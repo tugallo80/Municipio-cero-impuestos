@@ -1,0 +1,611 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font-sans); }
+
+  .section-label {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin: 0 0 10px;
+  }
+
+  /* ── Schema panel ── */
+  .schema-wrap {
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-lg);
+    background: var(--color-background-secondary);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .schema-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .table-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    font-size: 12px;
+  }
+  .table-header {
+    padding: 8px 12px;
+    font-weight: 500;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .table-header i { font-size: 14px; }
+  .th-blue  { background: #E6F1FB; color: #0C447C; }
+  .th-teal  { background: #E1F5EE; color: #085041; }
+  .th-amber { background: #FAEEDA; color: #633806; }
+  .th-purple{ background: #EEEDFE; color: #3C3489; }
+  .th-green { background: #EAF3DE; color: #27500A; }
+  @media (prefers-color-scheme: dark) {
+    .th-blue  { background: #042C53; color: #B5D4F4; }
+    .th-teal  { background: #04342C; color: #9FE1CB; }
+    .th-amber { background: #412402; color: #FAC775; }
+    .th-purple{ background: #26215C; color: #CECBF6; }
+    .th-green { background: #173404; color: #C0DD97; }
+  }
+  .table-body { padding: 4px 0; }
+  .field-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-bottom: 0.5px solid var(--color-border-tertiary);
+    font-size: 11px;
+  }
+  .field-row:last-child { border-bottom: none; }
+  .field-name { flex: 1; color: var(--color-text-primary); font-family: var(--font-mono); }
+  .field-type {
+    font-size: 10px;
+    padding: 1px 5px;
+    border-radius: 3px;
+    background: var(--color-background-secondary);
+    color: var(--color-text-secondary);
+    font-family: var(--font-mono);
+  }
+  .pk-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: #FAEEDA;
+    color: #633806;
+    font-weight: 500;
+  }
+  .fk-badge {
+    font-size: 9px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    background: #E6F1FB;
+    color: #0C447C;
+    font-weight: 500;
+  }
+  @media (prefers-color-scheme: dark) {
+    .pk-badge { background: #412402; color: #FAC775; }
+    .fk-badge { background: #042C53; color: #B5D4F4; }
+  }
+
+  /* ── Phone mockup ── */
+  .phone-wrap {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+  }
+  .phone-outer {
+    flex-shrink: 0;
+    width: 280px;
+    background: #0d0d0d;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 0 0 1px #333;
+  }
+  .phone-screen {
+    background: #0a0f0a;
+    border-radius: 26px;
+    overflow: hidden;
+    height: 580px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-notch {
+    width: 80px;
+    height: 22px;
+    background: #0d0d0d;
+    border-radius: 0 0 14px 14px;
+    margin: 0 auto 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  /* App content inside phone */
+  .app-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2px 16px 6px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+  }
+  .app-header {
+    padding: 0 16px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .app-logo {
+    font-size: 13px;
+    font-weight: 500;
+    color: #C8F56A;
+    letter-spacing: -0.01em;
+  }
+  .app-logo span { color: rgba(255,255,255,0.5); font-weight: 400; }
+  .app-score-pill {
+    background: rgba(200,245,106,0.12);
+    border: 0.5px solid rgba(200,245,106,0.3);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 10px;
+    color: #C8F56A;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .app-map-placeholder {
+    background: #121f12;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Fake map grid lines */
+  .map-line-h {
+    position: absolute;
+    left: 0; right: 0;
+    height: 0.5px;
+    background: rgba(255,255,255,0.06);
+  }
+  .map-line-v {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 0.5px;
+    background: rgba(255,255,255,0.06);
+  }
+  .map-road {
+    position: absolute;
+    background: rgba(255,255,255,0.09);
+    border-radius: 2px;
+  }
+  .map-pin {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .map-pin-origin {
+    background: rgba(200,245,106,0.2);
+    border: 1.5px solid #C8F56A;
+    color: #C8F56A;
+    left: 50%;
+    top: 45%;
+    transform: translate(-50%,-50%);
+  }
+  .map-route {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 2px;
+    height: 45%;
+    background: linear-gradient(to bottom, transparent, #C8F56A 40%, rgba(200,245,106,0.3));
+    transform: translateX(-50%) rotate(12deg);
+    transform-origin: bottom center;
+  }
+  .map-car {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    background: rgba(200,245,106,0.15);
+    border: 1px solid rgba(200,245,106,0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    left: 62%;
+    top: 20%;
+    color: #C8F56A;
+  }
+  .map-eta-badge {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.75);
+    border: 0.5px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    white-space: nowrap;
+  }
+  .app-bottom-sheet {
+    background: #111a11;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+    padding: 12px 14px 16px;
+    border-radius: 20px 20px 0 0;
+  }
+  .sheet-handle {
+    width: 32px; height: 3px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 2px;
+    margin: 0 auto 12px;
+  }
+  .sheet-title {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.4);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .dest-input {
+    background: rgba(255,255,255,0.07);
+    border: 0.5px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.9);
+  }
+  .dest-input i { font-size: 14px; color: #C8F56A; }
+  .dest-input .placeholder { color: rgba(255,255,255,0.3); }
+  .tax-pill {
+    background: rgba(200,245,106,0.08);
+    border: 0.5px solid rgba(200,245,106,0.2);
+    border-radius: 8px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .tax-label { font-size: 10px; color: rgba(255,255,255,0.4); }
+  .tax-val { font-size: 12px; color: #C8F56A; font-weight: 500; }
+  .tax-tag { font-size: 9px; color: rgba(200,245,106,0.6); }
+  .fare-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    padding: 2px 0;
+    color: rgba(255,255,255,0.5);
+  }
+  .fare-total {
+    font-size: 13px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.9);
+  }
+  .divider-line {
+    height: 0.5px;
+    background: rgba(255,255,255,0.08);
+    margin: 6px 0;
+  }
+  .btn-solicitar {
+    width: 100%;
+    background: #C8F56A;
+    color: #0a0f0a;
+    border: none;
+    border-radius: 12px;
+    padding: 11px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-top: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    letter-spacing: -0.01em;
+  }
+  .driver-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 0 8px;
+  }
+  .driver-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(200,245,106,0.15);
+    border: 1px solid rgba(200,245,106,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: #C8F56A;
+    font-weight: 500;
+  }
+  .driver-info { flex: 1; }
+  .driver-name { font-size: 11px; color: rgba(255,255,255,0.8); font-weight: 500; }
+  .driver-sub { font-size: 10px; color: rgba(255,255,255,0.35); }
+  .star { color: #C8F56A; font-size: 10px; }
+  .patent-badge {
+    font-size: 9px;
+    background: rgba(200,245,106,0.1);
+    border: 0.5px solid rgba(200,245,106,0.25);
+    color: #C8F56A;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+
+  /* ── Annotation panel ── */
+  .annotation-panel {
+    flex: 1;
+    min-width: 0;
+  }
+  .annotation-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--border-radius-md);
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .ann-number {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #E1F5EE;
+    color: #085041;
+    font-size: 10px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-bottom: 6px;
+  }
+  @media (prefers-color-scheme: dark) {
+    .ann-number { background: #04342C; color: #9FE1CB; }
+  }
+  .ann-title { font-size: 12px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 2px; }
+  .ann-desc { font-size: 11px; color: var(--color-text-secondary); line-height: 1.5; }
+  .highlight-green { color: #0F6E56; font-weight: 500; }
+  @media (prefers-color-scheme: dark) { .highlight-green { color: #5DCAA5; } }
+</style>
+
+<h2 class="sr-only">Municipio 0 Impuestos — MVP de Transporte: esquema de base de datos y pantalla de solicitud de viaje</h2>
+
+<div style="padding: 1rem 0;">
+
+  <!-- Schema section -->
+  <div class="schema-wrap">
+    <p class="section-label">Schema SQL — módulo transporte</p>
+    <div class="schema-grid">
+
+      <!-- ciudadanos -->
+      <div class="table-card">
+        <div class="table-header th-blue"><i class="ti ti-user" aria-hidden="true"></i> ciudadanos</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">ci</span><span class="field-type">varchar</span></div>
+          <div class="field-row"><span class="field-name">nombre</span><span class="field-type">varchar</span></div>
+          <div class="field-row"><span class="field-name">ruat_id</span><span class="field-type">varchar</span></div>
+          <div class="field-row"><span class="field-name">saldo_fiscal</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">puntos_civicos</span><span class="field-type">int</span></div>
+          <div class="field-row"><span class="field-name">created_at</span><span class="field-type">timestamptz</span></div>
+        </div>
+      </div>
+
+      <!-- vehiculos -->
+      <div class="table-card">
+        <div class="table-header th-teal"><i class="ti ti-car" aria-hidden="true"></i> vehiculos</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">conductor_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">placa</span><span class="field-type">varchar</span></div>
+          <div class="field-row"><span class="field-name">tipo</span><span class="field-type">enum</span></div>
+          <div class="field-row"><span class="field-name">patente_anual</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">patente_pagada</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">activo</span><span class="field-type">boolean</span></div>
+        </div>
+      </div>
+
+      <!-- viajes -->
+      <div class="table-card">
+        <div class="table-header th-amber"><i class="ti ti-route" aria-hidden="true"></i> viajes</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">pasajero_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">vehiculo_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">origen_lat/lng</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">destino_lat/lng</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">distancia_km</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">tarifa_base</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">estado</span><span class="field-type">enum</span></div>
+        </div>
+      </div>
+
+      <!-- micro_pagos_fiscales -->
+      <div class="table-card">
+        <div class="table-header th-purple"><i class="ti ti-receipt" aria-hidden="true"></i> micro_pagos_fiscales</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">viaje_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">vehiculo_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">monto_patente</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">monto_pasajero</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">pct_conductor</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">confirmado_at</span><span class="field-type">timestamptz</span></div>
+        </div>
+      </div>
+
+      <!-- tarifas_impositivas -->
+      <div class="table-card">
+        <div class="table-header th-green"><i class="ti ti-adjustments" aria-hidden="true"></i> tarifas_impositivas</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">tipo_vehiculo</span><span class="field-type">enum</span></div>
+          <div class="field-row"><span class="field-name">pct_por_km</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">pct_pasajero</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">tope_diario</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">vigente_desde</span><span class="field-type">date</span></div>
+        </div>
+      </div>
+
+      <!-- sensor_logs -->
+      <div class="table-card">
+        <div class="table-header th-teal" style="background:#E1F5EE;color:#085041"><i class="ti ti-map-pin" aria-hidden="true"></i> sensor_logs</div>
+        <div class="table-body">
+          <div class="field-row"><span class="field-name">id</span><span class="pk-badge">PK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">viaje_id</span><span class="fk-badge">FK</span><span class="field-type">uuid</span></div>
+          <div class="field-row"><span class="field-name">lat / lng</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">velocidad_kmh</span><span class="field-type">numeric</span></div>
+          <div class="field-row"><span class="field-name">evento</span><span class="field-type">enum</span></div>
+          <div class="field-row"><span class="field-name">ts</span><span class="field-type">timestamptz</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Key logic note -->
+    <div style="margin-top:12px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 14px;font-size:11px;color:var(--color-text-secondary);line-height:1.6">
+      <strong style="color:var(--color-text-primary);font-weight:500">Lógica fiscal clave:</strong>
+      Al confirmar cada viaje, un trigger SQL calcula
+      <code style="font-size:10px;background:var(--color-background-secondary);padding:1px 4px;border-radius:3px">monto_patente = distancia_km × pct_por_km</code>
+      y lo abona en <code style="font-size:10px;background:var(--color-background-secondary);padding:1px 4px;border-radius:3px">vehiculos.patente_pagada</code>.
+      Cuando <code style="font-size:10px;background:var(--color-background-secondary);padding:1px 4px;border-radius:3px">patente_pagada ≥ patente_anual</code>, el vehículo queda libre de deuda fiscal. Recaudación invisible.
+    </div>
+  </div>
+
+  <!-- Phone mockup + annotations -->
+  <p class="section-label">Pantalla — solicitud de viaje (conductor)</p>
+  <div class="phone-wrap">
+
+    <!-- Phone -->
+    <div class="phone-outer">
+      <div class="phone-screen">
+        <div class="phone-notch"></div>
+        <div class="app-status-bar">
+          <span>9:41</span>
+          <span style="display:flex;gap:4px;align-items:center">
+            <i class="ti ti-wifi" style="font-size:11px" aria-hidden="true"></i>
+            <i class="ti ti-battery-2" style="font-size:11px" aria-hidden="true"></i>
+          </span>
+        </div>
+        <div class="app-header">
+          <div class="app-logo">M<span>·</span>0 <span style="font-size:10px">Transporte</span></div>
+          <div class="app-score-pill">
+            <i class="ti ti-star" style="font-size:11px" aria-hidden="true"></i>
+            1,240 pts
+          </div>
+        </div>
+
+        <!-- Map area -->
+        <div class="app-map-placeholder">
+          <!-- Grid -->
+          <div class="map-line-h" style="top:25%"></div>
+          <div class="map-line-h" style="top:50%"></div>
+          <div class="map-line-h" style="top:75%"></div>
+          <div class="map-line-v" style="left:33%"></div>
+          <div class="map-line-v" style="left:66%"></div>
+          <!-- Roads -->
+          <div class="map-road" style="left:0;right:0;height:8px;top:49%;opacity:.6"></div>
+          <div class="map-road" style="top:0;bottom:0;width:8px;left:32%;opacity:.6"></div>
+          <div class="map-road" style="left:15%;right:0;height:5px;top:28%;transform:rotate(-3deg)"></div>
+          <!-- Route -->
+          <div class="map-route"></div>
+          <!-- Car -->
+          <div class="map-car"><i class="ti ti-car" aria-hidden="true"></i></div>
+          <!-- Pin -->
+          <div class="map-pin map-pin-origin"><i class="ti ti-current-location" style="font-size:13px" aria-hidden="true"></i></div>
+          <!-- ETA -->
+          <div class="map-eta-badge">3 min · Carlos M. en camino</div>
+        </div>
+
+        <!-- Bottom sheet -->
+        <div class="app-bottom-sheet">
+          <div class="sheet-handle"></div>
+
+          <!-- Driver row -->
+          <div class="driver-row">
+            <div class="driver-avatar">CM</div>
+            <div class="driver-info">
+              <div class="driver-name">Carlos Mamani</div>
+              <div class="driver-sub">
+                <span class="star">★</span> 4.9 · Toyota Corolla · CBA-1234
+              </div>
+            </div>
+            <div class="patent-badge">Patente al día</div>
+          </div>
+
+          <div class="divider-line"></div>
+
+          <div class="sheet-title">Destino</div>
+          <div class="dest-input">
+            <i class="ti ti-map-pin" aria-hidden="true"></i>
+            <span class="placeholder">¿A dónde vas?</span>
+          </div>
+
+          <!-- Tax pill -->
+          <div class="tax-pill">
+            <div>
+              <div class="tax-label">Crédito fiscal de este viaje</div>
+              <div class="tax-val">Bs 0.12 <span class="tax-tag">hacia patente anual</span></div>
+            </div>
+            <i class="ti ti-shield-check" style="font-size:16px;color:#C8F56A" aria-hidden="true"></i>
+          </div>
+
+          <!-- Fare breakdown -->
+          <div class="fare-row"><span>Tarifa base (5 km)</span><span>Bs 12.00</span></div>
+          <div class="fare-row"><span>Contribución fiscal</span><span style="color:#C8F56A">–Bs 0.12</span></div>
+          <div class="divider-line"></div>
+          <div class="fare-row fare-total"><span>Total pasajero</span><span>Bs 11.88</span></div>
+
+          <button class="btn-solicitar" onclick="sendPrompt('¿Cómo funciona el cálculo del micro-pago fiscal por kilómetro?')">
+            <i class="ti ti-car" aria-hidden="true"></i>
+            Solicitar viaje ↗
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotations -->
+    <div class="annotation-panel">
+      <div class="annotation-card">
+        <div class="ann-number">1</div>
+        <div class="ann-title">Recaudación invisible</div>
+        <div class="ann-desc">Cada carrera descuenta automáticamente <span class="highlight-green">Bs 0.12/km</span> de la patente anual del conductor. Sin ventanillas, sin recordatorios.</div>
+      </div>
+      <div class="annotation-card">
+        <div class="ann-number">2</div>
+        <div class="ann-title">Badge fiscal en tiempo real</div>
+        <div class="ann-desc">El pill "Patente al día" es dinámico: refleja el estado fiscal del vehículo usando <code style="font-size:10px">vehiculos.patente_pagada</code>. El pasajero sabe que viaja en un conductor cumplidor.</div>
+      </div>
+      <div class="annotation-card">
+        <div class="ann-number">3</div>
+        <div class="ann-title">Puntos cívicos (gamificación)</div>
+        <div class="ann-desc">El pasajero acumula <span class="highlight-green">puntos_civicos</span> por cada viaje. Al llegar a umbrales, obtiene descuentos en patentes inmobiliarias o crédito en el marketplace municipal.</div>
+      </div>
+      <div class="annotation-card">
+        <div class="ann-number">4</div>
+        <div class="ann-title">Trigger SQL post-viaje</div>
+        <div class="ann-desc">Al marcar estado = <code style="font-size:10px">'completado'</code>, el trigger inserta en <code style="font-size:10px">micro_pagos_fiscales</code> y actualiza <code style="font-size:10px">patente_pagada</code> en una sola transacción atómica.</div>
+      </div>
+    </div>
+  </div>
+
+</div>

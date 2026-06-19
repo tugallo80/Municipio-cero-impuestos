@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M·0 Comercio — Marketplace Municipal</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --lime: #C8F56A;
+  --lime-dim: rgba(200,245,106,0.07);
+  --lime-dim2: rgba(200,245,106,0.13);
+  --lime-border: rgba(200,245,106,0.22);
+  --lime-text: #a8d44e;
+  --bg: #080d08;
+  --bg-nav: #0b100b;
+  --bg-card: #0d140d;
+  --bg-card2: #101810;
+  --bg-input: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.14);
+  --text-1: rgba(255,255,255,0.92);
+  --text-2: rgba(255,255,255,0.48);
+  --text-3: rgba(255,255,255,0.22);
+  --green: #5DCAA5;
+  --teal: #1D9E75;
+  --amber: #EF9F27;
+  --red: #E24B4A;
+  --market-abasto: #1D9E75;
+  --market-mutualista: #378ADD;
+  --market-los-pozos: #EF9F27;
+}
+
+html, body { height: 100%; background: var(--bg); }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; color: var(--text-1); display: flex; flex-direction: column; min-height: 100vh; }
+
+/* ── TOPNAV ── */
+.topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 28px;
+  background: var(--bg-nav);
+  border-bottom: 0.5px solid var(--border);
+  flex-shrink: 0; position: sticky; top: 0; z-index: 100;
+}
+.nav-left { display: flex; align-items: center; gap: 20px; }
+.nav-logo { font-size: 15px; font-weight: 700; color: var(--lime); letter-spacing: -0.02em; white-space: nowrap; }
+.nav-logo span { color: var(--text-2); font-weight: 400; }
+.nav-module-tabs { display: flex; gap: 2px; }
+.nav-tab {
+  font-size: 12px; color: var(--text-2);
+  padding: 5px 12px; border-radius: 6px;
+  cursor: pointer; transition: all 0.15s;
+  border: none; background: none;
+  display: flex; align-items: center; gap: 5px;
+}
+.nav-tab:hover { color: var(--text-1); background: rgba(255,255,255,0.05); }
+.nav-tab.active { color: var(--lime); background: var(--lime-dim); }
+.nav-tab i { font-size: 14px; }
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.cart-btn {
+  display: flex; align-items: center; gap: 7px;
+  background: var(--lime-dim); border: 0.5px solid var(--lime-border);
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 12px; color: var(--lime); cursor: pointer;
+  transition: all 0.15s; white-space: nowrap;
+}
+.cart-btn:hover { background: var(--lime-dim2); }
+.cart-count {
+  background: var(--lime); color: #080d08;
+  font-size: 10px; font-weight: 700;
+  width: 16px; height: 16px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+}
+.search-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--bg-input); border: 0.5px solid var(--border);
+  border-radius: 8px; padding: 6px 12px;
+  font-size: 12px; color: var(--text-2); width: 200px;
+  transition: border-color 0.2s;
+}
+.search-bar:hover { border-color: var(--border-hover); }
+.search-bar i { font-size: 13px; }
+.search-bar input { background: none; border: none; outline: none; color: var(--text-1); font-size: 12px; width: 100%; }
+.search-bar input::placeholder { color: var(--text-3); }
+
+/* ── LAYOUT ── */
+.main { flex: 1; display: grid; grid-template-columns: 1fr 360px; min-height: 0; }
+.left-col { overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+.right-col { border-left: 0.5px solid var(--border); display: flex; flex-direction: column; }
+
+/* ── MARKET TABS ── */
+.market-tabs { display: flex; gap: 8px; }
+.market-chip {
+  display: flex; align-items: center; gap: 7px;
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 11px; cursor: pointer;
+  transition: all 0.18s;
+  border: 0.5px solid var(--border);
+  color: var(--text-2); background: none;
+  white-space: nowrap;
+}
+.market-chip:hover { border-color: var(--border-hover); color: var(--text-1); }
+.market-chip.active { color: #080d08; }
+.market-chip.active.abasto { background: var(--market-abasto); border-color: var(--market-abasto); }
+.market-chip.active.mutualista { background: var(--market-mutualista); border-color: var(--market-mutualista); }
+.market-chip.active.pozos { background: var(--market-los-pozos); border-color: var(--market-los-pozos); }
+.market-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.market-chip .dist-label { font-size: 10px; opacity: 0.75; }
+
+/* ── SECTION HEADER ── */
+.section-header { display: flex; align-items: center; justify-content: space-between; }
+.section-title { font-size: 13px; font-weight: 500; color: var(--text-1); }
+.section-sub { font-size: 11px; color: var(--text-2); }
+.view-all { font-size: 11px; color: var(--lime-text); cursor: pointer; display: flex; align-items: center; gap: 4px; }
+
+/* ── PRODUCT GRID ── */
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 10px; }
+.product-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.18s, transform 0.15s;
+  position: relative;
+}
+.product-card:hover { border-color: var(--border-hover); transform: translateY(-2px); }
+.product-card.selected { border-color: var(--lime); background: rgba(200,245,106,0.04); }
+.product-card.selected .pc-add-btn { background: var(--lime); color: #080d08; }
+
+.pc-img {
+  width: 100%; height: 90px;
+  background: var(--bg-card2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 36px; position: relative;
+}
+.pc-market-badge {
+  position: absolute; top: 6px; left: 6px;
+  font-size: 9px; padding: 2px 6px; border-radius: 4px;
+  font-weight: 500; letter-spacing: 0.03em;
+}
+.badge-abasto { background: rgba(29,158,117,0.25); color: #5DCAA5; }
+.badge-mutualista { background: rgba(55,138,221,0.25); color: #85B7EB; }
+.badge-pozos { background: rgba(239,159,39,0.25); color: #FAC775; }
+.pc-organic { position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--lime-dim); display: flex; align-items: center; justify-content: center; font-size: 10px; color: var(--lime); border: 0.5px solid var(--lime-border); }
+.pc-body { padding: 10px; }
+.pc-name { font-size: 12px; font-weight: 500; color: var(--text-1); margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-origin { font-size: 10px; color: var(--text-2); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pc-footer { display: flex; align-items: center; justify-content: space-between; }
+.pc-price { font-size: 13px; font-weight: 600; color: var(--text-1); }
+.pc-price span { font-size: 9px; font-weight: 400; color: var(--text-2); }
+.pc-add-btn {
+  width: 24px; height: 24px; border-radius: 6px;
+  background: rgba(200,245,106,0.1); border: 0.5px solid var(--lime-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--lime); cursor: pointer;
+  transition: all 0.15s;
+}
+.pc-add-btn:hover { background: var(--lime-dim2); }
+.pc-qty-badge {
+  position: absolute; bottom: 6px; right: 6px;
+  display: none;
+  background: var(--lime); color: #080d08;
+  font-size: 9px; font-weight: 700;
+  padding: 1px 5px; border-radius: 4px;
+}
+.product-card.selected .pc-qty-badge { display: block; }
+
+/* ── VENDOR PANEL (seller view, collapsible) ── */
+.vendor-banner {
+  background: var(--bg-card);
+  border: 0.5px solid var(--lime-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 14px;
+}
+.vendor-avatar {
+  width: 40px; height: 40px; border-radius: 10px;
+  background: var(--lime-dim); border: 0.5px solid var(--lime-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.vendor-info { flex: 1; }
+.vendor-name { font-size: 13px; font-weight: 500; color: var(--text-1); }
+.vendor-sub { font-size: 11px; color: var(--text-2); }
+.vendor-suscripcion {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--lime-dim); border: 0.5px solid var(--lime-border);
+  border-radius: 8px; padding: 8px 14px;
+  cursor: pointer; transition: all 0.15s;
+  font-size: 12px; color: var(--lime); white-space: nowrap;
+  font-weight: 500;
+}
+.vendor-suscripcion:hover { background: var(--lime-dim2); }
+.vendor-suscripcion.paid { background: rgba(29,158,117,0.12); border-color: rgba(29,158,117,0.3); color: var(--green); }
+.vendor-suscripcion i { font-size: 16px; }
+
+/* ── RIGHT PANEL — CART + LOGISTICS ── */
+.right-col-inner { flex: 1; overflow-y: auto; padding: 18px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+.r-section-label {
+  font-size: 9px; color: var(--text-3);
+  letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+}
+
+/* cart items */
+.cart-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 0; border-bottom: 0.5px solid var(--border);
+}
+.cart-item:last-child { border-bottom: none; }
+.ci-emoji { font-size: 22px; width: 32px; text-align: center; flex-shrink: 0; }
+.ci-name { font-size: 12px; color: var(--text-1); flex: 1; }
+.ci-origin { font-size: 10px; color: var(--text-2); }
+.ci-qty-ctrl { display: flex; align-items: center; gap: 6px; }
+.ci-qty-btn {
+  width: 20px; height: 20px; border-radius: 5px;
+  background: rgba(255,255,255,0.07); border: 0.5px solid var(--border);
+  color: var(--text-1); font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.12s;
+}
+.ci-qty-btn:hover { background: rgba(255,255,255,0.12); }
+.ci-qty { font-size: 12px; min-width: 16px; text-align: center; }
+.ci-price { font-size: 12px; font-weight: 500; color: var(--text-1); width: 48px; text-align: right; flex-shrink: 0; }
+
+/* empty cart */
+.cart-empty { text-align: center; padding: 28px 16px; color: var(--text-3); font-size: 12px; }
+.cart-empty i { font-size: 32px; display: block; margin-bottom: 8px; }
+
+/* totals */
+.totals-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+.tot-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-2); padding: 3px 0; }
+.tot-row.main-total { color: var(--text-1); font-weight: 500; font-size: 13px; }
+.tot-divider { height: 0.5px; background: var(--border); margin: 6px 0; }
+.tot-lime { color: var(--lime); }
+
+/* ── LOGISTICS PANEL ── */
+.logistics-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--lime-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.logistics-header {
+  background: rgba(200,245,106,0.06);
+  border-bottom: 0.5px solid var(--lime-border);
+  padding: 12px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.logistics-title { font-size: 12px; font-weight: 500; color: var(--lime); display: flex; align-items: center; gap: 7px; }
+.logistics-title i { font-size: 15px; }
+.logistics-live { display: flex; align-items: center; gap: 5px; font-size: 10px; color: var(--green); }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.4s ease infinite; }
+
+.logistics-body { padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+
+/* driver options */
+.driver-option {
+  background: var(--bg-card2);
+  border: 0.5px solid var(--border);
+  border-radius: 9px;
+  padding: 10px 12px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.driver-option:hover { border-color: var(--border-hover); }
+.driver-option.selected-driver { border-color: var(--lime-border); background: rgba(200,245,106,0.04); }
+.driver-top { display: flex; align-items: center; gap: 9px; }
+.driver-avatar-sm {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; flex-shrink: 0;
+}
+.driver-av-lime { background: var(--lime-dim); border: 1px solid var(--lime-border); color: var(--lime); }
+.driver-av-teal { background: rgba(29,158,117,0.15); border: 1px solid rgba(29,158,117,0.3); color: var(--green); }
+.driver-av-blue { background: rgba(55,138,221,0.15); border: 1px solid rgba(55,138,221,0.3); color: #85B7EB; }
+.driver-details { flex: 1; min-width: 0; }
+.driver-dname { font-size: 11px; font-weight: 500; color: var(--text-1); }
+.driver-dmeta { font-size: 10px; color: var(--text-2); display: flex; gap: 8px; flex-wrap: wrap; }
+.driver-deta { font-size: 10px; color: var(--text-1); font-weight: 500; white-space: nowrap; }
+
+/* fiscal breakdown inside driver */
+.fiscal-breakdown {
+  background: rgba(200,245,106,0.05);
+  border: 0.5px solid rgba(200,245,106,0.12);
+  border-radius: 7px;
+  padding: 8px 10px;
+  display: none; flex-direction: column; gap: 3px;
+}
+.driver-option.selected-driver .fiscal-breakdown { display: flex; }
+.fb-row { display: flex; justify-content: space-between; font-size: 10px; color: var(--text-2); }
+.fb-row.highlight { color: var(--lime-text); }
+.fb-divider { height: 0.5px; background: rgba(200,245,106,0.12); margin: 3px 0; }
+.fb-label-tag {
+  font-size: 9px; background: rgba(200,245,106,0.1); color: var(--lime-text);
+  padding: 1px 6px; border-radius: 3px; border: 0.5px solid var(--lime-border);
+}
+
+/* transport connection badge */
+.transport-link {
+  background: rgba(93,202,165,0.07);
+  border: 0.5px solid rgba(93,202,165,0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex; align-items: center; gap: 9px;
+  font-size: 11px; color: var(--green);
+}
+.transport-link i { font-size: 14px; flex-shrink: 0; }
+.transport-link .tl-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; }
+
+/* CTA */
+.cta-btn {
+  width: 100%;
+  background: var(--lime);
+  color: #080d08;
+  border: none; border-radius: 11px;
+  padding: 12px; font-size: 13px; font-weight: 600;
+  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: opacity 0.15s, transform 0.1s;
+  letter-spacing: -0.01em;
+}
+.cta-btn:hover { opacity: 0.9; }
+.cta-btn:active { transform: scale(0.98); }
+.cta-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* fiscal summary pill */
+.fiscal-summary {
+  background: var(--lime-dim);
+  border: 0.5px solid var(--lime-border);
+  border-radius: 9px;
+  padding: 10px 12px;
+}
+.fs-row { display: flex; justify-content: space-between; align-items: center; font-size: 11px; }
+.fs-label { color: var(--text-2); }
+.fs-val { color: var(--lime); font-weight: 600; }
+.fs-note { font-size: 10px; color: var(--text-3); margin-top: 5px; line-height: 1.5; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+/* ── TOAST ── */
+@keyframes toast-in { from{transform:translateY(20px);opacity:0} to{transform:translateY(0);opacity:1} }
+@keyframes toast-out { from{opacity:1} to{opacity:0;transform:translateY(-8px)} }
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1a2e1a; border: 0.5px solid var(--lime-border);
+  border-radius: 10px; padding: 10px 18px;
+  display: flex; align-items: center; gap: 10px;
+  font-size: 12px; color: var(--text-1);
+  z-index: 999; pointer-events: none;
+  animation: toast-in 0.3s ease both;
+  white-space: nowrap;
+}
+.toast.hide { animation: toast-out 0.3s ease both; }
+.toast i { color: var(--lime); font-size: 16px; }
+</style>
+
+<!-- TOPNAV -->
+<nav class="topnav">
+  <div class="nav-left">
+    <div class="nav-logo">M<span>·</span>0 <span style="font-size:11px">Comercio</span></div>
+    <div class="nav-module-tabs">
+      <button class="nav-tab active" onclick="setView('comprador',this)"><i class="ti ti-shopping-bag"></i> Comprador</button>
+      <button class="nav-tab" onclick="setView('vendedor',this)"><i class="ti ti-building-store"></i> Vendedor</button>
+    </div>
+  </div>
+  <div class="nav-right">
+    <div class="search-bar"><i class="ti ti-search"></i><input type="text" placeholder="Buscar producto..." oninput="filterProducts(this.value)"></div>
+    <button class="cart-btn" onclick="scrollToCart()">
+      <i class="ti ti-shopping-cart" style="font-size:15px"></i>
+      Carrito <div class="cart-count" id="cartCount">0</div>
+    </button>
+  </div>
+</nav>
+
+<!-- MAIN LAYOUT -->
+<div class="main">
+
+  <!-- LEFT COL -->
+  <div class="left-col" id="leftCol">
+
+    <!-- Vendor view (hidden by default) -->
+    <div id="vendorView" style="display:none">
+      <div class="vendor-banner">
+        <div class="vendor-avatar">🏪</div>
+        <div class="vendor-info">
+          <div class="vendor-name">Doña Rosa Gutiérrez</div>
+          <div class="vendor-sub">Mercado Abasto · Puesto 42 · Verduras y frutas</div>
+        </div>
+        <button class="vendor-suscripcion" id="susBtn" onclick="pagarSuscripcion()">
+          <i class="ti ti-credit-card"></i> Pagar suscripción del mes
+        </button>
+      </div>
+      <div style="background:var(--bg-card);border:0.5px solid var(--border);border-radius:12px;padding:16px 18px;">
+        <div class="r-section-label">Mi situación fiscal</div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px">
+          <div style="background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Suscripción mensual</div>
+            <div style="font-size:20px;font-weight:700;color:var(--lime)">Bs 180</div>
+            <div style="font-size:10px;color:var(--text-3)">= patente anual ÷ 12</div>
+          </div>
+          <div style="background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Pagado este año</div>
+            <div style="font-size:20px;font-weight:700;color:var(--green)" id="vendorPagado">Bs 720</div>
+            <div style="font-size:10px;color:var(--text-3)">4 de 12 meses</div>
+          </div>
+          <div style="background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Estado patente</div>
+            <div style="font-size:20px;font-weight:700;color:var(--amber)" id="vendorEstado">Al día</div>
+            <div style="font-size:10px;color:var(--text-3)">Próximo vence jul 1</div>
+          </div>
+        </div>
+        <div class="r-section-label">Mis ventas del mes</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <div style="flex:1;min-width:140px;background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Pedidos recibidos</div>
+            <div style="font-size:20px;font-weight:700;color:var(--text-1)" id="vendorPedidos">47</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Total vendido</div>
+            <div style="font-size:20px;font-weight:700;color:var(--text-1)">Bs 1,840</div>
+          </div>
+          <div style="flex:1;min-width:140px;background:var(--bg-card2);border:0.5px solid var(--border);border-radius:9px;padding:12px">
+            <div style="font-size:10px;color:var(--text-2);margin-bottom:6px">Costo patente cubierto</div>
+            <div style="font-size:20px;font-weight:700;color:var(--lime)">60%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buyer view -->
+    <div id="buyerView">
+      <!-- Market chips -->
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="market-tabs" id="marketTabs">
+          <button class="market-chip active abasto" onclick="filterMarket('todos',this)">
+            <div class="market-dot" style="background:white"></div> Todos los mercados
+          </button>
+          <button class="market-chip" onclick="filterMarket('abasto',this)">
+            <div class="market-dot" style="background:var(--market-abasto)"></div> Abasto <span class="dist-label">· 1.2 km</span>
+          </button>
+          <button class="market-chip" onclick="filterMarket('mutualista',this)">
+            <div class="market-dot" style="background:var(--market-mutualista)"></div> Mutualista <span class="dist-label">· 2.8 km</span>
+          </button>
+          <button class="market-chip" onclick="filterMarket('pozos',this)">
+            <div class="market-dot" style="background:var(--market-los-pozos)"></div> Los Pozos <span class="dist-label">· 3.5 km</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Products -->
+      <div>
+        <div class="section-header" style="margin-bottom:10px">
+          <div>
+            <div class="section-title" id="productsTitle">Canasta familiar — todos los mercados</div>
+            <div class="section-sub" id="productsCount">Mostrando 12 productos · precios de hoy</div>
+          </div>
+          <div class="view-all"><i class="ti ti-adjustments-horizontal" style="font-size:13px"></i> Filtrar</div>
+        </div>
+        <div class="product-grid" id="productGrid"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COL -->
+  <div class="right-col">
+    <div class="right-col-inner" id="rightColInner">
+
+      <!-- Cart -->
+      <div>
+        <div class="r-section-label">Carrito de compras</div>
+        <div id="cartItems">
+          <div class="cart-empty"><i class="ti ti-basket"></i>Selecciona productos del mercado</div>
+        </div>
+      </div>
+
+      <!-- Totals -->
+      <div class="totals-card" id="totalsCard" style="display:none">
+        <div class="tot-row"><span>Subtotal productos</span><span id="subtotalEl">Bs 0.00</span></div>
+        <div class="tot-row"><span>Costo de envío</span><span id="envioCostEl">Bs 0.00</span></div>
+        <div class="tot-divider"></div>
+        <div class="tot-row main-total"><span>Total a pagar</span><span id="totalEl">Bs 0.00</span></div>
+      </div>
+
+      <!-- Logistics panel -->
+      <div class="logistics-card" id="logisticsCard" style="display:none">
+        <div class="logistics-header">
+          <div class="logistics-title"><i class="ti ti-truck-delivery"></i> Logística de entrega — M·0 Transporte</div>
+          <div class="logistics-live"><div class="live-dot"></div> 3 conductores cercanos</div>
+        </div>
+        <div class="logistics-body">
+          <div class="transport-link">
+            <i class="ti ti-link"></i>
+            <div>
+              <div>Integrado con el módulo de transporte</div>
+              <div class="tl-sub">El conductor paga su patente con cada entrega — igual que con viajes de pasajeros</div>
+            </div>
+          </div>
+
+          <div style="font-size:10px;color:var(--text-2)">Elige tu conductor de entrega</div>
+
+          <div class="driver-option selected-driver" onclick="selectDriver(this,'CM','Bs 8.50',0.8,'Carlos Mamani','CBA-1234','★ 4.9','15 min')">
+            <div class="driver-top">
+              <div class="driver-avatar-sm driver-av-lime">CM</div>
+              <div class="driver-details">
+                <div class="driver-dname">Carlos Mamani · CBA-1234</div>
+                <div class="driver-dmeta"><span>★ 4.9</span><span>Mercado Abasto → tu dirección</span></div>
+              </div>
+              <div class="driver-deta">15 min</div>
+            </div>
+            <div class="fiscal-breakdown">
+              <div class="fb-row"><span>Tarifa de envío</span><span>Bs 8.50</span></div>
+              <div class="fb-row"><span>Distancia estimada</span><span>4.2 km</span></div>
+              <div class="fb-divider"></div>
+              <div class="fb-row highlight"><span>Micro-pago fiscal (0.12/km)</span><span>Bs 0.50</span></div>
+              <div class="fb-row" style="margin-top:2px"><span><span class="fb-label-tag">Patente del conductor</span></span><span style="color:var(--text-3)">53% cubierta</span></div>
+              <div class="fb-row"><span style="color:var(--text-3)">Mismo sistema que módulo de viajes</span></div>
+            </div>
+          </div>
+
+          <div class="driver-option" onclick="selectDriver(this,'RV','Bs 10.20',1.0,'Roberto Vaca','SCZ-8821','★ 4.7','22 min')">
+            <div class="driver-top">
+              <div class="driver-avatar-sm driver-av-teal">RV</div>
+              <div class="driver-details">
+                <div class="driver-dname">Roberto Vaca · SCZ-8821</div>
+                <div class="driver-dmeta"><span>★ 4.7</span><span>Mercado Mutualista → tu dirección</span></div>
+              </div>
+              <div class="driver-deta">22 min</div>
+            </div>
+            <div class="fiscal-breakdown">
+              <div class="fb-row"><span>Tarifa de envío</span><span id="fb2-tarifa">Bs 10.20</span></div>
+              <div class="fb-row"><span>Distancia estimada</span><span>5.1 km</span></div>
+              <div class="fb-divider"></div>
+              <div class="fb-row highlight"><span>Micro-pago fiscal (0.12/km)</span><span>Bs 0.61</span></div>
+              <div class="fb-row" style="margin-top:2px"><span><span class="fb-label-tag">Patente del conductor</span></span><span style="color:var(--text-3)">38% cubierta</span></div>
+            </div>
+          </div>
+
+          <div class="driver-option" onclick="selectDriver(this,'LF','Bs 7.80',0.75,'Luis Flores','CBA-0093','★ 5.0','11 min')">
+            <div class="driver-top">
+              <div class="driver-avatar-sm driver-av-blue">LF</div>
+              <div class="driver-details">
+                <div class="driver-dname">Luis Flores · CBA-0093</div>
+                <div class="driver-dmeta"><span>★ 5.0</span><span>Mercado Los Pozos → tu dirección</span></div>
+              </div>
+              <div class="driver-deta">11 min</div>
+            </div>
+            <div class="fiscal-breakdown">
+              <div class="fb-row"><span>Tarifa de envío</span><span>Bs 7.80</span></div>
+              <div class="fb-row"><span>Distancia estimada</span><span>3.8 km</span></div>
+              <div class="fb-divider"></div>
+              <div class="fb-row highlight"><span>Micro-pago fiscal (0.12/km)</span><span>Bs 0.46</span></div>
+              <div class="fb-row" style="margin-top:2px"><span><span class="fb-label-tag">Patente del conductor</span></span><span style="color:var(--text-3)">71% cubierta</span></div>
+            </div>
+          </div>
+
+          <!-- Fiscal summary -->
+          <div class="fiscal-summary" id="fiscalSummary">
+            <div class="fs-row"><span class="fs-label">Crédito fiscal total del pedido</span><span class="fs-val" id="fsTotalVal">Bs 0.50</span></div>
+            <div class="fs-row" style="margin-top:4px"><span class="fs-label" style="font-size:10px">Productos: Bs 0.00 · Envío: Bs 0.50</span></div>
+            <div class="fs-note">Cada compra contribuye a la patente del vendedor y del conductor. La ciudad se financia sola.</div>
+          </div>
+
+          <button class="cta-btn" id="ctaBtn" onclick="confirmarPedido()">
+            <i class="ti ti-truck-delivery"></i>
+            <span id="ctaText">Confirmar pedido</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Empty logistics placeholder -->
+      <div id="logisticsEmpty" style="background:var(--bg-card);border:0.5px solid var(--border);border-radius:12px;padding:20px 16px;text-align:center;">
+        <i class="ti ti-truck-delivery" style="font-size:28px;color:var(--text-3);display:block;margin-bottom:8px"></i>
+        <div style="font-size:12px;color:var(--text-2)">Agrega productos al carrito<br>para ver las opciones de entrega</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+const PRODUCTS = [
+  { id:1, emoji:'🍅', name:'Tomates', origin:'Samaipata · productor directo', price:4.50, market:'abasto', badge:'badge-abasto', badgeText:'Abasto', organic:true, tax:0.02 },
+  { id:2, emoji:'🥔', name:'Papa imilla', origin:'Cochabamba · intermediario local', price:3.80, market:'abasto', badge:'badge-abasto', badgeText:'Abasto', organic:false, tax:0.02 },
+  { id:3, emoji:'🥬', name:'Lechuga hidropónica', origin:'Santa Cruz · huerto urbano', price:5.20, market:'mutualista', badge:'badge-mutualista', badgeText:'Mutualista', organic:true, tax:0.02 },
+  { id:4, emoji:'🧅', name:'Cebolla', origin:'Vallegrande · mayorista', price:2.90, market:'abasto', badge:'badge-abasto', badgeText:'Abasto', organic:false, tax:0.02 },
+  { id:5, emoji:'🍋', name:'Limón mandarina', origin:'Bermejo · cítricos', price:6.00, market:'pozos', badge:'badge-pozos', badgeText:'Los Pozos', organic:true, tax:0.02 },
+  { id:6, emoji:'🌽', name:'Maíz choclo', origin:'Montero · temporada', price:3.50, market:'abasto', badge:'badge-abasto', badgeText:'Abasto', organic:false, tax:0.02 },
+  { id:7, emoji:'🐔', name:'Pollo entero', origin:'Santa Cruz · frigorífico local', price:28.00, market:'mutualista', badge:'badge-mutualista', badgeText:'Mutualista', organic:false, tax:0.02 },
+  { id:8, emoji:'🥩', name:'Carne de res', origin:'Beni · ganadería', price:42.00, market:'pozos', badge:'badge-pozos', badgeText:'Los Pozos', organic:false, tax:0.02 },
+  { id:9, emoji:'🥚', name:'Huevos (12 u.)', origin:'La Guardia · granja local', price:14.00, market:'abasto', badge:'badge-abasto', badgeText:'Abasto', organic:true, tax:0.02 },
+  { id:10, emoji:'🧀', name:'Queso fresco', origin:'Valle del Caballero', price:18.50, market:'mutualista', badge:'badge-mutualista', badgeText:'Mutualista', organic:false, tax:0.02 },
+  { id:11, emoji:'🍌', name:'Banano', origin:'Chapare · cooperativa', price:4.00, market:'pozos', badge:'badge-pozos', badgeText:'Los Pozos', organic:true, tax:0.02 },
+  { id:12, emoji:'🫙', name:'Aceite girasol (1L)', origin:'Santa Cruz · planta industrial', price:9.80, market:'pozos', badge:'badge-pozos', badgeText:'Los Pozos', organic:false, tax:0.02 },
+];
+
+let cart = {};
+let activeMarket = 'todos';
+let activeDriver = { tarifa: 8.50, fiscal: 0.50 };
+let searchQuery = '';
+let susciPaid = false;
+
+function getFiltered() {
+  return PRODUCTS.filter(p => {
+    const marketOk = activeMarket === 'todos' || p.market === activeMarket;
+    const searchOk = !searchQuery || p.name.toLowerCase().includes(searchQuery) || p.origin.toLowerCase().includes(searchQuery);
+    return marketOk && searchOk;
+  });
+}
+
+function renderGrid() {
+  const grid = document.getElementById('productGrid');
+  const prods = getFiltered();
+  document.getElementById('productsCount').textContent = `Mostrando ${prods.length} productos · precios de hoy`;
+  grid.innerHTML = prods.map(p => {
+    const qty = cart[p.id]?.qty || 0;
+    const sel = qty > 0;
+    return `<div class="product-card${sel?' selected':''}" id="pc-${p.id}" onclick="toggleProduct(${p.id})">
+      <div class="pc-img">
+        <span>${p.emoji}</span>
+        <div class="pc-market-badge ${p.badge}">${p.badgeText}</div>
+        ${p.organic ? `<div class="pc-organic"><i class="ti ti-leaf" style="font-size:10px"></i></div>` : ''}
+      </div>
+      <div class="pc-body">
+        <div class="pc-name">${p.name}</div>
+        <div class="pc-origin"><i class="ti ti-map-pin" style="font-size:9px"></i> ${p.origin}</div>
+        <div class="pc-footer">
+          <div class="pc-price">Bs ${p.price.toFixed(2)} <span>/unid.</span></div>
+          <div class="pc-add-btn" id="btn-${p.id}"><i class="ti ${sel?'ti-check':'ti-plus'}"></i></div>
+        </div>
+      </div>
+      ${sel ? `<div class="pc-qty-badge">${qty}</div>` : ''}
+    </div>`;
+  }).join('') || `<div style="grid-column:1/-1;text-align:center;padding:32px;color:var(--text-3);font-size:12px"><i class="ti ti-search" style="font-size:24px;display:block;margin-bottom:8px"></i>Sin resultados para "${searchQuery}"</div>`;
+}
+
+function toggleProduct(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  if (cart[id]) {
+    delete cart[id];
+    showToast(`<i class="ti ti-trash"></i> ${p.name} eliminado del carrito`);
+  } else {
+    cart[id] = { ...p, qty: 1 };
+    showToast(`<i class="ti ti-check"></i> ${p.name} agregado — Bs ${p.price.toFixed(2)}`);
+  }
+  renderGrid();
+  renderCart();
+}
+
+function changeQty(id, delta) {
+  if (!cart[id]) return;
+  cart[id].qty = Math.max(1, cart[id].qty + delta);
+  renderCart();
+  renderGrid();
+}
+
+function renderCart() {
+  const items = Object.values(cart);
+  const cartCountEl = document.getElementById('cartCount');
+  cartCountEl.textContent = items.reduce((a,i) => a + i.qty, 0);
+
+  const cartItemsEl = document.getElementById('cartItems');
+  if (items.length === 0) {
+    cartItemsEl.innerHTML = '<div class="cart-empty"><i class="ti ti-basket"></i>Selecciona productos del mercado</div>';
+    document.getElementById('totalsCard').style.display = 'none';
+    document.getElementById('logisticsCard').style.display = 'none';
+    document.getElementById('logisticsEmpty').style.display = 'block';
+    return;
+  }
+
+  cartItemsEl.innerHTML = items.map(it => `
+    <div class="cart-item">
+      <div class="ci-emoji">${it.emoji}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ci-name">${it.name}</div>
+        <div class="ci-origin">${it.market.charAt(0).toUpperCase()+it.market.slice(1)}</div>
+      </div>
+      <div class="ci-qty-ctrl">
+        <button class="ci-qty-btn" onclick="changeQty(${it.id},-1)">−</button>
+        <span class="ci-qty">${it.qty}</span>
+        <button class="ci-qty-btn" onclick="changeQty(${it.id},1)">+</button>
+      </div>
+      <div class="ci-price">Bs ${(it.price * it.qty).toFixed(2)}</div>
+    </div>`).join('');
+
+  const subtotal = items.reduce((a, i) => a + i.price * i.qty, 0);
+  const envio = activeDriver.tarifa;
+  const total = subtotal + envio;
+  const productTax = items.reduce((a, i) => a + i.price * i.qty * i.tax, 0);
+  const totalFiscal = productTax + activeDriver.fiscal;
+
+  document.getElementById('subtotalEl').textContent = `Bs ${subtotal.toFixed(2)}`;
+  document.getElementById('envioCostEl').textContent = `Bs ${envio.toFixed(2)}`;
+  document.getElementById('totalEl').textContent = `Bs ${total.toFixed(2)}`;
+  document.getElementById('totalsCard').style.display = 'block';
+  document.getElementById('logisticsCard').style.display = 'block';
+  document.getElementById('logisticsEmpty').style.display = 'none';
+  document.getElementById('fsTotalVal').textContent = `Bs ${totalFiscal.toFixed(2)}`;
+  document.getElementById('ctaText').textContent = `Confirmar pedido · Bs ${total.toFixed(2)}`;
+}
+
+function selectDriver(el, initials, tarifa, fiscalKm, name, plate, rating, eta) {
+  document.querySelectorAll('.driver-option').forEach(d => d.classList.remove('selected-driver'));
+  el.classList.add('selected-driver');
+  const tarifaNum = parseFloat(tarifa.replace('Bs ',''));
+  const kmEst = tarifaNum / 2.0;
+  activeDriver = { tarifa: tarifaNum, fiscal: parseFloat((kmEst * fiscalKm * 0.12).toFixed(2)) };
+  renderCart();
+}
+
+function filterMarket(market, btn) {
+  activeMarket = market;
+  document.querySelectorAll('.market-chip').forEach(c => {
+    c.classList.remove('active','abasto','mutualista','pozos');
+  });
+  btn.classList.add('active');
+  if (market !== 'todos') btn.classList.add(market);
+
+  const labels = { todos: 'Canasta familiar — todos los mercados', abasto: 'Mercado Abasto — frutas y verduras', mutualista: 'Mercado Mutualista — carnes y lácteos', pozos: 'Mercado Los Pozos — básicos y tropicales' };
+  document.getElementById('productsTitle').textContent = labels[market];
+  renderGrid();
+}
+
+function filterProducts(val) {
+  searchQuery = val.toLowerCase();
+  renderGrid();
+}
+
+function setView(view, btn) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('buyerView').style.display = view === 'comprador' ? 'contents' : 'none';
+  document.getElementById('vendorView').style.display = view === 'vendedor' ? 'block' : 'none';
+}
+
+function pagarSuscripcion() {
+  if (susciPaid) return;
+  susciPaid = true;
+  const btn = document.getElementById('susBtn');
+  btn.classList.add('paid');
+  btn.innerHTML = '<i class="ti ti-check"></i> Suscripción pagada · junio';
+  document.getElementById('vendorPagado').textContent = 'Bs 900';
+  document.getElementById('vendorEstado').textContent = 'Al día';
+  document.getElementById('vendorEstado').style.color = 'var(--green)';
+  document.getElementById('vendorPedidos').textContent = '48';
+  showToast('<i class="ti ti-check"></i> Suscripción de junio pagada — patente actualizada');
+}
+
+function scrollToCart() {
+  document.getElementById('rightColInner').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+let toastTimer;
+function showToast(html) {
+  let old = document.getElementById('activeToast');
+  if (old) { old.remove(); }
+  const t = document.createElement('div');
+  t.className = 'toast'; t.id = 'activeToast';
+  t.innerHTML = html;
+  document.body.appendChild(t);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.classList.add('hide'); setTimeout(() => t.remove(), 300); }, 2200);
+}
+
+function confirmarPedido() {
+  const items = Object.values(cart);
+  if (!items.length) return;
+  showToast('<i class="ti ti-check"></i> Pedido confirmado — conductor en camino');
+  cart = {};
+  renderCart();
+  renderGrid();
+}
+
+renderGrid();
+renderCart();
+</script>
+</html>

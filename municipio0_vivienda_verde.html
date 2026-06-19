@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>M·0 Vivienda Verde</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --neon: #deff9a;
+  --green: #22c55e;
+  --green-dim: rgba(34,197,94,0.09);
+  --green-dim2: rgba(34,197,94,0.16);
+  --green-border: rgba(34,197,94,0.24);
+  --neon-dim: rgba(222,255,154,0.07);
+  --neon-border: rgba(222,255,154,0.22);
+  --bg: #060d06;
+  --bg-nav: #080f08;
+  --bg-card: #0b130b;
+  --bg-card2: #0e180e;
+  --bg-input: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.07);
+  --border-md: rgba(255,255,255,0.12);
+  --text-1: rgba(255,255,255,0.93);
+  --text-2: rgba(255,255,255,0.50);
+  --text-3: rgba(255,255,255,0.24);
+  --amber: #f59e0b;
+  --teal: #14b8a6;
+  --red: #ef4444;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text-1); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+body { display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+
+/* ── TOPNAV ── */
+.topnav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 11px 28px; background: var(--bg-nav);
+  border-bottom: 0.5px solid var(--border); flex-shrink: 0;
+}
+.nav-left { display: flex; align-items: center; gap: 16px; }
+.nav-logo { font-size: 15px; font-weight: 700; color: var(--neon); letter-spacing: -0.02em; }
+.nav-logo span { color: var(--text-2); font-weight: 400; }
+.nav-badge {
+  font-size: 9px; letter-spacing: 0.07em; text-transform: uppercase;
+  background: var(--green-dim); border: 0.5px solid var(--green-border);
+  color: var(--green); padding: 2px 9px; border-radius: 20px;
+}
+.nav-right { display: flex; align-items: center; gap: 12px; }
+.citizen-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--neon-dim); border: 0.5px solid var(--neon-border);
+  border-radius: 9px; padding: 5px 12px;
+}
+.citizen-avatar {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--green-dim2); border: 1px solid var(--green-border);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--neon);
+}
+.citizen-name { font-size: 11px; color: var(--text-1); }
+.citizen-level { font-size: 10px; color: var(--neon); display: flex; align-items: center; gap: 4px; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+.live-indicator { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--green); }
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: blink 1.5s ease infinite; }
+
+/* ── MAIN ── */
+.main { flex: 1; display: grid; grid-template-columns: 1fr 400px; min-height: 0; overflow: hidden; }
+.left-col { overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+.right-col { border-left: 0.5px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+::-webkit-scrollbar { width: 3px; } ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 2px; }
+
+/* ── HERO BALANCE CARD ── */
+.hero-card {
+  background: var(--bg-card);
+  border: 0.5px solid var(--green-border);
+  border-radius: 16px; padding: 20px 22px;
+  position: relative; overflow: hidden;
+}
+.hero-card::before {
+  content: ''; position: absolute;
+  top: -60px; right: -60px; width: 200px; height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(34,197,94,0.07) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 18px; }
+.hero-title { font-size: 12px; color: var(--text-2); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 6px; }
+.hero-tax-display { display: flex; align-items: baseline; gap: 6px; }
+.hero-tax-num { font-size: 44px; font-weight: 800; color: var(--neon); letter-spacing: -0.04em; line-height: 1; font-variant-numeric: tabular-nums; transition: color 0.6s; }
+.hero-tax-label { font-size: 13px; color: var(--text-2); }
+.hero-tax-saved { font-size: 12px; color: var(--green); margin-top: 4px; display: flex; align-items: center; gap: 5px; }
+
+/* Progress ring */
+.ring-wrap { position: relative; width: 80px; height: 80px; flex-shrink: 0; }
+.ring-wrap svg { transform: rotate(-90deg); }
+.ring-bg { fill: none; stroke: rgba(255,255,255,0.07); stroke-width: 5; }
+.ring-fill { fill: none; stroke: var(--green); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 220; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1), stroke 0.6s; }
+.ring-text { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ring-pct { font-size: 16px; font-weight: 700; color: var(--neon); line-height: 1; font-variant-numeric: tabular-nums; }
+.ring-sub { font-size: 9px; color: var(--text-2); margin-top: 1px; }
+
+/* Reduction bars */
+.reduction-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 16px; }
+.red-scenario { background: var(--bg-card2); border: 0.5px solid var(--border); border-radius: 9px; padding: 10px 10px; }
+.red-scenario.current { border-color: var(--neon-border); background: rgba(222,255,154,0.04); }
+.red-label { font-size: 10px; color: var(--text-2); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.red-bar-track { height: 6px; background: rgba(255,255,255,0.07); border-radius: 3px; overflow: hidden; margin-bottom: 6px; }
+.red-bar-fill { height: 100%; border-radius: 3px; transition: width 1.2s cubic-bezier(.4,0,.2,1); }
+.red-pct { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+/* ── MATERIAL COUNTER CARDS ── */
+.material-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.mat-card {
+  background: var(--bg-card); border: 0.5px solid var(--border);
+  border-radius: 12px; padding: 14px;
+  cursor: pointer; transition: border-color 0.18s, transform 0.15s;
+  position: relative; overflow: hidden;
+}
+.mat-card:hover { border-color: var(--border-md); transform: translateY(-1px); }
+.mat-card.active { border-color: var(--green-border); }
+.mat-icon { font-size: 22px; margin-bottom: 10px; }
+.mat-name { font-size: 11px; color: var(--text-2); margin-bottom: 5px; }
+.mat-kg { font-size: 24px; font-weight: 700; color: var(--text-1); font-variant-numeric: tabular-nums; line-height: 1; }
+.mat-kg span { font-size: 11px; font-weight: 400; color: var(--text-2); }
+.mat-credit { font-size: 11px; color: var(--green); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+.mat-rate { font-size: 10px; color: var(--text-3); margin-top: 3px; }
+.mat-bar { height: 3px; border-radius: 2px; margin-top: 10px; transition: width 0.8s ease; }
+
+/* ── RANKING BARRIO ── */
+.ranking-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+.section-label { font-size: 10px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.barrio-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 0.5px solid var(--border); }
+.barrio-row:last-child { border-bottom: none; }
+.barrio-rank { font-size: 11px; color: var(--text-3); width: 18px; text-align: center; }
+.barrio-medal { font-size: 14px; }
+.barrio-name { flex: 1; font-size: 12px; color: var(--text-1); }
+.barrio-bar-wrap { width: 80px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; }
+.barrio-bar { height: 100%; border-radius: 2px; background: var(--green); transition: width 0.9s ease; }
+.barrio-score { font-size: 11px; color: var(--neon); font-weight: 600; width: 48px; text-align: right; font-variant-numeric: tabular-nums; }
+.my-barrio .barrio-name { color: var(--neon); }
+.my-barrio .barrio-rank { color: var(--neon); font-weight: 700; }
+
+/* ── RIGHT COL: SCANNER + SOLAR ── */
+.right-inner { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Scanner panel */
+.scanner-card { background: var(--bg-card); border: 0.5px solid var(--green-border); border-radius: 14px; overflow: hidden; }
+.scanner-header { background: var(--green-dim); border-bottom: 0.5px solid var(--green-border); padding: 11px 14px; display: flex; align-items: center; justify-content: space-between; }
+.scanner-title { font-size: 12px; font-weight: 500; color: var(--neon); display: flex; align-items: center; gap: 7px; }
+.scanner-title i { font-size: 15px; }
+.scanner-body { padding: 16px; }
+
+/* QR viewfinder */
+.qr-viewfinder {
+  width: 100%; height: 120px; border-radius: 10px;
+  background: #010d01; border: 1.5px dashed rgba(34,197,94,0.3);
+  display: flex; align-items: center; justify-content: center;
+  position: relative; overflow: hidden; margin-bottom: 14px;
+  cursor: pointer; transition: border-color 0.2s;
+}
+.qr-viewfinder:hover { border-color: rgba(34,197,94,0.6); }
+.qr-viewfinder.scanning { border-color: var(--green); }
+.qr-corner { position: absolute; width: 14px; height: 14px; border-color: var(--green); border-style: solid; }
+.qr-corner.tl { top: 8px; left: 8px; border-width: 2px 0 0 2px; }
+.qr-corner.tr { top: 8px; right: 8px; border-width: 2px 2px 0 0; }
+.qr-corner.bl { bottom: 8px; left: 8px; border-width: 0 0 2px 2px; }
+.qr-corner.br { bottom: 8px; right: 8px; border-width: 0 2px 2px 0; }
+@keyframes scan-line { 0%{top:12%} 100%{top:82%} }
+.scan-line {
+  position: absolute; left: 10px; right: 10px; height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--green), transparent);
+  display: none;
+}
+.qr-viewfinder.scanning .scan-line { display: block; animation: scan-line 1.4s ease-in-out infinite alternate; }
+.qr-idle-text { font-size: 12px; color: var(--text-3); text-align: center; }
+.qr-idle-text i { font-size: 28px; display: block; margin-bottom: 6px; color: rgba(34,197,94,0.3); }
+
+/* Sliders */
+.slider-group { display: flex; flex-direction: column; gap: 10px; }
+.slider-item { display: flex; flex-direction: column; gap: 5px; }
+.slider-row { display: flex; align-items: center; justify-content: space-between; }
+.slider-label { font-size: 11px; color: var(--text-2); display: flex; align-items: center; gap: 6px; }
+.slider-val { font-size: 12px; font-weight: 600; color: var(--neon); font-variant-numeric: tabular-nums; min-width: 50px; text-align: right; }
+input[type=range] { width: 100%; accent-color: var(--green); height: 4px; }
+.slider-credit { font-size: 10px; color: var(--green); }
+
+/* Simulate btn */
+.simulate-btn {
+  width: 100%; background: var(--green); color: #060d06;
+  border: none; border-radius: 10px; padding: 11px;
+  font-size: 13px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: opacity 0.15s, transform 0.1s; margin-top: 12px;
+  letter-spacing: -0.01em;
+}
+.simulate-btn:hover { opacity: 0.88; }
+.simulate-btn:active { transform: scale(0.98); }
+
+/* Result flash */
+@keyframes flash-in { from{transform:translateY(6px);opacity:0} to{transform:translateY(0);opacity:1} }
+.result-flash {
+  background: rgba(34,197,94,0.08); border: 0.5px solid var(--green-border);
+  border-radius: 10px; padding: 12px 14px; margin-top: 10px;
+  display: none; animation: flash-in 0.35s ease both;
+}
+.result-flash.show { display: block; }
+.rf-title { font-size: 11px; font-weight: 600; color: var(--neon); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.rf-rows { display: flex; flex-direction: column; gap: 4px; }
+.rf-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-2); }
+.rf-row.total { color: var(--neon); font-weight: 600; font-size: 13px; }
+.rf-divider { height: 0.5px; background: var(--green-border); margin: 5px 0; }
+
+/* Solar panel */
+.solar-card { background: var(--bg-card); border: 0.5px solid var(--border); border-radius: 14px; overflow: hidden; }
+.solar-header { padding: 11px 14px; border-bottom: 0.5px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.solar-title { font-size: 12px; font-weight: 500; color: var(--text-1); display: flex; align-items: center; gap: 7px; }
+.solar-cert { font-size: 9px; background: rgba(222,255,154,0.07); border: 0.5px solid var(--neon-border); color: var(--neon); padding: 2px 7px; border-radius: 4px; letter-spacing: 0.04em; }
+.solar-body { padding: 14px; }
+.solar-kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+.solar-kpi { background: var(--bg-card2); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px; }
+.solar-kpi-label { font-size: 9px; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 5px; }
+.solar-kpi-val { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.solar-kpi-val.neon { color: var(--neon); }
+.solar-kpi-val.green { color: var(--green); }
+.solar-kpi-sub { font-size: 9px; color: var(--text-3); margin-top: 2px; }
+.chart-mini-wrap { height: 80px; position: relative; }
+
+/* Cert badge */
+.cert-badge-wrap { margin-top: 12px; background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(222,255,154,0.05)); border: 0.5px solid var(--green-border); border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+.cert-icon { font-size: 24px; color: var(--neon); flex-shrink: 0; }
+.cert-text { flex: 1; }
+.cert-title { font-size: 12px; font-weight: 500; color: var(--neon); }
+.cert-sub { font-size: 10px; color: var(--text-2); margin-top: 2px; line-height: 1.5; }
+.cert-pct { font-size: 18px; font-weight: 700; color: var(--green); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+/* ── TOAST ── */
+@keyframes toast-in { from{transform:translateX(-50%) translateY(16px);opacity:0} to{transform:translateX(-50%) translateY(0);opacity:1} }
+.toast {
+  position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%);
+  background: #0e1f0e; border: 0.5px solid var(--green-border);
+  border-radius: 10px; padding: 9px 18px;
+  font-size: 12px; color: var(--text-1);
+  display: flex; align-items: center; gap: 9px;
+  z-index: 999; pointer-events: none;
+  animation: toast-in 0.3s ease both;
+  white-space: nowrap; box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+.toast i { color: var(--neon); font-size: 15px; }
+</style>
+
+<!-- TOPNAV -->
+<nav class="topnav">
+  <div class="nav-left">
+    <div class="nav-logo">M<span>·</span>0 <span style="font-size:10px">Vivienda Verde</span></div>
+    <div class="nav-badge">Impuesto cero · impacto ambiental</div>
+  </div>
+  <div class="nav-right">
+    <div class="live-indicator"><div class="live-dot"></div> En vivo</div>
+    <div class="citizen-badge">
+      <div class="citizen-avatar">MG</div>
+      <div>
+        <div class="citizen-name">María Gutiérrez</div>
+        <div class="citizen-level"><i class="ti ti-leaf" style="font-size:11px"></i> Ciudadana Verde Nv.2</div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- LEFT COL -->
+  <div class="left-col">
+
+    <!-- HERO: balance fiscal -->
+    <div class="hero-card">
+      <div class="hero-top">
+        <div>
+          <div class="hero-title">Impuesto inmobiliario 2025</div>
+          <div class="hero-tax-display">
+            <div class="hero-tax-num" id="heroTaxNum">Bs 840</div>
+            <div class="hero-tax-label">/ Bs 1,400 anual</div>
+          </div>
+          <div class="hero-tax-saved" id="heroSaved">
+            <i class="ti ti-trending-down" style="font-size:13px"></i>
+            <span id="heroSavedText">Bs 560 ahorrados por acciones verdes</span>
+          </div>
+        </div>
+        <div class="ring-wrap">
+          <svg viewBox="0 0 80 80" width="80" height="80">
+            <circle class="ring-bg" cx="40" cy="40" r="34"/>
+            <circle class="ring-fill" id="ringFill" cx="40" cy="40" r="34" stroke-dashoffset="73"/>
+          </svg>
+          <div class="ring-text">
+            <div class="ring-pct" id="ringPct">40%</div>
+            <div class="ring-sub">pagado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reduction scenarios -->
+      <div style="font-size:10px;color:var(--text-3);margin-bottom:8px;letter-spacing:0.05em;text-transform:uppercase">Trayectoria de reducción fiscal</div>
+      <div class="reduction-grid">
+        <div class="red-scenario">
+          <div class="red-label">Sin acciones (100%)</div>
+          <div class="red-bar-track"><div class="red-bar-fill" style="width:100%;background:var(--red)"></div></div>
+          <div class="red-pct" style="color:var(--red)">Bs 1,400</div>
+        </div>
+        <div class="red-scenario">
+          <div class="red-label">Con reciclaje (−40%)</div>
+          <div class="red-bar-track"><div class="red-bar-fill" style="width:60%;background:var(--amber)"></div></div>
+          <div class="red-pct" style="color:var(--amber)">Bs 840</div>
+        </div>
+        <div class="red-scenario">
+          <div class="red-label">Reciclaje + solar (−85%)</div>
+          <div class="red-bar-track"><div class="red-bar-fill" style="width:15%;background:var(--green)"></div></div>
+          <div class="red-pct" style="color:var(--green)">Bs 210</div>
+        </div>
+        <div class="red-scenario current">
+          <div class="red-label" style="color:var(--neon)">Vivienda Pro (M·0)</div>
+          <div class="red-bar-track"><div class="red-bar-fill" style="width:3%;background:var(--neon)"></div></div>
+          <div class="red-pct" style="color:var(--neon)">Bs 0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MATERIAL COUNTERS -->
+    <div class="material-row">
+      <div class="mat-card" id="matPlastic">
+        <div class="mat-icon">♻️</div>
+        <div class="mat-name">Plástico PET reciclado</div>
+        <div class="mat-kg" id="kgPlastic">224 <span>kg este año</span></div>
+        <div class="mat-credit" id="creditPlastic"><i class="ti ti-coin" style="font-size:11px"></i> Bs 560.00 en créditos</div>
+        <div class="mat-rate">Bs 2.50 por kg · <span style="color:var(--green)">máxima tasa</span></div>
+        <div class="mat-bar" style="background:var(--green);width:80%"></div>
+      </div>
+      <div class="mat-card" id="matPaper">
+        <div class="mat-icon">📦</div>
+        <div class="mat-name">Papel y cartón reciclado</div>
+        <div class="mat-kg" id="kgPaper">89 <span>kg este año</span></div>
+        <div class="mat-credit" id="creditPaper"><i class="ti ti-coin" style="font-size:11px"></i> Bs 160.20 en créditos</div>
+        <div class="mat-rate">Bs 1.80 por kg</div>
+        <div class="mat-bar" style="background:var(--amber);width:32%"></div>
+      </div>
+      <div class="mat-card" id="matGlass">
+        <div class="mat-icon">🫙</div>
+        <div class="mat-name">Vidrio reciclado</div>
+        <div class="mat-kg" id="kgGlass">41 <span>kg este año</span></div>
+        <div class="mat-credit" id="creditGlass"><i class="ti ti-coin" style="font-size:11px"></i> Bs 49.20 en créditos</div>
+        <div class="mat-rate">Bs 1.20 por kg</div>
+        <div class="mat-bar" style="background:var(--teal);width:15%"></div>
+      </div>
+    </div>
+
+    <!-- BARRIO RANKING -->
+    <div class="ranking-card">
+      <div class="section-label">Ranking de barrios más verdes — Distrito 1</div>
+      <div id="barrioList"></div>
+    </div>
+
+  </div>
+
+  <!-- RIGHT COL -->
+  <div class="right-col">
+    <div class="right-inner">
+
+      <!-- SCANNER PANEL -->
+      <div class="scanner-card">
+        <div class="scanner-header">
+          <div class="scanner-title"><i class="ti ti-qrcode"></i> Simulador de pesaje — camión recolector</div>
+          <div style="font-size:10px;color:var(--green);display:flex;align-items:center;gap:5px"><div class="live-dot"></div> Camión #07 · 1.4 km</div>
+        </div>
+        <div class="scanner-body">
+
+          <!-- QR viewfinder -->
+          <div class="qr-viewfinder" id="qrBox" onclick="startScan()">
+            <div class="qr-corner tl"></div><div class="qr-corner tr"></div>
+            <div class="qr-corner bl"></div><div class="qr-corner br"></div>
+            <div class="scan-line" id="scanLine"></div>
+            <div class="qr-idle-text" id="qrIdleText">
+              <i class="ti ti-qrcode-off"></i>
+              Toca para simular escaneo QR
+            </div>
+          </div>
+
+          <!-- Sliders -->
+          <div class="slider-group">
+            <div class="slider-item">
+              <div class="slider-row">
+                <div class="slider-label">🔴 Plástico PET</div>
+                <div class="slider-val" id="valPlastic">3.0 kg</div>
+              </div>
+              <input type="range" min="0" max="20" step="0.5" value="3" id="slPlastic" oninput="updateSliders()">
+              <div class="slider-credit" id="credPlastic">→ Bs 7.50 de crédito fiscal</div>
+            </div>
+            <div class="slider-item">
+              <div class="slider-row">
+                <div class="slider-label">📦 Papel / Cartón</div>
+                <div class="slider-val" id="valPaper">2.0 kg</div>
+              </div>
+              <input type="range" min="0" max="20" step="0.5" value="2" id="slPaper" oninput="updateSliders()">
+              <div class="slider-credit" id="credPaper">→ Bs 3.60 de crédito fiscal</div>
+            </div>
+            <div class="slider-item">
+              <div class="slider-row">
+                <div class="slider-label">🫙 Vidrio</div>
+                <div class="slider-val" id="valGlass">1.0 kg</div>
+              </div>
+              <input type="range" min="0" max="20" step="0.5" value="1" id="slGlass" oninput="updateSliders()">
+              <div class="slider-credit" id="credGlass">→ Bs 1.20 de crédito fiscal</div>
+            </div>
+          </div>
+
+          <button class="simulate-btn" id="simBtn" onclick="simulatePesaje()">
+            <i class="ti ti-scale"></i> Simular pesaje y registrar crédito
+          </button>
+
+          <!-- Result -->
+          <div class="result-flash" id="resultFlash">
+            <div class="rf-title"><i class="ti ti-check" style="font-size:14px"></i> Registro confirmado en cadena municipal</div>
+            <div class="rf-rows">
+              <div class="rf-row"><span>Plástico PET</span><span id="rfPlastic">3.0 kg · Bs 7.50</span></div>
+              <div class="rf-row"><span>Papel / Cartón</span><span id="rfPaper">2.0 kg · Bs 3.60</span></div>
+              <div class="rf-row"><span>Vidrio</span><span id="rfGlass">1.0 kg · Bs 1.20</span></div>
+              <div class="rf-divider"></div>
+              <div class="rf-row total"><span>Crédito fiscal generado</span><span id="rfTotal">Bs 12.30</span></div>
+              <div class="rf-row" style="margin-top:4px"><span style="color:var(--text-3)">Impuesto inmobiliario restante</span><span id="rfRemaining" style="color:var(--neon)">Bs 840</span></div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- SOLAR PANEL -->
+      <div class="solar-card">
+        <div class="solar-header">
+          <div class="solar-title"><i class="ti ti-solar-panel" style="font-size:15px;color:var(--amber)"></i> Panel solar — conexión ENDE</div>
+          <div class="solar-cert">LEED PENDIENTE</div>
+        </div>
+        <div class="solar-body">
+          <div class="solar-kpi-row">
+            <div class="solar-kpi">
+              <div class="solar-kpi-label">Generado hoy</div>
+              <div class="solar-kpi-val neon" id="solarHoy">8.4 kWh</div>
+              <div class="solar-kpi-sub">↑ vs prom. 7.2 kWh</div>
+            </div>
+            <div class="solar-kpi">
+              <div class="solar-kpi-label">Inyectado red</div>
+              <div class="solar-kpi-val green" id="solarRed">3.1 kWh</div>
+              <div class="solar-kpi-sub">crédito Bs 0.50/kWh</div>
+            </div>
+            <div class="solar-kpi">
+              <div class="solar-kpi-label">Crédito solar</div>
+              <div class="solar-kpi-val" style="color:var(--amber)" id="solarCredito">Bs 1.55</div>
+              <div class="solar-kpi-sub">acumulado hoy</div>
+            </div>
+          </div>
+          <div class="chart-mini-wrap">
+            <canvas id="solarChart"></canvas>
+          </div>
+          <div class="cert-badge-wrap">
+            <div class="cert-icon"><i class="ti ti-certificate"></i></div>
+            <div class="cert-text">
+              <div class="cert-title">Certificación Vivienda Verde</div>
+              <div class="cert-sub">Logra 100% renovables → Tasa impositiva permanente 0. Integrado con Ley 1333 y Emacruz.</div>
+            </div>
+            <div class="cert-pct" id="certPct">60%</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ── STATE ── */
+const RATES = { plastic: 2.50, paper: 1.80, glass: 1.20 };
+let taxBase = 1400;
+let taxCredits = { plastic: 560, paper: 160.2, glass: 49.2, solar: 44.8 };
+let kgTotals = { plastic: 224, paper: 89, glass: 41 };
+let certPct = 60;
+
+function totalCredits() {
+  return Object.values(taxCredits).reduce((a,b) => a+b, 0);
+}
+function taxDue() {
+  return Math.max(0, taxBase - totalCredits());
+}
+function paidPct() {
+  return Math.min(100, (totalCredits() / taxBase) * 100);
+}
+
+/* ── HERO UPDATE (animated) ── */
+function animateNumber(el, from, to, duration, prefix, suffix) {
+  const start = performance.now();
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const ease = 1 - Math.pow(1 - t, 3);
+    const val = from + (to - from) * ease;
+    el.textContent = prefix + val.toFixed(0) + suffix;
+    if (t < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+function updateHero(animate = false) {
+  const due = taxDue();
+  const saved = totalCredits();
+  const pct = paidPct();
+  const ringEl = document.getElementById('ringFill');
+  const circumference = 2 * Math.PI * 34;
+  const offset = circumference * (1 - pct / 100);
+
+  if (animate) {
+    const heroEl = document.getElementById('heroTaxNum');
+    const prevVal = parseFloat(heroEl.textContent.replace('Bs ', '')) || due + 50;
+    animateNumber(heroEl, prevVal, due, 1000, 'Bs ', '');
+  } else {
+    document.getElementById('heroTaxNum').textContent = 'Bs ' + due.toFixed(0);
+  }
+
+  ringEl.style.strokeDashoffset = offset;
+  ringEl.style.stroke = pct >= 90 ? 'var(--neon)' : pct >= 60 ? 'var(--green)' : '#f59e0b';
+  document.getElementById('ringPct').textContent = pct.toFixed(0) + '%';
+  document.getElementById('heroSavedText').textContent = `Bs ${saved.toFixed(0)} ahorrados por acciones verdes`;
+  document.getElementById('heroTaxNum').style.color = due <= 0 ? 'var(--green)' : pct >= 85 ? 'var(--neon)' : 'var(--neon)';
+}
+
+/* ── MATERIAL CARDS UPDATE ── */
+function updateMaterials() {
+  document.getElementById('kgPlastic').innerHTML = `${kgTotals.plastic} <span>kg este año</span>`;
+  document.getElementById('kgPaper').innerHTML = `${kgTotals.paper} <span>kg este año</span>`;
+  document.getElementById('kgGlass').innerHTML = `${kgTotals.glass} <span>kg este año</span>`;
+  document.getElementById('creditPlastic').innerHTML = `<i class="ti ti-coin" style="font-size:11px"></i> Bs ${taxCredits.plastic.toFixed(2)} en créditos`;
+  document.getElementById('creditPaper').innerHTML = `<i class="ti ti-coin" style="font-size:11px"></i> Bs ${taxCredits.paper.toFixed(2)} en créditos`;
+  document.getElementById('creditGlass').innerHTML = `<i class="ti ti-coin" style="font-size:11px"></i> Bs ${taxCredits.glass.toFixed(2)} en créditos`;
+}
+
+/* ── SLIDERS ── */
+function updateSliders() {
+  const p = parseFloat(document.getElementById('slPlastic').value);
+  const pa = parseFloat(document.getElementById('slPaper').value);
+  const g = parseFloat(document.getElementById('slGlass').value);
+  document.getElementById('valPlastic').textContent = p.toFixed(1) + ' kg';
+  document.getElementById('valPaper').textContent = pa.toFixed(1) + ' kg';
+  document.getElementById('valGlass').textContent = g.toFixed(1) + ' kg';
+  document.getElementById('credPlastic').textContent = `→ Bs ${(p * RATES.plastic).toFixed(2)} de crédito fiscal`;
+  document.getElementById('credPaper').textContent = `→ Bs ${(pa * RATES.paper).toFixed(2)} de crédito fiscal`;
+  document.getElementById('credGlass').textContent = `→ Bs ${(g * RATES.glass).toFixed(2)} de crédito fiscal`;
+}
+
+/* ── QR SCAN ANIMATION ── */
+function startScan() {
+  const box = document.getElementById('qrBox');
+  if (box.classList.contains('scanning')) return;
+  box.classList.add('scanning');
+  document.getElementById('qrIdleText').innerHTML = '<i class="ti ti-loader" style="font-size:20px;animation:spin 1s linear infinite;display:block;margin-bottom:4px;color:var(--green)"></i><span style="color:rgba(34,197,94,0.7)">Leyendo código RFID...</span>';
+  setTimeout(() => {
+    box.classList.remove('scanning');
+    document.getElementById('qrIdleText').innerHTML = '<i class="ti ti-check" style="font-size:22px;display:block;margin-bottom:4px;color:var(--green)"></i><span style="color:var(--green)">CI vinculada · María G. · Vivienda 4B</span>';
+  }, 2200);
+}
+
+/* ── SIMULATE PESAJE ── */
+let simulating = false;
+function simulatePesaje() {
+  if (simulating) return;
+  simulating = true;
+  const btn = document.getElementById('simBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-loader-2" style="animation:spin 0.8s linear infinite"></i> Registrando en blockchain municipal...';
+
+  const p = parseFloat(document.getElementById('slPlastic').value);
+  const pa = parseFloat(document.getElementById('slPaper').value);
+  const g = parseFloat(document.getElementById('slGlass').value);
+  const cpCredit = p * RATES.plastic;
+  const paCredit = pa * RATES.paper;
+  const gCredit = g * RATES.glass;
+  const total = cpCredit + paCredit + gCredit;
+
+  setTimeout(() => {
+    taxCredits.plastic += cpCredit;
+    taxCredits.paper += paCredit;
+    taxCredits.glass += gCredit;
+    kgTotals.plastic += p;
+    kgTotals.paper += pa;
+    kgTotals.glass += g;
+    certPct = Math.min(95, certPct + total * 0.08);
+    document.getElementById('certPct').textContent = certPct.toFixed(0) + '%';
+
+    updateHero(true);
+    updateMaterials();
+    updateRanking(total);
+
+    document.getElementById('rfPlastic').textContent = `${p.toFixed(1)} kg · Bs ${cpCredit.toFixed(2)}`;
+    document.getElementById('rfPaper').textContent = `${pa.toFixed(1)} kg · Bs ${paCredit.toFixed(2)}`;
+    document.getElementById('rfGlass').textContent = `${g.toFixed(1)} kg · Bs ${gCredit.toFixed(2)}`;
+    document.getElementById('rfTotal').textContent = `Bs ${total.toFixed(2)}`;
+    document.getElementById('rfRemaining').textContent = `Bs ${taxDue().toFixed(0)}`;
+    document.getElementById('resultFlash').classList.add('show');
+
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-scale"></i> Simular pesaje y registrar crédito';
+    simulating = false;
+
+    showToast(`<i class="ti ti-check"></i> +Bs ${total.toFixed(2)} de crédito fiscal acreditado a tu vivienda`);
+  }, 1800);
+}
+
+/* ── BARRIO RANKING ── */
+const BARRIOS = [
+  { name: 'Equipetrol Norte', score: 9840, pct: 100 },
+  { name: 'Sirari', score: 8720, pct: 89 },
+  { name: 'Las Palmas', score: 7310, pct: 74 },
+  { name: 'Mi Barrio (Urb. 8 Calles)', score: 5980, pct: 61, mine: true },
+  { name: 'Radial 27', score: 4420, pct: 45 },
+];
+
+function updateRanking(bonus) {
+  const myIdx = 3;
+  BARRIOS[myIdx].score += Math.round(bonus * 8);
+  BARRIOS[myIdx].pct = Math.min(100, BARRIOS[myIdx].pct + bonus * 0.4);
+  BARRIOS.sort((a, b) => b.score - a.score);
+  renderRanking();
+}
+
+function renderRanking() {
+  const medals = ['🥇', '🥈', '🥉'];
+  document.getElementById('barrioList').innerHTML = BARRIOS.map((b, i) => `
+    <div class="barrio-row${b.mine ? ' my-barrio' : ''}">
+      <div class="barrio-rank">${medals[i] || (i+1)}</div>
+      <div class="barrio-name">${b.name}${b.mine ? ' <span style="font-size:9px;color:var(--green)">(tú)</span>' : ''}</div>
+      <div class="barrio-bar-wrap"><div class="barrio-bar" style="width:${b.pct.toFixed(0)}%"></div></div>
+      <div class="barrio-score">${b.score.toLocaleString()} pts</div>
+    </div>`).join('');
+}
+
+/* ── SOLAR CHART ── */
+const solarHours = ['6am','7','8','9','10','11','12pm','1','2','3','4','5pm'];
+const solarData = [0.1, 0.4, 1.2, 2.8, 4.1, 5.3, 5.8, 5.4, 4.2, 2.9, 1.6, 0.5];
+const ctx = document.getElementById('solarChart').getContext('2d');
+const solarChart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: solarHours,
+    datasets: [{
+      data: solarData,
+      backgroundColor: solarData.map((v, i) => i <= 6 ? 'rgba(222,255,154,0.5)' : 'rgba(34,197,94,0.3)'),
+      borderRadius: 3,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    animation: { duration: 800 },
+    plugins: { legend: { display: false }, tooltip: {
+      backgroundColor: '#0b130b', borderColor: 'rgba(34,197,94,0.3)', borderWidth: 0.5,
+      titleColor: 'rgba(255,255,255,0.5)', bodyColor: 'var(--neon)',
+      callbacks: { label: c => `${c.parsed.y} kWh` }
+    }},
+    scales: {
+      x: { grid: { display: false }, ticks: { color: 'rgba(255,255,255,0.25)', font: { size: 9 } }, border: { display: false } },
+      y: { display: false }
+    }
+  }
+});
+
+/* Live solar tick */
+setInterval(() => {
+  const base = parseFloat(document.getElementById('solarHoy').textContent);
+  const delta = (Math.random() * 0.06 - 0.01);
+  const newVal = Math.max(0, base + delta);
+  document.getElementById('solarHoy').textContent = newVal.toFixed(1) + ' kWh';
+  const inyect = parseFloat(document.getElementById('solarRed').textContent) + (Math.random() * 0.02);
+  document.getElementById('solarRed').textContent = inyect.toFixed(1) + ' kWh';
+  const credito = inyect * 0.5;
+  document.getElementById('solarCredito').textContent = 'Bs ' + credito.toFixed(2);
+  taxCredits.solar = credito * 29;
+  updateHero(false);
+}, 4000);
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(html) {
+  const old = document.getElementById('activeToast');
+  if (old) old.remove();
+  const t = document.createElement('div');
+  t.className = 'toast'; t.id = 'activeToast';
+  t.innerHTML = html;
+  document.body.appendChild(t);
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity 0.3s'; setTimeout(() => t.remove(), 300); }, 2800);
+}
+
+/* ── SPINNER KEYFRAME (injected) ── */
+const style = document.createElement('style');
+style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+document.head.appendChild(style);
+
+/* ── INIT ── */
+updateHero();
+updateMaterials();
+updateSliders();
+renderRanking();
+</script>
+</html>

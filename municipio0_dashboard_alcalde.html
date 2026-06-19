@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Municipio 0 — Dashboard del Alcalde</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --lime: #C8F56A;
+    --lime-dim: rgba(200,245,106,0.08);
+    --lime-border: rgba(200,245,106,0.2);
+    --lime-text: #a8d44e;
+    --bg: #090e09;
+    --bg-card: #0e160e;
+    --bg-card2: #111c11;
+    --border: rgba(255,255,255,0.07);
+    --text-1: rgba(255,255,255,0.92);
+    --text-2: rgba(255,255,255,0.48);
+    --text-3: rgba(255,255,255,0.24);
+    --green: #5DCAA5;
+    --teal: #1D9E75;
+    --red: #E24B4A;
+    --amber: #EF9F27;
+  }
+
+  html, body { height: 100%; }
+
+  body {
+    background: var(--bg);
+    color: var(--text-1);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ── TOP NAV ── */
+  .topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    border-bottom: 0.5px solid var(--border);
+    flex-shrink: 0;
+  }
+  .nav-brand {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-logo {
+    font-size: 16px; font-weight: 700; color: var(--lime);
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--text-2); font-weight: 400; }
+  .nav-badge {
+    font-size: 9px;
+    background: var(--lime-dim);
+    border: 0.5px solid var(--lime-border);
+    color: var(--lime-text);
+    padding: 2px 8px;
+    border-radius: 20px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-time { font-size: 12px; color: var(--text-2); font-variant-numeric: tabular-nums; }
+  .live-dot {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 11px; color: var(--green);
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .live-dot-circle {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    animation: blink 1.4s ease-in-out infinite;
+  }
+  .nav-user {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--lime-dim);
+    border: 0.5px solid var(--lime-border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--lime); font-weight: 600;
+  }
+
+  /* ── MAIN ── */
+  .main { flex: 1; padding: 20px 28px 28px; display: flex; flex-direction: column; gap: 16px; overflow: auto; }
+
+  /* KPI row */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+  .kpi-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card.accent {
+    border-color: var(--lime-border);
+    background: rgba(200,245,106,0.04);
+  }
+  .kpi-label { font-size: 10px; color: var(--text-2); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+  .kpi-value { font-size: 26px; font-weight: 700; color: var(--text-1); letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .kpi-value.lime { color: var(--lime); }
+  .kpi-sub { font-size: 10px; color: var(--text-2); margin-top: 4px; display: flex; align-items: center; gap: 4px; }
+  .kpi-sub .up { color: var(--green); }
+  .kpi-sub .dn { color: var(--red); }
+  .kpi-icon {
+    position: absolute; right: 14px; top: 14px;
+    font-size: 20px; color: var(--text-3);
+  }
+
+  /* Content row */
+  .content-row { display: grid; grid-template-columns: 1fr 340px; gap: 14px; flex: 1; min-height: 0; }
+
+  /* Chart card */
+  .chart-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex; flex-direction: column;
+  }
+  .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .card-title { font-size: 13px; font-weight: 500; color: var(--text-1); }
+  .card-sub { font-size: 11px; color: var(--text-2); }
+  .chart-wrap { flex: 1; min-height: 0; position: relative; }
+
+  /* Right column */
+  .right-col { display: flex; flex-direction: column; gap: 14px; }
+
+  /* Feed card */
+  .feed-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    flex: 1;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .feed-list { flex: 1; overflow: hidden; }
+  .feed-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 7px 0;
+    border-bottom: 0.5px solid var(--border);
+    animation: feed-slide 0.4s ease both;
+  }
+  @keyframes feed-slide { from{transform:translateY(-6px);opacity:0} to{transform:translateY(0);opacity:1} }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green); flex-shrink: 0;
+    animation: blink 1.6s ease-in-out infinite;
+  }
+  .feed-dot.new { background: var(--lime); }
+  .feed-zone { font-size: 11px; color: var(--text-1); flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .feed-amount { font-size: 11px; color: var(--lime); font-weight: 500; font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  .feed-time { font-size: 10px; color: var(--text-3); flex-shrink: 0; width: 28px; text-align: right; }
+
+  /* District table */
+  .district-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .dist-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 6px 0;
+    border-bottom: 0.5px solid var(--border);
+  }
+  .dist-row:last-child { border-bottom: none; }
+  .dist-rank { font-size: 11px; color: var(--text-3); width: 16px; text-align: center; }
+  .dist-name { font-size: 12px; color: var(--text-1); flex: 1; }
+  .dist-bar-wrap { width: 70px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; }
+  .dist-bar { height: 100%; background: var(--lime); border-radius: 2px; transition: width 0.8s ease; }
+  .dist-amt { font-size: 11px; color: var(--text-2); font-variant-numeric: tabular-nums; width: 56px; text-align: right; }
+
+  /* Morosidad gauge */
+  .gauge-card {
+    background: var(--bg-card);
+    border: 0.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .gauge-row { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+  .gauge-track {
+    flex: 1; height: 6px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .gauge-fill {
+    height: 100%; border-radius: 3px;
+    transition: width 1.2s ease;
+  }
+  .gauge-fill.red { background: var(--red); }
+  .gauge-fill.lime { background: var(--lime); }
+  .gauge-pct { font-size: 12px; font-weight: 600; font-variant-numeric: tabular-nums; width: 36px; text-align: right; }
+  .gauge-pct.red { color: var(--red); }
+  .gauge-pct.lime { color: var(--lime); }
+</style>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="nav-brand">
+    <div class="nav-logo">Municipio <span>"</span>0<span>"</span> Impuestos</div>
+    <div class="nav-badge">Dashboard del Alcalde</div>
+  </div>
+  <div class="nav-right">
+    <div class="live-dot"><div class="live-dot-circle"></div> En vivo</div>
+    <div class="nav-time" id="clockDisplay">09:41:00</div>
+    <div class="nav-user" title="Alcalde Municipal">AL</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main class="main">
+
+  <!-- KPI Row -->
+  <div class="kpi-grid">
+    <div class="kpi-card accent">
+      <div class="kpi-label">Recaudado hoy</div>
+      <div class="kpi-value lime" id="kpiHoy">Bs 0</div>
+      <div class="kpi-sub"><span class="up"><i class="ti ti-trending-up" style="font-size:11px"></i> +12.4%</span> vs ayer</div>
+      <i class="ti ti-coin kpi-icon"></i>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Viajes activos ahora</div>
+      <div class="kpi-value" id="kpiViajes">0</div>
+      <div class="kpi-sub" id="kpiViajesSub">cargando...</div>
+      <i class="ti ti-car kpi-icon"></i>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Conductores al día</div>
+      <div class="kpi-value" id="kpiConductores">0</div>
+      <div class="kpi-sub"><span class="up">↑ 34 pts</span> hoy</div>
+      <i class="ti ti-users kpi-icon"></i>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Morosidad tributaria</div>
+      <div class="kpi-value" id="kpiMorosidad" style="color:var(--amber)">60%</div>
+      <div class="kpi-sub"><span class="up">↓ 2.1% esta semana</span></div>
+      <i class="ti ti-chart-arrows-vertical kpi-icon"></i>
+    </div>
+  </div>
+
+  <!-- Content row -->
+  <div class="content-row">
+
+    <!-- Chart card -->
+    <div class="chart-card">
+      <div class="card-header">
+        <div>
+          <div class="card-title">Recaudación en tiempo real — últimos 20 minutos</div>
+          <div class="card-sub" id="chartSubtitle">Micro-pagos fiscales por viaje completado · Bs/min</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <div style="font-size:10px;color:var(--text-2);display:flex;align-items:center;gap:5px">
+            <span style="width:10px;height:2px;background:var(--lime);display:inline-block;border-radius:1px"></span>Transporte
+          </div>
+          <div style="font-size:10px;color:var(--text-2);display:flex;align-items:center;gap:5px">
+            <span style="width:10px;height:2px;background:var(--teal);display:inline-block;border-radius:1px"></span>Comercio
+          </div>
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="realtimeChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Right column -->
+    <div class="right-col">
+
+      <!-- Live feed -->
+      <div class="feed-card">
+        <div class="card-header" style="margin-bottom:6px">
+          <div class="card-title">Micro-pagos recientes</div>
+          <div class="live-dot" style="font-size:10px"><div class="live-dot-circle"></div> activo</div>
+        </div>
+        <div class="feed-list" id="feedList"></div>
+      </div>
+
+      <!-- Districts -->
+      <div class="district-card">
+        <div class="card-header" style="margin-bottom:8px">
+          <div class="card-title">Distritos — recaudación hoy</div>
+        </div>
+        <div id="districtList"></div>
+      </div>
+
+      <!-- Morosidad gauge -->
+      <div class="gauge-card">
+        <div class="card-header" style="margin-bottom:4px">
+          <div class="card-title">Progreso: Municipio 0</div>
+          <div class="card-sub" id="gaugeSub">Meta: 0% morosidad</div>
+        </div>
+        <div class="gauge-row">
+          <span style="font-size:10px;color:var(--text-2);width:52px">Morosidad</span>
+          <div class="gauge-track"><div class="gauge-fill red" id="gaugeRed" style="width:60%"></div></div>
+          <span class="gauge-pct red" id="gaugePctRed">60%</span>
+        </div>
+        <div class="gauge-row">
+          <span style="font-size:10px;color:var(--text-2);width:52px">Al día</span>
+          <div class="gauge-track"><div class="gauge-fill lime" id="gaugeLime" style="width:40%"></div></div>
+          <span class="gauge-pct lime" id="gaugePctLime">40%</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<script>
+/* ── STATE ── */
+let totalHoy = 2847.30;
+let totalViajes = 148;
+let conductoresAlDia = 312;
+let morosidad = 60.0;
+let minutesPassed = 0;
+
+const ZONES = [
+  'Plan Tres Mil', 'Equipetrol', 'Norte', 'UV District', 'Palermo',
+  'Casco Viejo', 'Radial 27', 'Cotoca', 'La Guardia', 'Warnes',
+  'Av. Roca', 'Hamacas', 'Los Lotes', 'Sirpita', 'Montero km8'
+];
+
+const DISTRICTS = [
+  { name: 'Distrito 1 — Centro', base: 680 },
+  { name: 'Distrito 2 — Norte', base: 520 },
+  { name: 'Distrito 3 — Sur', base: 430 },
+  { name: 'Distrito 4 — Este', base: 310 },
+  { name: 'Distrito 5 — Satélite', base: 190 },
+];
+
+/* ── CLOCK ── */
+function updateClock() {
+  const now = new Date();
+  const h = String(now.getHours()).padStart(2,'0');
+  const m = String(now.getMinutes()).padStart(2,'0');
+  const s = String(now.getSeconds()).padStart(2,'0');
+  document.getElementById('clockDisplay').textContent = `${h}:${m}:${s}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+/* ── CHART ── */
+const chartLabels = [];
+const chartDataT = [];
+const chartDataC = [];
+for (let i = 19; i >= 0; i--) {
+  chartLabels.push(`-${i}m`);
+  chartDataT.push(+(Math.random()*35+18).toFixed(2));
+  chartDataC.push(+(Math.random()*15+6).toFixed(2));
+}
+
+const ctx = document.getElementById('realtimeChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'line',
+  data: {
+    labels: chartLabels,
+    datasets: [
+      {
+        label: 'Transporte',
+        data: chartDataT,
+        borderColor: '#C8F56A',
+        borderWidth: 2,
+        pointRadius: 2,
+        pointBackgroundColor: '#C8F56A',
+        tension: 0.45,
+        fill: true,
+        backgroundColor: (ctx) => {
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 200);
+          g.addColorStop(0, 'rgba(200,245,106,0.18)');
+          g.addColorStop(1, 'rgba(200,245,106,0)');
+          return g;
+        }
+      },
+      {
+        label: 'Comercio',
+        data: chartDataC,
+        borderColor: '#1D9E75',
+        borderWidth: 1.5,
+        pointRadius: 0,
+        tension: 0.45,
+        fill: false,
+        borderDash: [4,3],
+      }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    animation: { duration: 400 },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        backgroundColor: '#0e160e',
+        borderColor: 'rgba(255,255,255,0.1)',
+        borderWidth: 0.5,
+        titleColor: 'rgba(255,255,255,0.9)',
+        bodyColor: 'rgba(255,255,255,0.55)',
+        padding: 10,
+        callbacks: {
+          label: ctx => `Bs ${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      x: {
+        grid: { color: 'rgba(255,255,255,0.05)', lineWidth: 0.5 },
+        ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 10 }, maxRotation: 0 },
+        border: { display: false }
+      },
+      y: {
+        grid: { color: 'rgba(255,255,255,0.05)', lineWidth: 0.5 },
+        ticks: {
+          color: 'rgba(255,255,255,0.3)',
+          font: { size: 10 },
+          callback: v => `Bs ${v}`
+        },
+        border: { display: false }
+      }
+    }
+  }
+});
+
+/* ── FEED ── */
+const feedEl = document.getElementById('feedList');
+let feedItems = [];
+
+function addFeedItem(zone, amount, isNew) {
+  const item = { zone, amount, sec: 0, isNew };
+  feedItems.unshift(item);
+  if (feedItems.length > 8) feedItems = feedItems.slice(0, 8);
+  renderFeed();
+}
+
+function renderFeed() {
+  feedEl.innerHTML = feedItems.map((it, i) => `
+    <div class="feed-item">
+      <div class="feed-dot${it.isNew && i===0 ? ' new' : ''}"></div>
+      <div class="feed-zone">${it.zone}</div>
+      <div class="feed-amount">+Bs ${it.amount.toFixed(2)}</div>
+      <div class="feed-time">${it.sec < 60 ? it.sec+'s' : Math.floor(it.sec/60)+'m'}</div>
+    </div>`).join('');
+}
+
+/* ── DISTRICTS ── */
+let districtAmounts = DISTRICTS.map(d => d.base + Math.random() * 40);
+
+function renderDistricts() {
+  const max = Math.max(...districtAmounts);
+  document.getElementById('districtList').innerHTML = DISTRICTS.map((d, i) => {
+    const pct = Math.round((districtAmounts[i]/max)*100);
+    return `<div class="dist-row">
+      <div class="dist-rank">${i+1}</div>
+      <div class="dist-name">${d.name}</div>
+      <div class="dist-bar-wrap"><div class="dist-bar" style="width:${pct}%"></div></div>
+      <div class="dist-amt">Bs ${districtAmounts[i].toFixed(0)}</div>
+    </div>`;
+  }).join('');
+}
+
+/* ── KPI UPDATE ── */
+function updateKPIs() {
+  document.getElementById('kpiHoy').textContent = 'Bs ' + totalHoy.toLocaleString('es-BO', {minimumFractionDigits:2, maximumFractionDigits:2});
+  document.getElementById('kpiViajes').textContent = totalViajes;
+  document.getElementById('kpiViajesSub').innerHTML = `<span class="up">↑ ${Math.floor(Math.random()*3+2)} en los últimos 5m</span>`;
+  document.getElementById('kpiConductores').textContent = conductoresAlDia;
+  document.getElementById('kpiMorosidad').textContent = morosidad.toFixed(1) + '%';
+  document.getElementById('gaugePctRed').textContent = morosidad.toFixed(1) + '%';
+  document.getElementById('gaugePctLime').textContent = (100 - morosidad).toFixed(1) + '%';
+  document.getElementById('gaugeRed').style.width = morosidad + '%';
+  document.getElementById('gaugeLime').style.width = (100 - morosidad) + '%';
+  document.getElementById('gaugeSub').textContent = `${(100-morosidad).toFixed(1)}% de conductores libres de deuda`;
+}
+
+/* ── TICK EVERY SECOND ── */
+let secondCounter = 0;
+setInterval(() => {
+  secondCounter++;
+  feedItems.forEach(it => it.sec++);
+
+  if (secondCounter % 3 === 0) {
+    const zone = ZONES[Math.floor(Math.random() * ZONES.length)];
+    const dist = parseFloat((Math.random() * 8 + 1.5).toFixed(2));
+    const amt = parseFloat((dist * 0.012).toFixed(2));
+    addFeedItem(zone, amt, true);
+    totalHoy = parseFloat((totalHoy + amt).toFixed(2));
+    totalViajes++;
+    conductoresAlDia += Math.random() < 0.08 ? 1 : 0;
+    if (morosidad > 12 && Math.random() < 0.06) {
+      morosidad = parseFloat((morosidad - 0.05).toFixed(2));
+    }
+    const idx = Math.floor(Math.random() * DISTRICTS.length);
+    districtAmounts[idx] = parseFloat((districtAmounts[idx] + amt).toFixed(2));
+    updateKPIs();
+    renderDistricts();
+  }
+
+  if (secondCounter % 2 === 0) {
+    feedItems.forEach(it => { it.isNew = false; });
+    renderFeed();
+  }
+}, 1000);
+
+/* ── CHART TICK every 60s (simulate) — also every 8s for demo ── */
+setInterval(() => {
+  minutesPassed++;
+  chartLabels.shift();
+  chartLabels.push('ahora');
+  chartDataT.shift();
+  chartDataT.push(+(Math.random()*38+15).toFixed(2));
+  chartDataC.shift();
+  chartDataC.push(+(Math.random()*14+5).toFixed(2));
+  chart.update('active');
+  document.getElementById('chartSubtitle').textContent =
+    `Micro-pagos fiscales por viaje completado · Bs/min · actualizado hace ${secondCounter % 8}s`;
+}, 8000);
+
+/* ── INIT ── */
+addFeedItem('Equipetrol Norte', 0.18, false);
+addFeedItem('Plan Tres Mil', 0.12, false);
+addFeedItem('Casco Viejo', 0.22, false);
+addFeedItem('Av. Roca y Coronado', 0.09, false);
+addFeedItem('Norte — Warnes km4', 0.31, false);
+addFeedItem('UV District', 0.14, false);
+updateKPIs();
+renderDistricts();
+</script>
+</html>
