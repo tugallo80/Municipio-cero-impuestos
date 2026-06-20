@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Municipio "0" Impuestos</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{navy:'#020617',lime:'#deff9a',blue:'#3b82f6'},fontFamily:{grotesk:['Space Grotesk','sans-serif'],inter:['Inter','sans-serif']}}}}
+</script>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{background:#020617;font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+h1,h2,h3,.num{font-family:'Space Grotesk',sans-serif}
+.glass{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,0.08)}
+.hero-card{background:linear-gradient(135deg,rgba(222,255,154,0.08),rgba(59,130,246,0.06));backdrop-filter:blur(12px);border:1px solid rgba(222,255,154,0.15);box-shadow:0 0 60px rgba(222,255,154,0.08),0 20px 60px rgba(0,0,0,0.5)}
+.progress-bar{background:linear-gradient(90deg,#3b82f6,#deff9a);border-radius:999px}
+.nav-blur{background:rgba(2,6,23,0.9);backdrop-filter:blur(20px);border-top:1px solid rgba(255,255,255,0.06)}
+.topbar-blur{background:rgba(2,6,23,0.9);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.05)}
+.pulse-dot{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.feed-item{animation:slideIn 0.4s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mod{transition:all 0.2s ease}
+.mod:active{transform:scale(0.96)}
+::-webkit-scrollbar{display:none}
+.wrap{max-width:480px;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="wrap" style="min-height:100vh">
+
+<div class="topbar-blur" style="position:sticky;top:0;z-index:50;padding:14px 20px;display:flex;align-items:center;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:8px">
+    <div style="width:28px;height:28px;background:linear-gradient(135deg,#deff9a,#a8e063);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:13px;font-weight:700;color:#020617">0</div>
+    <span style="font-family:'Space Grotesk';font-size:13px;font-weight:600;color:#deff9a">MUNICIPIO <span style="color:rgba(255,255,255,0.4)">"0"</span></span>
+  </div>
+  <div style="background:rgba(222,255,154,0.08);border:1px solid rgba(222,255,154,0.15);border-radius:20px;padding:5px 12px;display:flex;align-items:center;gap:7px">
+    <div style="width:22px;height:22px;border-radius:50%;background:#deff9a;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#020617;font-family:'Space Grotesk'">RC</div>
+    <span style="font-size:12px;color:rgba(255,255,255,0.5)">Renzo C.</span>
+  </div>
+</div>
+
+<div style="padding:0 0 90px">
+
+  <div style="padding:20px 20px 4px">
+    <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-bottom:4px">Santa Cruz · Zona Norte</p>
+    <h1 style="font-size:24px;font-weight:700;color:#fff;line-height:1.2">Hola, Renzo 👋</h1>
+    <p style="font-size:14px;color:rgba(255,255,255,0.35);margin-top:4px">Tu ciudad trabaja para vos hoy.</p>
+  </div>
+
+  <!-- HERO CARD -->
+  <div class="hero-card" style="margin:16px 20px;border-radius:28px;padding:20px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
+      <div>
+        <p style="font-size:11px;font-weight:500;color:rgba(222,255,154,0.6);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:8px">Crédito Fiscal Acumulado</p>
+        <div style="font-family:'Space Grotesk';font-size:42px;font-weight:700;color:#deff9a;line-height:1">Bs 342</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.3);margin-top:4px">de Bs 450 deuda anual</p>
+      </div>
+      <svg width="72" height="72" viewBox="0 0 72 72">
+        <circle cx="36" cy="36" r="30" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="5"/>
+        <circle cx="36" cy="36" r="30" fill="none" stroke="#deff9a" stroke-width="5" stroke-dasharray="188" stroke-dashoffset="46" stroke-linecap="round" transform="rotate(-90 36 36)" style="filter:drop-shadow(0 0 6px rgba(222,255,154,0.5))"/>
+        <text x="36" y="40" text-anchor="middle" font-family="Space Grotesk" font-weight="700" font-size="13" fill="#deff9a">76%</text>
+      </svg>
+    </div>
+    <div style="background:rgba(255,255,255,0.06);border-radius:999px;height:5px;overflow:hidden;margin-bottom:8px">
+      <div class="progress-bar" style="width:76%;height:100%"></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px">
+      <span style="font-size:11px;color:rgba(255,255,255,0.25)">Bs 0</span>
+      <span style="font-size:11px;font-weight:600;color:#deff9a">76% — Bs 108 restantes</span>
+      <span style="font-size:11px;color:rgba(255,255,255,0.25)">Bs 450</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:rgba(222,255,154,0.1);border:1px solid rgba(222,255,154,0.2);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:#deff9a;display:flex;align-items:center;gap:6px">
+        <div class="pulse-dot" style="width:5px;height:5px;background:#deff9a;border-radius:50%"></div>Ciudadano Activo
+      </div>
+      <div style="background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);border-radius:20px;padding:5px 12px;font-size:11px;font-weight:600;color:#60a5fa">✓ Al día</div>
+    </div>
+  </div>
+
+  <!-- 4 PILARES -->
+  <div style="padding:0 20px;margin-bottom:6px">
+    <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:1.2px;margin-bottom:14px">Los 4 Pilares</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+      <a class="mod glass" href="municipio0_viaje_app.html" style="text-decoration:none;border-radius:24px;padding:16px;display:block">
+        <div style="width:44px;height:44px;background:rgba(222,255,154,0.08);border:1px solid rgba(222,255,154,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#deff9a" stroke-width="1.5" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="m16 8 4 0 3 4v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-size:14px;font-weight:600;color:#fff;margin-bottom:4px">Movilidad</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.4;margin-bottom:10px">Uber Municipal · patente por carrera</p>
+        <span style="background:rgba(222,255,154,0.1);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:600;color:#deff9a">+Bs 12 hoy</span>
+      </a>
+
+      <a class="mod glass" href="municipio0_marketplace.html" style="text-decoration:none;border-radius:24px;padding:16px;display:block">
+        <div style="width:44px;height:44px;background:rgba(59,130,246,0.08);border:1px solid rgba(59,130,246,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-linecap="round"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-size:14px;font-weight:600;color:#fff;margin-bottom:4px">Comercio</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.4;margin-bottom:10px">Marketplace · suscripción = patente</p>
+        <span style="background:rgba(59,130,246,0.1);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:600;color:#60a5fa">3 misiones</span>
+      </a>
+
+      <a class="mod glass" href="municipio0_vivienda_verde.html" style="text-decoration:none;border-radius:24px;padding:16px;display:block">
+        <div style="width:44px;height:44px;background:rgba(251,146,60,0.08);border:1px solid rgba(251,146,60,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fb923c" stroke-width="1.5" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-size:14px;font-weight:600;color:#fff;margin-bottom:4px">Vivienda</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.4;margin-bottom:10px">Verde · crédito por reciclaje</p>
+        <span style="background:rgba(251,146,60,0.1);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:600;color:#fb923c">Ranking #4</span>
+      </a>
+
+      <a class="mod glass" href="municipio0_bienestar.html" style="text-decoration:none;border-radius:24px;padding:16px;display:block">
+        <div style="width:44px;height:44px;background:rgba(167,139,250,0.08);border:1px solid rgba(167,139,250,0.15);border-radius:14px;display:flex;align-items:center;justify-content:center;margin-bottom:12px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a78bfa" stroke-width="1.5" stroke-linecap="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3 style="font-family:'Space Grotesk';font-size:14px;font-weight:600;color:#fff;margin-bottom:4px">Bienestar</h3>
+        <p style="font-size:11px;color:rgba(255,255,255,0.3);line-height:1.4;margin-bottom:10px">Salud IA · Edu-Misiones</p>
+        <span style="background:rgba(167,139,250,0.1);border-radius:20px;padding:4px 10px;font-size:10px;font-weight:600;color:#a78bfa">2 pendientes</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- MISIONES -->
+  <div style="padding:0 20px;margin-top:24px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:1.2px">Misiones activas</p>
+      <span style="font-size:12px;color:#deff9a">Ver todas →</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <div class="glass" style="border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:rgba(222,255,154,0.06);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">♻️</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Pesa tu reciclaje esta semana</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.3)">Punto verde · Av. Banzer y 4to Anillo</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-family:'Space Grotesk';font-size:14px;font-weight:700;color:#deff9a">+Bs 25</p>
+          <p style="font-size:10px;color:rgba(255,255,255,0.25)">Vivienda</p>
+        </div>
+      </div>
+      <div class="glass" style="border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:rgba(59,130,246,0.06);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">🚗</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Completa 3 viajes municipales</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.3)">2 de 3 completados · vence viernes</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-family:'Space Grotesk';font-size:14px;font-weight:700;color:#deff9a">+Bs 18</p>
+          <p style="font-size:10px;color:rgba(255,255,255,0.25)">Movilidad</p>
+        </div>
+      </div>
+      <div class="glass" style="border-radius:18px;padding:14px;display:flex;align-items:center;gap:12px">
+        <div style="width:44px;height:44px;background:rgba(167,139,250,0.06);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">📚</div>
+        <div style="flex:1;min-width:0">
+          <p style="font-size:13px;font-weight:500;color:#fff;margin-bottom:2px">Edu-Misión de matemáticas</p>
+          <p style="font-size:11px;color:rgba(255,255,255,0.3)">Unidad Educativa Central</p>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <p style="font-family:'Space Grotesk';font-size:14px;font-weight:700;color:#deff9a">+Bs 30</p>
+          <p style="font-size:10px;color:rgba(255,255,255,0.25)">Bienestar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEED EN VIVO -->
+  <div style="padding:0 20px;margin-top:24px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+      <p style="font-size:11px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:1.2px">Feed de Impacto</p>
+      <div style="background:rgba(222,255,154,0.08);border:1px solid rgba(222,255,154,0.15);border-radius:20px;padding:2px 8px;display:flex;align-items:center;gap:4px">
+        <div class="pulse-dot" style="width:5px;height:5px;background:#deff9a;border-radius:50%"></div>
+        <span style="font-size:10px;color:#deff9a;font-weight:600">EN VIVO</span>
+      </div>
+    </div>
+    <div id="feed" style="display:flex;flex-direction:column;gap:8px"></div>
+  </div>
+
+  <!-- CTA -->
+  <div style="padding:0 20px;margin-top:24px">
+    <a href="municipio0_dashboard_alcalde.html" style="display:flex;align-items:center;justify-content:space-between;background:rgba(222,255,154,0.05);border:1px solid rgba(222,255,154,0.12);border-radius:20px;padding:16px 20px;text-decoration:none">
+      <div>
+        <p style="font-size:13px;font-weight:600;color:#fff;margin-bottom:2px">Panel Municipal</p>
+        <p style="font-size:12px;color:rgba(255,255,255,0.3)">Ver ejecución del presupuesto</p>
+      </div>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#deff9a" stroke-width="2" stroke-linecap="round"><path d="M5 12h14m-7-7 7 7-7 7"/></svg>
+    </a>
+  </div>
+
+</div>
+
+<!-- NAVBAR -->
+<nav class="nav-blur" style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;padding:10px 0 24px;z-index:50">
+  <div style="display:flex;justify-content:space-around">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px">
+      <div style="width:32px;height:32px;background:rgba(222,255,154,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#deff9a" stroke-width="2" stroke-linecap="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      </div>
+      <span style="font-size:10px;color:#deff9a;font-weight:600">Inicio</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer" onclick="location.href='municipio0_viaje_app.html'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2)">Ciudad</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2)">Ranking</span>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer" onclick="location.href='municipio0_marketplace.html'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2)">Crédito</span>
+    </div>
+    <div style="position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer" onclick="location.href='municipio0_bienestar.html'">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2)">Perfil</span>
+      <div style="position:absolute;top:0;right:6px;width:6px;height:6px;background:#deff9a;border-radius:50%"></div>
+    </div>
+  </div>
+</nav>
+
+</div>
+<script>
+const feedData=[
+  {emoji:'♻️',text:'Tu vecino <b>Carlos M.</b> recicló <b>2 kg</b> y ahorró <b>Bs 1.00</b>',time:'ahora',c:'rgba(222,255,154,0.06)',b:'rgba(222,255,154,0.1)'},
+  {emoji:'🚗',text:'<b>María R.</b> completó un viaje y acumuló <b>Bs 6.00</b>',time:'hace 2 min',c:'rgba(59,130,246,0.06)',b:'rgba(59,130,246,0.1)'},
+  {emoji:'🏪',text:'Mercado <b>Los Pozos</b> se unió · <b>+48 vendedores</b>',time:'hace 5 min',c:'rgba(251,146,60,0.06)',b:'rgba(251,146,60,0.1)'},
+  {emoji:'🎓',text:'<b>Zona Norte</b> es <b>#1</b> en Edu-Misiones este mes',time:'hace 8 min',c:'rgba(167,139,250,0.06)',b:'rgba(167,139,250,0.1)'},
+];
+const extras=[
+  {emoji:'🌱',text:'<b>Pedro V.</b> instaló paneles solares · crédito aplicado',time:'ahora',c:'rgba(222,255,154,0.06)',b:'rgba(222,255,154,0.1)'},
+  {emoji:'🏆',text:'<b>Zona Sur</b> superó a Zona Norte en el ranking',time:'ahora',c:'rgba(251,191,36,0.06)',b:'rgba(251,191,36,0.1)'},
+];
+function render(){
+  document.getElementById('feed').innerHTML=feedData.map(i=>`
+    <div class="feed-item" style="background:${i.c};border:1px solid ${i.b};border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px">
+      <span style="font-size:22px;flex-shrink:0">${i.emoji}</span>
+      <div style="flex:1"><p style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.5">${i.text}</p></div>
+      <span style="font-size:10px;color:rgba(255,255,255,0.2);white-space:nowrap">${i.time}</span>
+    </div>`).join('');
+}
+render();
+let ei=0;
+setInterval(()=>{feedData.unshift(extras[ei%extras.length]);feedData.pop();ei++;render();},7000);
+</script>
+</body>
+                                                                                                                                                                                              </html>
