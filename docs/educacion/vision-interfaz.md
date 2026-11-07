@@ -69,3 +69,15 @@ Solo consulta (no editan contenidos):
   versión para colegios privados. El municipio entregaría una tablet por alumno con textos y
   cuadernos (ver `docs/vision-modelo-economico.md`).
 - Pendiente: qué ve la dirección (detalle por alumno o solo resúmenes).
+
+## Personalidad y voz del tutor (7-nov-2026)
+
+- Demo piloto: **IA conversacional en vivo por voz** (motor Kay / Gemini Live).
+- Tono **camba**: confiable, agradable, que se note que sabe mucho pero amigable y algo gracioso,
+  con el cantito y la calidez cruceña.
+- **Personaje original.** No imitar ni clonar la voz o identidad de ninguna persona real (el dueño
+  pensó en Percy Fernández como inspiración de carisma; se descartó copiarlo por derechos de su
+  familia, por ser figura política en un producto para escuelas públicas, y porque Gemini Live
+  usa voces predefinidas, no clonadas). Si en el futuro se quisiera una referencia a una persona
+  real, solo con autorización escrita de sus herederos y evaluación del riesgo político.
+- Nombre provisional: Kay (puede cambiar).
