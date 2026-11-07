@@ -42,12 +42,19 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 |---|---|---|---|---|
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
 | INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏳ siguiente |
-| EDU.01 | Migración RubiKEduAI | Traer `rubikeduai-backend` a `educacion/`, que compile y se publique en `/educacion` | INF.01 | ⏳ |
-| EDU.02 | Sprint 1.1 — lector offline | Textos por capítulos, lectura en tablet sin internet | EDU.01 | ⏳ |
-| EDU.03 | Sprint 1.2 — tutor contextual | Tutor del capítulo + guardrails + anonimización + cuota | EDU.01 | ⏳ |
-| EDU.04 | Sprint 1.3 — cifrado local | Datos locales cifrados + config emulador/tablet | EDU.02 | ⏳ |
-| EDU.05 | Prueba Alfa familiar (Fase 1) | Probar con los hijos, ajustar, checklist de salida | EDU.02–04 | ⏳ |
-| EDU.06 | Limpieza | Archivar `rubikeduai-backend` (PR aparte, con OK del dueño) | EDU.05 | ⏳ |
+| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | ⏳ siguiente |
+| EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | ⏳ |
+| EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
+| EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
+| EDU.05 | Retos / Misiones | Editor del tutor + motor de misiones + tutor IA dentro de la misión | EDU.03–04 | ⏳ |
+| EDU.06 | Mundo 3D del colegio | App del alumno: colegio estilo bloques, aulas por materia, misiones (PWA) | EDU.05 | ⏳ |
+| EDU.07 | Modelos 3D en Blender | Colegio y aulas en glTF liviano, Blender en la nube con Claude | EDU.01 | ⏳ |
+| EDU.08 | Minijuegos | 2–3 minijuegos que desbloquean las misiones | EDU.05–06 | ⏳ |
+| EDU.09 | App de padres | Avance en tiempo real, cronograma, reportes, permisos, pagos, libretas | EDU.03, 05 | ⏳ |
+| EDU.10 | Panel de dirección | Cursos, finanzas, cronograma, planificación, ayuda de notas RUDE/SIE | EDU.03, 09 | ⏳ |
+| EDU.11 | Sin internet + cifrado | Offline, sincronización y datos locales cifrados | EDU.06, 08 | ⏳ |
+| EDU.12 | Prueba Alfa familiar | Prueba con los hijos, ajustes, guion de la demo para la presentación | EDU.04–11 | ⏳ |
+| EDU.13 | Limpieza | Archivar `rubikeduai-backend` (PR aparte, con OK del dueño) | EDU.12 | ⏳ |
 | NUC.01 | Núcleo ciudadano | Login, perfil, plan de suscripción, billetera de créditos, Hub con diseño ÑANDÉ | INF.01 | ⏳ |
 | TRA.01 | Transporte | Del prototipo a MVP: pedir viaje, conductor, pago con créditos | NUC.01 | ⏳ |
 | MKT.01 | eMarket | Catálogo de comercios, pedidos, suscripción comercial | NUC.01 | ⏳ |
@@ -69,6 +76,7 @@ actualiza este plan; la maestra revisa y propone la siguiente.
 
 ## Decisiones tomadas
 
+- Educación es el **primer módulo a probar** antes de presentar el proyecto completo. Interfaz nueva según `docs/educacion/vision-interfaz.md` (4 perfiles, mundo 3D, misiones).
 - Educación vive en `educacion/` con la estructura del documento de visión
   (`apps/`, `services/`, `packages/`, `docs/`) — ver `docs/educacion/vision-plataforma-educativa.md`.
 - Los HTML de la raíz no se mueven hasta NUC.01, para no romper enlaces.

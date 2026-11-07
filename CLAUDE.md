@@ -44,7 +44,7 @@ Repo: `tugallo80/Municipio-cero-impuestos`. Plan general: `docs/plan-maestro.md`
 | `municipio0_vivienda_verde.html` | Vivienda verde: reciclaje + solar (reemplaza impuesto inmueble) |
 | `municipio0_bienestar.html` | Bienestar / salud |
 | `municipio0_dashboard_alcalde.html` | Dashboard del alcalde |
-| `educacion/` | Módulo Educación (viene de `tugallo80/rubikeduai-backend`) — ver `docs/sesiones/EDU.01-migracion.md` |
+| `educacion/` | Módulo Educación (viene de `tugallo80/rubikeduai-backend`) — fichas `docs/sesiones/EDU.*`, visión en `docs/educacion/` |
 | `docs/` | Plan maestro, fichas de sesión, visiones de cada módulo |
 | `tools/cloudshell/` | Scripts que corre el dueño en Cloud Shell (permisos, proyecto) |
 
