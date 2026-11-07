@@ -8,8 +8,13 @@ mkdir -p _site
 cp index.html _site/
 cp municipio0_*.html _site/
 
-# Gancho para Educación (llega con EDU.01): si existe la app de la tablet, se compila
-# y se publica en /educacion.
+# Educación: la maqueta estática (EDU.01) se copia tal cual a /educacion/maqueta.
+if [ -d educacion/maqueta ]; then
+  mkdir -p _site/educacion/maqueta
+  cp -r educacion/maqueta/. _site/educacion/maqueta/
+fi
+
+# Educación: si existe la app de la tablet, se compila y se publica en /educacion.
 APP=educacion/apps/tablet-client
 if [ -f "$APP/package.json" ]; then
   echo "Compilando $APP..."
