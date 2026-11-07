@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Padres · Educación ÑANDÉ (maqueta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .principal { max-width: 640px; }
+  .hijos { display: flex; gap: 8px; margin-bottom: 18px; }
+  .hijo { flex: 1; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 16px; background: var(--sup2); border: 1px solid var(--borde); }
+  .hijo.activo { border-color: var(--verde); background: var(--verde-suave); }
+  .hijo b { font-size: 14px; display: block; }
+  .hijo small { font-size: 11px; color: var(--texto2); }
+  .evento { display: flex; gap: 12px; align-items: flex-start; }
+  .evento .hora { font-size: 12px; color: var(--texto3); min-width: 42px; padding-top: 2px; }
+  .evento.nuevo { animation: entra .5s ease; }
+  @keyframes entra { from { opacity: 0; transform: translateY(-6px); } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
+    <div class="marca"><b id="familia"></b><span id="nom-colegio"></span></div>
+    <span class="pildora">Padres</span>
+  </header>
+  <main class="principal" id="principal"></main>
+  <nav class="barra-inf">
+    <a href="#vivo" data-ruta="vivo"><span class="ico">📡</span>En vivo</a>
+    <a href="#agenda" data-ruta="agenda"><span class="ico">🗓️</span>Agenda</a>
+    <a href="#notas" data-ruta="notas"><span class="ico">📒</span>Libreta</a>
+    <a href="#permisos" data-ruta="permisos"><span class="ico">✍️</span>Permisos</a>
+    <a href="#pagos" data-ruta="pagos"><span class="ico">💳</span>Pagos</a>
+  </nav>
+</div>
+<script src="datos-demo.js"></script>
+<script src="comun.js"></script>
+<script>
+const D = DEMO, F = D.familia;
+let hijoId = F.hijos[0];
+let reloj = null;
+U.$('#familia').textContent = F.nombre;
+U.$('#nom-colegio').textContent = D.colegio.nombre + ' · solo consulta';
+
+function selectorHijos() {
+  return `<div class="hijos">${F.hijos.map(id => { const a = U.alumno(id); return `
+    <button class="hijo ${id === hijoId ? 'activo' : ''}" onclick="hijoId='${id}';dispatchEvent(new HashChangeEvent('hashchange'))">
+      <span class="avatar" style="width:36px;height:36px;font-size:20px">${a.avatar}</span>
+      <span style="text-align:left"><b>${a.nombre.split(' ')[0]}</b><small>${U.curso(a.curso).nombre}</small></span>
+    </button>`; }).join('')}</div>`;
+}
+
+const extras = [
+  'Abrió el aula de Ciencias en el mundo 3D',
+  'Respondió bien 3 preguntas seguidas',
+  'Terminó la lectura del día',
+  'Pidió una pista al tutor IA',
+  'Ganó ⭐ 10 en una misión'
+];
+
+const rutas = {
+  vivo() {
+    const a = U.alumno(hijoId);
+    const mis = D.misiones.filter(m => m.curso === a.curso);
+    const pend = mis.filter(m => m.estado === 'activa');
+    return selectorHijos() + `
+    <div class="tarjeta" style="margin-bottom:12px">
+      <div class="fila entre"><h3>Hoy, ${a.nombre.split(' ')[0]}</h3><span class="pildora"><span class="punto vivo"></span> en vivo</span></div>
+      <div class="grilla" style="grid-template-columns:repeat(3,1fr);margin-top:14px;text-align:center">
+        <div class="kpi"><b>${mis.length - pend.length}</b><span>misiones hechas</span></div>
+        <div class="kpi"><b style="color:var(--ambar)">${pend.length}</b><span>pendientes</span></div>
+        <div class="kpi"><b style="color:${U.colorNota(a.promedio)}">${a.promedio}</b><span>promedio</span></div>
+      </div>
+    </div>
+    <div class="tarjeta"><h3 style="margin-bottom:6px">Actividad</h3>
+      <div class="lista" id="feed">${F.feed[hijoId].map(e => evento(e)).join('')}</div></div>
+    <div class="seccion"><h3>Misiones pendientes</h3><div class="pila">${pend.map(m => { const pct = Math.round(m.hechos / m.total * 100); return `
+      <div class="tarjeta"><div class="fila entre"><b>${U.materia(m.materia).icono} ${m.titulo}</b><span class="ter">vence ${m.vence}</span></div>
+      <div style="margin-top:8px">${U.barra(pct)}</div></div>`; }).join('')}</div></div>
+    <div class="seccion"><h3>Próximos exámenes</h3><div class="tarjeta lista">${F.examenes.filter(e => e.hijo === hijoId).map(e => `
+      <div class="fila"><span class="pildora gris">${e.fecha}</span><span>${e.materia}</span></div>`).join('') || '<div class="ter">Sin exámenes esta semana</div>'}</div></div>`;
+  },
+
+  agenda() {
+    const a = U.alumno(hijoId);
+    return selectorHijos() + `<h2 style="margin-bottom:12px">Cronograma de ${a.curso}</h2>
+    <div class="pila">${D.semana.map((d, i) => `
+      <div class="tarjeta" style="${i === 0 ? 'border-color:var(--verde)' : ''}"><div class="fila entre"><h3>${d.dia}</h3>${i === 0 ? '<span class="pildora">hoy</span>' : ''}</div>
+      <p class="chica sec" style="margin-top:6px">${d.items.join(' · ')}</p></div>`).join('')}</div>
+    <div class="seccion"><h3>Fechas del mes</h3><div class="tarjeta lista">${D.mes.map(e => `<div class="fila"><span class="pildora gris" style="min-width:60px;justify-content:center">${e.fecha}</span><span class="chica">${e.evento}</span></div>`).join('')}</div></div>`;
+  },
+
+  notas() {
+    const a = U.alumno(hijoId);
+    return selectorHijos() + `<div class="fila entre" style="margin-bottom:12px"><h2>Libreta · ${D.colegio.trimestre}er trimestre</h2></div>
+    <div class="tabla-caja"><table><thead><tr><th>Materia</th><th class="num">Nota</th></tr></thead><tbody>
+      ${D.materias.map(m => `<tr><td>${m.icono} ${m.nombre}</td><td class="num" style="color:${U.colorNota(a.notas[m.id])};font-weight:600">${a.notas[m.id]}</td></tr>`).join('')}
+      <tr><td><b>Promedio</b></td><td class="num"><b>${a.promedio}</b></td></tr></tbody></table></div>
+    <button class="btn sec2 ancho" style="margin-top:12px" onclick="U.toast('📄 Simulado: se descargaría la libreta en PDF')">⬇ Descargar libreta (PDF)</button>
+    <div class="seccion"><h3>Reportes del tutor</h3><div class="pila">${F.reportes.map((r, i) => `
+      <div class="tarjeta click" onclick="verReporte(${i})">
+        <div class="fila entre"><b>${r.titulo}</b><span class="ter">${r.fecha}</span></div><p class="chica sec" style="margin-top:4px">${r.resumen}</p></div>`).join('')}</div></div>`;
+  },
+
+  permisos() {
+    return `<h2 style="margin-bottom:4px">Permisos</h2><p class="sec chica" style="margin-bottom:14px">Autorizá lo que pide el colegio o pedí un permiso.</p>
+    <div class="pila">${F.permisos.map((p, i) => `
+      <div class="tarjeta"><div class="fila entre"><b>${p.titulo}</b>${U.estado(p.estado)}</div><p class="ter">${p.fecha}</p>
+      ${p.estado === 'pendiente' ? `<div class="fila" style="margin-top:12px"><button class="btn chico" onclick="autorizar(this)">Autorizar</button><button class="btn chico sec2" onclick="U.toast('Simulado: rechazado')">No autorizar</button></div>` : ''}</div>`).join('')}</div>
+    <button class="btn ancho" style="margin-top:16px" onclick="pedirPermiso()">+ Pedir un permiso</button>`;
+  },
+
+  pagos() {
+    const pend = F.pagos.filter(p => p.estado === 'pendiente').reduce((s, p) => s + p.monto, 0);
+    return `<div class="tarjeta" style="background:linear-gradient(135deg,#0b2a20,#111);border-color:rgba(16,185,129,.4)">
+      <span class="sec chica">Saldo pendiente</span><div class="titulo" style="font-size:34px">${U.bs(pend)}</div>
+      <button class="btn ancho" style="margin-top:12px" onclick="U.toast('💳 Simulado: pago con QR / créditos ÑANDÉ')">Pagar ahora</button></div>
+    <div class="seccion"><h3>Movimientos</h3><div class="tarjeta lista">${F.pagos.map(p => `
+      <div class="fila"><div class="crece"><b class="chica">${p.concepto}</b><div class="ter">vence ${p.vence}</div></div><span class="chica">${U.bs(p.monto)}</span>${U.estado(p.estado)}</div>`).join('')}</div></div>
+    <p class="ter" style="margin-top:12px">Idea a futuro: pagar con créditos verdes de la cuenta ÑANDÉ.</p>`;
+  },
+
+  _despues(ruta) {
+    clearInterval(reloj);
+    if (ruta !== 'vivo') return;
+    let i = 0;
+    reloj = setInterval(() => {
+      const feed = U.$('#feed'); if (!feed) return clearInterval(reloj);
+      const ahora = new Date();
+      const e = { hora: ahora.getHours() + ':' + String(ahora.getMinutes()).padStart(2, '0'), txt: extras[i++ % extras.length], tipo: 'ok' };
+      feed.insertAdjacentHTML('afterbegin', evento(e, true));
+    }, 6000);
+  }
+};
+
+function evento(e, nuevo) {
+  const ico = e.tipo === 'ok' ? '✅' : e.tipo === 'alerta' ? '⚠️' : '•';
+  return `<div class="evento ${nuevo ? 'nuevo' : ''}"><span class="hora">${e.hora}</span><span>${ico}</span><span class="chica crece">${e.txt}</span></div>`;
+}
+
+function autorizar(btn) {
+  const t = btn.closest('.tarjeta');
+  t.querySelector('.pildora').outerHTML = U.estado('autorizado');
+  btn.parentNode.remove();
+  U.toast('✅ Permiso autorizado (simulado)');
+}
+
+function verReporte(i) {
+  const r = F.reportes[i];
+  U.hoja(`<h2>${r.titulo}</h2><p class="ter" style="margin:4px 0 14px">${r.fecha}</p><p>${r.resumen}</p>
+    <button class="btn ancho" style="margin-top:18px" data-cerrar>Cerrar</button>`);
+}
+
+function pedirPermiso() {
+  U.hoja(`<h2>Pedir un permiso</h2><p class="sec chica" style="margin:4px 0 16px">Simulado: no se envía nada.</p>
+    <label class="campo"><span>Motivo</span><select><option>Retiro anticipado</option><option>Falta justificada</option><option>Otro</option></select></label>
+    <label class="campo"><span>Fecha</span><input type="date" value="2026-11-20"></label>
+    <label class="campo"><span>Detalle</span><textarea>Cita médica a las 11:00.</textarea></label>
+    <button class="btn ancho" data-cerrar onclick="U.toast('📨 Permiso enviado al tutor (simulado)')">Enviar</button>`);
+}
+
+U.router(rutas, 'vivo');
+</script>
+</body>
+</html>

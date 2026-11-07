@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#7cc8f5">
+<title>Alumno · Mundo del colegio (maqueta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --verde: #10B981; --verde-osc: #047857; --panel: #0F1A17; --borde: #1F3B33; --texto2: #A3A3A3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; overflow: hidden; background: #7cc8f5; font-family: 'Inter', system-ui, sans-serif; color: #fff; -webkit-tap-highlight-color: transparent; touch-action: none; user-select: none; -webkit-user-select: none; }
+  h1, h2, h3, .t { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+  button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
+  #mundo { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
+
+  /* HUD */
+  .hud { position: fixed; top: 0; left: 0; right: 0; padding: calc(10px + env(safe-area-inset-top)) 12px 0; display: flex; gap: 8px; align-items: center; z-index: 10; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+  .boton-hud { width: 46px; height: 46px; border-radius: 14px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); display: grid; place-items: center; font-size: 20px; color: #fff; text-decoration: none; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+  .jugador { flex: 1; display: flex; align-items: center; gap: 10px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); border-radius: 16px; padding: 6px 12px 6px 6px; box-shadow: 0 4px 0 rgba(0,0,0,.25); min-width: 0; }
+  .jugador .cara { width: 34px; height: 34px; border-radius: 10px; background: var(--verde); display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
+  .jugador b { font-family: 'Space Grotesk'; font-size: 15px; display: block; line-height: 1.1; }
+  .jugador small { font-size: 11px; color: #cbd5e1; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jugador > div:nth-child(2) { min-width: 0; }
+  .estrellas { margin-left: auto; font-family: 'Space Grotesk'; font-weight: 700; color: #FDE047; white-space: nowrap; }
+  .kay { background: var(--verde); border-color: #6EE7B7; }
+
+  .ayuda { position: fixed; top: calc(74px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); background: rgba(15,26,23,.8); border-radius: 99px; padding: 8px 14px; font-size: 13px; z-index: 10; white-space: nowrap; pointer-events: none; transition: opacity .4s; }
+
+  /* Joystick */
+  .joy { position: fixed; left: 20px; bottom: calc(24px + env(safe-area-inset-bottom)); width: 120px; height: 120px; border-radius: 50%; background: rgba(15,26,23,.35); border: 3px solid rgba(255,255,255,.35); z-index: 10; touch-action: none; }
+  .joy i { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: rgba(255,255,255,.85); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .entrar { position: fixed; right: 16px; bottom: calc(40px + env(safe-area-inset-bottom)); z-index: 10; display: none; }
+
+  /* Botones de juego */
+  .bj { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; padding: 0 22px; border-radius: 16px; background: var(--verde); color: #04261B; font-family: 'Space Grotesk'; font-weight: 700; font-size: 17px; box-shadow: 0 5px 0 var(--verde-osc); transition: transform .08s, box-shadow .08s; }
+  .bj:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--verde-osc); }
+  .bj.gris { background: #E2E8F0; color: #0F172A; box-shadow: 0 5px 0 #94A3B8; }
+  .bj.ancho { width: 100%; }
+
+  /* Paneles */
+  .panel-velo { position: fixed; inset: 0; z-index: 50; background: rgba(4,12,10,.55); display: none; align-items: flex-end; justify-content: center; }
+  .panel-velo.abierto { display: flex; }
+  .panel { width: 100%; max-width: 520px; max-height: 86vh; overflow: auto; background: var(--panel); border: 3px solid var(--borde); border-bottom: 0; border-radius: 26px 26px 0 0; padding: 18px 16px calc(22px + env(safe-area-inset-bottom)); animation: sube .25s ease; touch-action: pan-y; }
+  @media (min-width: 700px) { .panel-velo { align-items: center; } .panel { border-radius: 26px; border-bottom: 3px solid var(--borde); } }
+  @keyframes sube { from { transform: translateY(40px); opacity: 0; } }
+  .panel .cab { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .panel .cab .icono { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 30px; flex-shrink: 0; }
+  .panel .cab h2 { font-size: 21px; line-height: 1.15; }
+  .panel .cab small { color: var(--texto2); font-size: 13px; }
+  .cerrar { margin-left: auto; width: 40px; height: 40px; border-radius: 12px; background: rgba(255,255,255,.08); font-size: 18px; flex-shrink: 0; }
+  .barra { height: 12px; border-radius: 99px; background: rgba(255,255,255,.1); overflow: hidden; }
+  .barra i { display: block; height: 100%; border-radius: 99px; }
+  .mision { display: flex; align-items: center; gap: 12px; width: 100%; text-align: left; padding: 14px; border-radius: 18px; background: rgba(255,255,255,.05); border: 2px solid rgba(255,255,255,.08); margin-top: 10px; }
+  .mision b { font-family: 'Space Grotesk'; font-size: 16px; display: block; }
+  .mision small { color: var(--texto2); font-size: 12px; }
+  .mision .pts { margin-left: auto; color: #FDE047; font-weight: 700; white-space: nowrap; }
+  .mision.hecha { opacity: .55; }
+  .etq { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 99px; background: rgba(16,185,129,.18); color: #6EE7B7; }
+  .pasos { display: flex; gap: 6px; margin: 14px 0; }
+  .pasos i { flex: 1; height: 10px; border-radius: 99px; background: rgba(255,255,255,.12); }
+  .pasos i.ok { background: var(--verde); }
+  .pregunta { font-family: 'Space Grotesk'; font-size: 20px; margin: 6px 0 14px; line-height: 1.25; }
+  .opciones { display: grid; gap: 10px; }
+  .opcion { min-height: 56px; border-radius: 16px; background: #E2E8F0; color: #0F172A; font-weight: 700; font-size: 18px; box-shadow: 0 5px 0 #94A3B8; }
+  .opcion.mal { background: #FCA5A5; box-shadow: 0 5px 0 #DC2626; animation: tiembla .3s; }
+  .opcion.bien { background: #6EE7B7; box-shadow: 0 5px 0 var(--verde-osc); }
+  @keyframes tiembla { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+  /* Desbloqueo */
+  .premio { text-align: center; padding: 10px 0; }
+  .premio .cofre { font-size: 76px; animation: salta 1s infinite; display: inline-block; }
+  @keyframes salta { 50% { transform: translateY(-10px) rotate(-4deg); } }
+  .premio h2 { font-size: 26px; color: #6EE7B7; margin: 6px 0; }
+  .pizza { display: block; margin: 8px auto 12px; width: 220px; height: 220px; }
+  .pizza path { cursor: pointer; transition: transform .15s, opacity .15s; transform-origin: 110px 110px; }
+  .pizza path.comida { opacity: .15; transform: scale(.92); }
+
+  /* Chat tutor IA */
+  .chat { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 14px; }
+  .burbuja { max-width: 85%; padding: 12px 14px; border-radius: 18px; font-size: 15px; line-height: 1.4; animation: sube .25s ease; }
+  .burbuja.ia { background: rgba(16,185,129,.16); border: 2px solid rgba(16,185,129,.35); border-bottom-left-radius: 6px; align-self: flex-start; }
+  .burbuja.yo { background: #E2E8F0; color: #0F172A; border-bottom-right-radius: 6px; align-self: flex-end; font-weight: 600; }
+  .sugerencias { display: flex; gap: 8px; flex-wrap: wrap; }
+  .sug { padding: 10px 14px; border-radius: 99px; background: rgba(255,255,255,.08); border: 2px solid rgba(255,255,255,.15); font-size: 14px; font-weight: 600; }
+  .escribiendo { display: inline-flex; gap: 4px; }
+  .escribiendo i { width: 7px; height: 7px; border-radius: 50%; background: #6EE7B7; animation: punto 1s infinite; }
+  .escribiendo i:nth-child(2) { animation-delay: .15s; } .escribiendo i:nth-child(3) { animation-delay: .3s; }
+  @keyframes punto { 50% { opacity: .2; } }
+
+  .cargando { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: linear-gradient(#7cc8f5, #bfe6fb); color: #0F172A; text-align: center; padding: 24px; }
+  .cargando .t { font-size: 22px; margin-bottom: 6px; }
+  .lista2d { display: none; position: fixed; inset: 70px 12px 12px; overflow: auto; z-index: 5; }
+  .lista2d.ver { display: grid; gap: 10px; align-content: start; }
+  .toast { position: fixed; left: 50%; top: 90px; transform: translateX(-50%); background: #FDE047; color: #422006; padding: 12px 18px; border-radius: 16px; font-family: 'Space Grotesk'; font-weight: 700; z-index: 200; box-shadow: 0 5px 0 #CA8A04; white-space: nowrap; }
+</style>
+</head>
+<body>
+<canvas id="mundo"></canvas>
+
+<div class="hud">
+  <a class="boton-hud" href="index.html" title="Salir">←</a>
+  <div class="jugador">
+    <div class="cara" id="cara"></div>
+    <div><b id="apodo"></b><small id="nivel"></small></div>
+    <span class="estrellas" id="estrellas"></span>
+  </div>
+  <button class="boton-hud kay" id="btn-kay" title="Tutor IA">💬</button>
+</div>
+<div class="ayuda" id="ayuda">Mové el círculo para caminar · tocá un aula</div>
+<div class="joy" id="joy"><i></i></div>
+<button class="bj entrar" id="entrar"></button>
+<div class="lista2d" id="lista2d"></div>
+
+<div class="cargando" id="cargando"><div><div class="t">Armando el colegio…</div><div>bloque por bloque 🧱</div></div></div>
+
+<div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
+
+<script src="datos-demo.js"></script>
+<script>
+// ------------------------------------------------------------
+// Contenido de demo de las misiones (preguntas y pistas del tutor IA).
+// El tutor IA guía con preguntas y pistas: no da la respuesta.
+// ------------------------------------------------------------
+const D = DEMO, YO = D.alumnoDemo;
+let puntos = YO.puntos;
+const PREG = {
+  mat: { q: '¿Qué fracción es igual a 1/2?', ops: ['2/4', '1/3', '3/5'], ok: 0, pistas: ['Pensá en una pizza cortada en 4 pedazos. ¿Cuántos pedazos son la mitad?', '¿Y si multiplicás arriba y abajo de 1/2 por el mismo número?'] },
+  len: { q: '¿Cuál palabra DESCRIBE cómo es algo?', ops: ['corre', 'colorido', 'ayer'], ok: 1, pistas: ['Las palabras que describen se llaman adjetivos. ¿Cuál te dice cómo es una cosa?', 'Probá decir “el mercado es …”. ¿Cuál queda bien?'] },
+  cnat: { q: '¿Qué pasa con el agua cuando el sol la calienta?', ops: ['Se congela', 'Se evapora', 'Desaparece'], ok: 1, pistas: ['Acordate de la ropa mojada al sol. ¿A dónde se va el agua?', 'Cuando el agua se calienta sube como vapor… ¿cómo se llama eso?'] },
+  csoc: { q: '¿Cuántos departamentos tiene Bolivia?', ops: ['7', '9', '12'], ok: 1, pistas: ['Contá con los dedos: Santa Cruz, Beni, Pando… ¿cuáles más conocés?', 'Es un número impar, mayor que 8.'] },
+  ing: { q: '“I ___ my teeth every morning.”', ops: ['brush', 'sleep', 'eat'], ok: 0, pistas: ['¿Qué hacés con el cepillo de dientes?', 'Pensá en la palabra para “cepillar”.'] },
+  art: { q: '¿Cuál es un color cálido?', ops: ['Azul', 'Naranja', 'Verde'], ok: 1, pistas: ['Los colores cálidos te recuerdan al fuego y al sol.', '¿De qué color es el atardecer en Santa Cruz?'] }
+};
+
+const $ = s => document.querySelector(s);
+const materia = id => D.materias.find(m => m.id === id);
+$('#cara').textContent = YO.avatar;
+$('#apodo').textContent = YO.apodo;
+function pintarHud() { $('#nivel').textContent = 'Nivel ' + YO.nivel + ' · 4to A'; $('#estrellas').textContent = '⭐ ' + puntos; }
+pintarHud();
+
+function toast(t) { const d = document.createElement('div'); d.className = 'toast'; d.textContent = t; document.body.appendChild(d); setTimeout(() => d.remove(), 2000); }
+
+// ------------------------------------------------------------
+// Paneles: aula → misiones → misión → minijuego desbloqueado → tutor IA
+// ------------------------------------------------------------
+let estado = { materia: null, mision: null, paso: 0, pista: 0 };
+const velo = $('#velo'), panel = $('#panel');
+function abrir(html) { panel.innerHTML = html; velo.classList.add('abierto'); panel.scrollTop = 0; window.__pausa = true; }
+function cerrar() { velo.classList.remove('abierto'); window.__pausa = false; }
+velo.addEventListener('click', e => { if (e.target === velo) cerrar(); });
+
+function misionesDe(id) { return D.misiones.filter(m => m.materia === id); }
+
+function abrirAula(id) {
+  const m = materia(id), av = YO.avance[id];
+  estado.materia = id;
+  const mis = misionesDe(id);
+  abrir(`
+    <div class="cab"><div class="icono" style="background:${m.color}33">${m.icono}</div>
+      <div><h2>Aula de ${m.corto}</h2><small>${m.nombre}</small></div>
+      <button class="cerrar" onclick="cerrar()">✕</button></div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>Tu avance</span><b>${av}%</b></div>
+    <div class="barra"><i style="width:${av}%;background:${m.color}"></i></div>
+    <h3 style="margin-top:18px;font-size:15px;color:var(--texto2)">MISIONES</h3>
+    ${mis.map(x => `
+      <button class="mision ${x.estado === 'hecha' ? 'hecha' : ''}" onclick="abrirMision('${x.id}')">
+        <span style="font-size:26px">${x.estado === 'hecha' ? '✅' : '🎯'}</span>
+        <span><b>${x.titulo}</b><small>${x.estado === 'hecha' ? 'Completada' : 'Vence ' + x.vence + ' · paso ' + Math.min(x.hechos + 1, x.total) + ' de ' + x.total}</small></span>
+        <span class="pts">⭐ ${x.puntos}</span>
+      </button>`).join('')}
+    <button class="bj gris ancho" style="margin-top:16px" onclick="abrirKay()">💬 Preguntarle a Kay</button>`);
+}
+
+function abrirMision(id) {
+  const x = D.misiones.find(m => m.id === id), m = materia(x.materia);
+  estado.mision = x; estado.paso = x.estado === 'hecha' ? x.total : x.hechos; estado.pista = 0;
+  abrir(`
+    <div class="cab"><div class="icono" style="background:${m.color}33">🎯</div>
+      <div><span class="etq">${m.corto} · ⭐ ${x.puntos}</span><h2 style="margin-top:4px">${x.titulo}</h2></div>
+      <button class="cerrar" onclick="abrirAula('${x.materia}')">←</button></div>
+    <p style="font-size:16px;line-height:1.45">${x.desc}</p>
+    <div class="pasos">${Array.from({ length: x.total }, (_, i) => `<i class="${i < estado.paso ? 'ok' : ''}"></i>`).join('')}</div>
+    <div style="display:flex;gap:10px;align-items:center;padding:12px;border-radius:16px;background:rgba(253,224,71,.08);border:2px dashed rgba(253,224,71,.35);margin-bottom:16px">
+      <span style="font-size:28px">${x.estado === 'hecha' ? '🎮' : '🔒'}</span>
+      <span style="font-size:14px">Al terminar se desbloquea el minijuego <b>${x.minijuego}</b></span></div>
+    ${x.estado === 'hecha'
+      ? `<button class="bj ancho" onclick="desbloqueado()">🎮 Jugar ${x.minijuego}</button>`
+      : `<button class="bj ancho" onclick="pregunta()">▶ Jugar paso ${estado.paso + 1}</button>`}
+    <button class="bj gris ancho" style="margin-top:12px" onclick="abrirKay()">💬 Pedir ayuda a Kay</button>`);
+}
+
+function pregunta() {
+  const x = estado.mision, p = PREG[x.materia];
+  abrir(`
+    <div class="cab"><div class="icono" style="background:rgba(16,185,129,.2)">❓</div>
+      <div><span class="etq">Paso ${estado.paso + 1} de ${x.total}</span><h2 style="margin-top:4px;font-size:17px">${x.titulo}</h2></div>
+      <button class="cerrar" onclick="abrirMision('${x.id}')">←</button></div>
+    <p class="pregunta">${p.q}</p>
+    <div class="opciones">${p.ops.map((o, i) => `<button class="opcion" onclick="responder(this, ${i})">${o}</button>`).join('')}</div>
+    <button class="bj gris ancho" style="margin-top:18px" onclick="abrirKay(true)">💡 Pedir una pista a Kay</button>`);
+}
+
+function responder(btn, i) {
+  const x = estado.mision, p = PREG[x.materia];
+  if (i !== p.ok) { btn.classList.add('mal'); setTimeout(() => btn.classList.remove('mal'), 400); toast('¡Casi! Probá otra vez o pedí una pista'); return; }
+  btn.classList.add('bien');
+  setTimeout(() => {
+    // Para la demo, un acierto completa la misión y desbloquea el minijuego.
+    x.hechos = x.total; x.estado = 'hecha';
+    YO.avance[x.materia] = Math.min(100, YO.avance[x.materia] + 8);
+    puntos += x.puntos; pintarHud();
+    if (window.__actualizarCartel) window.__actualizarCartel(x.materia);
+    desbloqueado();
+  }, 500);
+}
+
+function desbloqueado() {
+  const x = estado.mision;
+  abrir(`
+    <div class="premio"><div class="cofre">🎁</div><h2>¡Minijuego desbloqueado!</h2>
+      <p style="color:var(--texto2)">${x.minijuego} · ganaste ⭐ ${x.puntos}</p></div>
+    <p style="text-align:center;font-weight:600;margin-top:8px">Ejemplo: tocá los pedazos para comer <b style="color:#6EE7B7">3/4</b> de la pizza</p>
+    <svg class="pizza" viewBox="0 0 220 220" id="pizza">
+      <circle cx="110" cy="110" r="104" fill="#92400E"/>
+      ${[0, 1, 2, 3].map(i => { const a0 = i * Math.PI / 2, a1 = a0 + Math.PI / 2, r = 98;
+        const p0 = [110 + r * Math.cos(a0), 110 + r * Math.sin(a0)], p1 = [110 + r * Math.cos(a1), 110 + r * Math.sin(a1)];
+        return `<path d="M110 110 L${p0} A${r} ${r} 0 0 1 ${p1} Z" fill="${['#FBBF24', '#F59E0B', '#FBBF24', '#F59E0B'][i]}" stroke="#78350F" stroke-width="3" onclick="comer(this)"/>`; }).join('')}
+      <circle cx="80" cy="80" r="9" fill="#DC2626"/><circle cx="145" cy="75" r="9" fill="#DC2626"/><circle cx="70" cy="145" r="9" fill="#DC2626"/><circle cx="140" cy="145" r="9" fill="#DC2626"/>
+    </svg>
+    <p style="text-align:center;font-size:14px;color:var(--texto2)" id="pizza-msg">Comiste 0/4</p>
+    <button class="bj gris ancho" style="margin-top:14px" onclick="abrirKay()">💬 Contarle a Kay</button>
+    <button class="bj ancho" style="margin-top:12px" onclick="cerrar();toast('⭐ ' + puntos + ' estrellas')">🧱 Volver al colegio</button>`);
+}
+
+function comer(el) {
+  el.classList.toggle('comida');
+  const n = document.querySelectorAll('#pizza .comida').length;
+  const msg = $('#pizza-msg');
+  msg.textContent = 'Comiste ' + n + '/4';
+  if (n === 3) { msg.innerHTML = '🎉 <b style="color:#6EE7B7">¡Exacto! 3/4</b> · +5 ⭐'; puntos += 5; pintarHud(); }
+}
+
+// ---- Tutor IA (simulado) ----
+function abrirKay(conPista) {
+  const x = estado.mision, mid = (x && x.materia) || estado.materia || 'mat', p = PREG[mid];
+  const volver = x ? (x.estado === 'hecha' ? `abrirMision('${x.id}')` : 'pregunta()') : (estado.materia ? `abrirAula('${estado.materia}')` : 'cerrar()');
+  abrir(`
+    <div class="cab"><div class="icono" style="background:var(--verde)">🤖</div>
+      <div><h2>Kay, tu tutor</h2><small>Te ayudo con pistas, no con la respuesta</small></div>
+      <button class="cerrar" onclick="${volver}">←</button></div>
+    <div class="chat" id="chat">
+      <div class="burbuja ia">¡Hola ${YO.apodo}! 👋 ${x ? 'Estás en “' + x.titulo + '”.' : 'Estás en el aula de ' + materia(mid).corto + '.'} ¿En qué te ayudo?</div>
+    </div>
+    <div class="sugerencias">
+      <button class="sug" onclick="decir('Dame una pista', 'pista')">💡 Dame una pista</button>
+      <button class="sug" onclick="decir('¿Me decís la respuesta?', 'resp')">🙊 ¿Me decís la respuesta?</button>
+      <button class="sug" onclick="decir('No entiendo la pregunta', 'explica')">🤔 No entiendo</button>
+    </div>
+    <button class="bj ancho" style="margin-top:16px" onclick="${volver}">${x && x.estado !== 'hecha' ? '▶ Volver a la pregunta' : 'Listo'}</button>`);
+  if (conPista) setTimeout(() => decir('Dame una pista', 'pista'), 300);
+}
+
+function decir(txt, tipo) {
+  const chat = $('#chat'); if (!chat) return;
+  const mid = (estado.mision && estado.mision.materia) || estado.materia || 'mat', p = PREG[mid];
+  chat.insertAdjacentHTML('beforeend', `<div class="burbuja yo">${txt}</div><div class="burbuja ia" id="tipeando"><span class="escribiendo"><i></i><i></i><i></i></span></div>`);
+  panel.scrollTop = panel.scrollHeight;
+  let r;
+  if (tipo === 'pista') { r = '💡 ' + p.pistas[estado.pista % p.pistas.length]; estado.pista++; }
+  else if (tipo === 'resp') r = 'Mmm, si te la digo no la aprendés 😉 Pero vamos juntos: ' + p.pistas[0];
+  else r = 'Te la digo con otras palabras: “' + p.q + '” Leela despacio y mirá cada opción. ¿Cuál te parece más lógica?';
+  setTimeout(() => { const t = $('#tipeando'); if (t) { t.removeAttribute('id'); t.textContent = r; panel.scrollTop = panel.scrollHeight; } }, 900);
+}
+
+$('#btn-kay').onclick = () => { estado.mision = null; abrirKay(); };
+
+// Lista 2D de respaldo si el 3D no carga (sin internet / navegador viejo)
+function modo2D(motivo) {
+  $('#cargando').style.display = 'none';
+  $('#joy').style.display = 'none';
+  $('#ayuda').textContent = motivo;
+  const l = $('#lista2d'); l.classList.add('ver');
+  l.innerHTML = D.materias.map(m => `
+    <button class="mision" style="background:rgba(15,26,23,.9)" onclick="abrirAula('${m.id}')">
+      <span style="font-size:28px">${m.icono}</span><span style="flex:1"><b>${m.corto}</b>
+      <div class="barra" style="margin-top:6px;height:8px"><i style="width:${YO.avance[m.id]}%;background:${m.color}"></i></div></span>
+      <span class="pts">${YO.avance[m.id]}%</span></button>`).join('');
+}
+window.__modo2D = modo2D;
+</script>
+
+<script type="module">
+// ------------------------------------------------------------
+// Mundo 3D del colegio, estilo bloques (diseño propio).
+// three.js desde CDN con versión exacta; si no carga, se usa la lista 2D.
+// ------------------------------------------------------------
+const FUENTES = [
+  'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.160.0/three.module.min.js',
+  'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.min.js'
+];
+let THREE = null;
+for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
+if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un aula'); }
+else iniciar(THREE);
+
+function iniciar(THREE) {
+  const D = window.DEMO, YO = D.alumnoDemo;
+  const canvas = document.getElementById('mundo');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.75));
+  renderer.setSize(innerWidth, innerHeight);
+
+  const escena = new THREE.Scene();
+  escena.background = new THREE.Color('#7cc8f5');
+  escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
+
+  const camara = new THREE.PerspectiveCamera(innerHeight > innerWidth ? 58 : 50, innerWidth / innerHeight, 0.1, 200);
+  escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
+  const sol = new THREE.DirectionalLight('#fff4d6', 1.6);
+  sol.position.set(12, 20, 8); escena.add(sol);
+
+  const caja = new THREE.BoxGeometry(1, 1, 1);
+  const mats = {};
+  const mat = c => mats[c] || (mats[c] = new THREE.MeshLambertMaterial({ color: c }));
+  function bloque(x, y, z, sx, sy, sz, color, padre = escena) {
+    const m = new THREE.Mesh(caja, mat(color));
+    m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
+  }
+
+  // --- Suelo de bloques (una sola malla instanciada) ---
+  const N = 34, mitad = N / 2;
+  const sueloGeo = new THREE.BoxGeometry(1, 1, 1);
+  const suelo = new THREE.InstancedMesh(sueloGeo, new THREE.MeshLambertMaterial(), N * N);
+  const m4 = new THREE.Matrix4(), col = new THREE.Color();
+  const esCamino = (x, z) => {
+    if (Math.abs(x) <= 1.5 && Math.abs(z) <= 10) return true;
+    if (Math.abs(z) <= 1.5 && Math.abs(x) <= 10) return true;
+    if (Math.hypot(x, z) < 4.2) return true;
+    return false;
+  };
+  let k = 0;
+  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+    const x = i - mitad + .5, z = j - mitad + .5;
+    const camino = esCamino(x, z);
+    m4.makeTranslation(x, camino ? -.45 : -.5 + ((i * 7 + j * 13) % 5 === 0 ? .08 : 0), z);
+    suelo.setMatrixAt(k, m4);
+    col.set(camino ? ((i + j) % 2 ? '#e7d8b1' : '#ddcb9c') : ((i * 3 + j) % 4 === 0 ? '#5fae4f' : (i + j) % 2 ? '#6bbd57' : '#64b552'));
+    suelo.setColorAt(k++, col);
+  }
+  escena.add(suelo);
+
+  // --- Plaza central: mástil con bandera verde ÑANDÉ y bancos ---
+  bloque(0, 1.8, 0, .25, 4, .25, '#e5e7eb');
+  const bandera = bloque(.85, 3.3, 0, 1.4, .8, .08, '#10B981');
+  bloque(0, .15, 0, 2.4, .3, 2.4, '#cbd5e1');
+  [[-3, 0], [3, 0], [0, 3], [0, -3]].forEach(([x, z]) => { if (x) bloque(x, .25, z + 2.5, 1.6, .3, .5, '#a16207'); });
+
+  // --- Árboles (bloques) ---
+  const arboles = [[-14, -14], [-12, 13], [14, -13], [13, 13], [-15, 0], [15, -1], [-5, -14], [5, 14], [-4, 14], [6, -14], [-14, 8], [14, 7]];
+  arboles.forEach(([x, z], i) => {
+    bloque(x, 1, z, .7, 2, .7, '#7c4a1e');
+    bloque(x, 2.6, z, 2.2, 1.6, 2.2, i % 2 ? '#2f8f46' : '#3fa356');
+    bloque(x, 3.6, z, 1.3, .8, 1.3, '#4cb865');
+  });
+  // Cerco
+  for (let t = -16; t <= 16; t += 2) {
+    [[t, -16.5], [t, 16.5], [-16.5, t], [16.5, t]].forEach(([x, z]) => bloque(x, .5, z, .35, 1, .35, '#f1f5f9'));
+  }
+
+  // --- Aulas por materia ---
+  const aulas = [];
+  const tocables = [];
+  function cartel(m, av) {
+    const c = document.createElement('canvas'); c.width = 320; c.height = 150;
+    const g = c.getContext('2d');
+    g.fillStyle = 'rgba(15,26,23,.92)'; g.beginPath(); g.roundRect(4, 4, 312, 142, 28); g.fill();
+    g.lineWidth = 6; g.strokeStyle = m.color; g.stroke();
+    g.font = '52px "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif'; g.textBaseline = 'middle';
+    g.fillText(m.icono, 22, 56);
+    g.fillStyle = '#fff'; g.font = '700 40px "Space Grotesk", Inter, sans-serif'; g.fillText(m.corto, 90, 56);
+    g.fillStyle = 'rgba(255,255,255,.15)'; g.beginPath(); g.roundRect(24, 100, 200, 22, 11); g.fill();
+    g.fillStyle = m.color; g.beginPath(); g.roundRect(24, 100, Math.max(22, 200 * av / 100), 22, 11); g.fill();
+    g.fillStyle = '#fff'; g.font = '700 30px Inter, sans-serif'; g.fillText(av + '%', 236, 112);
+    const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 4;
+    return tex;
+  }
+  D.materias.forEach(m => {
+    const [x, z] = m.pos;
+    const g = new THREE.Group(); g.position.set(x, 0, z);
+    // la puerta mira al centro
+    g.rotation.y = Math.atan2(-x, -z);
+    escena.add(g);
+    const pared = '#f5efe3';
+    bloque(0, 1.6, 0, 5, 3.2, 4.4, pared, g);
+    bloque(0, .15, 0, 5.4, .3, 4.8, '#9ca3af', g);
+    // techo escalonado del color de la materia
+    bloque(0, 3.45, 0, 5.6, .5, 5, m.color, g);
+    bloque(0, 3.95, 0, 4.2, .5, 3.6, m.color, g);
+    bloque(0, 4.4, 0, 2.6, .4, 2.2, m.color, g);
+    // puerta y ventanas
+    bloque(0, 1.05, 2.21, 1.3, 2.1, .12, '#5b3a1a', g);
+    bloque(-1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g);
+    bloque(1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g);
+    // alfombra de entrada (marca dónde entrar)
+    const alfombra = bloque(0, .05, 3.2, 1.8, .1, 1.4, m.color, g);
+    alfombra.material = new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 });
+    // cartel con avance
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cartel(m, YO.avance[m.id]), depthTest: false }));
+    sp.scale.set(3.4, 1.6, 1); sp.position.set(0, 6.3, 0); sp.renderOrder = 5; g.add(sp);
+    // aviso de misión pendiente
+    const pendientes = D.misiones.filter(x => x.materia === m.id && x.estado !== 'hecha').length;
+    let aviso = null;
+    if (pendientes) { aviso = bloque(0, 8, 0, .5, .5, .5, '#FDE047', g); aviso.rotation.set(.6, .6, 0); }
+    g.traverse(o => { if (o.isMesh) { o.userData.aula = m.id; tocables.push(o); } });
+    const puerta = new THREE.Vector3(0, 0, 3.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(g.position);
+    aulas.push({ m, g, sp, aviso, puerta, caja: new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(5.6, 3, 5.6)) });
+  });
+  window.__actualizarCartel = id => {
+    const a = aulas.find(a => a.m.id === id); if (!a) return;
+    a.sp.material.map.dispose(); a.sp.material.map = cartel(a.m, YO.avance[id]); a.sp.material.needsUpdate = true;
+    if (a.aviso && !D.misiones.some(x => x.materia === id && x.estado !== 'hecha')) { a.g.remove(a.aviso); a.aviso = null; }
+  };
+
+  // --- Personaje propio: explorador de bloques con visor verde ---
+  const yo = new THREE.Group(); escena.add(yo);
+  const cuerpo = new THREE.Group(); yo.add(cuerpo);
+  bloque(0, 1.25, 0, .9, 1, .55, '#10B981', cuerpo);           // remera ÑANDÉ
+  bloque(0, 2.1, 0, .8, .7, .7, '#f2c79b', cuerpo);             // cabeza
+  bloque(0, 2.15, .36, .62, .2, .05, '#0f172a', cuerpo);        // visor
+  bloque(0, 2.5, 0, .86, .16, .76, '#1e3a8a', cuerpo);           // gorra
+  bloque(0, 2.45, .48, .5, .08, .3, '#1e3a8a', cuerpo);          // visera
+  bloque(0, 1.3, -.38, .6, .7, .25, '#f59e0b', cuerpo);          // mochila
+  const piernaI = bloque(-.22, .38, 0, .36, .75, .4, '#334155', cuerpo);
+  const piernaD = bloque(.22, .38, 0, .36, .75, .4, '#334155', cuerpo);
+  const brazoI = bloque(-.6, 1.3, 0, .26, .8, .3, '#f2c79b', cuerpo);
+  const brazoD = bloque(.6, 1.3, 0, .26, .8, .3, '#f2c79b', cuerpo);
+  const sombra = new THREE.Mesh(new THREE.CircleGeometry(.6, 16), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: .2 }));
+  sombra.rotation.x = -Math.PI / 2; sombra.position.y = .06; yo.add(sombra);
+  yo.position.set(0, 0, 2.6);
+  yo.rotation.y = Math.PI;
+
+  // --- Controles: joystick táctil + teclado ---
+  const joy = document.getElementById('joy'), perilla = joy.querySelector('i');
+  const dir = { x: 0, z: 0 }; const teclas = {};
+  let joyId = null;
+  function moverJoy(e) {
+    const r = joy.getBoundingClientRect();
+    let dx = e.clientX - (r.left + r.width / 2), dy = e.clientY - (r.top + r.height / 2);
+    const max = r.width / 2 - 10, d = Math.hypot(dx, dy);
+    if (d > max) { dx *= max / d; dy *= max / d; }
+    perilla.style.transform = `translate(${dx}px, ${dy}px)`;
+    dir.x = dx / max; dir.z = dy / max;
+  }
+  joy.addEventListener('pointerdown', e => { joyId = e.pointerId; joy.setPointerCapture(joyId); moverJoy(e); ocultarAyuda(); });
+  joy.addEventListener('pointermove', e => { if (e.pointerId === joyId) moverJoy(e); });
+  const soltar = () => { joyId = null; dir.x = dir.z = 0; perilla.style.transform = ''; };
+  joy.addEventListener('pointerup', soltar); joy.addEventListener('pointercancel', soltar);
+  addEventListener('keydown', e => { teclas[e.key.toLowerCase()] = true; ocultarAyuda(); });
+  addEventListener('keyup', e => { teclas[e.key.toLowerCase()] = false; });
+  function ocultarAyuda() { document.getElementById('ayuda').style.opacity = 0; }
+
+  // Tocar un aula la abre
+  const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
+  let inicioToque = null;
+  canvas.addEventListener('pointerdown', e => { inicioToque = { x: e.clientX, y: e.clientY }; });
+  canvas.addEventListener('pointerup', e => {
+    if (!inicioToque || Math.hypot(e.clientX - inicioToque.x, e.clientY - inicioToque.y) > 12) return;
+    ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
+    ray.setFromCamera(ptr, camara);
+    const hit = ray.intersectObjects(tocables, false)[0];
+    if (hit) { ocultarAyuda(); window.abrirAula(hit.object.userData.aula); }
+  });
+
+  const btnEntrar = document.getElementById('entrar');
+  let cercana = null;
+  btnEntrar.onclick = () => cercana && window.abrirAula(cercana.m.id);
+
+  addEventListener('resize', () => {
+    renderer.setSize(innerWidth, innerHeight);
+    camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix();
+  });
+
+  // --- Bucle ---
+  const reloj = new THREE.Clock();
+  const objetivoCam = new THREE.Vector3();
+  const vertical = innerHeight > innerWidth;
+  const offset = new THREE.Vector3(0, vertical ? 27 : 17, vertical ? 13 : 13);
+  let paso = 0;
+  const tmp = new THREE.Box3();
+  function bucle() {
+    const dt = Math.min(reloj.getDelta(), .05), t = reloj.elapsedTime;
+    let mx = dir.x, mz = dir.z;
+    if (teclas['arrowleft'] || teclas['a']) mx -= 1;
+    if (teclas['arrowright'] || teclas['d']) mx += 1;
+    if (teclas['arrowup'] || teclas['w']) mz -= 1;
+    if (teclas['arrowdown'] || teclas['s']) mz += 1;
+    const largo = Math.hypot(mx, mz);
+    if (largo > .1 && !window.__pausa) {
+      const v = 6 * Math.min(1, largo);
+      const nx = yo.position.x + mx / largo * v * dt, nz = yo.position.z + mz / largo * v * dt;
+      // choque simple con aulas y bordes
+      const choca = (x, z) => aulas.some(a => { tmp.copy(a.caja).expandByScalar(.35); return tmp.containsPoint(new THREE.Vector3(x, 1, z)); }) || Math.hypot(x, z) < .9;
+      if (!choca(nx, yo.position.z) && Math.abs(nx) < 15.5) yo.position.x = nx;
+      if (!choca(yo.position.x, nz) && Math.abs(nz) < 15.5) yo.position.z = nz;
+      const ang = Math.atan2(mx, mz);
+      let dA = ang - yo.rotation.y; dA = Math.atan2(Math.sin(dA), Math.cos(dA));
+      yo.rotation.y += dA * Math.min(1, dt * 12);
+      paso += dt * 10;
+      const s = Math.sin(paso) * .6;
+      piernaI.rotation.x = s; piernaD.rotation.x = -s; brazoI.rotation.x = -s; brazoD.rotation.x = s;
+      cuerpo.position.y = Math.abs(Math.sin(paso)) * .08;
+    } else {
+      piernaI.rotation.x = piernaD.rotation.x = brazoI.rotation.x = brazoD.rotation.x = 0;
+      cuerpo.position.y = Math.sin(t * 2) * .03;
+    }
+
+    // aula cercana → botón "Entrar"
+    cercana = null;
+    for (const a of aulas) if (a.puerta.distanceTo(yo.position) < 2.6) cercana = a;
+    btnEntrar.style.display = cercana && !window.__pausa ? 'inline-flex' : 'none';
+    if (cercana) btnEntrar.textContent = `${cercana.m.icono} Entrar a ${cercana.m.corto}`;
+
+    aulas.forEach((a, i) => {
+      a.sp.position.y = 6.3 + Math.sin(t * 1.5 + i) * .12;
+      if (a.aviso) { a.aviso.rotation.y += dt * 2; a.aviso.position.y = 7.6 + Math.sin(t * 3 + i) * .2; }
+    });
+    bandera.scale.y = .8 + Math.sin(t * 3) * .05;
+
+    objetivoCam.copy(yo.position).add(offset);
+    camara.position.lerp(objetivoCam, Math.min(1, dt * 4));
+    camara.lookAt(yo.position.x, yo.position.y + 1, yo.position.z - 2);
+    renderer.render(escena, camara);
+    requestAnimationFrame(bucle);
+  }
+  camara.position.copy(yo.position).add(offset);
+  bucle();
+  document.getElementById('cargando').style.display = 'none';
+  window.__listo3D = true;
+}
+</script>
+</body>
+</html>

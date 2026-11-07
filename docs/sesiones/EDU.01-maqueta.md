@@ -40,4 +40,31 @@ colegio ficticio y navegación real entre pantallas. Sin backend, sin login real
   estética del mundo, qué datos ve cada perfil).
 
 ## Cierre
-(pendientes de la sesión)
+
+**Hecho (7-nov-2026)** — rama `sesion/edu-01`.
+- `educacion/maqueta/`: `index.html` (¿Quién sos?), `tutor.html`, `alumno.html`, `padres.html`,
+  `direccion.html`, `estilos.css`, `comun.js`, `datos-demo.js` (todos los datos inventados en un solo archivo).
+- Alumno: mundo 3D con three.js `0.160.0` desde cdnjs (si falla, prueba jsDelivr; sin internet muestra
+  una lista 2D de aulas). 6 aulas con cartel de avance, personaje propio de bloques, joystick táctil y
+  teclado, tocar un aula la abre. Flujo: aula → misión → pregunta → tutor IA (Kay, solo pistas) →
+  minijuego desbloqueado (ejemplo: pizza de fracciones).
+- Enlace "Educación (maqueta)" en el Hub (`index.html`), debajo de "Panel Municipal".
+- Capturas: `docs/educacion/capturas-maqueta/` (celular 390×844 y laptop 1366×768).
+
+**Notas técnicas**
+- Desde el contenedor de Claude los CDN están bloqueados: las capturas se sacaron sirviendo three.js
+  y las fuentes desde npm con Playwright. En el celular del dueño cargan desde el CDN normal.
+- Rendimiento: suelo en una sola malla instanciada, sin sombras reales, resolución máx. 1,75×.
+  Falta probarlo en un celular de gama media real cuando haya link de vista previa (INF.01).
+- La tabla de notas RUDE usa las dimensiones Ser/Saber/Hacer/Decidir/Autoevaluación como ejemplo;
+  el formato oficial del SIE se valida en EDU.10.
+
+**Decisiones abiertas para el dueño**
+1. **Minijuegos**: ¿qué 2–3 hacemos primero? Propuestos: pizza de fracciones (Mate), sopa de
+   adjetivos (Lenguaje), ruta del agua (Ciencias), mapa armable de Bolivia (Sociales), memoria de palabras (Inglés).
+2. **Estética del mundo**: ¿día soleado y colores vivos como ahora, o algo más cruceño (palmeras,
+   tajibos, plaza con bancos de colegio real)? ¿Personaje fijo o que cada alumno lo arme?
+3. **Qué ve cada perfil**: ¿los padres ven el perfil psicopedagógico o solo notas y avance?
+   ¿Dirección ve el detalle por alumno o solo resúmenes por curso?
+4. **Tutor IA**: ¿se llama Kay también para los alumnos? ¿Voz desde el inicio o solo texto?
+5. **Pagos**: ¿los padres pueden pagar con créditos ÑANDÉ (reciclaje/solar) además de QR?
