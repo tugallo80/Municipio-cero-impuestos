@@ -35,7 +35,7 @@ APIS=(
   run.googleapis.com artifactregistry.googleapis.com eventarc.googleapis.com
   secretmanager.googleapis.com iam.googleapis.com iamcredentials.googleapis.com
   sts.googleapis.com cloudresourcemanager.googleapis.com serviceusage.googleapis.com
-  logging.googleapis.com
+  logging.googleapis.com generativelanguage.googleapis.com apikeys.googleapis.com
 )
 
 # Lo que necesita GitHub Actions para publicar Hosting, reglas y Functions.
@@ -63,6 +63,9 @@ PROHIBIDOS_CLAUDE='roles/(owner|editor|viewer|firebase\.|firebasedatabase\.|fire
 ok()   { echo "  ✅ $*"; }
 mal()  { echo "  ❌ $*"; }
 paso() { echo; echo "── $*"; }
+
+# Reintenta (las cuentas recién creadas tardan unos segundos en verse en IAM).
+reintentar() { local i; for i in 1 2 3 4 5 6; do "$@" && return 0; echo "   (reintento $i en 10 s…)"; sleep 10; done; return 1; }
 
 token()  { gcloud auth print-access-token; }
 fb_get() { curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $(token)" \
@@ -163,10 +166,12 @@ aplicar() {
   fi
 
   paso "5. Cuenta de deploy + Workload Identity"
-  gcloud iam service-accounts describe "$DEPLOY_SA" --project="$P" >/dev/null 2>&1 || \
+  if ! gcloud iam service-accounts describe "$DEPLOY_SA" --project="$P" >/dev/null 2>&1; then
     gcloud iam service-accounts create github-deploy --project="$P" --display-name="Deploy desde GitHub Actions"
+    sleep 15
+  fi
   for R in "${ROLES_DEPLOY[@]}"; do
-    gcloud projects add-iam-policy-binding "$P" --member="serviceAccount:$DEPLOY_SA" --role="$R" \
+    reintentar gcloud projects add-iam-policy-binding "$P" --member="serviceAccount:$DEPLOY_SA" --role="$R" \
       --condition=None --format=none && echo "   + $R"
   done
   gcloud iam workload-identity-pools describe "$POOL" --location=global --project="$P" >/dev/null 2>&1 || \
@@ -174,11 +179,11 @@ aplicar() {
   gcloud iam workload-identity-pools providers describe "$PROVIDER" --workload-identity-pool="$POOL" \
       --location=global --project="$P" >/dev/null 2>&1 || \
     gcloud iam workload-identity-pools providers create-oidc "$PROVIDER" --project="$P" --location=global \
-      --workload-identity-pool="$POOL" --display-name="GitHub $REPO" \
+      --workload-identity-pool="$POOL" --display-name="GitHub Actions" \
       --issuer-uri="https://token.actions.githubusercontent.com" \
       --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
       --attribute-condition="assertion.repository=='$REPO'"
-  gcloud iam service-accounts add-iam-policy-binding "$DEPLOY_SA" --project="$P" \
+  reintentar gcloud iam service-accounts add-iam-policy-binding "$DEPLOY_SA" --project="$P" \
     --role=roles/iam.workloadIdentityUser --format=none \
     --member="principalSet://iam.googleapis.com/projects/$num/locations/global/workloadIdentityPools/$POOL/attribute.repository/$REPO"
   ok "Solo GitHub Actions de $REPO puede usar $DEPLOY_SA"
@@ -189,14 +194,27 @@ aplicar() {
       --condition=None --format=none && echo "   + $R"
   done
 
-  paso "7. Clave de Gemini"
+  paso "7. Clave de Gemini (se crea sola dentro del proyecto)"
   if gcloud secrets describe GEMINI_API_KEY --project="$P" >/dev/null 2>&1; then ok "Ya guardada"
   else
-    echo "  Creá una clave en aistudio.google.com/app/apikey (o Enter para hacerlo después)."
-    read -r -s -p "  Pegá la clave (no se ve al escribir): " K; echo
+    local KN K
+    KN=$(gcloud services api-keys list --project="$P" --filter='displayName="Gemini MUNICIPIO IA"' \
+           --format="value(name)" 2>/dev/null | head -1)
+    if [ -z "$KN" ]; then
+      gcloud services api-keys create --project="$P" --display-name="Gemini MUNICIPIO IA" \
+        --api-target=service=generativelanguage.googleapis.com --format=none 2>/dev/null || true
+      KN=$(gcloud services api-keys list --project="$P" --filter='displayName="Gemini MUNICIPIO IA"' \
+             --format="value(name)" 2>/dev/null | head -1)
+    fi
+    K=""
+    [ -n "$KN" ] && K=$(gcloud services api-keys get-key-string "$KN" --format="value(keyString)" 2>/dev/null || true)
+    if [ -z "$K" ]; then
+      echo "  No se pudo crear sola. Creala en aistudio.google.com/app/apikey (proyecto $P)."
+      read -r -s -p "  Pegá la clave (no se ve al escribir; Enter = después): " K; echo
+    fi
     if [ -n "$K" ]; then
       printf '%s' "$K" | gcloud secrets create GEMINI_API_KEY --project="$P" \
-        --replication-policy=automatic --data-file=- --format=none && ok "Guardada en Secret Manager"
+        --replication-policy=automatic --data-file=- --format=none && ok "Guardada en Secret Manager (solo sirve para Gemini)"
     else echo "  (saltado)"; fi
     unset K
   fi
