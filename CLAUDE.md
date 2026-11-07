@@ -12,7 +12,8 @@ Repo: `tugallo80/Municipio-cero-impuestos`. Plan general: `docs/plan-maestro.md`
   administrador— pegar **un solo comando** en Cloud Shell (desde el navegador del celular).
 - Responder siempre en **español**: chat, commits y PRs. Mensajes cortos, sin jerga; decir qué
   cambió y qué tiene que probar.
-- **Sesión maestra + sub-sesiones**: cada sub-sesión tiene su ficha en `docs/sesiones/`. Al
+- **MAESTRA + sub-sesiones por módulo** (`INF.01`, `EDU.01`, `EDU.02`, `TRA.01`…; códigos en
+  `docs/sesiones/README.md`). Cada sub-sesión tiene su ficha en `docs/sesiones/`. Al
   arrancar, leer este archivo, `docs/plan-maestro.md` y la ficha. Al cerrar, actualizar la tabla
   de estado del plan maestro y anotar lo pendiente en la ficha.
 - Antes de borrar archivos, módulos, datos o repos: **pedir confirmación**, y hacerlo en un PR aparte.
@@ -43,7 +44,7 @@ Repo: `tugallo80/Municipio-cero-impuestos`. Plan general: `docs/plan-maestro.md`
 | `municipio0_vivienda_verde.html` | Vivienda verde: reciclaje + solar (reemplaza impuesto inmueble) |
 | `municipio0_bienestar.html` | Bienestar / salud |
 | `municipio0_dashboard_alcalde.html` | Dashboard del alcalde |
-| `educacion/` | Módulo Educación (viene de `tugallo80/rubikeduai-backend`) — ver `docs/sesiones/S2-educacion-migracion.md` |
+| `educacion/` | Módulo Educación (viene de `tugallo80/rubikeduai-backend`) — ver `docs/sesiones/EDU.01-migracion.md` |
 | `docs/` | Plan maestro, fichas de sesión, visiones de cada módulo |
 | `tools/cloudshell/` | Scripts que corre el dueño en Cloud Shell (permisos, proyecto) |
 

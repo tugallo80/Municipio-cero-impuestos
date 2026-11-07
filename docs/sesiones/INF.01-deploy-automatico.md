@@ -1,4 +1,4 @@
-# S1 — Infra y deploy automático
+# INF.01 — Infra y deploy automático
 
 ## Objetivo
 Cada merge a `main` publica el sitio solo; cada PR genera una URL de vista previa para probar

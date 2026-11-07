@@ -1,4 +1,4 @@
-# S2 — Educación: migración al repo
+# EDU.01 — Migración de RubiKEduAI al repo
 
 ## Objetivo
 El código de RubiKEduAI vive en `educacion/` con la estructura del documento de visión, compila,
@@ -6,7 +6,7 @@ y se publica en `/educacion` del sitio ÑANDÉ.
 
 ## Antes de empezar
 - Leer `CLAUDE.md`, `docs/plan-maestro.md` y `docs/educacion/vision-plataforma-educativa.md`.
-- S1 terminada (deploy automático funcionando).
+- INF.01 terminada (deploy automático funcionando).
 - Repo origen: `tugallo80/rubikeduai-backend` (privado) — rama `main` (backend Vercel) y rama
   `claude/dashboard-hijos-kay` (dashboard React + Functions + seed).
 
