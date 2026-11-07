@@ -50,3 +50,18 @@ Solo consulta (no editan contenidos):
   navegador del celular o tablet.
 - Diseño ÑANDÉ para tutor, padres y dirección. El mundo del alumno tiene su propia estética de
   juego, con el verde ÑANDÉ como color de acento.
+
+## Decisiones del dueño tras la maqueta EDU.01 (7-nov-2026)
+
+- **Educación es una app aparte**, no enlazada al Hub del municipio.
+- **Minijuegos**: hacer **2** para probar. Después de tener una maqueta funcional, el dueño
+  escribe un guion de cómo se los imagina.
+- **Estilo del mundo**: el de la maqueta sirve para probar; no es el final. Se diseña a detalle después.
+- **Padres SÍ ven el perfil psicopedagógico** de sus hijos. Es un punto central: ayuda a los
+  padres a entender cómo aprende su hijo. Cada niño entiende de forma distinta; la plataforma
+  personaliza el estudio para cada uno, para que el nivel de aprendizaje supere al actual.
+  - Cuidado al implementarlo (EDU.03/EDU.09): lenguaje positivo y orientado a cómo ayudar, sin
+    etiquetas ni diagnósticos; consentimiento de los padres; el perfil nunca va con el nombre
+    real a la IA; solo los padres del alumno, su tutor y quien autorice la dirección lo ven.
+- Pendientes de la maqueta sin respuesta todavía: nombre y voz del tutor de los chicos (¿Kay?),
+  pago de mensualidad con créditos ÑANDÉ, qué ve la dirección (detalle o resúmenes).

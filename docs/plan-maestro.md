@@ -41,8 +41,8 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | Código | Sub-sesión | Objetivo | Depende de | Estado |
 |---|---|---|---|---|
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
-| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏳ siguiente |
-| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | ⏳ siguiente |
+| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏸️ PR #1 aprobado por el dueño en lo técnico, **en espera** hasta definir apps separadas |
+| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | 🔎 PR #2 listo, capturas revisadas por el dueño |
 | EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | ⏳ |
 | EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
@@ -92,6 +92,18 @@ WIF_PROVIDER=projects/359679900643/locations/global/workloadIdentityPools/github
 DEPLOY_SA=github-deploy@municipio-ia.iam.gserviceaccount.com
 ```
 Facturación: cuenta "Pago de Firebase" (`01853C-…`), la misma de `nutri-piloto-rubik`.
+
+## Decisiones del 7-nov-2026 (dueño)
+
+- **Apps separadas, no una sola web enlazada**: Educación es una app propia; Salud probablemente también.
+  La app del municipio se centra en: estado de "impuestos" → **suscripciones**, **referéndums
+  digitales** (el vecino elige entre obras para su zona, "el ciudadano como un concejal más") y
+  **transparencia en tiempo real** (cuánto dinero hay, cuánto entra, en qué se gasta).
+- Pendiente: ¿eMarket y transporte van dentro de la app del municipio o aparte? → investigación
+  en curso (sociología, psicología, neurociencias, marketing, casos reales). Resultado en
+  `docs/investigacion/una-app-o-varias.md`.
+- INF.01 queda **en espera** (PR #1 abierto, sin mergear) hasta definir cómo se separan las apps
+  (probablemente un sitio de Hosting por app).
 
 ## Decisiones pendientes del dueño
 
