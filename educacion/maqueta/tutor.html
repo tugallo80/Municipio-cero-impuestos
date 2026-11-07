@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Tutor · Educación ÑANDÉ (maqueta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
+    <div class="marca"><b id="nom-tutor"></b><span id="nom-colegio"></span></div>
+    <span class="pildora">Tutor</span>
+  </header>
+  <div class="cuerpo con-lateral">
+    <nav class="nav">
+      <a href="#hoy" data-ruta="hoy">📌 Hoy</a>
+      <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
+      <a href="#pensum" data-ruta="pensum">📚 Pensum</a>
+      <a href="#alumnos" data-ruta="alumnos">👧 Alumnos</a>
+      <a href="#misiones" data-ruta="misiones">🎯 Retos / Misiones</a>
+    </nav>
+    <main class="principal" id="principal"></main>
+  </div>
+</div>
+<script src="datos-demo.js"></script>
+<script src="comun.js"></script>
+<script>
+const D = DEMO;
+U.$('#nom-tutor').textContent = D.tutor.nombre;
+U.$('#nom-colegio').textContent = D.colegio.nombre + ' · ' + D.colegio.hoy;
+
+const rutas = {
+  hoy() {
+    const hechos = D.hoy.filter(h => h.estado === 'hecho').length;
+    const alertas = D.alumnos.filter(a => a.tendencia === 'baja');
+    return `
+    <div class="encab"><div><h1>Hoy toca avanzar</h1><p>${D.colegio.hoy} · ${hechos} de ${D.hoy.length} clases hechas</p></div>
+      <a class="btn chico" href="#nueva">+ Nueva misión</a></div>
+    <div class="grilla g4">
+      <div class="tarjeta kpi"><b>${D.hoy.length}</b><span>clases hoy</span></div>
+      <div class="tarjeta kpi"><b>${D.misiones.filter(m => m.estado === 'activa').length}</b><span>misiones activas</span></div>
+      <div class="tarjeta kpi"><b style="color:var(--rojo)">${alertas.length}</b><span>alumnos con alerta</span></div>
+      <div class="tarjeta kpi"><b>75%</b><span>avance del pensum</span></div>
+    </div>
+    <div class="seccion"><h3>Plan del día por materia</h3><div class="pila">
+      ${D.hoy.map(h => { const m = U.materia(h.materia); return `
+        <div class="tarjeta fila">
+          <div class="ico-caja" style="background:${m.color}22">${m.icono}</div>
+          <div class="crece"><b>${h.tema}</b><div class="ter">${h.hora} · ${m.nombre} · ${U.curso(h.curso).nombre} · ${h.pensum}</div></div>
+          ${U.estado(h.estado)}
+        </div>`; }).join('')}
+    </div></div>
+    <div class="seccion"><h3>Necesitan atención</h3><div class="grilla g2">
+      ${alertas.map(a => `
+        <a class="tarjeta click fila" href="#alumno/${a.id}" style="color:inherit">
+          <div class="avatar">${a.avatar}</div>
+          <div class="crece"><b>${a.nombre}</b><div class="ter">${a.curso} · promedio ${a.promedio}</div></div>
+          ${U.tendencia(a.tendencia)}
+        </a>`).join('')}
+    </div></div>`;
+  },
+
+  cronograma(vista = 'semana') {
+    const tabs = `<div class="chips" style="margin-bottom:16px">
+      <a class="chip ${vista === 'semana' ? 'activo' : ''}" href="#cronograma/semana">Semana</a>
+      <a class="chip ${vista === 'mes' ? 'activo' : ''}" href="#cronograma/mes">Mes</a></div>`;
+    const cuerpo = vista === 'mes'
+      ? `<div class="tarjeta lista">${D.mes.map(e => `<div class="fila"><span class="pildora gris" style="min-width:64px;justify-content:center">${e.fecha}</span><span>${e.evento}</span></div>`).join('')}</div>`
+      : `<div class="grilla" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))">${D.semana.map((d, i) => `
+          <div class="tarjeta" style="${i === 0 ? 'border-color:var(--verde)' : ''}">
+            <h3 style="margin-bottom:10px">${d.dia}${i === 0 ? ' <span class="pildora">hoy</span>' : ''}</h3>
+            <div class="pila">${d.items.map(t => `<div class="chica" style="padding:8px 10px;background:var(--sup3);border-radius:10px">${t}</div>`).join('')}</div>
+          </div>`).join('')}</div>`;
+    return `<div class="encab"><div><h1>Cronograma</h1><p>4A y 5A · 3er trimestre ${D.colegio.gestion}</p></div></div>${tabs}${cuerpo}`;
+  },
+
+  pensum() {
+    return `<div class="encab"><div><h1>Pensum por materia</h1><p>Contenidos y avance. En la versión real: subís el PDF y la IA lo arma.</p></div>
+      <button class="btn chico sec2" onclick="U.toast('📄 Simulado: la IA leería el PDF y armaría las unidades')">⬆ Subir PDF del pensum</button></div>
+    <div class="grilla g2">${D.materias.map(m => `
+      <div class="tarjeta">
+        <div class="fila" style="margin-bottom:12px"><div class="ico-caja" style="background:${m.color}22">${m.icono}</div><h3>${m.nombre}</h3></div>
+        <div class="pila">${D.pensum[m.id].map(u => `
+          <div><div class="fila entre chica"><span>${u.unidad}</span><span class="sec">${u.avance}%</span></div>${U.barra(u.avance)}</div>`).join('')}</div>
+      </div>`).join('')}</div>`;
+  },
+
+  alumnos(curso = 'todos') {
+    const lista = D.alumnos.filter(a => curso === 'todos' || a.curso === curso);
+    return `<div class="encab"><div><h1>Alumnos</h1><p>Tocá un alumno para ver su perfil psicopedagógico y rendimiento.</p></div></div>
+    <div class="chips" style="margin-bottom:16px">
+      ${['todos', '4A', '5A'].map(c => `<a class="chip ${curso === c ? 'activo' : ''}" href="#alumnos/${c}">${c === 'todos' ? 'Todos' : c}</a>`).join('')}
+    </div>
+    <div class="tabla-caja"><table>
+      <thead><tr><th>Alumno</th><th>Curso</th><th class="num">Promedio</th><th>Tendencia</th><th class="num">Misiones</th><th>Estilo</th></tr></thead>
+      <tbody>${lista.map(a => `
+        <tr onclick="location.hash='alumno/${a.id}'" style="cursor:pointer">
+          <td><span style="margin-right:8px">${a.avatar}</span><b>${a.nombre}</b></td>
+          <td>${a.curso}</td>
+          <td class="num" style="color:${U.colorNota(a.promedio)};font-weight:600">${a.promedio}</td>
+          <td>${U.tendencia(a.tendencia)}</td>
+          <td class="num">${a.misiones}</td>
+          <td class="sec">${a.estilo}</td>
+        </tr>`).join('')}</tbody></table></div>`;
+  },
+
+  alumno(id) {
+    const a = U.alumno(id) || D.alumnos[0], p = a.perfil;
+    const mis = D.misiones.filter(m => m.curso === a.curso);
+    return `<a href="#alumnos" class="chica">← Alumnos</a>
+    <div class="fila" style="margin:12px 0 18px"><div class="avatar grande">${a.avatar}</div>
+      <div class="crece"><h1>${a.nombre}</h1><p class="sec">${U.curso(a.curso).nombre} · ID opaco ${a.id}</p></div>${U.tendencia(a.tendencia)}</div>
+    <div class="grilla g2">
+      <div class="tarjeta">
+        <h3 style="margin-bottom:12px">🧠 Perfil psicopedagógico</h3>
+        <div class="lista chica">
+          <div><span class="ter">Estilo de aprendizaje</span><br>${p.estilo}</div>
+          <div><span class="ter">Fortalezas</span><br>${p.fortalezas}</div>
+          <div><span class="ter">Necesita apoyo en</span><br>${p.apoyo}</div>
+          <div><span class="ter">Contexto</span><br>${p.contexto}</div>
+          <div><span class="ter">Observación del tutor</span><br>${p.obs}</div>
+        </div>
+        <button class="btn chico sec2" style="margin-top:12px" onclick="U.toast('✏️ Simulado: nota guardada')">+ Agregar observación</button>
+      </div>
+      <div class="tarjeta">
+        <h3 style="margin-bottom:12px">📈 Rendimiento por materia</h3>
+        <div class="pila">${D.materias.map(m => { const n = a.notas[m.id]; return `
+          <div><div class="fila entre chica"><span>${m.icono} ${m.nombre}</span><b style="color:${U.colorNota(n)}">${n}</b></div>${U.barra(n)}</div>`; }).join('')}</div>
+      </div>
+    </div>
+    <div class="seccion"><h3>Misiones de su curso</h3><div class="pila">${mis.map(m => `
+      <div class="tarjeta fila"><span>${U.materia(m.materia).icono}</span><div class="crece"><b>${m.titulo}</b><div class="ter">vence ${m.vence}</div></div>${U.estado(m.estado)}</div>`).join('')}</div></div>
+    <div class="seccion fila envuelve">
+      <a class="btn" href="#nueva/${a.id}">🎯 Asignarle una misión</a>
+      <button class="btn sec2" onclick="U.toast('💬 Simulado: mensaje enviado a la familia')">💬 Escribir a la familia</button>
+    </div>`;
+  },
+
+  misiones() {
+    return `<div class="encab"><div><h1>Retos / Misiones</h1><p>Las tareas son misiones: el alumno las juega en el mundo 3D.</p></div>
+      <a class="btn" href="#nueva">+ Crear misión</a></div>
+    <div class="grilla g2">${D.misiones.map(m => { const mat = U.materia(m.materia), pct = Math.round(m.hechos / m.total * 100); return `
+      <div class="tarjeta">
+        <div class="fila" style="margin-bottom:10px"><div class="ico-caja" style="background:${mat.color}22">${mat.icono}</div>
+          <div class="crece"><b>${m.titulo}</b><div class="ter">${mat.nombre} · ${m.curso}</div></div>${U.estado(m.estado)}</div>
+        <p class="chica sec" style="margin-bottom:10px">${m.desc}</p>
+        <div class="fila entre ter"><span>Avance promedio del curso</span><span>${pct}%</span></div>${U.barra(pct)}
+        <div class="fila entre chica" style="margin-top:12px"><span class="ter">🎮 ${m.minijuego} · ⭐ ${m.puntos}</span>
+          <button class="btn chico sec2" onclick="asignar('${m.id}')">Asignar</button></div>
+      </div>`; }).join('')}</div>`;
+  },
+
+  nueva(alumnoId) {
+    const a = alumnoId && U.alumno(alumnoId);
+    return `<a href="#misiones" class="chica">← Misiones</a>
+    <div class="encab" style="margin-top:12px"><div><h1>Nueva misión</h1><p>Formulario simulado: no se guarda nada.</p></div></div>
+    <form class="tarjeta" style="max-width:640px" onsubmit="event.preventDefault();U.toast('🎯 Misión creada y asignada (simulado)');setTimeout(()=>location.hash='misiones',900)">
+      <label class="campo"><span>Título</span><input value="Fracciones en la cocina"></label>
+      <div class="grilla g2" style="gap:0 12px">
+        <label class="campo"><span>Materia</span><select>${D.materias.map(m => `<option>${m.nombre}</option>`).join('')}</select></label>
+        <label class="campo"><span>Tema del pensum</span><select><option>U5 · Fracciones</option><option>U6 · Medidas</option></select></label>
+      </div>
+      <label class="campo"><span>Consigna para el alumno</span><textarea>Ayudá a preparar una receta usando 1/2, 1/4 y 3/4 de taza.</textarea></label>
+      <div class="grilla g2" style="gap:0 12px">
+        <label class="campo"><span>Asignar a</span><select>
+          ${a ? `<option>${a.nombre} (${a.curso})</option>` : ''}
+          <option>Todo 4A</option><option>Todo 5A</option><option>Solo alumnos con alerta</option></select></label>
+        <label class="campo"><span>Vence</span><input type="date" value="2026-11-13"></label>
+      </div>
+      <label class="campo"><span>Minijuego que desbloquea</span><select><option>Pizza de fracciones</option><option>Carrera de bloques</option><option>Memoria de palabras</option></select></label>
+      <label class="campo"><span>Cómo ayuda el tutor IA</span><select><option>Solo pistas y preguntas (recomendado)</option><option>Pistas + ejemplo parecido</option></select></label>
+      <button class="btn ancho" type="submit">Crear y asignar</button>
+    </form>`;
+  }
+};
+
+function asignar(id) {
+  const m = D.misiones.find(x => x.id === id);
+  U.hoja(`<h2>Asignar “${m.titulo}”</h2><p class="sec chica" style="margin:4px 0 16px">Elegí a quién (simulado)</p>
+    <div class="chips" style="margin-bottom:16px">
+      <span class="chip activo">Todo ${m.curso}</span>
+      ${D.alumnos.filter(a => a.curso === m.curso).map(a => `<span class="chip" onclick="this.classList.toggle('activo')">${a.avatar} ${a.nombre.split(' ')[0]}</span>`).join('')}
+    </div>
+    <button class="btn ancho" data-cerrar onclick="U.toast('✅ Misión asignada (simulado)')">Asignar</button>`);
+}
+
+U.router(rutas, 'hoy');
+</script>
+</body>
+</html>
