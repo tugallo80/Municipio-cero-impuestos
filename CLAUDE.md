@@ -58,7 +58,7 @@ S=<scratchpad de la sesión>            # NUNCA dentro del repo
 echo "$GCP_SA_KEY_B64" | base64 -d > $S/sa.json && chmod 600 $S/sa.json
 export CLOUDSDK_CONFIG=$S/gcloud; unset CLOUDSDK_AUTH_ACCESS_TOKEN
 gcloud auth activate-service-account --key-file=$S/sa.json
-bash tools/probar-permisos-claude-code.sh $S <id-proyecto>
+bash tools/probar-permisos-claude-code.sh $S municipio-ia
 ```
 
 - `claude-code` tiene **solo lectura** (logs, estado de Functions/Cloud Run, versiones de Hosting).

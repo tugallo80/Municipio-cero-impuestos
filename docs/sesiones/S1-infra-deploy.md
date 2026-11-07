@@ -6,10 +6,9 @@ desde el celular. Vercel deja de fallar.
 
 ## Antes de empezar
 - Leer `CLAUDE.md` y `docs/plan-maestro.md`.
-- El dueño corrió en Cloud Shell `bash tools/cloudshell/configurar-nande.sh <id-proyecto> aplicar`
-  y pegó en el chat el bloque final **"Datos para GitHub"** (proveedor de Workload Identity y cuenta
-  de deploy — no son secretos).
-- Comprobar acceso de lectura: `bash tools/probar-permisos-claude-code.sh $S <id-proyecto>`.
+- ✅ Proyecto `municipio-ia` configurado. Datos de Workload Identity en `docs/plan-maestro.md`
+  (sección "Datos de Google Cloud").
+- Comprobar acceso de lectura: `bash tools/probar-permisos-claude-code.sh $S municipio-ia`.
 
 ## Tareas
 1. `firebase.json` + `.firebaserc`: Hosting publica `_site/`; cabeceras `no-cache` para HTML.
@@ -27,7 +26,7 @@ desde el celular. Vercel deja de fallar.
 
 ## Hecho cuando
 - El PR de esta sesión muestra una URL de vista previa que abre el Hub y los 6 módulos.
-- Al mergear, la URL de producción (`<id-proyecto>.web.app`) se actualiza sola.
+- Al mergear, la URL de producción (`municipio-ia.web.app`) se actualiza sola.
 - `firebase hosting:channel:list` y logs visibles con la cuenta `claude-code`.
 
 ## Cierre

@@ -31,7 +31,7 @@ módulos suman o gastan créditos en la misma cuenta.
 | Educación — dashboard de los chicos (voz en vivo con Kay) | `rubikeduai-backend` rama `claude/dashboard-hijos-kay` | Sin mergear. Nunca desplegado (Cloud Functions apagadas en el proyecto `rubikeduai`) |
 | Educación — panel del profesor | No encontrado en ningún repo | `api/process-pdf.js` lo menciona pero el código no está |
 | Deploy | — | Sin `firebase.json`, `vercel.json` ni GitHub Actions. Vercel falla por carpeta de salida |
-| Proyecto Google Cloud/Firebase propio | — | No existe. `claude-code` no tiene acceso a `rubikeduai` |
+| Proyecto Google Cloud/Firebase propio | `municipio-ia` ("MUNICIPIO IA") | ✅ Creado 7-nov: Blaze, Firebase, deploy por Workload Identity, `GEMINI_API_KEY` en Secret Manager, `claude-code` con solo lectura (probado) |
 
 ## Orden de trabajo
 
@@ -40,8 +40,8 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 
 | # | Sub-sesión | Objetivo | Depende de | Estado |
 |---|---|---|---|---|
-| S0 | Maestra | Ordenar visión, plan, reglas, permisos | — | ✅ en curso |
-| S1 | Infra y deploy | Proyecto Firebase, deploy automático (Firebase + Vercel), vista previa por PR | Dueño corre `configurar-nande.sh` | ⏳ siguiente |
+| S0 | Maestra | Ordenar visión, plan, reglas, permisos | — | ✅ base lista (sigue coordinando) |
+| S1 | Infra y deploy | Proyecto Firebase, deploy automático (Firebase + Vercel), vista previa por PR | ✅ `configurar-nande.sh` corrido | ⏳ siguiente |
 | S2 | Educación: migración | Traer `rubikeduai-backend` a `educacion/` con la estructura del documento de visión, que compile y se publique en `/educacion` | S1 | ⏳ |
 | S3 | Educación: Sprint 1.1 | Lector de textos offline por capítulos, para tablet | S2 | ⏳ |
 | S4 | Educación: Sprint 1.2 | Tutor contextual al capítulo + guardrails + anonimización + cuota por alumno | S2 | ⏳ |
@@ -73,6 +73,15 @@ actualiza este plan; la maestra revisa y propone la siguiente.
 - Deploy principal: **Firebase Hosting** (todo el sitio) + Functions. Vercel queda como espejo o
   solo para el webhook de WhatsApp (se decide en S1).
 - Sin llaves de deploy guardadas: GitHub Actions entra a Google Cloud por Workload Identity.
+
+## Datos de Google Cloud (no son secretos)
+
+```
+PROYECTO=municipio-ia
+WIF_PROVIDER=projects/359679900643/locations/global/workloadIdentityPools/github/providers/github-actions
+DEPLOY_SA=github-deploy@municipio-ia.iam.gserviceaccount.com
+```
+Facturación: cuenta "Pago de Firebase" (`01853C-…`), la misma de `nutri-piloto-rubik`.
 
 ## Decisiones pendientes del dueño
 
