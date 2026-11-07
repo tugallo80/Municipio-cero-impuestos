@@ -1,0 +1,49 @@
+/* Diseño ÑANDÉ: negro, verde esmeralda, Space Grotesk + Inter. Pensado para 360 px. */
+:root {
+  --verde: #10b981;
+  --verde-suave: rgba(16, 185, 129, 0.12);
+  --fondo: #000;
+  --sup1: #0a0a0a;
+  --sup2: #111;
+  --borde: #1f1f1f;
+  --texto: #fff;
+  --texto2: #a3a3a3;
+  --error: #f87171;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; margin: 0; }
+html, body { background: var(--fondo); color: var(--texto); }
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100dvh;
+  -webkit-tap-highlight-color: transparent;
+}
+h1, h2, h3, .titulo { font-family: 'Space Grotesk', 'Inter', sans-serif; font-weight: 700; letter-spacing: -0.01em; }
+a { color: var(--verde); }
+.contenedor { max-width: 520px; margin: 0 auto; padding: 20px 16px 48px; }
+.etiqueta {
+  display: inline-block; font-size: 12px; font-weight: 600; color: var(--verde);
+  background: var(--verde-suave); border-radius: 999px; padding: 4px 10px;
+}
+.tarjeta { background: var(--sup1); border: 1px solid var(--borde); border-radius: 20px; padding: 18px; }
+.secundario { color: var(--texto2); }
+.chico { font-size: 13px; }
+.oculto { display: none !important; }
+
+label { display: block; font-size: 14px; color: var(--texto2); margin: 14px 0 6px; }
+input {
+  width: 100%; font: inherit; color: var(--texto); background: var(--sup2);
+  border: 1px solid var(--borde); border-radius: 14px; padding: 14px 16px; min-height: 52px;
+}
+input:focus { outline: 2px solid var(--verde); outline-offset: 1px; }
+
+.boton {
+  display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%;
+  min-height: 56px; border: 0; border-radius: 16px; font: 600 17px 'Space Grotesk', sans-serif;
+  background: var(--verde); color: #00140d; cursor: pointer;
+}
+.boton:disabled { opacity: 0.5; cursor: default; }
+.boton.fantasma { background: transparent; color: var(--texto2); border: 1px solid var(--borde); min-height: 44px; font-size: 15px; }
+.error { color: var(--error); font-size: 14px; margin-top: 10px; }

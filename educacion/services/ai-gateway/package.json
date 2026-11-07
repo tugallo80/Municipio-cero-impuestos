@@ -1,0 +1,15 @@
+{
+  "name": "nande-educacion-ai-gateway",
+  "private": true,
+  "description": "Cloud Functions de Educación ÑANDÉ: tutor de voz Kay (token efímero de Gemini Live, cuota, costos).",
+  "main": "index.js",
+  "engines": { "node": "22" },
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "@google/genai": "2.31.0",
+    "firebase-admin": "14.5.0",
+    "firebase-functions": "7.4.0"
+  }
+}

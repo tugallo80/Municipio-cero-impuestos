@@ -1,3 +1,5 @@
 _site/
 .firebase/
 node_modules/
+dist/
+salida-e2e/

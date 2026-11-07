@@ -1,0 +1,14 @@
+{
+  "_nota": "Cuentas de prueba SIN datos personales (sin nombre). La clave no está acá: solo su hash bcrypt (costo 12), que no se puede revertir. La clave se la pasa Claude al dueño por chat.",
+  "dominio": "alumnos.nande-educacion.local",
+  "cuentas": [
+    {
+      "uid": "prueba-kay-01",
+      "usuario": "prueba",
+      "alumnoId": "alu_p7m4q2",
+      "curso": "4to_primaria",
+      "estilo": "visual",
+      "hashBcrypt": "$2a$12$BrbZkl4PrUXD2LkbC6aO/.PCYC8U7Pv4kS/i/AKVhrUTJpL.shGoy"
+    }
+  ]
+}
