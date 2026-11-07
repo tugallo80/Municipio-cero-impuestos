@@ -48,6 +48,7 @@ ROLES_DEPLOY=(
   roles/cloudbuild.builds.editor
   roles/secretmanager.admin
   roles/serviceusage.serviceUsageConsumer
+  roles/serviceusage.apiKeysAdmin   # EDU.02: limitar la clave pública del navegador (que no sirva para Gemini)
 )
 
 # Claude: solo lectura. Nunca datos de ciudadanos/alumnos, secretos ni IAM.

@@ -11,6 +11,7 @@
 const admin = require('firebase-admin');
 const { cuentas, dominio } = require('./cuentas-prueba.json');
 const contenido = require('./contenido-demo.json');
+const reglas = require('../../database.rules.json');
 
 admin.initializeApp({
   projectId: process.env.PROYECTO || 'municipio-ia',
@@ -19,6 +20,10 @@ admin.initializeApp({
 const db = admin.database();
 
 (async () => {
+  // Reglas de la base: todo cerrado al navegador (solo el servidor lee/escribe).
+  await db.setRules(JSON.stringify(reglas));
+  console.log('✅ Reglas de la base aplicadas (cerrada al navegador)');
+
   const usuarios = cuentas.map((c) => ({
     uid: c.uid,
     email: `${c.usuario}@${dominio}`,

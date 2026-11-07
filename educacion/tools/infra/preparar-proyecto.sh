@@ -25,12 +25,23 @@ aviso(){ echo "::warning::$*"; }
 paso() { echo; echo "── $*"; }
 
 paso "1. Sitio de Hosting $SITIO"
-if $FB hosting:sites:list --project "$P" --json | grep -q "\"sites/$SITIO\"\|/sites/$SITIO\""; then ok "Ya existe"
-else $FB hosting:sites:create "$SITIO" --project "$P" --non-interactive && ok "Creado"; fi
+if $FB hosting:sites:list --project "$P" --json | grep -q "/sites/$SITIO\""; then ok "Ya existe"
+else $FB hosting:sites:create "$SITIO" --project "$P" --non-interactive; ok "Creado"; fi
 
 paso "2. Realtime Database $BASE"
-if $FB database:instances:list --project "$P" --json | grep -q "\"$BASE\"\|/instances/$BASE\""; then ok "Ya existe"
-else $FB database:instances:create "$BASE" --location us-central1 --project "$P" --non-interactive && ok "Creada"; fi
+# Por la API directa: la CLI de Firebase exige crear antes la base "por defecto" del
+# proyecto, y Educación usa una propia, separada de la del municipio.
+T=$(gcloud auth print-access-token)
+RTDB="https://firebasedatabase.googleapis.com/v1beta/projects/$P/locations/us-central1/instances"
+COD=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $T" -H "x-goog-user-project: $P" "$RTDB/$BASE")
+if [ "$COD" = 200 ]; then ok "Ya existe"
+else
+  RESP=$(curl -s -w '\n%{http_code}' -X POST -H "Authorization: Bearer $T" -H "x-goog-user-project: $P" \
+    -H "Content-Type: application/json" -d '{"type":"USER_DATABASE"}' "$RTDB?databaseId=$BASE")
+  if [ "$(echo "$RESP" | tail -1)" = 200 ]; then ok "Creada"
+  else echo "$RESP" | head -20; echo "::error::No se pudo crear la base $BASE"; exit 1; fi
+fi
+# Las reglas (todo cerrado al navegador) las aplica seed/crear-cuentas-prueba.js.
 
 paso "3. App web de Firebase"
 APP_ID=$($FB apps:list WEB --project "$P" --json | node -e '

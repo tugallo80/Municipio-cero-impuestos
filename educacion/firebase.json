@@ -31,11 +31,5 @@
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       }
     ]
-  },
-  "database": [
-    {
-      "instance": "municipio-ia-educacion",
-      "rules": "database.rules.json"
-    }
-  ]
+  }
 }
