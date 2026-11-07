@@ -76,7 +76,7 @@ actualiza este plan; la maestra revisa y propone la siguiente.
 
 ## Decisiones pendientes del dueño
 
-1. **ID del proyecto Firebase** para ÑANDÉ (propuesta: `nande-scz`; si está tomado, `nande-scz-digital`).
+1. ~~ID del proyecto~~ → nombre **MUNICIPIO IA**, ID `municipio-ia` (si está tomado, `municipio-ia-scz`).
 2. **¿Educación usa el proyecto nuevo o sigue en `rubikeduai`?** Recomendación: proyecto nuevo único
    para toda la súper app; los datos de `rubikeduai` son de prueba familiar y se recrean con el seed.
 3. **Plan Blaze (facturación)**: necesario para Cloud Functions. Hosting solo funciona gratis.

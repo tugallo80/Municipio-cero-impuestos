@@ -5,6 +5,7 @@
 #  Lo corre el DUEÑO en Cloud Shell (shell.cloud.google.com, sirve desde el celular):
 #    bash configurar-nande.sh <id-proyecto>            → solo revisa, no cambia nada
 #    bash configurar-nande.sh <id-proyecto> aplicar    → crea/configura todo
+#  ID sugerido: municipio-ia (minúsculas, números y guiones; único en todo Google Cloud)
 #
 #  Qué hace "aplicar" (cada paso se salta si ya está hecho):
 #    1. Crea el proyecto si no existe.
@@ -24,6 +25,7 @@ MODO="${2:-revisar}"
 REPO="tugallo80/Municipio-cero-impuestos"
 CLAUDE_SA="claude-code@desarrollo-personal-a831d.iam.gserviceaccount.com"
 DEPLOY_SA="github-deploy@${P}.iam.gserviceaccount.com"
+NOMBRE="MUNICIPIO IA"   # nombre visible del proyecto (sin Ñ ni tildes: Google no las acepta)
 POOL="github"
 PROVIDER="github-actions"
 
@@ -121,7 +123,12 @@ datos_github() {
 aplicar() {
   paso "1. Proyecto"
   if gcloud projects describe "$P" >/dev/null 2>&1; then ok "Ya existe"
-  else gcloud projects create "$P" --name="ÑANDÉ SCZ Digital" && ok "Creado"; fi
+  elif gcloud projects create "$P" --name="$NOMBRE"; then ok "Creado: $NOMBRE ($P)"
+  else
+    mal "No se pudo crear '$P'. Si dice que el ID ya está en uso, probá con otro, por ejemplo:"
+    echo "     bash c.sh ${P}-scz aplicar"
+    exit 1
+  fi
   local num; num=$(gcloud projects describe "$P" --format="value(projectNumber)")
 
   paso "2. Facturación"
