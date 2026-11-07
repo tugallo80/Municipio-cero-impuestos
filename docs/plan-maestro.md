@@ -105,6 +105,20 @@ Facturación: cuenta "Pago de Firebase" (`01853C-…`), la misma de `nutri-pilot
 - INF.01 queda **en espera** (PR #1 abierto, sin mergear) hasta definir cómo se separan las apps
   (probablemente un sitio de Hosting por app).
 
+- **Investigación "una app o varias"** aceptada por el dueño como criterio: ÑANDÉ ID único, app
+  núcleo con pocos accesos (Mi aporte, Mi ciudad, Comprar, Viajar), lo cívico protegido (sin
+  premios por votar), Educación y Salud aparte. Ver `docs/investigacion/una-app-o-varias.md`.
+- **Modelo económico** (impuesto → suscripción con beneficio personal): `docs/vision-modelo-economico.md`.
+- **Educación pública gratuita**; financiamiento buscado con Google y otros.
+
+## Material para la presentación
+
+Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, financiadores):
+- `docs/investigacion/una-app-o-varias.md` — por qué este diseño (con fuentes).
+- `docs/vision-modelo-economico.md` — de impuesto a suscripción.
+- `docs/educacion/vision-plataforma-educativa.md` y `vision-interfaz.md`.
+- (en curso) `docs/investigacion/educacion-piloto-y-financiamiento.md`, `docs/investigacion/transporte-municipal.md`.
+
 ## Decisiones pendientes del dueño
 
 1. ~~ID del proyecto~~ → nombre **MUNICIPIO IA**, ID `municipio-ia` (si está tomado, `municipio-ia-scz`).

@@ -63,5 +63,9 @@ Solo consulta (no editan contenidos):
   - Cuidado al implementarlo (EDU.03/EDU.09): lenguaje positivo y orientado a cómo ayudar, sin
     etiquetas ni diagnósticos; consentimiento de los padres; el perfil nunca va con el nombre
     real a la IA; solo los padres del alumno, su tutor y quien autorice la dirección lo ven.
-- Pendientes de la maqueta sin respuesta todavía: nombre y voz del tutor de los chicos (¿Kay?),
-  pago de mensualidad con créditos ÑANDÉ, qué ve la dirección (detalle o resúmenes).
+- **Tutor de los chicos**: con **voz** desde el principio. Nombre provisional **Kay** (puede cambiar).
+- **Educación pública gratuita**: sin pagos para alumnos ni familias (ni dinero, ni QR, ni
+  créditos). La sección "Pagos" de padres no va en la versión pública; podría existir en una
+  versión para colegios privados. El municipio entregaría una tablet por alumno con textos y
+  cuadernos (ver `docs/vision-modelo-economico.md`).
+- Pendiente: qué ve la dirección (detalle por alumno o solo resúmenes).
