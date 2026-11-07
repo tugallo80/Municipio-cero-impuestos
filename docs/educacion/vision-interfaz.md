@@ -50,3 +50,34 @@ Solo consulta (no editan contenidos):
   navegador del celular o tablet.
 - Diseño ÑANDÉ para tutor, padres y dirección. El mundo del alumno tiene su propia estética de
   juego, con el verde ÑANDÉ como color de acento.
+
+## Decisiones del dueño tras la maqueta EDU.01 (7-nov-2026)
+
+- **Educación es una app aparte**, no enlazada al Hub del municipio.
+- **Minijuegos**: hacer **2** para probar. Después de tener una maqueta funcional, el dueño
+  escribe un guion de cómo se los imagina.
+- **Estilo del mundo**: el de la maqueta sirve para probar; no es el final. Se diseña a detalle después.
+- **Padres SÍ ven el perfil psicopedagógico** de sus hijos. Es un punto central: ayuda a los
+  padres a entender cómo aprende su hijo. Cada niño entiende de forma distinta; la plataforma
+  personaliza el estudio para cada uno, para que el nivel de aprendizaje supere al actual.
+  - Cuidado al implementarlo (EDU.03/EDU.09): lenguaje positivo y orientado a cómo ayudar, sin
+    etiquetas ni diagnósticos; consentimiento de los padres; el perfil nunca va con el nombre
+    real a la IA; solo los padres del alumno, su tutor y quien autorice la dirección lo ven.
+- **Tutor de los chicos**: con **voz** desde el principio. Nombre provisional **Kay** (puede cambiar).
+- **Educación pública gratuita**: sin pagos para alumnos ni familias (ni dinero, ni QR, ni
+  créditos). La sección "Pagos" de padres no va en la versión pública; podría existir en una
+  versión para colegios privados. El municipio entregaría una tablet por alumno con textos y
+  cuadernos (ver `docs/vision-modelo-economico.md`).
+- Pendiente: qué ve la dirección (detalle por alumno o solo resúmenes).
+
+## Personalidad y voz del tutor (7-nov-2026)
+
+- Demo piloto: **IA conversacional en vivo por voz** (motor Kay / Gemini Live).
+- Tono **camba**: confiable, agradable, que se note que sabe mucho pero amigable y algo gracioso,
+  con el cantito y la calidez cruceña.
+- **Personaje original.** No imitar ni clonar la voz o identidad de ninguna persona real (el dueño
+  pensó en Percy Fernández como inspiración de carisma; se descartó copiarlo por derechos de su
+  familia, por ser figura política en un producto para escuelas públicas, y porque Gemini Live
+  usa voces predefinidas, no clonadas). Si en el futuro se quisiera una referencia a una persona
+  real, solo con autorización escrita de sus herederos y evaluación del riesgo político.
+- Nombre provisional: Kay (puede cambiar).
