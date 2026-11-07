@@ -117,7 +117,8 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/investigacion/una-app-o-varias.md` — por qué este diseño (con fuentes).
 - `docs/vision-modelo-economico.md` — de impuesto a suscripción.
 - `docs/educacion/vision-plataforma-educativa.md` y `vision-interfaz.md`.
-- (en curso) `docs/investigacion/educacion-piloto-y-financiamiento.md`, `docs/investigacion/transporte-municipal.md`.
+- `docs/investigacion/educacion-piloto-y-financiamiento.md` — piloto, evidencia y financiamiento.
+- `docs/investigacion/transporte-municipal.md` — parque, modelo financiero y ley del transporte.
 
 ## Decisiones pendientes del dueño
 

@@ -24,9 +24,11 @@ porque el universo de aportantes crece).
 | Extra | — | Con lo recaudado, posible **seguro gratuito del vehículo** → trabajo para talleres locales |
 
 - El municipio **asegura** ese ingreso (cobro diario en vez de un impuesto anual que muchos no pagan).
-- Parque estimado de autos de plataforma en Santa Cruz: se escuchó ~50.000 (en verificación).
-- Investigación en curso: parque real, comisiones e ingresos verificados, impuesto vehicular
-  típico, costo de seguros, modelo financiero y viabilidad legal → `docs/investigacion/transporte-municipal.md`.
+- **Resultado de la investigación** (`docs/investigacion/transporte-municipal.md`): el parque real
+  de conductores de app sería 10.000–25.000 (no 50.000) y la comisión privada ~10–15% (no 25%).
+  La ventaja de ÑANDÉ está en el **paquete**: comisión baja (5–10% o con tope, solo días con
+  viajes) + **impuesto del auto en 0** (exención por ley municipal) + **seguro gratuito**.
+  Con supuestos razonables deja margen al municipio; lo decisivo es el precio del seguro.
 
 ## eMarket — patente comercial → suscripción
 
@@ -51,5 +53,6 @@ un intercambio con beneficio personal visible.
   alcanza para útiles.
 - Financiamiento: presentar el proyecto a **Google** (programas de apoyo a la educación en países
   en desarrollo) y otros financiadores. Colegios **privados** podrían pagar por la app.
-- Investigación en curso: ¿piloto primero en público o en privado? y fuentes de financiamiento
-  → `docs/investigacion/educacion-piloto-y-financiamiento.md`.
+- **Resultado de la investigación** (`docs/investigacion/educacion-piloto-y-financiamiento.md`):
+  piloto público chico pagado con dinero privado (unidad de convenio o fiscal) con grupo de
+  comparación; el valor está en el tutor adaptativo y el uso guiado, no en el aparato.
