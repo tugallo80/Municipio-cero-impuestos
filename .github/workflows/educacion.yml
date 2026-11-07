@@ -64,12 +64,16 @@ jobs:
           export FIREBASE_WEB_CONFIG="$(cat "$RUNNER_TEMP/firebase-web.json")"
           npm ci --no-audit --no-fund && npm run build
 
-      - name: Publicar Functions y Hosting
+      - name: Publicar el sitio (Hosting)
         working-directory: educacion
         run: >
-          $FIREBASE_CLI deploy --only functions:educacion,hosting
-          --project "$PROYECTO" --non-interactive --force
+          $FIREBASE_CLI deploy --only hosting
+          --project "$PROYECTO" --non-interactive
           --message "educacion ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
+
+      - name: Publicar las Functions
+        working-directory: educacion
+        run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
 
       - name: Reglas de la base, cuentas de prueba y contenido demo
         working-directory: educacion/tools

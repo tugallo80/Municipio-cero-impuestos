@@ -36,6 +36,8 @@ APIS=(
   secretmanager.googleapis.com iam.googleapis.com iamcredentials.googleapis.com
   sts.googleapis.com cloudresourcemanager.googleapis.com serviceusage.googleapis.com
   logging.googleapis.com generativelanguage.googleapis.com apikeys.googleapis.com
+  cloudbilling.googleapis.com firebaseextensions.googleapis.com pubsub.googleapis.com
+  storage.googleapis.com   # EDU.02: el deploy de Functions de Firebase los revisa
 )
 
 # Lo que necesita GitHub Actions para publicar Hosting, reglas y Functions.
