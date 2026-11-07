@@ -26,11 +26,11 @@ módulos suman o gastan créditos en la misma cuenta.
 
 | Pieza | Dónde está | Estado |
 |---|---|---|
-| Hub + 6 prototipos HTML | Raíz de este repo | Maquetas estáticas con datos de ejemplo. Sin backend. `municipio0_transporte_mvp.html` no está enlazado en el Hub |
+| Hub + 6 prototipos HTML | Raíz de este repo | Maquetas estáticas con datos de ejemplo. Sin backend. Todos enlazados en el Hub (INF.01) |
 | Educación — backend WhatsApp + PDF | `tugallo80/rubikeduai-backend` rama `main` (Vercel) | Funcional en código. Sin validación de firma Twilio. Manda nombre del alumno a Gemini |
 | Educación — dashboard de los chicos (voz en vivo con Kay) | `rubikeduai-backend` rama `claude/dashboard-hijos-kay` | Sin mergear. Nunca desplegado (Cloud Functions apagadas en el proyecto `rubikeduai`) |
 | Educación — panel del profesor | No encontrado en ningún repo | `api/process-pdf.js` lo menciona pero el código no está |
-| Deploy | — | Sin `firebase.json`, `vercel.json` ni GitHub Actions. Vercel falla por carpeta de salida |
+| Deploy | `firebase.json`, `.github/workflows/`, `vercel.json` | INF.01 (PR #1): push a `main` → `municipio-ia.web.app`; cada PR → vista previa con URL comentada. Vercel publica `_site/` |
 | Proyecto Google Cloud/Firebase propio | `municipio-ia` ("MUNICIPIO IA") | ✅ Creado 7-nov: Blaze, Firebase, deploy por Workload Identity, `GEMINI_API_KEY` en Secret Manager, `claude-code` con solo lectura (probado) |
 
 ## Orden de trabajo
@@ -41,7 +41,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | Código | Sub-sesión | Objetivo | Depende de | Estado |
 |---|---|---|---|---|
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
-| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏳ siguiente |
+| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | 🔎 PR #1 en revisión del dueño |
 | EDU.01 | Migración RubiKEduAI | Traer `rubikeduai-backend` a `educacion/`, que compile y se publique en `/educacion` | INF.01 | ⏳ |
 | EDU.02 | Sprint 1.1 — lector offline | Textos por capítulos, lectura en tablet sin internet | EDU.01 | ⏳ |
 | EDU.03 | Sprint 1.2 — tutor contextual | Tutor del capítulo + guardrails + anonimización + cuota | EDU.01 | ⏳ |
