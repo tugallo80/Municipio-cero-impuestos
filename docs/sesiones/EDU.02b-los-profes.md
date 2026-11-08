@@ -67,4 +67,30 @@ Para cambiar: editar `nombre` y `titulo` en `profes.json` (y los títulos de los
 
 ## Cierre
 
-_(se completa al terminar)_
+**8-nov-2026** — PR #5 (`sesion/edu-02b` → `main`), sin mergear. Publicado desde la rama
+(Hosting `nande-educacion` versión `c47de67`; Functions `eduKayToken`, `eduKayUso` y la nueva
+`eduProfes` ACTIVE en `municipio-ia`, sin errores en los logs).
+
+**Prueba de punta a punta (voz real contra Gemini, en el deploy): todo OK**
+- La profe Taji se presenta, dice que es una IA, con la misión cargada da la pregunta-pista y el
+  ejemplo con otros números (torta en 8) **sin dar la respuesta aunque insista**, marca el peldaño
+  en pantalla (`mostrar_pista`) y, al pedir "el profe Jochi", llama a `llamar_profe`.
+- Relevo a Jochi con voz Achird: no cuenta charla nueva (4 → 4) y hereda el reloj (552 s restantes).
+- Memoria compartida guardada (misión M1, peldaño 1) y preferencia de Matemática recordada.
+- Al terminar la misión Jochi celebra: "¡Belleza! ¡Mucha dosis…! ya tenés tu llave para el Parque escondido".
+- Habla camba con "s" aspirada en la transcripción ("ejtéh", "noj ejcapó", "trej octavoj").
+- Prueba en el navegador (Playwright, 390 px): flujo de misión completo sin errores; marco y franja
+  a ~60 fps (en la sesión el 3D no cargó por la red; con el 3D no se midió acá).
+
+**Costo**: la charla con misión sale **~USD 0,04–0,054/min** (la instrucción con la misión entera y
+dos personalidades pesa ~6.500–7.000 caracteres y se cobra en cada turno), contra ~0,025–0,03 de Kay.
+
+**Pendiente**
+- Prueba del dueño en el celular: elegir marco o franja, nombres finales y afinar el camba (se edita
+  en `tutor/profes/*.md`).
+- Bajar el costo: mandar solo el paso actual en vez de la misión entera, o caché de contexto.
+- En el relevo, Jochi a veces saluda dos veces; afinar la instrucción si molesta.
+- Llamar a un profe por voz cuando NO hay charla abierta no existe (el micrófono solo se abre al
+  tocar una cara, a propósito: costo y privacidad).
+- Medir fluidez con el 3D en un celular de gama media real.
+- Las misiones viven en `misiones-demo.js` (maqueta y servidor): pasan a la base cuando llegue EDU.05.
