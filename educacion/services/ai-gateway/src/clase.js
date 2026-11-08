@@ -95,7 +95,7 @@ async function generar(ai, pedido, audio, mime, contenido) {
 }
 
 exports.eduClase = onCall(
-  { region: 'us-central1', secrets: [GEMINI_API_KEY], timeoutSeconds: 540, memory: '1GiB', maxInstances: 5 },
+  { region: 'us-central1', invoker: 'public', secrets: [GEMINI_API_KEY], timeoutSeconds: 540, memory: '1GiB', maxInstances: 5 },
   async (request) => {
     const yo = await personalDeLaCuenta(request);
     if (!yo.tutor) throw new HttpsError('permission-denied', 'Solo un profe puede grabar su clase.');
@@ -184,7 +184,8 @@ exports.eduClase = onCall(
   }
 );
 
-exports.eduClases = onCall({ region: 'us-central1', timeoutSeconds: 30, memory: '256MiB', maxInstances: 10 }, async (request) => {
+exports.eduClases = // invoker public: cualquiera puede LLAMARLA, pero la Function exige cuenta de profe/dirección.
+exports.eduClases = onCall({ region: 'us-central1', invoker: 'public', timeoutSeconds: 30, memory: '256MiB', maxInstances: 10 }, async (request) => {
   const yo = await personalDeLaCuenta(request);
   const accion = String(request.data?.accion || 'listar');
   if (accion === 'listar') {
