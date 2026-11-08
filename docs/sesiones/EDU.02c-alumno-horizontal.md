@@ -135,9 +135,17 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
   Rotación automática esté apagada). Si no gira, el aviso dice que toque el **botón de girar** de Android
   en la esquina o active la Rotación automática.
 
+**Cierre final (8-nov-2026)** — El dueño probó en Chrome, con el celular acostado: los profes hablan y el
+horizontal anda bien. La MAESTRA 2 mergeó el PR #10 (`f0829a2`), que también trae el arreglo del panel del
+tutor en el celular (commit `afbec0d`, el mismo del PR #11).
+
 **Pendiente**
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
 - iPhone no permite trabar la orientación desde la web: ahí queda el aviso "Girá tu pantalla".
 - La zona del notch no se pudo simular en Playwright: mirar en un celular con notch.
 - Medir fluidez en un celular de gama media real (sigue pendiente desde EDU.02b).
+- Causa exacta del audio mudo en el celular: con el contexto creado dentro del toque volvió a sonar, pero en
+  Chrome de escritorio también sonaba antes. Si vuelve a pasar, usar `alumno.html?diag=1`.
+- Sensibilidad del giro (`SENS`) y límites del zoom (`ZOOM_MIN`/`ZOOM_MAX`) en `alumno.html`: afinar con chicos.
+- Al cambiar algo de la maqueta, subir el número `?v=` de sus archivos (hoy `edu02c-7`, estilos `edu02c-8`).
