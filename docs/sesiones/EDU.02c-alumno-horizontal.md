@@ -111,7 +111,21 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
 - Si igual no suena: en Android, con el micrófono abierto el volumen que manda es el **de llamada**;
   subir el volumen con los botones mientras habla el profe.
 
+**Ajuste 5 — audio: prueba de punta a punta y modo diagnóstico; zoom**
+- Prueba nueva en el navegador con Firebase y Gemini **simulados** (`educacion/tools/e2e/probar-audio-navegador.cjs`):
+  login → toque en la cara → token → WebSocket que manda 1,5 s de voz → se mide lo que llega a los parlantes.
+  Con Chrome exigiendo gesto para el audio: **suena** (pico 0,37) tanto con este arreglo como con la versión
+  anterior (ccfca90). O sea, en Chrome de escritorio la página horizontal reproduce bien; lo que falla depende
+  del celular (Android/navegador interno/salida de audio).
+- **Modo diagnóstico** para el celular: `alumno.html?diag=1` muestra abajo el estado del audio
+  (salida/mic, Hz, cuántos bloques de voz llegaron y el nivel) y un botón **"🔈 Probar parlante"**
+  que hace dos pitidos (uno a 24 kHz, como el profe, y otro a la frecuencia normal del celular).
+- **Zoom** como en los juegos: pellizcar con dos dedos sobre el mundo acerca o aleja (límites 0,45×–1,5×,
+  ~9 a ~30 unidades), con suavizado. No gira la cámara mientras se pellizca y se puede seguir caminando con
+  el círculo (probado con 3 dedos a la vez). En compu: rueda del mouse o + / −. Capturas `e1-*`, `e2-*`.
+
 **Pendiente**
+- Que el dueño abra `?diag=1` en su celular y cuente qué dice la barrita y si suenan los pitidos.
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
 - iPhone no permite trabar la orientación desde la web: ahí queda el aviso "Girá tu pantalla".

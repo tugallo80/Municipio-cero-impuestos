@@ -167,6 +167,7 @@ export async function iniciarSesionKay({
 
   let cerrado = false
   let sesion = null
+  const diag = { bloques: 0, muestras: 0 }
 
   if (ctxEntrada.state !== 'running' || ctxSalida.state !== 'running') {
     onError?.(
@@ -198,6 +199,7 @@ export async function iniciarSesionKay({
     for (const parte of partes) {
       if (parte.inlineData?.data) {
         const floats = pcm16Base64AFloat32(parte.inlineData.data)
+        diag.bloques++; diag.muestras += floats.length
         nodoSalida.port.postMessage(floats.buffer, [floats.buffer])
       }
       if (parte.text) onTextoModelo?.(parte.text)
@@ -330,6 +332,8 @@ export async function iniciarSesionKay({
     // Estado del audio de salida ('running' | 'suspended' | 'interrupted' | 'closed')
     // y cómo reanudarlo desde un toque (por si el celular lo suspende).
     estadoAudio: () => ctxSalida.state,
+    // Para el modo diagnóstico (?diag=1): cuánto audio llegó y cómo está el audio del navegador.
+    diagnostico: () => ({ salida: ctxSalida.state, entrada: ctxEntrada.state, hz: ctxSalida.sampleRate, latencia: ctxSalida.baseLatency, ...diag }),
     reanudarAudio: () => Promise.all([ctxSalida.resume(), ctxEntrada.resume()]).catch(() => {}),
   }
 }

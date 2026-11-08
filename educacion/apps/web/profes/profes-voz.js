@@ -416,6 +416,31 @@ function prepararSalida() {
     f.buffer = b; f.connect(salidaPreparada.destination); f.start()
   } catch { salidaPreparada = null }
 }
+// ── Modo diagnóstico (?diag=1): muestra en pantalla el estado del audio y deja probar el parlante ──
+if (new URLSearchParams(location.search).has('diag')) {
+  const caja = document.createElement('div')
+  caja.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));z-index:80;background:rgba(0,0,0,.85);color:#fff;font:12px/1.35 monospace;padding:6px 10px;border-radius:10px;display:flex;gap:8px;align-items:center;max-width:96vw'
+  caja.innerHTML = '<span id="pv-diag">audio: sin charla</span><button type="button" style="font:inherit;background:#FDE047;color:#000;border:0;border-radius:8px;padding:6px 8px">🔈 Probar parlante</button>'
+  document.body.appendChild(caja)
+  caja.querySelector('button').onclick = () => {
+    for (const [hz, f, t] of [[24000, 440, 0], [undefined, 660, 0.6]]) {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext
+        const c = hz ? new AC({ sampleRate: hz }) : new AC()
+        const o = c.createOscillator(), g = c.createGain()
+        o.frequency.value = f; g.gain.value = 0.2; o.connect(g).connect(c.destination)
+        c.resume(); o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.4)
+        setTimeout(() => c.close(), 1500)
+      } catch (e) { $('pv-diag').textContent = 'error: ' + e.message }
+    }
+  }
+  setInterval(() => {
+    const d = charla?.sesion?.diagnostico?.()
+    $('pv-diag').textContent = d
+      ? `salida ${d.salida} ${d.hz}Hz · mic ${d.entrada} · llegaron ${d.bloques} bloques (${(d.muestras / 24000).toFixed(1)} s) · nivel ${charla.sesion.nivelSalida().toFixed(2)}`
+      : 'audio: sin charla (tocá la cara de un profe)'
+  }, 300)
+}
 function tomarSalida() { const c = salidaPreparada; salidaPreparada = null; return c }
 async function llamar(profeId) {
   if (ocupado || !profe(profeId)) return

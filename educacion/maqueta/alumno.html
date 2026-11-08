@@ -269,7 +269,7 @@
     <button class="redondo ayudar" onclick="abrirAyuda()" title="Pedir ayuda">🙋<small>Ayuda</small></button>
   </div>
 </div>
-<div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar</div>
+<div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar · pellizcá para acercar</div>
 <div class="lista2d" id="lista2d"></div>
 
 <div class="cargando" id="cargando"><div><div class="t">Armando la isla del curso…</div><div>bloque por bloque 🧱</div></div></div>
@@ -297,8 +297,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-5"></script>
-<script src="misiones-demo.js?v=edu02c-5"></script>
+<script src="datos-demo.js?v=edu02c-6"></script>
+<script src="misiones-demo.js?v=edu02c-6"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -856,7 +856,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-5').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-6').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
@@ -1183,7 +1183,10 @@ function iniciar(THREE) {
   // Cada dedo se sigue por separado: el izquierdo puede caminar con el círculo mientras
   // el derecho gira la cámara.
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
-  const CAM = { yaw: 0, pitch: 0, yawObj: 0, pitchObj: 0, dist: 20, min: .45, max: 1.2 };
+  const CAM = { yaw: 0, pitch: 0, yawObj: 0, pitchObj: 0, dist: 20, min: .45, max: 1.2, zoom: 1, zoomObj: 1 };
+  const ZOOM_MIN = .45, ZOOM_MAX = 1.5;   // ~9 a ~30 unidades: ni dentro del personaje ni demasiado lejos
+  const zoomA = z => { CAM.zoomObj = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z)); };
+  let pellizco = null;   // { d0, z0 } mientras hay dos dedos sobre el mundo
   window.__cam = CAM; window.__yo = yo;   // (para las pruebas automáticas)
   const dedos = new Map();  // pointerId → { x, y, x0, y0, t0, mirar }
   let ultimoTap = { t: 0, x: 0, y: 0 };
@@ -1203,21 +1206,26 @@ function iniciar(THREE) {
     return true;
   }
   function detrasDelPersonaje() { CAM.yawObj = yo.rotation.y + Math.PI; CAM.pitchObj = CAM.pitch0; }
+  const distDedos = () => { const [a, b] = [...dedos.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
   canvas.addEventListener('pointerdown', e => {
     dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: e.clientX > innerWidth / 2 });
     try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    // Dos dedos sobre el mundo (el círculo de caminar no cuenta: es otro elemento) = pellizco para zoom
+    if (dedos.size === 2) { pellizco = { d0: distDedos(), z0: CAM.zoomObj }; dedos.forEach(d => { d.pellizco = true; }); ocultarPistaMirar(); }
   });
   canvas.addEventListener('pointermove', e => {
     const d = dedos.get(e.pointerId); if (!d) return;
     const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
-    if (!d.mirar || window.__pausa) return;
+    if (pellizco && dedos.size >= 2) { if (!window.__pausa) zoomA(pellizco.z0 * pellizco.d0 / distDedos()); return; }
+    if (d.pellizco || !d.mirar || window.__pausa) return;
     if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 10) return;   // todavía puede ser un toque
     CAM.yawObj -= dx * SENS;
     CAM.pitchObj = Math.min(CAM.max, Math.max(CAM.min, CAM.pitchObj + dy * SENS * .7));
     ocultarPistaMirar();
   });
   const soltarDedo = e => {
-    const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (!d || e.type === 'pointercancel') return;
+    const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (dedos.size < 2) pellizco = null;
+    if (!d || e.type === 'pointercancel' || d.pellizco) return;
     const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
     if (!corto) return;
     const ahora = performance.now();
@@ -1227,6 +1235,9 @@ function iniciar(THREE) {
     tocar(e);
   };
   canvas.addEventListener('pointerup', soltarDedo);
+  // En compu: rueda del mouse o teclas + / -
+  canvas.addEventListener('wheel', e => { e.preventDefault(); zoomA(CAM.zoomObj * Math.exp(e.deltaY * .0015)); }, { passive: false });
+  addEventListener('keydown', e => { if (e.key === '+' || e.key === '=') zoomA(CAM.zoomObj / 1.15); if (e.key === '-' || e.key === '_') zoomA(CAM.zoomObj * 1.15); });
   canvas.addEventListener('pointercancel', soltarDedo);
   // Pista la primera vez
   const pistaMirar = document.getElementById('pista-mirar');
@@ -1348,8 +1359,9 @@ function iniciar(THREE) {
     const k = Math.min(1, dt * 10);
     let dY = CAM.yawObj - CAM.yaw; dY = Math.atan2(Math.sin(dY), Math.cos(dY)); CAM.yaw += dY * k; CAM.yawObj = CAM.yaw + (dY * (1 - k));
     CAM.pitch += (CAM.pitchObj - CAM.pitch) * k;
-    const horiz = Math.cos(CAM.pitch) * CAM.dist;
-    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
+    CAM.zoom += (CAM.zoomObj - CAM.zoom) * k;
+    const dist = CAM.dist * CAM.zoom, horiz = Math.cos(CAM.pitch) * dist;
+    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
     camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
     camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
     renderer.render(escena, camara);
