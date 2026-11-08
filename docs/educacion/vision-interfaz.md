@@ -243,3 +243,23 @@ Notas de la MAESTRA:
 - La decisión del curso puede ser una **votación en clase** guiada por el docente, sin premios por votar.
 - Las obras de la ciudad son **de todos**: se pueden visitar por portales y llevan el nombre de los
   colegios que aportaron.
+
+## Construir debe ser lúdico y propio (dueño, 8-nov-2026)
+
+- No solo "tocar y que aparezca una pieza predeterminada": los chicos **diseñan lo suyo**. Eso
+  es lo que diferencia a los juegos de construcción libre de los que entregan el diseño hecho.
+- También se **competirá en arte** (diseño de las obras). Después de tener la maqueta funcional.
+- Idea de mezcla: el alumno diseña → la obra se aprueba → **obreros la construyen durante un rato**
+  (expectativa de verla terminada).
+- Posible **mix**: diseño libre para lo propio + piezas/planos guía para empezar.
+
+Notas de la MAESTRA (para hacerlo sano):
+- **Diseño libre** = construccionismo (aprende quien diseña): respaldado.
+- **Obreros que tardan**: dar expectativa sí, ansiedad no. Ver la obra crecer en vivo mientras se
+  juega, o "los obreros trabajan mientras estás en clase/mañana está lista" está bien. **Evitar**
+  los relojes de los juegos gratuitos que empujan a volver o pagar: nada de notificaciones para
+  apurar, nada de "acelerar" con monedas o dinero, y la obra nunca se pierde.
+- **Concurso de arte**: jurado docente + votos de compañeros con reacciones predefinidas, por
+  categorías y ligas (no ranking único); moderación de lo construido (aprobación docente).
+- Herramientas simples en tablet: pintar bloques, simetría, copiar/pegar, deshacer, plantillas
+  opcionales para quien no sabe por dónde empezar.
