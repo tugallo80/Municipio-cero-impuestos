@@ -41,11 +41,11 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | Código | Sub-sesión | Objetivo | Depende de | Estado |
 |---|---|---|---|---|
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
-| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏸️ PR #1 aprobado por el dueño en lo técnico, **en espera** hasta definir apps separadas |
-| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | 🔎 PR #2 listo, capturas revisadas por el dueño |
-| EDU.01b | Láminas y maqueta v2 | Láminas de los 4 mundos + cartas para talleres con niños; maqueta del alumno v2 (misión→llave→lugar, sin ranking, perfil sin "estilo de aprendizaje") | EDU.01 | 🔎 PR #4 abierto: láminas en `/educacion/talleres/` + maqueta v2; falta OK del dueño |
-| EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | 🔎 PR #3 listo: `nande-educacion.web.app/prueba-motor/` habla por voz con Kay (prueba automática OK); ~USD 0,025–0,03 por minuto; falta prueba del dueño en el celular |
-| EDU.02b | Los profes dentro del mundo | Voz en vivo en la maqueta del alumno: la profe (Sulafat) y el profe (Achird), habla camba, marco/franja que sigue la voz, pistas en escalera con la misión | EDU.02, EDU.01b | 🔎 PR #5 listo y publicado: `nande-educacion.web.app/maqueta/alumno.html` (cuenta `dueno`); prueba automática OK; ~USD 0,04–0,05/min; falta prueba del dueño en el celular |
+| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ✅ En `main` (8-nov). Sitio del municipio publicándose en `municipio-ia.web.app`; Educación en su propio sitio |
+| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | ✅ En `main` (8-nov) |
+| EDU.01b | Láminas y maqueta v2 | Láminas de los 4 mundos + cartas para talleres con niños; maqueta del alumno v2 (misión→llave→lugar, sin ranking, perfil sin "estilo de aprendizaje") | EDU.01 | ✅ En `main` (8-nov) |
+| EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | ✅ En `main` (8-nov). `nande-educacion.web.app/prueba-motor/` |
+| EDU.02b | Los profes dentro del mundo | Voz en vivo en la maqueta del alumno: la profe (Sulafat) y el profe (Achird), habla camba, marco/franja que sigue la voz, pistas en escalera con la misión | EDU.02, EDU.01b | ✅ En `main` (8-nov). `nande-educacion.web.app/maqueta/alumno.html` |
 | EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
 | EDU.05 | Retos / Misiones | Editor del tutor + motor de misiones + tutor IA dentro de la misión | EDU.03–04 | ⏳ |
