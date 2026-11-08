@@ -117,6 +117,10 @@ try {
   tokenProfe = await cuenta(PROFE)
   await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true } })
   await db.ref(`edu/uso_clase/${fecha}/${PROFE.id}`).remove()
+  // Restos de corridas anteriores que fallaron a mitad: que no queden en el contexto del curso.
+  const viejas = (await db.ref(`edu/clases/${CURSO}`).orderByChild('personalId').equalTo(PROFE.id).once('value')).val() || {}
+  for (const id of Object.keys(viejas)) await db.ref().update({ [`edu/clases/${CURSO}/${id}`]: null, [`edu/contexto_dia/${CURSO}/${id}`]: null })
+  if (Object.keys(viejas).length) md(`- Limpié ${Object.keys(viejas).length} clase(s) de pruebas anteriores`)
   const tokenAlu = await cuenta(ALU)
   await db.ref(`edu/uid_alumno/${ALU.uid}`).set(ALU.alumnoId)
   await db.ref(`edu/alumnos/${ALU.alumnoId}`).set({ curso: CURSO, estilo: 'visual' })
@@ -190,7 +194,7 @@ try {
   if (claseId && tokenProfe) {
     const b = await llamar('eduClases', { accion: 'borrar', curso: CURSO, id: claseId }, tokenProfe)
     const queda = (await db.ref(`edu/contexto_dia/${CURSO}/${claseId}`).once('value')).val()
-    chequear(b.result?.ok === true && !queda, 'Borrar el informe borra también lo que sabían los profes IA')
+    chequear(b.result?.ok === true && !queda, `Borrar el informe borra también lo que sabían los profes IA (${JSON.stringify(b.result || b.error)}, contexto ${queda ? 'quedó' : 'borrado'})`)
   }
 }
 

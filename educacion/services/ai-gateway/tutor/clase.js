@@ -225,6 +225,25 @@ function limpiarInforme(crudo, nombres = []) {
 }
 
 /**
+ * La Realtime Database no guarda listas vacías: al leer un informe se completan los
+ * campos que falten para que el navegador siempre reciba la misma forma.
+ */
+function completarInforme(inf) {
+  const i = inf && typeof inf === 'object' ? inf : {};
+  const arr = (v) => (Array.isArray(v) ? v : v && typeof v === 'object' ? Object.values(v) : []);
+  const p = i.profe || {};
+  const d = i.direccion || {};
+  const c = i.contexto || {};
+  return {
+    huboClase: i.huboClase !== false,
+    calidadAudio: i.calidadAudio || 'regular',
+    profe: { resumen: p.resumen || '', vistos: arr(p.vistos), comparacionPensum: p.comparacionPensum || '', pendiente: arr(p.pendiente), sugerencias: arr(p.sugerencias), tareas: arr(p.tareas) },
+    direccion: { resumen: d.resumen || '', alertas: arr(d.alertas) },
+    contexto: { temas: arr(c.temas), explicaciones: arr(c.explicaciones), tareas: arr(c.tareas), dudas: arr(c.dudas) },
+  };
+}
+
+/**
  * Texto para la instrucción de los profes IA: lo que pasó en las últimas clases del
  * curso (sin nombres; ya viene limpio). `clases`: [{fecha, materia, tema, contexto}]
  */
@@ -264,5 +283,6 @@ module.exports = {
   instruccionClase,
   pedidoClase,
   limpiarInforme,
+  completarInforme,
   textoClasesParaTutor,
 };

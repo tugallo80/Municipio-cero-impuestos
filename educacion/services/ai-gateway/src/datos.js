@@ -307,8 +307,10 @@ async function obtenerClasesRecientes(curso, max = 3) {
   if (!/^[a-z0-9_]{3,30}$/.test(curso || '')) return [];
   const ahora = Date.now();
   const ctx = (await base().ref(`edu/contexto_dia/${curso}`).orderByChild('creado').limitToLast(10).once('value')).val() || {};
+  const arr = (v) => (Array.isArray(v) ? v : []);
   return Object.values(ctx)
     .filter((c) => (c.vence || 0) > ahora)
+    .map((c) => ({ ...c, contexto: { temas: arr(c.contexto?.temas), explicaciones: arr(c.contexto?.explicaciones), tareas: arr(c.contexto?.tareas), dudas: arr(c.contexto?.dudas) } }))
     .sort((a, b) => b.creado - a.creado)
     .slice(0, max);
 }

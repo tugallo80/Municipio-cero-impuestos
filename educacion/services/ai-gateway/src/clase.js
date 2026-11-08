@@ -54,7 +54,7 @@ function publico(c) {
     venceTranscripcion: c.venceTranscripcion,
     modelo: c.modelo,
     costoUsd: c.costoUsd,
-    informe: c.informe,
+    informe: clase.completarInforme(c.informe),
     transcripcion: c.transcripcion || '',
   };
 }

@@ -105,3 +105,10 @@ test('costoClase: una hora de audio con Flash-Lite cuesta centavos', () => {
   const d = costoClase({ promptTokenCount: hora, promptTokensDetails: [{ modality: 'AUDIO', tokenCount: hora }] }, 'otro-modelo');
   assert.ok(d.costoUsd >= 0.11);
 });
+
+test('completarInforme rellena las listas que la base no guarda', () => {
+  const i = clase.completarInforme({ profe: { resumen: 'x' }, direccion: { resumen: 'y' } });
+  assert.deepEqual(i.direccion.alertas, []);
+  assert.deepEqual(i.profe.tareas, []);
+  assert.deepEqual(i.contexto.temas, []);
+});
