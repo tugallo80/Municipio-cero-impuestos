@@ -14,6 +14,7 @@
 #    4. Agrega Firebase al proyecto.
 #    5. Crea la cuenta "github-deploy" y deja que SOLO GitHub Actions de este repo la use
 #       (Workload Identity: no se guarda ninguna llave en GitHub).
+#    5b. Deja compilar Cloud Functions a la cuenta de cómputo (Cloud Build).
 #    6. Da a la cuenta "claude-code" permisos de SOLO LECTURA (logs, estado, versiones).
 #    7. Ofrece guardar la clave de Gemini en Secret Manager (se escribe oculta).
 #    8. Imprime los "Datos para GitHub" que hay que pegarle a Claude (no son secretos).
@@ -36,6 +37,8 @@ APIS=(
   secretmanager.googleapis.com iam.googleapis.com iamcredentials.googleapis.com
   sts.googleapis.com cloudresourcemanager.googleapis.com serviceusage.googleapis.com
   logging.googleapis.com generativelanguage.googleapis.com apikeys.googleapis.com
+  cloudbilling.googleapis.com firebaseextensions.googleapis.com pubsub.googleapis.com
+  storage.googleapis.com   # EDU.02: el deploy de Functions de Firebase los revisa
 )
 
 # Lo que necesita GitHub Actions para publicar Hosting, reglas y Functions.
@@ -48,6 +51,7 @@ ROLES_DEPLOY=(
   roles/cloudbuild.builds.editor
   roles/secretmanager.admin
   roles/serviceusage.serviceUsageConsumer
+  roles/serviceusage.apiKeysAdmin   # EDU.02: limitar la clave pública del navegador (que no sirva para Gemini)
 )
 
 # Claude: solo lectura. Nunca datos de ciudadanos/alumnos, secretos ni IAM.
@@ -187,6 +191,13 @@ aplicar() {
     --role=roles/iam.workloadIdentityUser --format=none \
     --member="principalSet://iam.googleapis.com/projects/$num/locations/global/workloadIdentityPools/$POOL/attribute.repository/$REPO"
   ok "Solo GitHub Actions de $REPO puede usar $DEPLOY_SA"
+
+  paso "5b. Cuenta que compila las Cloud Functions"
+  # En proyectos nuevos Cloud Build compila con la cuenta de cómputo por defecto, que
+  # arranca sin permisos para escribir logs ni la imagen: sin esto el deploy falla.
+  local COMPUTE_SA="${num}-compute@developer.gserviceaccount.com"
+  reintentar gcloud projects add-iam-policy-binding "$P" --member="serviceAccount:$COMPUTE_SA" \
+    --role=roles/cloudbuild.builds.builder --condition=None --format=none && ok "$COMPUTE_SA puede compilar"
 
   paso "6. claude-code (solo lectura)"
   for R in "${ROLES_CLAUDE[@]}"; do

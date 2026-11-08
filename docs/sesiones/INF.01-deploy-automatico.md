@@ -30,4 +30,18 @@ desde el celular. Vercel deja de fallar.
 - `firebase hosting:channel:list` y logs visibles con la cuenta `claude-code`.
 
 ## Cierre
-(pendientes de la sesión)
+
+Hecho (PR #1, rama `sesion/inf-01`). Vista previa verificada: `https://municipio-ia--pr-1-lmdi7w7u.web.app` (versión con Hub + 6 módulos, publicada por `github-deploy`):
+- `firebase.json` + `.firebaserc` (Hosting `municipio-ia`, publica `_site/`, HTML `no-cache`).
+- `scripts/build-site.sh`: copia `educacion/maqueta/` (EDU.01) a `/educacion/maqueta/` y, si existe
+  `educacion/apps/tablet-client`, la compila y copia `dist/`, `build/` u `out/` a `/educacion/`.
+- `deploy.yml` (push a `main` → Hosting) y `preview.yml` (PR → canal `pr-N`, 14 días, comentario con URL).
+  Los PR desde forks no generan vista previa (no reciben token de Google).
+- `vercel.json` con `buildCommand` y `outputDirectory: "_site"`.
+- Hub: enlace "Transporte MVP" con el estilo del botón "Panel Municipal".
+
+Pendiente:
+- Functions en `deploy.yml`: se agrega en EDU.02 (motor) cuando exista `educacion/services/` o `functions/`.
+- Decisión del dueño: ¿Vercel queda como espejo del sitio o solo para el webhook de WhatsApp?
+  Si en el panel de Vercel hay un "Output Directory" puesto a mano, borrarlo (manda `vercel.json`).
+- Verificar después del merge que `municipio-ia.web.app` se actualiza sola.

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Escena</title>
+<style>
+@font-face { font-family: 'Space Grotesk'; font-weight: 700; src: url(recursos/SpaceGrotesk-700.ttf); }
+html, body { margin: 0; background: transparent; }
+canvas { display: block; }
+</style></head>
+<body><canvas id="c"></canvas>
+<script type="module">
+import { dibujar } from './escenas.js';
+const q = new URLSearchParams(location.search), w = +q.get('w'), h = +q.get('h');
+const c = document.getElementById('c'); c.style.width = w + 'px'; c.style.height = h + 'px';
+try { await dibujar(q.get('n'), w, h, c); window.__listo = 'ok'; } catch (e) { window.__listo = 'error: ' + e.message; console.error(e); }
+</script></body></html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Dirección · Educación ÑANDÉ (maqueta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
+    <div class="marca"><b id="nom-colegio"></b><span>Dirección y administración</span></div>
+    <span class="pildora">Dirección</span>
+  </header>
+  <div class="cuerpo con-lateral">
+    <nav class="nav">
+      <a href="#resumen" data-ruta="resumen">🏫 Cursos</a>
+      <a href="#finanzas" data-ruta="finanzas">💰 Finanzas</a>
+      <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
+      <a href="#planificacion" data-ruta="planificacion">🧭 Planificación</a>
+      <a href="#notas" data-ruta="notas">📝 Notas RUDE / SIE</a>
+    </nav>
+    <main class="principal" id="principal"></main>
+  </div>
+</div>
+<script src="datos-demo.js"></script>
+<script src="comun.js"></script>
+<script>
+const D = DEMO;
+U.$('#nom-colegio').textContent = D.colegio.nombre;
+
+// Reparte una nota de 100 en las dimensiones de evaluación (ejemplo, se valida en EDU.10)
+function dimensiones(n) {
+  const r = (max) => Math.round(n / 100 * max);
+  const d = { ser: r(10), saber: r(35), hacer: r(35), decidir: r(10), auto: r(10) };
+  d.total = d.ser + d.saber + d.hacer + d.decidir + d.auto;
+  return d;
+}
+
+const rutas = {
+  resumen() {
+    const tot = D.alumnos.length;
+    return `<div class="encab"><div><h1>Estado de los cursos</h1><p>${D.colegio.hoy} · gestión ${D.colegio.gestion} · ${D.colegio.trimestre}er trimestre</p></div></div>
+    <div class="grilla g4">
+      <div class="tarjeta kpi"><b>${D.cursos.length}</b><span>cursos en la demo</span></div>
+      <div class="tarjeta kpi"><b>${tot}</b><span>alumnos</span></div>
+      <div class="tarjeta kpi"><b>92%</b><span>asistencia media</span></div>
+      <div class="tarjeta kpi"><b style="color:var(--rojo)">${D.cursos.reduce((s, c) => s + c.alertas, 0)}</b><span>alertas abiertas</span></div>
+    </div>
+    <div class="seccion"><h3>Por curso</h3><div class="grilla g2">${D.cursos.map(c => `
+      <div class="tarjeta">
+        <div class="fila entre"><h2>${c.nombre}</h2>${c.alertas ? `<span class="pildora rojo">${c.alertas} alerta${c.alertas > 1 ? 's' : ''}</span>` : ''}</div>
+        <p class="ter" style="margin-bottom:14px">Tutora: ${c.tutor} · ${c.alumnos} alumnos</p>
+        <div class="pila chica">
+          <div><div class="fila entre"><span>Avance del pensum</span><b>${c.avancePensum}%</b></div>${U.barra(c.avancePensum)}</div>
+          <div><div class="fila entre"><span>Asistencia</span><b>${c.asistencia}%</b></div>${U.barra(c.asistencia)}</div>
+          <div><div class="fila entre"><span>Promedio general</span><b style="color:${U.colorNota(c.promedio)}">${c.promedio}</b></div>${U.barra(c.promedio)}</div>
+        </div>
+        <div class="fila" style="margin-top:14px"><a class="btn chico sec2" href="#notas/${c.id}">Ver notas</a></div>
+      </div>`).join('')}</div></div>
+    <div class="seccion"><h3>Promedio por materia (todos los cursos)</h3><div class="tarjeta pila">${D.materias.map(m => {
+      const p = Math.round(D.alumnos.reduce((s, a) => s + a.notas[m.id], 0) / D.alumnos.length);
+      return `<div class="chica"><div class="fila entre"><span>${m.icono} ${m.nombre}</span><b style="color:${U.colorNota(p)}">${p}</b></div>${U.barra(p)}</div>`; }).join('')}</div></div>`;
+  },
+
+  finanzas() {
+    const F = D.finanzas, max = Math.max(...F.meses.map(m => m.ingresos));
+    const ult = F.meses[F.meses.length - 2];
+    const totalGastos = F.rubros.reduce((s, r) => s + r.monto, 0);
+    return `<div class="encab"><div><h1>Finanzas</h1><p>Montos de ejemplo en bolivianos</p></div>
+      <button class="btn chico sec2" onclick="U.toast('📊 Simulado: exportar a planilla')">⬇ Exportar</button></div>
+    <div class="grilla g4">
+      <div class="tarjeta kpi"><b>${U.bs(ult.ingresos)}</b><span>ingresos octubre</span></div>
+      <div class="tarjeta kpi"><b>${U.bs(ult.gastos)}</b><span>gastos octubre</span></div>
+      <div class="tarjeta kpi"><b style="color:var(--verde)">${U.bs(ult.ingresos - ult.gastos)}</b><span>resultado octubre</span></div>
+      <div class="tarjeta kpi"><b style="color:var(--ambar)">${F.morosidad}%</b><span>familias con mora</span></div>
+    </div>
+    <div class="grilla g2 seccion">
+      <div class="tarjeta"><div class="fila entre"><h3>Ingresos vs gastos</h3>
+        <span class="ter"><span class="punto"></span> ingresos &nbsp;<span class="punto" style="background:#3F3F46"></span> gastos</span></div>
+        <div class="barras">${F.meses.map(m => `<div class="col"><div class="par">
+          <i style="height:${m.ingresos / max * 100}%" title="${U.bs(m.ingresos)}"></i><i class="g" style="height:${m.gastos / max * 100}%" title="${U.bs(m.gastos)}"></i></div><small>${m.mes}</small></div>`).join('')}</div>
+        <p class="ter" style="margin-top:8px">Noviembre va por la mitad del mes.</p></div>
+      <div class="tarjeta"><h3 style="margin-bottom:12px">Gastos por rubro (octubre)</h3><div class="pila chica">${F.rubros.map(r => `
+        <div><div class="fila entre"><span>${r.rubro}</span><b>${U.bs(r.monto)}</b></div>${U.barra(Math.round(r.monto / totalGastos * 100))}</div>`).join('')}</div></div>
+    </div>`;
+  },
+
+  cronograma() {
+    return `<div class="encab"><div><h1>Cronograma educativo</h1><p>Hitos del colegio hasta fin de gestión</p></div>
+      <button class="btn chico" onclick="U.toast('📅 Simulado: evento agregado')">+ Agregar evento</button></div>
+    <div class="grilla g2">
+      <div class="tarjeta"><h3 style="margin-bottom:8px">Noviembre – diciembre</h3><div class="lista">${D.mes.map(e => `
+        <div class="fila"><span class="pildora gris" style="min-width:64px;justify-content:center">${e.fecha}</span><span>${e.evento}</span></div>`).join('')}</div></div>
+      <div class="tarjeta"><h3 style="margin-bottom:8px">Trimestres ${D.colegio.gestion}</h3><div class="pila chica">
+        <div><div class="fila entre"><span>1er trimestre · feb – may</span><span class="pildora">cerrado</span></div>${U.barra(100)}</div>
+        <div><div class="fila entre"><span>2do trimestre · may – ago</span><span class="pildora">cerrado</span></div>${U.barra(100)}</div>
+        <div><div class="fila entre"><span>3er trimestre · sep – dic</span><span class="pildora ambar">en curso</span></div>${U.barra(70)}</div>
+      </div></div>
+    </div>`;
+  },
+
+  planificacion() {
+    return `<div class="encab"><div><h1>Planificación</h1><p>Documentos y planes en marcha</p></div></div>
+    <div class="pila">${D.planificacion.map(p => `
+      <div class="tarjeta"><div class="fila entre envuelve"><div><b>${p.item}</b><div class="ter">Responsable: ${p.responsable}</div></div>${U.estado(p.estado)}</div>
+      <div style="margin-top:10px">${U.barra(p.avance)}</div></div>`).join('')}</div>
+    <div class="tarjeta seccion" style="border-style:dashed"><b>💡 Ayuda de la IA</b><p class="sec chica" style="margin-top:4px">En la versión real, la IA propone el borrador de la planificación anual a partir del pensum y del avance de cada curso. La dirección revisa y aprueba.</p></div>`;
+  },
+
+  notas(curso = '4A') {
+    const al = D.alumnos.filter(a => a.curso === curso);
+    window._materiaNotas = window._materiaNotas || 'mat';
+    const m = U.materia(window._materiaNotas);
+    return `<div class="encab"><div><h1>Ayuda de notas RUDE / SIE</h1><p>Prepara las notas en el formato del Ministerio para cargarlas. No se conecta al sistema del Estado.</p></div></div>
+    <div class="fila envuelve" style="margin-bottom:14px">
+      <div class="chips">${D.cursos.map(c => `<a class="chip ${c.id === curso ? 'activo' : ''}" href="#notas/${c.id}">${c.id}</a>`).join('')}</div>
+      <select class="chip" style="background:var(--sup3)" onchange="window._materiaNotas=this.value;dispatchEvent(new HashChangeEvent('hashchange'))">
+        ${D.materias.map(x => `<option value="${x.id}" ${x.id === m.id ? 'selected' : ''}>${x.nombre}</option>`).join('')}</select>
+    </div>
+    <div class="tabla-caja"><table>
+      <thead><tr><th>Cód.</th><th>Estudiante</th><th class="num">Ser /10</th><th class="num">Saber /35</th><th class="num">Hacer /35</th><th class="num">Decidir /10</th><th class="num">Autoev. /10</th><th class="num">Total</th></tr></thead>
+      <tbody>${al.map(a => { const d = dimensiones(a.notas[m.id]); return `<tr>
+        <td class="ter">${a.id}</td><td>${a.nombre}</td>
+        <td class="num">${d.ser}</td><td class="num">${d.saber}</td><td class="num">${d.hacer}</td><td class="num">${d.decidir}</td><td class="num">${d.auto}</td>
+        <td class="num" style="font-weight:700;color:${U.colorNota(d.total)}">${d.total}</td></tr>`; }).join('')}</tbody></table></div>
+    <div class="fila envuelve" style="margin-top:14px">
+      <span class="pildora">✓ ${al.length} de ${al.length} con nota</span><span class="pildora">✓ sin notas fuera de rango</span>
+    </div>
+    <div class="fila envuelve" style="margin-top:16px">
+      <button class="btn" onclick="preparar('${curso}')">📦 Preparar archivo</button>
+      <span class="ter">Columnas y escala de ejemplo: se validan con el formato oficial en EDU.10.</span>
+    </div>`;
+  }
+};
+
+function preparar(curso) {
+  const m = U.materia(window._materiaNotas);
+  const v = U.hoja(`<h2>Preparando archivo…</h2><p class="sec chica" style="margin:4px 0 16px">${U.curso(curso).nombre} · ${m.nombre}</p>
+    <div class="pila chica" id="pasos"></div>`);
+  const pasos = ['Revisando que todos tengan nota', 'Ordenando por código de estudiante', 'Aplicando columnas del formato', 'Archivo listo'];
+  let i = 0;
+  const t = setInterval(() => {
+    const caja = v.querySelector('#pasos'); if (!caja) return clearInterval(t);
+    caja.insertAdjacentHTML('beforeend', `<div class="fila"><span class="verde">✓</span>${pasos[i]}</div>`);
+    if (++i === pasos.length) {
+      clearInterval(t);
+      caja.insertAdjacentHTML('afterend', `<button class="btn ancho" style="margin-top:18px" onclick="descargar('${curso}')">⬇ Descargar (CSV de ejemplo)</button>
+        <button class="btn sec2 ancho" style="margin-top:8px" data-cerrar>Cerrar</button>`);
+    }
+  }, 500);
+}
+
+function descargar(curso) {
+  const m = U.materia(window._materiaNotas);
+  const filas = [['codigo', 'estudiante', 'curso', 'materia', 'ser', 'saber', 'hacer', 'decidir', 'autoevaluacion', 'total']];
+  D.alumnos.filter(a => a.curso === curso).forEach(a => {
+    const d = dimensiones(a.notas[m.id]);
+    filas.push([a.id, a.nombre, curso, m.nombre, d.ser, d.saber, d.hacer, d.decidir, d.auto, d.total]);
+  });
+  const blob = new Blob([filas.map(f => f.join(';')).join('\n')], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `notas-demo-${curso}-${m.id}.csv`; a.click();
+  U.toast('📄 Archivo de ejemplo descargado');
+}
+
+U.router(rutas, 'resumen');
+</script>
+</body>
+</html>

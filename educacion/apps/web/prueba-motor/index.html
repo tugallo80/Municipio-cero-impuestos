@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="robots" content="noindex" />
+    <title>Prueba del motor · Kay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/estilos.css" />
+    <style>
+      header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+      header h1 { font-size: 22px; }
+      .voces { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 4px; }
+      .voz {
+        border: 1px solid var(--borde); background: var(--sup2); color: var(--texto); border-radius: 999px;
+        padding: 10px 14px; min-height: 44px; font: 600 14px 'Inter', sans-serif; cursor: pointer;
+      }
+      .voz small { color: var(--texto2); font-weight: 400; margin-left: 4px; }
+      .voz[aria-pressed='true'] { border-color: var(--verde); background: var(--verde-suave); }
+      .zona-kay { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 26px 0 10px; }
+      .orbe {
+        width: 168px; height: 168px; border-radius: 50%; border: 0; cursor: pointer;
+        background: radial-gradient(circle at 35% 30%, #34d399, var(--verde) 55%, #065f46);
+        color: #00140d; font: 700 20px 'Space Grotesk', sans-serif; box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.5);
+        transition: transform 0.2s;
+      }
+      .orbe:disabled { opacity: 0.6; }
+      .orbe.vivo { animation: latido 1.6s ease-in-out infinite; }
+      .orbe.vivo.habla { animation-duration: 0.7s; }
+      @keyframes latido {
+        0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.45); transform: scale(1); }
+        70% { box-shadow: 0 0 0 26px rgba(16, 185, 129, 0); transform: scale(1.03); }
+        100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); transform: scale(1); }
+      }
+      #estado { font: 600 17px 'Space Grotesk', sans-serif; text-align: center; min-height: 26px; }
+      .charla { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; max-height: 45dvh; overflow-y: auto; }
+      .burbuja { padding: 10px 14px; border-radius: 16px; max-width: 88%; font-size: 15px; }
+      .burbuja.kay { background: var(--sup2); border: 1px solid var(--borde); align-self: flex-start; }
+      .burbuja.alumno { background: var(--verde-suave); align-self: flex-end; }
+      .burbuja b { display: block; font-size: 12px; color: var(--texto2); font-weight: 600; }
+      .metricas { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+      .metricas div { background: var(--sup2); border-radius: 14px; padding: 10px 12px; }
+      .metricas b { display: block; font: 700 18px 'Space Grotesk', sans-serif; }
+      .metricas span { font-size: 12px; color: var(--texto2); }
+      .ideas li { margin: 4px 0 4px 18px; }
+    </style>
+  </head>
+  <body>
+    <main class="contenedor">
+      <header>
+        <h1>Hablar con Kay</h1>
+        <span class="etiqueta">Página técnica</span>
+      </header>
+
+      <!-- 1. Entrar con la cuenta de prueba -->
+      <section id="panel-entrar" class="tarjeta">
+        <h2 class="titulo" style="font-size: 18px">Entrar</h2>
+        <p class="secundario chico">Usá la cuenta de prueba que te pasaron.</p>
+        <form id="form-entrar" autocomplete="on">
+          <label for="usuario">Usuario</label>
+          <input id="usuario" name="username" autocomplete="username" autocapitalize="none" required />
+          <label for="clave">Clave</label>
+          <input id="clave" name="password" type="password" autocomplete="current-password" required />
+          <p id="error-entrar" class="error oculto"></p>
+          <button class="boton" style="margin-top: 18px" type="submit">Entrar</button>
+        </form>
+      </section>
+
+      <!-- 2. Charla -->
+      <section id="panel-charla" class="oculto">
+        <div class="tarjeta">
+          <p class="secundario chico">Voz de Kay (probá varias y decinos cuál te gusta más):</p>
+          <div id="voces" class="voces" role="group" aria-label="Voces"></div>
+        </div>
+
+        <div class="zona-kay">
+          <button id="orbe" class="orbe" aria-live="polite">Hablar</button>
+          <p id="estado">Tocá el círculo y hablale a Kay</p>
+          <p id="error-charla" class="error oculto" role="alert"></p>
+        </div>
+
+        <div id="charla" class="charla" aria-live="polite"></div>
+
+        <div class="metricas" id="metricas">
+          <div><b id="m-tiempo">0:00</b><span>duración</span></div>
+          <div><b id="m-tokens">—</b><span>tokens</span></div>
+          <div><b id="m-costo">—</b><span>costo estimado (USD)</span></div>
+          <div><b id="m-minuto">—</b><span>USD por minuto</span></div>
+        </div>
+        <p id="restantes" class="secundario chico" style="margin-top: 10px"></p>
+
+        <div class="tarjeta" style="margin-top: 16px">
+          <h3 style="font-size: 16px">Qué probar</h3>
+          <ul class="ideas secundario chico">
+            <li>"¿Cuánto es tres cuartos más un cuarto? Decime la respuesta nomás."</li>
+            <li>"No entiendo las fracciones" → ¿te guía con preguntas?</li>
+            <li>Interrumpilo hablando encima.</li>
+            <li>"Chau, Kay" → se despide y corta solo.</li>
+          </ul>
+        </div>
+        <button id="salir" class="boton fantasma" style="margin-top: 16px">Salir</button>
+      </section>
+    </main>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>

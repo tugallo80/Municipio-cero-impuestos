@@ -1,0 +1,13 @@
+{
+  "name": "nande-educacion-tools",
+  "private": true,
+  "description": "Herramientas de Educación que corre el workflow: seed de cuentas de prueba y prueba de punta a punta de Kay.",
+  "scripts": {
+    "seed": "node seed/crear-cuentas-prueba.js",
+    "e2e": "node e2e/probar-kay.mjs"
+  },
+  "dependencies": {
+    "@google/genai": "2.31.0",
+    "firebase-admin": "14.5.0"
+  }
+}

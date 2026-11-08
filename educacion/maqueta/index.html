@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Educación · ÑANDÉ (maqueta)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css">
+<style>
+  .entrada { max-width: 560px; margin: 0 auto; padding: 28px 18px 40px; min-height: 100vh; display: flex; flex-direction: column; }
+  .logo { display: flex; align-items: center; gap: 10px; margin-bottom: 30px; }
+  .logo .sello { width: 40px; height: 40px; border-radius: 12px; background: var(--verde); color: #00140D; display: grid; place-items: center; font-family: 'Space Grotesk'; font-weight: 700; font-size: 18px; }
+  .logo b { font-family: 'Space Grotesk'; font-size: 17px; display: block; }
+  .logo span { font-size: 12px; color: var(--texto2); }
+  .entrada h1 { font-size: 34px; line-height: 1.1; margin-bottom: 8px; }
+  .entrada h1 em { font-style: normal; color: var(--verde); }
+  .perfiles { display: grid; gap: 12px; margin-top: 26px; }
+  .perfil { display: flex; align-items: center; gap: 14px; padding: 18px 16px; border-radius: 20px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); transition: border-color .15s, transform .15s; }
+  .perfil:active { transform: scale(.98); }
+  .perfil:hover { border-color: var(--verde); }
+  .perfil .ico-caja { width: 54px; height: 54px; font-size: 28px; border-radius: 16px; }
+  .perfil b { font-family: 'Space Grotesk'; font-size: 18px; display: block; }
+  .perfil small { color: var(--texto2); font-size: 13px; }
+  .perfil .flecha { margin-left: auto; color: var(--texto3); font-size: 20px; }
+  .perfil.alumno { background: linear-gradient(135deg, #0b2a20, #111111 60%); border-color: rgba(16,185,129,.4); }
+  .pie { margin-top: auto; padding-top: 30px; }
+</style>
+</head>
+<body>
+<div class="entrada">
+  <div class="logo">
+    <div class="sello">Ñ</div>
+    <div><b>Educación ÑANDÉ</b><span id="colegio"></span></div>
+  </div>
+
+  <h1>¿Quién <em>sos</em>?</h1>
+  <p class="sec">Elegí un perfil para recorrer la maqueta. No hace falta contraseña: es una demo.</p>
+
+  <div class="perfiles">
+    <a class="perfil alumno" href="alumno.html">
+      <div class="ico-caja" style="background:rgba(16,185,129,.18)">🧱</div>
+      <div><b>Alumno</b><small>v2 · misiones con llaves · lugares secretos · curso</small></div>
+      <span class="flecha">›</span>
+    </a>
+    <a class="perfil" href="tutor.html">
+      <div class="ico-caja">🧑‍🏫</div>
+      <div><b>Tutor</b><small>Plan del día · cronograma · alumnos · misiones</small></div>
+      <span class="flecha">›</span>
+    </a>
+    <a class="perfil" href="padres.html">
+      <div class="ico-caja">👪</div>
+      <div><b>Padres</b><small>Avance en vivo · cómo aprende · libreta · permisos</small></div>
+      <span class="flecha">›</span>
+    </a>
+    <a class="perfil" href="direccion.html">
+      <div class="ico-caja">🏫</div>
+      <div><b>Dirección</b><small>Cursos · finanzas · planificación · notas RUDE</small></div>
+      <span class="flecha">›</span>
+    </a>
+  </div>
+
+  <div class="pie">
+    <a class="btn sec2 ancho" href="../../index.html">← Volver al Hub ÑANDÉ</a>
+    <p class="aviso-demo">Maqueta EDU.01b · colegio y nombres inventados · sin datos reales</p>
+  </div>
+</div>
+<script src="datos-demo.js"></script>
+<script>
+  document.getElementById('colegio').textContent = DEMO.colegio.nombre + ' · ' + DEMO.colegio.nota.toLowerCase();
+</script>
+</body>
+</html>

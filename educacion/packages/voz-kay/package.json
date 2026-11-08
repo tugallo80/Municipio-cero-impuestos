@@ -1,0 +1,15 @@
+{
+  "name": "@nande-educacion/voz-kay",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Motor de voz en vivo del tutor Kay (Gemini Live API): micrófono → Gemini → parlante, con barge-in.",
+  "type": "module",
+  "main": "src/kaySession.js",
+  "exports": {
+    ".": "./src/kaySession.js",
+    "./react": "./src/useKayLive.js"
+  },
+  "peerDependencies": {
+    "@google/genai": "2.31.0"
+  }
+}
