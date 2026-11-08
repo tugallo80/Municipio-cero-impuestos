@@ -8,7 +8,7 @@ name: Educación — deploy
 
 on:
   push:
-    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c]
+    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, sesion/edu-04a]
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'
@@ -79,6 +79,17 @@ jobs:
         working-directory: educacion
         run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
 
+      - name: Prueba de la clase grabada (audio → informe → la profe Taji)
+        if: github.event_name == 'push' || inputs.probar
+        working-directory: educacion/tools
+        env:
+          SALIDA: ${{ runner.temp }}/salida-clase
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg >/dev/null
+          export FIREBASE_API_KEY="$(node -e 'console.log(require(process.argv[1]).apiKey)' "$RUNNER_TEMP/firebase-web.json")"
+          echo "::add-mask::$FIREBASE_API_KEY"
+          node e2e/probar-clase.mjs
+
       - name: Prueba de punta a punta (voz real contra Gemini)
         if: github.event_name == 'push' || inputs.probar
         working-directory: educacion/tools
@@ -107,4 +118,5 @@ jobs:
             echo "- Sitio: https://nande-educacion.web.app/"
             echo "- Probar la voz: https://nande-educacion.web.app/prueba-motor/"
             echo "- Los profes en el mundo: https://nande-educacion.web.app/maqueta/alumno.html"
+            echo "- Clase grabada (profe): https://nande-educacion.web.app/maqueta/tutor.html#clase"
           } >> "$GITHUB_STEP_SUMMARY"

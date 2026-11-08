@@ -18,6 +18,8 @@
       "estilo": "visual",
       "limiteSesionesDia": 40,
       "limiteTokensDia": 3000000,
+      "personal": { "id": "per_d3n8w5", "tutor": true, "direccion": true, "cursos": ["4to_primaria", "5to_primaria"] },
+      "_notaPersonal": "EDU.04a: la cuenta del dueño también hace de profe y de dirección DEMO (curso ficticio) para mostrar la clase grabada. No hay login de profes todavía (EDU.03).",
       "_nota": "Cuenta del dueño para sus pruebas: 40 charlas/día (autorizado por el dueño el 8-nov-2026). El tope global de USD 5/día sigue igual.",
       "hashBcrypt": "$2a$12$Dk8hIjv8YRIAaOXfDtrH6e04eYrZHulrnrRLlRzpe5M2BDLN7mXem"
     }

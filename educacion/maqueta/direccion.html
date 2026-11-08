@@ -20,6 +20,7 @@
   <div class="cuerpo con-lateral">
     <nav class="nav">
       <a href="#resumen" data-ruta="resumen">🏫 Cursos</a>
+      <a href="#clases" data-ruta="clases">🎙️ Clases grabadas</a>
       <a href="#finanzas" data-ruta="finanzas">💰 Finanzas</a>
       <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
       <a href="#planificacion" data-ruta="planificacion">🧭 Planificación</a>
@@ -30,6 +31,8 @@
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script src="comun.js?v=edu02d-2"></script>
+<script src="clase.js?v=edu04a-1"></script>
+<script type="module">import('/voz/clase.js?v=edu04a-1').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
 U.$('#nom-colegio').textContent = D.colegio.nombre;
@@ -43,6 +46,9 @@ function dimensiones(n) {
 }
 
 const rutas = {
+  // EDU.04a: los mismos informes de clase que ve cada profe
+  clases(param) { return Clase.vistaDireccion(param); },
+
   resumen() {
     const tot = D.alumnos.length;
     return `<div class="encab"><div><h1>Estado de los cursos</h1><p>${D.colegio.hoy} · gestión ${D.colegio.gestion} · ${D.colegio.trimestre}er trimestre</p></div></div>
@@ -170,6 +176,9 @@ function descargar(curso) {
 }
 
 U.router(rutas, 'resumen');
+Clase.alRepintar = () => {
+  if ((location.hash.slice(1) || '').split('/')[0] === 'clases') window.dispatchEvent(new HashChangeEvent('hashchange'));
+};
 </script>
 </body>
 </html>

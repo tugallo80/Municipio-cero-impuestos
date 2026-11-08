@@ -12,6 +12,7 @@ const path = require('path');
 
 const { profes: PROFES } = require('./profes.json');
 const MISIONES_DEMO = require('./misiones-demo');
+const { textoClasesParaTutor } = require('./clase');
 
 const leer = (archivo) =>
   fs.readFileSync(path.join(__dirname, 'profes', archivo), 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim();
@@ -109,7 +110,8 @@ function textoMemoria(memoria) {
 /**
  * @param {string} profeId 'la_profe' | 'el_profe'
  * @param {object} perfil { curso } — cualquier otro campo se ignora
- * @param {{mision?: object, memoria?: object, relevo?: boolean, cursoLegible: (c:string)=>string}} extra
+ * @param {{mision?: object, memoria?: object, clases?: object[], relevo?: boolean, cursoLegible: (c:string)=>string}} extra
+ *   `clases`: contexto del día de las últimas clases grabadas del curso (EDU.04a, sin nombres)
  */
 function construirInstruccionProfe(profeId, perfil = {}, extra = {}) {
   const yo = profePorId(profeId);
@@ -133,6 +135,7 @@ El alumno te acaba de llamar: venía con ${otro.titulo} en esta misma charla. Sa
 
 - Un alumno o alumna de ${curso}. No sabés su nombre y no hace falta: tratalo con cariño sin nombrarlo.`,
     textoMemoria(extra.memoria),
+    textoClasesParaTutor(extra.clases),
     textoMision(extra.mision),
     relevo,
   ]

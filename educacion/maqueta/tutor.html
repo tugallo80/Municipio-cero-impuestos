@@ -20,6 +20,7 @@
   <div class="cuerpo con-lateral">
     <nav class="nav">
       <a href="#hoy" data-ruta="hoy">📌 Hoy</a>
+      <a href="#clase" data-ruta="clase">🎙️ Clase grabada</a>
       <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
       <a href="#pensum" data-ruta="pensum">📚 Pensum</a>
       <a href="#alumnos" data-ruta="alumnos">👧 Alumnos</a>
@@ -30,18 +31,24 @@
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script src="comun.js?v=edu02d-2"></script>
+<script src="clase.js?v=edu04a-1"></script>
+<script type="module">import('/voz/clase.js?v=edu04a-1').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
 U.$('#nom-tutor').textContent = D.tutor.nombre;
 U.$('#nom-colegio').textContent = D.colegio.nombre + ' · ' + D.colegio.hoy;
 
 const rutas = {
+  // EDU.04a: grabar la clase y ver el informe (maqueta/clase.js)
+  clase(param) { return Clase.vistaProfe(param); },
+
   hoy() {
     const hechos = D.hoy.filter(h => h.estado === 'hecho').length;
     const alertas = D.alumnos.filter(a => a.tendencia === 'baja');
     return `
     <div class="encab"><div><h1>Hoy toca avanzar</h1><p>${D.colegio.hoy} · ${hechos} de ${D.hoy.length} clases hechas</p></div>
       <a class="btn chico" href="#nueva">+ Nueva misión</a></div>
+    <div style="margin-bottom:16px">${Clase.tarjetaHoy()}</div>
     <div class="grilla g4">
       <div class="tarjeta kpi"><b>${D.hoy.length}</b><span>clases hoy</span></div>
       <div class="tarjeta kpi"><b>${D.misiones.filter(m => m.estado === 'activa').length}</b><span>misiones activas</span></div>
@@ -186,6 +193,11 @@ function asignar(id) {
 }
 
 U.router(rutas, 'hoy');
+// Clase grabada: vuelve a pintar la pantalla actual cuando cambia algo (grabando, IA, informes).
+Clase.alRepintar = () => {
+  const ruta = (location.hash.slice(1) || 'hoy').split('/')[0];
+  if (ruta === 'hoy' || ruta === 'clase') window.dispatchEvent(new HashChangeEvent('hashchange'));
+};
 </script>
 </body>
 </html>

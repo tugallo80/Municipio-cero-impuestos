@@ -44,11 +44,20 @@ const db = getDatabase();
     if (c.limiteSesionesDia) limites.limiteSesionesDia = c.limiteSesionesDia;
     if (c.limiteTokensDia) limites.limiteTokensDia = c.limiteTokensDia;
     await db.ref(`edu/alumnos/${c.alumnoId}`).set({ curso: c.curso, estilo: c.estilo, ...limites });
+    // EDU.04a: rol de profe / dirección (demo). Sin "personal" la cuenta no es personal del colegio.
+    if (c.personal) {
+      const p = c.personal;
+      await db.ref(`edu/personal/${c.uid}`).set({
+        id: p.id,
+        roles: { tutor: p.tutor === true, direccion: p.direccion === true },
+        cursos: Object.fromEntries((p.cursos || []).map((x) => [x, true])),
+      });
+    } else await db.ref(`edu/personal/${c.uid}`).remove();
     // Verificación: la cuenta existe con su correo y el perfil quedó guardado.
     const u = await getAuth().getUser(c.uid);
     const perfil = (await db.ref(`edu/alumnos/${c.alumnoId}`).once('value')).val();
     if (u.email !== `${c.usuario}@${dominio}` || !perfil) throw new Error(`La cuenta ${c.usuario} no quedó bien`);
-    console.log(`✅ Cuenta "${c.usuario}" lista (alumno ${c.alumnoId}, ${c.curso}, ${perfil.limiteSesionesDia || 'límite normal de'} charlas/día)`);
+    console.log(`✅ Cuenta "${c.usuario}" lista (alumno ${c.alumnoId}, ${c.curso}, ${perfil.limiteSesionesDia || 'límite normal de'} charlas/día${c.personal ? ', también profe/dirección demo' : ''})`);
   }
 
   for (const [curso, datos] of Object.entries(contenido)) {
