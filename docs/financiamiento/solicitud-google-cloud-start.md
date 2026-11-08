@@ -1,5 +1,9 @@
 # Solicitud: Google for Startups Cloud Program — nivel "Start" (8-nov-2026)
 
+> **Decisión del dueño (8-nov):** se envía **cuando el proyecto esté terminado** (demo completo).
+> Página del proyecto lista en `sitio-proyecto/` (sin publicar; falta correo de contacto y
+> actualizar la captura del mundo a la versión sin puntos).
+
 **Qué es**: hasta **USD 2.000 en créditos gratis de Google Cloud por 1 año** (incluye Gemini).
 No se paga nada. Se pide en https://cloud.google.com/startup (botón "Apply").
 
