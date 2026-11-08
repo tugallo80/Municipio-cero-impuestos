@@ -161,6 +161,14 @@ la página la restablece. `?calidad=fija` la desactiva (se usa para medir). Prob
 baja por todos los pasos sin errores; en este servidor sin GPU igual queda en 5–6 fps (no hay
 tarjeta gráfica), en un equipo con GPU es la red de seguridad de la demo.
 
+**Celular acostado (pedido del dueño):** escena, transición y construir abren con "▶ Ver", que pide
+pantalla completa y traba la orientación horizontal (`screen.orientation.lock`, como EDU.02c); el
+botón ⛶ vuelve a pantalla completa; el aviso "Girá tu pantalla" ofrece "▶ Ver acostado"; con poca
+altura los controles se achican. En la vitrina, la grilla usa las capturas horizontales cuando el
+celular está acostado, y tocar una captura la abre a pantalla completa (acostada) con ◀ ▶ y "Abrir
+en 3D". Probado con Playwright táctil/isMobile a 844×390 y 915×412 (pantalla completa activa).
+En iPhone el navegador no deja trabar la orientación: queda el aviso de girar.
+
 **Riesgos (pedidos por la MAESTRA)**
 - **Alumnos que repiten de curso**: el mundo **nunca retrocede** de estilo; si repite, se queda
   en su tramo sin mensaje negativo (la transición solo existe para celebrar, nunca se "quita").

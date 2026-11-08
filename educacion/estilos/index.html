@@ -54,6 +54,14 @@
   .tramo .accesos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px; }
   .tramo .accesos a { min-height: 48px; padding: 0 6px; font-size: 14px; }
   a.btn.grande { min-height: 52px; font-size: 16px; padding: 0 18px; }
+  #visor { position: fixed; inset: 0; z-index: 100; background: #000; display: grid; place-items: center; }
+  #visor[hidden] { display: none; }
+  #visor img { width: 100%; height: 100%; object-fit: contain; }
+  #visor .arriba, #visor .abajo { position: absolute; left: 0; right: 0; display: flex; gap: 8px; align-items: center; padding: 10px 12px; }
+  #visor .arriba { top: 0; background: linear-gradient(rgba(0,0,0,.7), transparent); }
+  #visor .abajo { bottom: 0; justify-content: center; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+  #visor .pie { flex: 1; visibility: hidden; } /* la captura ya trae su etiqueta */
+  #visor button { min-width: 48px; min-height: 48px; border-radius: 14px; border: 1px solid #333; background: rgba(10,10,10,.84); color: #fff; font: 600 18px Inter, sans-serif; }
   .fichas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
   .ficha { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 14px 16px; }
   .ficha h3 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
@@ -145,6 +153,12 @@
     <div>Transición de curso: ¿emociona igual en 1 → 2 que en 5 → 6?</div>
   </div>
 
+<div id="visor" hidden>
+  <img alt="">
+  <div class="arriba"><span class="pie"></span><button class="pc" title="Pantalla completa">⛶</button><button class="cerrar" title="Cerrar">✕</button></div>
+  <div class="abajo"><button class="ant">◀</button><a class="abrir3d btn verde">Abrir en 3D</a><button class="sig">▶</button></div>
+</div>
+
 <script>
 const TRAMOS = [
   { k: 'BLOQUES', l: '1', n: 'Bloques', g: 'P1–P2', c: '#F2C230', d: ['Todo con cubos: techos en escalón, árboles cúbicos.', 'Colores vivos y simples; personajes de ~3 cabezas.'], eq: 'cualquier tablet' },
@@ -162,13 +176,17 @@ document.getElementById('pares').innerHTML = TRAMOS.slice(0, -1).map((e, i) =>
   `<a class="btn verde grande" href="transicion.html?de=${e.k}&a=${TRAMOS[i + 1].k}">${e.l} → ${TRAMOS[i + 1].l}</a>`).join('');
 document.getElementById('fichas').innerHTML = TRAMOS.map(e => `<div class="ficha"><h3><span class="letra" style="background:${e.c}">${e.l}</span>${e.n} · ${e.g}</h3>
   <ul>${e.d.map(x => `<li>${x}</li>`).join('')}</ul><span class="costo">Anda en: <b>${e.eq}</b></span></div>`).join('');
-let vista = 'colegio', formato = innerWidth < 700 ? 'celular' : 'horizontal';
+// formato de las capturas: horizontales si la pantalla está acostada (o es ancha), salvo que se elija a mano
+const acostado = matchMedia('(orientation: landscape)');
+const formatoAuto = () => acostado.matches || innerWidth >= 700 ? 'horizontal' : 'celular';
+let vista = 'colegio', formato = formatoAuto(), formatoManual = false;
+acostado.addEventListener('change', () => { if (!formatoManual) { formato = formatoAuto(); pintar(); } });
 function tarjetas(lista) {
   const ar = formato === 'celular' ? '390 / 844' : '1280 / 800';
   return lista.map(e => {
     const img = `capturas/${e.k}-${vista}-${formato}.jpg`;
     return `<div class="carta" style="--ar:${ar}">
-      <a class="img" href="${img}"><img src="${img}" alt="${e.l} · ${e.n} · ${vista}" loading="lazy"></a>
+      <a class="img" href="${img}" data-ver="${e.k}"><img src="${img}" alt="${e.l} · ${e.n} · ${vista}" loading="lazy"></a>
       <div class="pie"><div class="nom"><span class="letra" style="background:${e.c}">${e.l}</span><b>${e.n}</b></div>
       <span class="corto">${e.g}</span>
       <a class="btn verde" href="escena.html?estilo=${e.k}&vista=${vista}">Abrir en 3D</a></div></div>`;
@@ -188,8 +206,43 @@ function pintar() {
   document.querySelectorAll('#segFormato button').forEach(b => b.classList.toggle('on', b.dataset.f === formato));
 }
 document.getElementById('segVista').onclick = e => { if (e.target.dataset.v) { vista = e.target.dataset.v; pintar(); } };
-document.getElementById('segFormato').onclick = e => { if (e.target.dataset.f) { formato = e.target.dataset.f; pintar(); } };
+document.getElementById('segFormato').onclick = e => { if (e.target.dataset.f) { formato = e.target.dataset.f; formatoManual = true; pintar(); } };
 pintar();
+
+// ---------------- Visor de capturas a pantalla completa (acostado, como EDU.02c) ----------------
+const visor = document.getElementById('visor'), visorImg = visor.querySelector('img'), visorPie = visor.querySelector('.pie');
+const enPC = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+async function pantallaHorizontal(el) {
+  try { if (!enPC()) { if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: 'hide' }); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } } catch (e) {}
+  try { if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch (e) {}
+}
+let lista = [], pos = 0;
+function mostrar() {
+  const e = lista[pos];
+  visorImg.src = `capturas/${e.k}-${vista}-horizontal.jpg`;
+  visorPie.textContent = `${e.l} · ${e.n} · ${e.g} — ${{ colegio: 'Colegio', obra: 'Obra', portal: 'Portal' }[vista]}`;
+  visor.querySelector('.abrir3d').href = `escena.html?estilo=${e.k}&vista=${vista}`;
+}
+document.addEventListener('click', ev => {
+  const a = ev.target.closest('[data-ver]');
+  if (!a) return;
+  ev.preventDefault();
+  lista = TRAMOS.some(t => t.k === a.dataset.ver) ? TRAMOS : EXPLORA;
+  pos = lista.findIndex(t => t.k === a.dataset.ver);
+  mostrar(); visor.hidden = false;
+  pantallaHorizontal(visor);
+});
+visor.querySelector('.ant').onclick = () => { pos = (pos + lista.length - 1) % lista.length; mostrar(); };
+visor.querySelector('.sig').onclick = () => { pos = (pos + 1) % lista.length; mostrar(); };
+visor.querySelector('.pc').onclick = () => pantallaHorizontal(visor);
+visor.querySelector('.cerrar').onclick = async () => {
+  visor.hidden = true;
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+  try { if (enPC()) await (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {}
+};
+const pintarPC = () => { visor.querySelector('.pc').hidden = enPC(); };
+addEventListener('fullscreenchange', pintarPC); pintarPC();
+
 fetch('capturas/fps.json').then(r => r.json()).then(d => {
   document.getElementById('fps').innerHTML = `<table><tr><th>Qué</th><th>Pantalla</th><th>fps</th><th>Dibujos</th></tr>${d.medidas.map(m =>
     `<tr><td>${m.pagina}</td><td>${m.formato}</td><td class="n" style="color:${m.fps >= 30 ? '#34D399' : m.fps >= 20 ? '#F2C230' : '#F87171'}">${m.fps}</td><td>${m.llamadasDeDibujo ? m.llamadasDeDibujo + ' llamadas · ' + Math.round(m.triangulos / 1000) + ' mil triáng.' : '—'}</td></tr>`).join('')}</table>`;

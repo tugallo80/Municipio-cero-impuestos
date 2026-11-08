@@ -51,13 +51,14 @@
 <script type="module">
 
 // Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
-const VERSION = '20261108-6';
+const VERSION = '20261108-7';
 let ARR;
 try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
   document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
   window.__listo = 'error'; throw e;
 }
 ARR.avisoGiro();
+ARR.botonVer('▶ Construir');
 const { THREE, crearMundo } = await ARR.cargar(VERSION, ['crearMundo']);
 
 const ESTILO = (new URLSearchParams(location.search).get('estilo') || 'A').toUpperCase();
