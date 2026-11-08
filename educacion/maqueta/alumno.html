@@ -297,8 +297,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-4"></script>
-<script src="misiones-demo.js?v=edu02c-4"></script>
+<script src="datos-demo.js?v=edu02c-5"></script>
+<script src="misiones-demo.js?v=edu02c-5"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -856,7 +856,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-4').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-5').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)

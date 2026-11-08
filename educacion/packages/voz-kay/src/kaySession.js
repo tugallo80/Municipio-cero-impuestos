@@ -55,8 +55,10 @@ function pcm16Base64AFloat32(base64) {
 // no dependen para nada de la respuesta del servidor, así que hacerlos
 // esperar esa ida y vuelta de red sería tiempo muerto puro antes de poder
 // escuchar/hablar.
-async function prepararAudio(workletBasePath) {
-  const ctxSalida = new AudioContext({ sampleRate: SAMPLE_RATE_SALIDA })
+async function prepararAudio(workletBasePath, ctxSalidaPrevio) {
+  // Si quien llama ya creó el contexto de salida dentro del toque del usuario
+  // (lo más seguro en celulares), se usa ese; si no, se crea acá.
+  const ctxSalida = ctxSalidaPrevio && ctxSalidaPrevio.state !== 'closed' ? ctxSalidaPrevio : new AudioContext({ sampleRate: SAMPLE_RATE_SALIDA })
   const cargaSalida = ctxSalida.audioWorklet.addModule(`${workletBasePath}/pcmPlayback.worklet.js`)
 
   const ctxEntrada = new AudioContext({ sampleRate: SAMPLE_RATE_ENTRADA })
@@ -124,6 +126,8 @@ async function prepararAudio(workletBasePath) {
  * @param {string} [args.workletBasePath] Carpeta pública donde serviste los
  *   worklets (ver README — tiene que ser una URL real, no un import de
  *   Vite). Default: '/audioWorklets'.
+ * @param {AudioContext} [args.ctxSalida] Contexto de reproducción ya creado (y
+ *   reanudado) dentro del gesto del usuario. Recomendado en celulares.
  * @returns {Promise<{cerrar: () => void, enviarTexto: (t: string) => void, nivelSalida: () => number, nivelEntrada: () => number}>}
  */
 export async function iniciarSesionKay({
@@ -141,13 +145,14 @@ export async function iniciarSesionKay({
   modelosFallback = MODELOS_FALLBACK_DEFAULT,
   voz = 'Kore',
   workletBasePath = '/audioWorklets',
+  ctxSalida: ctxSalidaPrevio = null,
 }) {
   onEstado?.('conectando')
 
   // El token (viaje de red al backend) y la preparación de audio (permiso
   // de mic + worklets, todo local salvo el propio permiso) no dependen uno
   // del otro — se piden a la vez en vez de en serie.
-  const [datos, audio] = await Promise.all([obtenerToken(), prepararAudio(workletBasePath)])
+  const [datos, audio] = await Promise.all([obtenerToken(), prepararAudio(workletBasePath, ctxSalidaPrevio)])
   const { ctxSalida, ctxEntrada, nodoSalida, nodoEntrada, stream, analizadorSalida, analizadorEntrada } = audio
 
   if (!datos.ok) {
@@ -322,5 +327,9 @@ export async function iniciarSesionKay({
     },
     nivelSalida: () => nivel(analizadorSalida),
     nivelEntrada: () => nivel(analizadorEntrada),
+    // Estado del audio de salida ('running' | 'suspended' | 'interrupted' | 'closed')
+    // y cómo reanudarlo desde un toque (por si el celular lo suspende).
+    estadoAudio: () => ctxSalida.state,
+    reanudarAudio: () => Promise.all([ctxSalida.resume(), ctxEntrada.resume()]).catch(() => {}),
   }
 }

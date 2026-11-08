@@ -60,6 +60,7 @@ const css = `
 #pv-pildora.ver{display:flex}
 #pv-pildora button{font:inherit;color:#fff;background:rgba(255,255,255,.1);border:0;border-radius:99px;min-height:34px;padding:0 10px;cursor:pointer}
 #pv-pildora .colgar{background:#DC2626}
+#pv-pildora #pv-sonido{background:#FDE047;color:#422006;font-weight:700;animation:pv-respira .8s ease-in-out infinite alternate}
 #pv-entrar{position:fixed;inset:0;z-index:70;background:rgba(4,12,10,.6);display:none;align-items:flex-end;justify-content:center;font-family:Inter,system-ui,sans-serif}
 #pv-entrar.ver{display:flex}
 #pv-entrar form{width:100%;max-width:420px;background:#0A0A0A;border:2px solid #1F3B33;border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));color:#fff;display:grid;gap:10px}
@@ -101,6 +102,7 @@ document.body.insertAdjacentHTML(
   `<div id="pv-marco" class="pv-capa" aria-hidden="true"><i class="luz"></i><i class="oye"></i></div>
    <div id="pv-franja" class="pv-capa" aria-hidden="true"><div class="caja"><b></b><b></b><b></b></div><i class="oye"></i></div>
    <div id="pv-pildora" role="status"><span id="pv-texto"></span>
+     <button type="button" id="pv-sonido" hidden>🔊 Tocá para activar el sonido</button>
      <button type="button" id="pv-efecto" title="Cambiar cómo se ve la voz"></button>
      <button type="button" class="colgar" id="pv-colgar" title="Colgar">✕</button></div>
    <div id="pv-entrar"><form>
@@ -114,6 +116,8 @@ document.body.insertAdjacentHTML(
 )
 const $ = (id) => document.getElementById(id)
 const marco = $('pv-marco')
+const sonido = $('pv-sonido')
+sonido.onclick = () => { charla?.sesion?.reanudarAudio?.(); window.__sonidoTocado = true }
 const franja = $('pv-franja')
 
 function pintarEfecto() {
@@ -148,6 +152,9 @@ let raf = 0
 function animar() {
   raf = 0
   if (!charla?.sesion) return
+  // Si el celular suspende el audio (llamada, otra app, ahorro de energía), avisar con un botón.
+  const bloqueado = !!charla.sesion.estadoAudio && charla.sesion.estadoAudio() !== 'running'
+  if (sonido.hidden === bloqueado) sonido.hidden = !bloqueado
   const habla = charla.sesion.nivelSalida()
   const oye = charla.sesion.nivelEntrada()
   suave += (habla - suave) * (habla > suave ? 0.5 : 0.12)
@@ -271,6 +278,7 @@ async function empezar(profeId, relevoDe = null) {
   try {
     const sesion = await iniciarSesionKay({
       workletBasePath: '/audioWorklets',
+      ctxSalida: tomarSalida(),
       obtenerToken: async () => {
         try {
           const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe })
@@ -394,8 +402,24 @@ async function relevo(aId) {
 }
 
 // ── API para la maqueta ───────────────────────────
+// Contexto de reproducción creado DENTRO del toque en la cara del profe (antes de
+// cualquier await): en Android/iOS es lo que garantiza que el audio suene.
+let salidaPreparada = null
+function prepararSalida() {
+  try {
+    if (salidaPreparada && salidaPreparada.state !== 'closed') return
+    const AC = window.AudioContext || window.webkitAudioContext
+    salidaPreparada = new AC({ sampleRate: 24000 })
+    salidaPreparada.resume().catch(() => {})
+    // un instante de silencio "desbloquea" la salida en algunos celulares
+    const b = salidaPreparada.createBuffer(1, 240, 24000), f = salidaPreparada.createBufferSource()
+    f.buffer = b; f.connect(salidaPreparada.destination); f.start()
+  } catch { salidaPreparada = null }
+}
+function tomarSalida() { const c = salidaPreparada; salidaPreparada = null; return c }
 async function llamar(profeId) {
   if (ocupado || !profe(profeId)) return
+  if (charla?.profe !== profeId) prepararSalida()
   try {
     await listo
   } catch {

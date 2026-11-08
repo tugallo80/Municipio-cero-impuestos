@@ -95,6 +95,22 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
   doble toque deja la cámara detrás (error 0,00 rad); toque corto en Artes abre "Aula de Artes". Sin errores.
   Capturas `d0-pista-*`, `d1-girada-*`.
 
+**Ajuste 4 — "los profes no hablan" (urgente)**
+- Logs: el modelo recibía la voz y generaba audio (salidaAudio 637 / 142 tokens), pero no sonaba en el celular.
+- No encontré una regresión directa de EDU.02c en la reproducción: el worklet usa ruta absoluta
+  (`/audioWorklets/...`, no lo afecta `<base>` ni `?v=`), nada cierra el audio en resize/rotación/pantalla completa
+  y la franja/marco solo lee un analizador. Lo más probable: el contexto de reproducción se creaba después
+  de varios `await` (token, login) y el celular lo dejaba suspendido o sin salida.
+- Arreglo: el contexto de salida (24 kHz) se crea y se reanuda **dentro del toque en la cara del profe**,
+  con un instante de silencio para desbloquearlo, y se le pasa al motor (`iniciarSesionKay({ ctxSalida })`).
+  Si durante la charla el audio queda suspendido, aparece en la píldora el botón amarillo
+  **"🔊 Tocá para activar el sonido"**, que lo reanuda.
+- Prueba (Chrome con `--autoplay-policy=document-user-activation-required` y micrófono falso): al tocar la cara
+  se crea el contexto de 24 kHz en estado `running`; sin errores. La voz real contra Gemini no se puede
+  probar desde esta sesión (la red no llega a las Functions).
+- Si igual no suena: en Android, con el micrófono abierto el volumen que manda es el **de llamada**;
+  subir el volumen con los botones mientras habla el profe.
+
 **Pendiente**
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
