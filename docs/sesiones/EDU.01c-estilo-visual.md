@@ -37,7 +37,12 @@ que sabés"*.
 
 ## Cierre
 
-**8-nov-2026** — PR "EDU.01c — Propuestas de estilo visual" (`sesion/edu-01c` → `main`), sin mergear.
+**8-nov-2026** — PR #8 "EDU.01c — Propuestas de estilo visual" (`sesion/edu-01c` → `main`), sin mergear.
+Vista previa (canal `pr-8`, verificado por la API de Firebase Hosting: versión con
+`/educacion/estilos/*` y la lámina E): **https://municipio-ia--pr-8-j2o7xxsd.web.app/educacion/estilos/**
+
+Nota: mientras tanto `main` sacó Educación del sitio del municipio (PR #7). `/educacion/estilos`
+se sigue publicando ahí como material para decidir (igual que `/educacion/talleres`), no como app.
 
 **Hecho**
 - `educacion/estilos/mundo.js`: la escena entera, compartida por los 3 estilos (three.js 0.160.0
