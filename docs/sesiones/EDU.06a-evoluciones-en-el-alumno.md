@@ -73,6 +73,25 @@ profe Taji responde (sin voz real: ayuda de texto). Sin errores de JavaScript.
 El juego del alumno ya daba ~18 fps en este servidor (EDU.01b): sin GPU todo es lento. Hay que
 medir en el celular real con `?diag=1`.
 
+**Arreglo: el dueño veía el mundo viejo en producción.** Sin 🎓 ni la barra de diag, aunque
+abrió el link con `?demo=1&diag=1`. Como la barra de diag no depende de la evolución, eso solo se
+explica si a la página **no le llegó el `?…`**: la redirección de Firebase `alumno.html →
+alumno/` (cleanUrls + trailingSlash) en producción lo descarta (en la copia local con superstatic
+sí se conserva, por eso las pruebas pasaban). Sin `demo`, 4A queda en "Piezas", que se parece a
+Bloques. Arreglo: link sin redirección (`/maqueta/alumno/`), los parámetros también se leen del
+`#` (que ninguna redirección borra), el HUD dice siempre el mundo ("4to A · mundo Piezas") y con
+diag se muestra en pantalla si la evolución no cargó.
+
+**App instalable** (para sacar el cartel de Chrome de la pantalla completa): `manifest.webmanifest`
+(display fullscreen, orientation landscape, íconos propios 192/512, start_url `/maqueta/alumno/`,
+scope `/maqueta/`), service worker mínimo `sw.js` **red primero** (solo usa lo guardado sin
+internet; no toca la CDN ni la voz) y en Ayuda "📲 Instalar en el celular" (beforeinstallprompt, o
+instrucciones si Chrome no lo ofrece). Probado: el SW se registra y controla la página, y con el SW
+activo la evolución, el 🎓 y el HUD siguen bien.
+
+**Aviso**: en el deploy de las 18:55 UTC falló "Publicar las Functions" porque la facturación de
+`municipio-ia` aparece desactivada (Secret Manager 403). El sitio (Hosting) sí se publicó.
+
 **Pendiente**
 - **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
   `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los

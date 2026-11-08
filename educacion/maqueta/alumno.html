@@ -5,6 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#7cc8f5">
+<!-- EDU.06a: app instalable (pantalla completa y acostada, sin el cartel de Chrome) -->
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/maqueta/iconos/icono-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Alumno · Mundo del curso (maqueta v2)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -771,9 +775,28 @@ function abrirAyuda() {
     ${pend.map(x => `<button class="mision" onclick="pedirAyuda('${x.id}')"><span style="font-size:22px">${materia(x.materia).icono}</span><span><b>${x.titulo}</b><small>Avisar al curso</small></span><span class="derecha">🙋</span></button>`).join('')}
     <div class="tit">Tu curso necesita ayuda</div>
     <button class="mision" onclick="ayudar()"><span style="font-size:22px">🐢</span><span><b>Tortuga Verde 9</b><small>pide ayuda con “Tablas en carrera”</small></span><span class="derecha">🤝</span></button>
+    ${yaInstalada() ? '' : `<div class="tit">Jugar como app</div>
+    <button class="mision" onclick="instalarApp()"><span style="font-size:22px">📲</span><span><b>Instalar en el celular</b><small>Se abre a pantalla completa y acostada</small></span></button>`}
     <div class="tit">¿Algo no está bien?</div>
     <button class="mision" style="border-color:rgba(252,165,165,.35)" onclick="avisarProfe()"><span style="font-size:22px">🚩</span><span><b>Avisar a la profe</b><small>Llega solo a tu profe, en secreto</small></span></button>`);
 }
+// ---------------- Instalar la app (EDU.06a) ----------------
+// Instalada y abierta desde el ícono, arranca a pantalla completa y acostada (manifest), sin el
+// cartel de Chrome "para salir de la pantalla completa…".
+let pedidoInstalar = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); pedidoInstalar = e; });
+addEventListener('appinstalled', () => { pedidoInstalar = null; toast('📲 ¡Listo! Abrí ÑANDÉ desde el ícono'); });
+const yaInstalada = () => matchMedia('(display-mode: fullscreen)').matches || matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+async function instalarApp() {
+  if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; pedidoInstalar = null; if (r.outcome === 'accepted') cerrar(); return; }
+  abrir(cab('📲', 'rgba(16,185,129,.25)', 'Instalar en el celular', 'Así se abre a pantalla completa, acostada y sin carteles') + `
+    <p style="margin:8px 0">En <b>Chrome</b>: tocá los <b>⋮</b> (arriba a la derecha) → <b>Instalar app</b> o <b>Agregar a la pantalla principal</b>.</p>
+    <p style="margin:8px 0">En <b>iPhone (Safari)</b>: botón <b>Compartir</b> → <b>Agregar a inicio</b>.</p>
+    <p style="margin:8px 0;color:#cbd5e1">Después abrí <b>ÑANDÉ</b> desde el ícono.</p>
+    <button class="bj ancho" onclick="cerrar()">Entendido</button>`);
+}
+if ('serviceWorker' in navigator) addEventListener('load', () => { navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {}); });
+
 function pedirAyuda(id) {
   const x = D.misiones.find(m => m.id === id), quien = M.companeros[0];
   abrir(cab('🙋', 'rgba(245,158,11,.25)', 'Pediste ayuda', x.titulo, 'abrirAyuda()') + `
