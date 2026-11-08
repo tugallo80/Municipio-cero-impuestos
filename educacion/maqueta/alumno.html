@@ -734,6 +734,13 @@ function abrirCasas() {
       <span><b>${c.apodo}</b><small>${S.visitados[c.id] ? 'Le dejaste ' + S.visitados[c.id] : 'Tocá para visitar'}</small></span><span class="derecha">›</span></button>`).join('') + `
     <button class="bj gris ancho" style="margin-top:14px" onclick="abrirMiCasa()">🏠 Ver mi casa</button>`);
 }
+// EDU.06a: el portal junto al colegio (visitas entre colegios del mismo nivel)
+function abrirPortal() {
+  abrir(cab('🌀', 'rgba(16,185,129,.25)', 'Portal · Col. Los Tajibos', 'Visitas entre colegios del mismo nivel') + `
+    <p style="margin:10px 0">Por este portal vas a poder visitar otros colegios de Santa Cruz y ver lo que construyeron, y dejarles una reacción.</p>
+    <p style="margin:10px 0;color:#cbd5e1">En esta demo todavía no se cruza: pronto.</p>
+    <button class="bj ancho" onclick="cerrar()">Volver</button>`);
+}
 function visitar(id) {
   const c = M.companeros.find(x => x.id === id);
   abrir(cab('🏠', c.color + '33', 'Casa de ' + c.apodo, 'De visita', 'abrirCasas()') + dibujoCasa(c.casa, c.casa.adornos) + `
@@ -1061,9 +1068,10 @@ function iniciar(THREE) {
     m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
   }
   // techo: escalonado en Bloques, a cuatro aguas desde Piezas
-  function techo(padre, y, w, l, h, color) {
-    if (N === 1) { bloque(0, y + .25, 0, w, .5, l, color, padre); bloque(0, y + .75, 0, w * .75, .5, l * .72, color, padre); bloque(0, y + 1.15, 0, w * .46, .4, l * .44, color, padre); return; }
-    const m = new THREE.Mesh(EVO.techoHip(w, l, h), mat(color)); m.position.y = y; padre.add(m);
+  function techo(padre, y, w, l, h, color, material) {
+    const c = material || color;
+    if (N === 1) { bloque(0, y + .25, 0, w, .5, l, c, padre); bloque(0, y + .75, 0, w * .75, .5, l * .72, c, padre); bloque(0, y + 1.15, 0, w * .46, .4, l * .44, c, padre); return; }
+    const m = new THREE.Mesh(EVO.techoHip(w, l, h), material || mat(color)); m.position.y = y; padre.add(m);
   }
   function bloque(x, y, z, sx, sy, sz, color, padre = escena) {
     const m = new THREE.Mesh(caja, typeof color === 'string' ? mat(color) : color);
@@ -1085,58 +1093,116 @@ function iniciar(THREE) {
   const interes = [];   // puntos con botón contextual { pos, texto, accion }
   function hacerTocable(g, toca) { g.traverse(o => { if (o.isMesh || o.isSprite) { o.userData.toca = toca; tocables.push(o); } }); }
 
-  // --- Suelo (una malla instanciada) con arroyo al fondo ---
-  const X0 = -22, X1 = 22, Z0 = -25, Z1 = 20;
-  const enArroyo = z => z >= -19.5 && z <= -16.5;
-  const esCamino = (x, z) => (Math.abs(x) <= 1.5 && z <= 10 && z >= -16) || (Math.abs(z) <= 1.5 && Math.abs(x) <= 10) || Math.hypot(x, z) < 4.2 || (Math.abs(z - 13.5) <= 1 && Math.abs(x) <= 14);
-  const celdas = [];
-  for (let x = X0; x <= X1; x++) for (let z = Z0; z <= Z1; z++) celdas.push([x, z]);
-  const suelo = new THREE.InstancedMesh(cajaRecta, EVO ? EVO.material('#ffffff', { nuevo: true }) : new THREE.MeshLambertMaterial(), celdas.length);
-  if (EVO && EVO.sombras) suelo.receiveShadow = true;
-  const PS = EVO ? EVO.P : null;
-  const m4 = new THREE.Matrix4(), col = new THREE.Color();
-  celdas.forEach(([x, z], k) => {
-    const agua = enArroyo(z), camino = esCamino(x, z), otra = z < -19.5;
-    // Bloques: baldosas con escalones; desde Mundo real el suelo es parejo y los colores más suaves
-    const liso = N >= 2;
-    m4.makeTranslation(x, agua ? -.85 : camino ? (liso ? -.47 : -.45) : -.5 + (!liso && (x * 7 + z * 13) % 5 === 0 ? .08 : 0), z);
-    suelo.setMatrixAt(k, m4);
-    if (N >= 2) {
-      const v = ((x * 3 + z * 7) % 5) / 5 * (liso ? .04 : .1);
-      const ondas = .035 * Math.sin(x * .31) * Math.cos(z * .27);   // manchas suaves, sin damero
-      col.set(agua ? PS.rio : otra ? '#8b9a7a' : camino ? PS.patio : PS.pasto).offsetHSL(0, 0, ondas);
-    } else
-    col.set(agua ? ((x + z) % 2 ? '#38bdf8' : '#0ea5e9') : otra ? ((x + z) % 2 ? '#8b9a7a' : '#7f8f6f') : camino ? ((x + z) % 2 ? '#e7d8b1' : '#ddcb9c') : ((x * 3 + z) % 4 === 0 ? '#5fae4f' : (x + z) % 2 ? '#6bbd57' : '#64b552'));
-    suelo.setColorAt(k, col);
-  });
-  escena.add(suelo);
-  // Piezas: el suelo es una base de placas que encastran (juntas suaves cada 4 m, sin pernos), como en la vitrina
-  if (N === 2) {
-    for (let k = X0 + 2.5; k < X1; k += 4) bloque(k, .02, (Z0 + Z1) / 2 + 2, .08, .04, Z1 - Z0 - 6, EVO.P.pasto2);
-    for (let k = Z0 + 6.5; k < Z1; k += 4) bloque((X0 + X1) / 2, .02, k, X1 - X0, .04, .08, EVO.P.pasto2);
-  }
+  // ================= EDU.06a — La ciudad de Santa Cruz por anillos =================
+  // El colegio del alumno (una casona cruceña con sus 6 aulas alrededor del patio) queda entre
+  // el 3.er y el 4.º anillo. Se camina libre en ±45 m; lo lejano (plaza 24 de Septiembre y
+  // catedral, otros colegios, el río) se ve como hito. La ciudad empieza casi vacía: la
+  // construyen los cursos (el zoológico es la obra de la ciudad).
+  const LIM = 45;                              // área caminable: |x|, |z| ≤ LIM
+  const CEN = new THREE.Vector2(0, 62);        // centro de la ciudad (plaza 24 de Septiembre)
+  const ANILLOS = [12, 24, 40, 82];            // 1.º, 2.º, 3.º y 4.º anillo (el colegio queda entre el 3.º y el 4.º)
+  const AV = [-1.95, -1.2, -0.45, 0.45, 1.2, 1.95, Math.PI / 2];   // avenidas radiales (ángulo desde el centro)
+  const C_PASTO = N >= 2 ? EVO.P.pasto : '#64b552', C_CALLE = N >= 2 ? EVO.P.calle : '#8c8c96', C_PATIO = N >= 2 ? EVO.P.patio : '#e7d8b1';
+  const C_PARED = N >= 2 ? EVO.P.pared : '#f5efe3', C_TEJA = N >= 2 ? EVO.P.teja : '#E8573A', C_HORCON = N >= 2 ? EVO.P.horcon : '#7c4a1e';
 
-  // --- Plaza central ---
-  bloque(0, 1.8, 0, .25, 4, .25, '#e5e7eb');
-  const bandera = dinamico(bloque(.85, 3.3, 0, 1.4, .8, .08, '#10B981'));
-  bloque(0, .15, 0, 2.4, .3, 2.4, '#cbd5e1');
-
-  // --- Árboles y cerco ---
-  [[-15, 0], [15, -1], [-15, 7], [15, 7], [-18, -6], [18, -6], [-19, 16], [19, 16], [0, 17.5]].forEach(([x, z], i) => {
-    bloque(x, 1, z, .7, 2, .7, '#7c4a1e');
-    if (N === 1) { bloque(x, 2.6, z, 2.2, 1.6, 2.2, i % 2 ? '#2f8f46' : '#3fa356'); bloque(x, 3.6, z, 1.3, .8, 1.3, '#4cb865'); }
-    else {
-      // copas redondas; algunos tajibos en flor (amarillo / rosado)
-      const flor = N >= 3 && i % 3 === 1 ? (i % 2 ? EVO.P.tajiboAm : EVO.P.tajiboRo) : null;
-      bola(x, 2.9, z, 2.8, 2.1, 2.8, flor || (i % 2 ? EVO.P.bosque2 : EVO.P.bosque3));
-      bola(x + .5, 3.8, z - .3, 1.7, 1.4, 1.7, flor || EVO.P.bosque4);
+  // --- Suelo: Bloques = baldosas en el área de juego; desde Piezas = suelo liso ---
+  {
+    const lejos = new THREE.Mesh(new THREE.PlaneGeometry(400, 400).rotateX(-Math.PI / 2), mat(N >= 2 ? EVO.P.pasto2 : '#5fae4f'));
+    lejos.position.y = -.03; escena.add(lejos); if (EVO && EVO.sombras) lejos.receiveShadow = true;
+    if (N === 1) {
+      const celdas = [];
+      for (let x = -LIM - 1; x <= LIM + 1; x += 2) for (let z = -LIM - 1; z <= LIM + 1; z += 2) celdas.push([x, z]);   // baldosas de 2 m (menos piezas)
+      const suelo = new THREE.InstancedMesh(cajaRecta, EVO ? EVO.material('#ffffff', { nuevo: true }) : new THREE.MeshLambertMaterial(), celdas.length);
+      const m4 = new THREE.Matrix4(), col = new THREE.Color();
+      celdas.forEach(([x, z], k) => {
+        m4.makeScale(2, 1, 2).setPosition(x, -.5 + ((x * 7 + z * 13) % 5 === 0 ? .06 : 0), z); suelo.setMatrixAt(k, m4);
+        col.set((x * 3 + z) % 4 === 0 ? '#5fae4f' : ((x + z) / 2) % 2 ? '#6bbd57' : '#64b552'); suelo.setColorAt(k, col);
+      });
+      escena.add(suelo);
+    } else {
+      const piso = new THREE.Mesh(new THREE.PlaneGeometry(2 * LIM + 30, 2 * LIM + 30).rotateX(-Math.PI / 2), mat(C_PASTO));
+      piso.position.y = -.01; escena.add(piso); if (EVO.sombras) piso.receiveShadow = true;
+      if (N === 2) {   // Piezas: base de placas que encastran (juntas cada 4 m, sin pernos)
+        for (let k = -LIM; k <= LIM; k += 4) { bloque(k, .02, 0, .1, .04, 2 * LIM, EVO.P.pasto2); bloque(0, .02, k, 2 * LIM, .04, .1, EVO.P.pasto2); }
+      }
     }
-  });
-  for (let t = -20; t <= 20; t += 2) {
-    [[t, 19.5], [-21.5, t], [21.5, t]].forEach(([x, z]) => { if (z > -16) bloque(x, .5, z, .35, 1, .35, '#f1f5f9'); });
+  }
+  // --- Calles: anillos y avenidas (en bloques de 4 m, se juntan en una sola malla) ---
+  const enMundo = (x, z) => Math.abs(x) < 120 && Math.abs(z) < 120;
+  const cercaColegio = (x, z, m = 0) => Math.abs(x) < 14 + m && Math.abs(z) < 14 + m;
+  function tramo(x0, z0, x1, z1, ancho, color, y = .03) {
+    const L = Math.hypot(x1 - x0, z1 - z0); if (L < .01) return;
+    bloque((x0 + x1) / 2, y, (z0 + z1) / 2, ancho, .06, L + .1, color).rotation.y = Math.atan2(x1 - x0, z1 - z0);
+  }
+  for (const r of ANILLOS) {
+    const n = Math.round(2 * Math.PI * r / 4);
+    for (let i = 0; i < n; i++) {
+      const a0 = i / n * Math.PI * 2, a1 = (i + 1) / n * Math.PI * 2;
+      const x0 = CEN.x + Math.cos(a0) * r, z0 = CEN.y + Math.sin(a0) * r, x1 = CEN.x + Math.cos(a1) * r, z1 = CEN.y + Math.sin(a1) * r;
+      if (!enMundo(x0, z0) || cercaColegio((x0 + x1) / 2, (z0 + z1) / 2, 2)) continue;
+      tramo(x0, z0, x1, z1, 5, C_CALLE);
+      if (r > 20) tramo(x0, z0, x1, z1, 1, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57', .05);   // cantero central con pasto
+    }
+  }
+  for (const a of AV) for (let r = 6; r < 130; r += 4) {
+    const x0 = CEN.x + Math.cos(a) * r, z0 = CEN.y + Math.sin(a) * r, x1 = CEN.x + Math.cos(a) * (r + 4), z1 = CEN.y + Math.sin(a) * (r + 4);
+    if (!enMundo(x0, z0) || cercaColegio(x0, z0, 4)) continue;
+    tramo(x0, z0, x1, z1, 4, C_CALLE, .025);
+  }
+  const enCalle = (x, z) => {
+    const d = Math.hypot(x - CEN.x, z - CEN.y);
+    if (ANILLOS.some(r => Math.abs(d - r) < 4)) return true;
+    const a = Math.atan2(z - CEN.y, x - CEN.x);
+    return AV.some(av => Math.abs(Math.sin(a - av)) * d < 3.5 && Math.cos(a - av) > 0);
+  };
+
+  // --- Árboles de la flora cruceña (las áreas verdes que todavía están libres) ---
+  function arbol(x, z, k = 1, tipo = 0) {
+    bloque(x, 1.2 * k, z, .6 * k, 2.4 * k, .6 * k, N >= 2 ? EVO.P.tronco || '#6B4A33' : '#7c4a1e');
+    const flor = tipo === 1 ? (N >= 2 ? EVO.P.tajiboAm : '#FDE047') : tipo === 2 ? (N >= 2 ? EVO.P.tajiboRo : '#f472b6') : null;
+    const verde = N >= 2 ? [EVO.P.bosque2, EVO.P.bosque3, EVO.P.bosque4][(Math.abs(x * 7 + z * 3) | 0) % 3] : ['#2f8f46', '#3fa356', '#4cb865'][(Math.abs(x * 7 + z * 3) | 0) % 3];
+    if (N === 1) { bloque(x, 3 * k, z, 2.6 * k, 1.8 * k, 2.6 * k, flor || verde); bloque(x, 4.1 * k, z, 1.5 * k, .8 * k, 1.5 * k, flor || '#4cb865'); }
+    else { bola(x, 3.2 * k, z, 3.2 * k, 2.4 * k, 3.2 * k, flor || verde); bola(x + .6 * k, 4.2 * k, z - .3 * k, 2 * k, 1.6 * k, 2 * k, flor || EVO.P.bosque4); }
   }
 
-  // --- Aulas por materia ---
+  // --- El colegio: casona con galerías y horcones alrededor de un patio con aljibe ---
+  const CE = 13, AL = 6, CI = CE - AL, HW = 4, GA = 2.4, CK = CI - GA;   // medio ancho, ala, patio, alto de pared, galería, borde de galería
+  const colegio = new THREE.Group(); escena.add(colegio);
+  const pared = (x, z, w, l) => { bloque(x, HW / 2, z, w, HW, l, C_PARED, colegio); bloque(x, .35, z, w + .06, .7, l + .06, N >= 2 ? EVO.P.zocalo : '#2F9BD6', colegio); solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(w, 3, l))); };
+  pared(0, -(CE - AL / 2), 2 * CE, AL);                      // ala norte
+  pared(-(CE - AL / 2), 0, AL, 2 * CI);                      // ala oeste
+  pared(CE - AL / 2, 0, AL, 2 * CI);                         // ala este
+  pared(-(CE + 2.5) / 2, CE - AL / 2, CE - 2.5, AL);          // ala sur (izquierda del zaguán)
+  pared((CE + 2.5) / 2, CE - AL / 2, CE - 2.5, AL);           // ala sur (derecha del zaguán)
+  if (N === 2) for (const yy of [1.4, 2.8]) for (const [x, z, w, l] of [[0, -CE, 2 * CE, .08], [-CE, 0, .08, 2 * CE], [CE, 0, .08, 2 * CE]]) bloque(x, yy, z, w + .1, .08, l + .1, EVO.P.pared2, colegio);
+  // techos a cuatro aguas sobre cada ala y su galería
+  // los techos del colegio se vuelven transparentes cuando el alumno está adentro (si no, tapan el patio)
+  const matTechoCol = EVO ? EVO.material(C_TEJA, { nuevo: true }) : new THREE.MeshLambertMaterial({ color: C_TEJA });
+  const techosCol = dinamico(new THREE.Group()); colegio.add(techosCol);
+  const techoAla = (x, z, w, l, h) => { const g = new THREE.Group(); g.position.set(x, 0, z); techosCol.add(g); techo(g, HW - .05, w, l, h, C_TEJA, matTechoCol); };
+  techoAla(0, -(CE + CK) / 2, 2 * CE + 1.2, CE - CK + 1, 2.4);
+  techoAla(0, (CE + CK) / 2, 2 * CE + 1.2, CE - CK + 1, 2.4);
+  techoAla(-(CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
+  techoAla((CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
+  // galería: piso de baldosa y horcones en el borde del patio
+  bloque(0, .04, 0, 2 * CI, .08, 2 * CI, N >= 2 ? EVO.P.piso : '#e08a5e', colegio);
+  bloque(0, .07, 0, 2 * CK, .08, 2 * CK, C_PASTO, colegio);
+  bloque(0, .1, 0, 1.4, .04, 2 * CK, C_PATIO, colegio); bloque(0, .1, 0, 2 * CK, .04, 1.4, C_PATIO, colegio);
+  for (let t = -CK; t <= CK + .01; t += CK / 2) for (const [x, z] of [[t, -CK], [t, CK], [-CK, t], [CK, t]]) bloque(x, HW / 2, z, .3, HW, .3, C_HORCON, colegio);
+  for (const [x, z, w, l] of [[0, -CK, 2 * CK + .4, .3], [0, CK, 2 * CK + .4, .3], [-CK, 0, .3, 2 * CK + .4], [CK, 0, .3, 2 * CK + .4]]) bloque(x, HW - .1, z, w, .2, l, N >= 2 ? EVO.P.madera : '#8a5a35', colegio);
+  // aljibe en el centro y un toborochi en una esquina del patio
+  bloque(0, .5, 0, 1.8, 1, 1.8, N >= 2 ? EVO.P.piedra : '#cbd5e1', colegio); bloque(0, 1.02, 0, 1.3, .04, 1.3, N >= 2 ? EVO.P.rioOsc : '#0ea5e9', colegio);
+  for (const sx of [-.7, .7]) bloque(sx, 1.6, 0, .14, 2.2, .14, C_HORCON, colegio);
+  techo((() => { const g = new THREE.Group(); g.position.set(0, 0, 0); colegio.add(g); return g; })(), 2.6, 2, 1.2, .6, C_TEJA);
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1.9, 2, 1.9)));
+  arbol(-3.2, -3.2, .75, 2);
+  // bandera en la plazuela del frente
+  bloque(-4.5, 3, CE + 4, .2, 6, .2, '#e5e7eb');
+  const bandera = dinamico(bloque(-3.7, 5.4, CE + 4, 1.4, .8, .08, '#10B981'));
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-4.5, 1, CE + 4), new THREE.Vector3(.5, 2, .5)));
+  bloque(0, .05, CE + 4.5, 12, .06, 7, C_PATIO);   // plazuela
+
+  // --- Las 6 aulas: puertas que dan a la galería del patio ---
   const aulas = [];
   function cartel(m, av) {
     const c = document.createElement('canvas'); c.width = 320; c.height = 150;
@@ -1151,71 +1217,60 @@ function iniciar(THREE) {
     g.fillStyle = '#fff'; g.font = '700 30px Inter, sans-serif'; g.fillText(av + '%', 236, 112);
     const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
   }
-  D.materias.forEach(m => {
-    const [x, z] = m.pos;
-    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.atan2(-x, -z); escena.add(g);
-    bloque(0, 1.6, 0, 5, 3.2, 4.4, N >= 2 ? EVO.P.pared : '#f5efe3', g);
-    bloque(0, .15, 0, 5.4, .3, 4.8, N >= 2 ? EVO.P.piedra : '#9ca3af', g);
-    if (N >= 2) {
-      // zócalo de color y galería con horcones al frente (casona cruceña, como en la vitrina)
-      bloque(0, .45, 0, 5.04, .5, 4.44, EVO.P.zocalo, g);
-      for (const sx of [-2.3, -.8, .8, 2.3]) bloque(sx, 1.4, 2.95, .2, 2.8, .2, EVO.P.horcon, g);
-      bloque(0, 2.85, 2.95, 5.2, .14, .22, EVO.P.madera, g);
-      bloque(0, .2, 2.6, 5.2, .1, 1.1, EVO.P.piso, g);
-      if (N === 2) for (const yy of [1.15, 2.1]) bloque(0, yy, 0, 5.06, .06, 4.46, EVO.P.pared2, g);   // ranuras de encastre
-    }
-    // techo: color de la materia en Bloques y Piezas; desde Mundo real, teja con una franja de la materia
-    if (N >= 3) { techo(g, 3.2, 6.2, 6.4, 1.7, EVO.P.teja); bloque(0, 3.25, 3.0, 6.2, .18, .3, m.color, g); }
-    else techo(g, 3.2, 5.8, N >= 2 ? 6.4 : 5.2, 1.7, m.color);
-    bloque(0, 1.05, 2.21, 1.3, 2.1, .12, '#5b3a1a', g);
-    bloque(-1.65, 1.9, 2.21, .9, .9, .12, N >= 2 ? EVO.P.madera : '#bae6fd', g); bloque(1.65, 1.9, 2.21, .9, .9, .12, N >= 2 ? EVO.P.madera : '#bae6fd', g);
-    bloque(0, .05, 3.2, 1.8, .1, 1.4, new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 }), g);
+  // puerta: [x, z, giro] sobre la pared interior de cada ala (mira hacia el patio)
+  const PUERTAS = { mat: [-4, -CI, 0], len: [4, -CI, 0], csoc: [-CI, 0, Math.PI / 2], cnat: [CI, 0, -Math.PI / 2], ing: [-7.5, CI, Math.PI], art: [7.5, CI, Math.PI] };
+  D.materias.forEach((m, i) => {
+    const [px, pz, ry] = PUERTAS[m.id] || Object.values(PUERTAS)[i % 6];
+    const g = new THREE.Group(); g.position.set(px, 3.2, pz); g.rotation.y = ry; escena.add(g);
+    // el frente del aula en el color de la materia: marco, puerta, ventanas y franja
+    bloque(0, -3.2 + 1.35, .08, 2.2, 2.7, .1, m.color, g);
+    bloque(0, -3.2 + 1.25, .15, 1.5, 2.5, .08, N >= 2 ? EVO.P.maderaOsc : '#5b3a1a', g);
+    for (const sx of [-2.1, 2.1]) bloque(sx, -3.2 + 1.9, .1, 1.1, 1.1, .08, N >= 2 ? EVO.P.madera : '#bae6fd', g);
+    bloque(0, -3.2 + 3.3, .1, 5.4, .3, .08, m.color, g);
+    bloque(0, -3.2 + .06, 1.4, 1.8, .06, 1.4, new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 }), g);
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cartel(m, YO.avance[m.id]), depthTest: false }));
     sp.scale.set(3.4, 1.6, 1); sp.position.set(0, 6.3, 0); sp.renderOrder = 5; g.add(sp);
     let aviso = null;
     if (D.misiones.some(x => x.materia === m.id && x.estado !== 'hecha')) { aviso = dinamico(bloque(0, 8, 0, .5, .5, .5, '#FDE047', g)); aviso.rotation.set(.6, .6, 0); }
     hacerTocable(g, { tipo: 'aula', id: m.id });
-    const puerta = new THREE.Vector3(0, 0, 3.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(g.position);
-    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(5.6, 3, 5.6)));
+    const puerta = new THREE.Vector3(0, 0, 1.6).applyAxisAngle(new THREE.Vector3(0, 1, 0), ry).add(new THREE.Vector3(px, 0, pz));
     interes.push({ clave: 'aula:' + m.id, pos: puerta, alto: 3.4, texto: `${m.icono} Entrar · ${m.corto}`, accion: () => window.abrirAula(m.id) });
     aulas.push({ m, g, sp, aviso });
   });
+  const cartelColegio = etiqueta('🏫 Mi colegio', '#10B981', 340); cartelColegio.position.set(0, 9.5, -CE - 1); escena.add(cartelColegio);
 
-  // --- Lugares con niebla (parque escondido, cuarto de objetos perdidos) ---
+  // --- Lugares con niebla (parque escondido, cuarto de objetos perdidos) en la manzana ---
   const matNiebla = EVO ? EVO.material('#e9d5ff', { transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 }) : new THREE.MeshLambertMaterial({ color: '#e9d5ff', transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 });
+  const POS_LUGAR = { parque: [-24, -6], perdidos: [24, 4] };
   const lugares3D = {};
   M.lugares.forEach(l => {
-    const [x, z] = l.pos;
+    const [x, z] = POS_LUGAR[l.id] || l.pos;
     const g = new THREE.Group(); g.position.set(x, 0, z); escena.add(g);
     const cerrado = dinamico(new THREE.Group()), abierto = dinamico(new THREE.Group()); g.add(cerrado, abierto); abierto.visible = false;
     let puertaHoja;
     if (l.id === 'parque') {
-      // cerco de arbustos con portón entreabierto mirando al centro (+x, +z)
+      // cerco de arbustos con portón entreabierto mirando al colegio (+x)
       for (let i = -3; i <= 3; i++) {
         bloque(i, .9, -3, 1, 1.8, 1, '#2f7d3a', g); bloque(-3, .9, i, 1, 1.8, 1, '#2f7d3a', g);
         if (Math.abs(i) > 1) { bloque(i, .9, 3, 1, 1.8, 1, '#2f7d3a', g); bloque(3, .9, i, 1, 1.8, 1, '#2f7d3a', g); }
       }
       bloque(3, 2.2, 0, .5, .6, 3.4, '#78350f', g);
       puertaHoja = dinamico(bloque(3, .9, -.8, .2, 1.6, 1.4, '#a16207', g)); puertaHoja.rotation.y = .5; puertaHoja.position.set(3.3, .9, -.6);
-      // silueta oscura de árbol grande
       bloque(0, 1.5, 0, .9, 3, .9, '#1f2937', cerrado); bloque(0, 3.6, 0, 3.6, 2, 3.6, '#111827', cerrado);
-      // abierto: árbol, hamacas, flores, mantel de picnic
       bloque(-1, 1.5, -1, .9, 3, .9, '#7c4a1e', abierto); bloque(-1, 3.6, -1, 3.4, 2, 3.4, '#22c55e', abierto); bloque(-1, 4.9, -1, 2, .8, 2, '#4ade80', abierto);
       bloque(1.2, 1.4, 1.4, .2, 2.8, .2, '#dc2626', abierto); bloque(1.2, 1.4, -.2, .2, 2.8, .2, '#dc2626', abierto); bloque(1.2, 2.8, .6, .2, .2, 1.8, '#dc2626', abierto);
       bloque(1.2, .7, .6, .6, .1, .5, '#facc15', abierto);
       bloque(-.6, .06, 1.6, 1.8, .06, 1.4, '#f87171', abierto);
       [[-2, 2], [-2.2, -.2], [.4, -2.2], [2, -2]].forEach(([fx, fz], i) => bloque(fx, .35, fz, .4, .4, .4, ['#f472b6', '#fde047', '#f97316', '#a78bfa'][i], abierto));
     } else {
-      // cuartito con puerta entreabierta (mirando al centro, -x)
-      bloque(0, 1.6, 0, 5, 3.2, 5, '#d6d3d1', g); techo(g, 3.15, 5.8, 5.8, 1.6, '#92400e');
+      // cuartito con puerta entreabierta (mirando al colegio, -x)
+      bloque(0, 1.6, 0, 5, 3.2, 5, N >= 2 ? EVO.P.pared4 || '#d6d3d1' : '#d6d3d1', g); techo(g, 3.15, 5.8, 5.8, 1.6, N >= 3 ? EVO.P.teja2 || '#92400e' : '#92400e');
       bloque(-2.52, 1.1, 0, .06, 2.2, 1.5, '#111827', g);
       puertaHoja = dinamico(bloque(-2.9, 1.1, -.55, 1.2, 2.2, .15, '#7c2d12', g)); puertaHoja.rotation.y = -.7;
       bloque(-2.55, 2.6, 0, .1, .5, 1.8, '#F59E0B', g);
-      // abierto: estantes y cajas de objetos afuera
       [[-3.5, 1.6], [-3.6, -1.7]].forEach(([bx, bz]) => { bloque(bx, .5, bz, .9, 1, .9, '#a16207', abierto); bloque(bx, 1.1, bz, .5, .3, .5, ['#38bdf8', '#f472b6'][bz > 0 ? 0 : 1], abierto); });
       bloque(-2.51, 1.1, 0, .05, 2.2, 1.5, '#fde68a', abierto);
     }
-    // niebla: cubos translúcidos que salen por la entrada
     const nubecitas = [];
     for (let i = 0; i < 9; i++) {
       const lado = l.id === 'parque' ? 1 : -1;
@@ -1237,23 +1292,42 @@ function iniciar(THREE) {
     hacerTocable(L.g, { tipo: 'lugar', id });
   };
 
-  // --- Puente del arroyo (se completa entre todos) y la otra orilla con niebla ---
-  const tablas = [];
-  for (let i = 0; i < 8; i++) tablas.push(dinamico(bloque(0, -.05, -16.2 - i * .45, 3, .25, .45, '#a16207')));
-  bloque(-1.6, .6, -18, .25, 1.2, 4.4, '#78350f'); bloque(1.6, .6, -18, .25, 1.2, 4.4, '#78350f');
+  // --- La obra de la ciudad: el zoológico (avanza con la barra "entre todos" del curso) ---
+  const ZX = 30, ZZ = -24;
+  bloque(ZX, .04, ZZ, 18, .06, 14, N >= 2 ? EVO.P.tierraClara || '#C9A06F' : '#ddcb9c');
+  bloque(ZX - 4, .07, ZZ - 2, 7, .06, 6, N >= 2 ? EVO.P.pasto2 : '#5fae4f'); bloque(ZX - 4.5, .1, ZZ - 2, 4, .06, 3, N >= 2 ? EVO.P.rio : '#38bdf8');
+  arbol(ZX - 6.5, ZZ - 4, .8, 1); arbol(ZX + 5, ZZ - 4.5, .7, 0);
+  const tablas = [];   // las piezas de la obra (cerco y portal de entrada): se completan entre todos
+  for (let i = 0; i < 8; i++) tablas.push(dinamico(bloque(ZX - 7 + i * 2, 1, ZZ + 6.5, 1.8, 2, .3, N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207')));
+  for (const sx of [-2.5, 2.5]) bloque(ZX + sx, 2.2, ZZ + 7.5, .9, 4.4, .9, N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207');
+  bloque(ZX + 9, 5, ZZ - 5, .8, 10, .8, '#FDE047'); bloque(ZX + 6, 10, ZZ - 5, 7, .6, .6, '#FDE047');   // grúa
+  bloque(ZX + 3, 7, ZZ - 5, .06, 6, .06, '#475569'); bloque(ZX + 3, 4, ZZ - 5, .9, .6, .9, '#10B981');
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(ZX, 1.5, ZZ - 1), new THREE.Vector3(17, 3, 13)));
   const matFantasma = EVO ? EVO.material('#ffffff', { transparent: true, opacity: .3 }) : new THREE.MeshLambertMaterial({ color: '#ffffff', transparent: true, opacity: .3 });
+  const matObra = mat(N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207');
   function pintarPuente() {
     const k = Math.round(tablas.length * Math.min(1, M.puente.hechas / M.puente.meta));
-    tablas.forEach((t, i) => { t.material = i < k ? mat('#a16207') : matFantasma; });
+    tablas.forEach((t, i) => { t.material = i < k ? matObra : matFantasma; });
   }
   pintarPuente();
-  for (let i = 0; i < 14; i++) { const n = bloque(-10 + Math.random() * 20, 1 + Math.random() * 3, -21 - Math.random() * 3, 2, 1.2, 2, matNiebla); n.userData.base = n.position.clone(); n.userData.fase = Math.random() * 6; lugares3D._orilla = lugares3D._orilla || []; lugares3D._orilla.push(n); }
-  bloque(-6, 1.5, -23, 1, 3, 1, '#8b8fa3'); bloque(-6, 3.6, -23, 2.6, 1.4, 2.6, '#7c809a'); bloque(5, 1.4, -22.5, 3.6, 2.8, 3, '#8b8fa3'); bloque(5, 3.1, -22.5, 4.2, .6, 3.6, '#7c809a');
-  const cartelPuente = etiqueta('🌉 ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 300); cartelPuente.position.set(0, 3.2, -15.6); escena.add(cartelPuente);
+  lugares3D._orilla = [];
+  const cartelPuente = etiqueta('🦜 Zoológico · ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 460); cartelPuente.position.set(ZX, 6.5, ZZ + 7); escena.add(cartelPuente);
   hacerTocable(cartelPuente, { tipo: 'puente' }); tablas.forEach(t => hacerTocable(t, { tipo: 'puente' }));
-  interes.push({ clave: 'puente', pos: new THREE.Vector3(0, 0, -15.2), alto: 2.4, texto: '🌉 Ver el puente', accion: () => window.abrirPuente() });
+  interes.push({ clave: 'puente', pos: new THREE.Vector3(ZX, 0, ZZ + 9), alto: 3, texto: '🦜 Ver la obra · Zoológico', accion: () => window.abrirPuente() });
 
-  // --- Casas del curso (la mía + compañeros) ---
+  // --- Portal para visitar otro colegio ---
+  {
+    const PX = -9, PZ = CE + 5.5;
+    for (const sx of [-1.6, 1.6]) bloque(PX + sx, 2, PZ, .45, 4, .45, C_HORCON);
+    bloque(PX, 4.1, PZ, 4, .35, .6, N >= 2 ? EVO.P.madera : '#8a5a35');
+    const disco = new THREE.Mesh(new THREE.CircleGeometry(1.4, N === 1 ? 8 : 28), new THREE.MeshBasicMaterial({ color: '#7DE3BE', transparent: true, opacity: .75, side: THREE.DoubleSide, depthWrite: false }));
+    disco.position.set(PX, 2, PZ); disco.scale.y = 1.35; escena.add(disco);
+    const e = etiqueta('🌀 Portal', '#10B981', 260); e.position.set(PX, 5.4, PZ); escena.add(e);
+    hacerTocable(disco, { tipo: 'portal', id: 'tajibos' });
+    interes.push({ clave: 'portal:tajibos', pos: new THREE.Vector3(PX, 0, PZ + 1.6), alto: 4.4, texto: '🌀 Visitar · Col. Los Tajibos', accion: () => window.abrirPortal && window.abrirPortal() });
+  }
+
+  // --- Casas del curso (la mía + compañeros), cruzando el 3.er anillo ---
   function casa(x, z, cfg, texto, toca, colorEtq) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.PI; escena.add(g);
     bloque(0, 1.1, 0, 3, 2.2, 2.6, N >= 3 ? EVO.P.pared3 : cfg.color, g); if (N >= 3) bloque(0, .3, 0, 3.04, .5, 2.64, cfg.color, g); if (N === 1) { bloque(0, 2.45, 0, 3.4, .5, 3, cfg.techo, g); bloque(0, 2.9, 0, 2.2, .4, 1.8, cfg.techo, g); } else techo(g, 2.2, 3.6, 3.2, 1.3, N >= 3 ? EVO.P.teja : cfg.techo);
@@ -1263,14 +1337,55 @@ function iniciar(THREE) {
     solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1, z), new THREE.Vector3(3.4, 2, 3)));
     return g;
   }
-  casa(-13, 16, M.miCasa, '🏠 Tu casa', { tipo: 'micasa' }, '#10B981');
-  interes.push({ clave: 'micasa', pos: new THREE.Vector3(-13, 0, 13.6), alto: 2.6, texto: '🏠 Entrar · Tu casa', accion: () => window.abrirMiCasa() });
-  const posCasas = [[-6.5, 16.5], [6.5, 16.5], [13, 16]];
+  casa(-30, 34, M.miCasa, '🏠 Tu casa', { tipo: 'micasa' }, '#10B981');
+  interes.push({ clave: 'micasa', pos: new THREE.Vector3(-30, 0, 31.6), alto: 2.6, texto: '🏠 Entrar · Tu casa', accion: () => window.abrirMiCasa() });
+  const posCasas = [[-22, 34], [22, 34], [30, 34]];
   M.companeros.slice(0, 3).forEach((c, i) => {
     const [x, z] = posCasas[i];
     casa(x, z, c.casa, c.apodo, { tipo: 'casa', id: c.id }, c.color);
     interes.push({ clave: 'casa:' + c.id, pos: new THREE.Vector3(x, 0, z - 2.4), alto: 2.6, texto: '🏠 Visitar · ' + c.apodo, accion: () => window.visitar(c.id) });
   });
+
+  // --- Hitos: plaza 24 de Septiembre con la catedral, el Cristo, otros colegios, el río ---
+  {
+    const cx = CEN.x, cz = CEN.y;
+    bloque(cx, .05, cz, 20, .08, 20, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57');
+    bloque(cx, .09, cz, 20, .04, 2.4, C_PATIO); bloque(cx, .09, cz, 2.4, .04, 20, C_PATIO);
+    const lad = N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#d1603f';
+    bloque(cx, 6, cz + 13, 12, 12, 18, lad);
+    for (const sx of [-5, 5]) { bloque(cx + sx, 10, cz + 4.5, 4, 20, 4, lad); const g = new THREE.Group(); g.position.set(cx + sx, 0, cz + 4.5); escena.add(g); techo(g, 20, 4.4, 4.4, 4, N >= 2 ? EVO.P.teja2 || C_TEJA : '#c9432a'); }
+    const g = new THREE.Group(); g.position.set(cx, 0, cz + 13); escena.add(g); techo(g, 12, 12.6, 18.6, 4, N >= 2 ? EVO.P.teja2 || C_TEJA : '#c9432a');
+    for (const [x, z] of [[-6, -6], [6, -6], [-6, 6], [6, 6]]) arbol(cx + x, cz + z, 1);
+    const e = etiqueta('⛪ Plaza 24 de Septiembre', '#F2C230', 560); e.position.set(cx, 26, cz + 8); e.scale.multiplyScalar(3); escena.add(e);
+    // Cristo Redentor en su rotonda (sobre el 2.º anillo), mirando al colegio
+    const a = AV[0], kx = CEN.x + Math.cos(a) * ANILLOS[1], kz = CEN.y + Math.sin(a) * ANILLOS[1];
+    bloque(kx, .06, kz, 9, .1, 9, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57');
+    bloque(kx, 2, kz, 3.2, 4, 3.2, N >= 2 ? EVO.P.piedra : '#cbd5e1');
+    bloque(kx, 6.5, kz, 1.6, 5, 1.2, '#F7F4EC'); bloque(kx, 8.4, kz, 7, .6, .6, '#F7F4EC'); bola(kx, 9.6, kz, 1.3, 1.5, 1.3, '#F7F4EC');
+    const ek = etiqueta('Cristo Redentor', '#F2C230', 420); ek.position.set(kx, 13, kz); ek.scale.multiplyScalar(1.8); escena.add(ek);
+    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(kx, 1, kz), new THREE.Vector3(3.4, 2, 3.4)));
+    // otros colegios (se visitan por portales): techos de teja sobre su terreno en verde
+    for (const [x, z] of [[-38, -40], [44, 40], [-70, 20], [60, -60]]) {
+      bloque(x, .05, z, 22, .06, 22, '#10B981');
+      bloque(x, 2, z, 16, 4, 16, C_PARED);
+      const gg = new THREE.Group(); gg.position.set(x, 0, z); escena.add(gg); techo(gg, 3.95, 17.2, 17.2, 2.6, C_TEJA);
+      if (Math.abs(x) <= LIM && Math.abs(z) <= LIM) solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(16.4, 3, 16.4)));
+    }
+    // el río (como el Piraí), al oeste
+    for (let z = -120; z < 120; z += 6) bloque(-82 + Math.sin(z * .04) * 6, .04, z, 9, .06, 6.4, N >= 2 ? EVO.P.rio : '#38bdf8');
+  }
+  // árboles sueltos en las áreas verdes libres
+  for (let gx = -96; gx <= 96; gx += 9) for (let gz = -96; gz <= 96; gz += 9) {
+    const x = gx + ((gx * 13 + gz * 7) % 5), z = gz + ((gx * 5 + gz * 11) % 5), h = (Math.abs(gx * 31 + gz * 17) % 10);
+    if (h < 4 || enCalle(x, z) || cercaColegio(x, z, 8) || Math.hypot(x - CEN.x, z - CEN.y) < 26) continue;
+    if (solidos.some(b => b.distanceToPoint(new THREE.Vector3(x, 1, z)) < 4) || interes.some(p => Math.hypot(p.pos.x - x, p.pos.z - z) < 6)) continue;
+    if (Math.abs(x - ZX) < 12 && Math.abs(z - ZZ) < 10) continue;
+    if (z > 27 && z < 40 && Math.abs(x) > 15 && Math.abs(x) < 36) continue;   // casas
+    arbol(x, z, .9 + (h % 3) * .12, h === 4 ? 1 : h === 5 ? 2 : 0);
+    if (Math.abs(x) <= LIM && Math.abs(z) <= LIM) solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1, z), new THREE.Vector3(.8, 2, .8)));
+  }
+  if (escena.fog) { escena.fog.near = Math.max(escena.fog.near, 55); escena.fog.far = Math.max(escena.fog.far, 190); }
+
 
   // --- Personajes: yo y compañeros (todos de diseño propio) ---
   function personaje(remera, gorra, piel = '#f2c79b') {
@@ -1327,12 +1442,12 @@ function iniciar(THREE) {
     } else { P.pI.rotation.x = P.pD.rotation.x = P.bI.rotation.x = P.bD.rotation.x = 0; P.cuerpo.position.y = Math.sin(t * 2) * .03; }
   }
   const YOP = personaje('#10B981', '#1e3a8a');
-  const yo = YOP.yo; yo.position.set(0, 0, 2.6); yo.rotation.y = Math.PI;
+  const yo = YOP.yo; yo.position.set(2.2, 0, 3.6); yo.rotation.y = Math.PI;
   const sombra = new THREE.Mesh(new THREE.CircleGeometry(.6, 16), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: .2 }));
   sombra.rotation.x = -Math.PI / 2; sombra.position.y = .06; yo.add(sombra);
 
   // Compañeros que pasean por rutas fijas (simulado)
-  const rutas = [[[3, 5], [3, -4], [-4, -4], [-4, 5]], [[-11, 11], [-3, 11], [-3, 12.5], [-11, 12.5]], [[6, -12], [5, -3], [-5, -3]]];
+  const rutas = [[[3, 3], [3, -3], [-3, -3], [-3, 3]], [[-6, 16], [6, 16], [6, 19], [-6, 19]], [[-5.5, -5.8], [5.5, -5.8]]];   // patio, plazuela, galería
   const comp = M.companeros.slice(0, 3).map((c, i) => {
     const P = personaje(c.color, ['#7c2d12', '#365314', '#831843'][i], ['#d9a274', '#b57a4f', '#e8b98c'][i]);
     const e = etiqueta(c.apodo, c.color, 420); e.position.y = 3.4; P.yo.add(e);
@@ -1474,7 +1589,7 @@ function iniciar(THREE) {
       if (a.aviso && !D.misiones.some(x => x.materia === a.m.id && x.estado !== 'hecha')) { a.g.remove(a.aviso); a.aviso = null; }
     });
     pintarPuente();
-    const viejo = cartelPuente.material.map; const nuevo = etiqueta('🌉 ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 300);
+    const viejo = cartelPuente.material.map; const nuevo = etiqueta('🦜 Zoológico · ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 460);
     cartelPuente.material.map = nuevo.material.map; cartelPuente.material.needsUpdate = true; viejo.dispose();
   };
 
@@ -1502,7 +1617,7 @@ function iniciar(THREE) {
   const reloj = new THREE.Clock();
   const objetivoCam = new THREE.Vector3();
   const punto = new THREE.Vector3();
-  const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.hypot(x, z) < .9 || z < -16 || Math.abs(x) > 21 || z > 19; };
+  const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.abs(x) > LIM || Math.abs(z) > LIM; };
   function bucle() {
     const dt = Math.min(reloj.getDelta(), .05), t = reloj.elapsedTime;
     let mx = dir.x, mz = dir.z;
@@ -1586,6 +1701,10 @@ function iniciar(THREE) {
     const ahora = performance.now();
     for (let i = burbujas.length - 1; i >= 0; i--) if (burbujas[i].hasta < ahora) { burbujas[i].P.yo.remove(burbujas[i].b); burbujas[i].b.material.map.dispose(); burbujas.splice(i, 1); }
     bandera.scale.y = .8 + Math.sin(t * 3) * .05;
+    // adentro del colegio, los techos se ven casi transparentes
+    { const adentro = Math.abs(yo.position.x) < 14 && Math.abs(yo.position.z) < 14;
+      const op = matTechoCol.opacity + ((adentro ? .18 : 1) - matTechoCol.opacity) * Math.min(1, dt * 6);
+      if (Math.abs(op - matTechoCol.opacity) > .002) { matTechoCol.opacity = op; const tr = op < .99; if (tr !== matTechoCol.transparent) { matTechoCol.transparent = tr; matTechoCol.depthWrite = !tr; matTechoCol.needsUpdate = true; } } }
 
     // panel abierto a la derecha → el mundo se corre a la izquierda (suave)
     const quiere = window.__corrimiento || 0;

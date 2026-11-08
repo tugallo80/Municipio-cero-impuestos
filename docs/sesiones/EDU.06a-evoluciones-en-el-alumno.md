@@ -96,6 +96,25 @@ apaga. Probado: demo=1 + S1 → abrir sin parámetros sigue en S1 con 🎓 → d
 **Aviso**: en el deploy de las 18:55 UTC falló "Publicar las Functions" porque la facturación de
 `municipio-ia` aparece desactivada (Secret Manager 403). El sitio (Hosting) sí se publicó.
 
+**El mundo nuevo: Santa Cruz por anillos** (pedido del dueño, plan aprobado por la MAESTRA 2). La
+isla vieja se reemplazó por la ciudad del diseño (vista "Ciudad" de la vitrina y lámina E):
+- Anillos (1.º a 4.º) y avenidas radiales con cantero, centrados en la plaza 24 de Septiembre
+  con la catedral (hito lejano), el Cristo en su rotonda sobre el 2.º anillo, otros colegios en
+  verde, el río al oeste y áreas verdes con árboles sueltos (toborochi, tajibos en flor).
+- **El colegio**: casona de ~26×26 m entre el 3.º y el 4.º anillo, con alas, techos a cuatro aguas,
+  galerías con horcones alrededor del patio con aljibe y toborochi. Las **6 aulas** son puertas en
+  las alas que dan a la galería, cada una con su color, su cartel de avance y el cartel "Entrar · …"
+  a 1,5 m; tocar el aula de lejos sigue llevando solo. El zaguán es la salida a la ciudad. Adentro
+  del colegio los techos se vuelven transparentes para ver el patio.
+- Afuera: plazuela con bandera, **portal** "Visitar · Col. Los Tajibos" (panel de demo), tu casa y
+  las de los compañeros cruzando el 3.er anillo, el parque escondido y el cuarto de objetos perdidos
+  en la manzana, y la **obra de la ciudad: el zoológico** (sus piezas se completan con la barra
+  "entre todos", antes el puente), con grúa y cartel.
+- Área caminable ±45 m; colisiones por ala, casa, obra, hito cercano y árbol. Lo fijo se fusiona
+  (~1450 piezas → ~41–47 mallas); en Bloques el suelo es de baldosas de 2 m.
+- Probado con Playwright (915×412, táctil) en las 6 evoluciones: se camina, el cartel "Entrar ·
+  Mate" abre el aula y la profe responde, sin errores.
+
 **Pendiente**
 - **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
   `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los
