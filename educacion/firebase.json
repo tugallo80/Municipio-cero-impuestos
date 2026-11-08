@@ -93,6 +93,15 @@
             "value": "no-cache"
           }
         ]
+      },
+      {
+        "source": "/estilos/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "no-cache"
+          }
+        ]
       }
     ]
   }

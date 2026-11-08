@@ -110,7 +110,7 @@
     <img id="imgTrans" src="capturas/transicion-1a2-horizontal.jpg" alt="Transición de Bloques a Piezas: una ola de luz transforma el mundo" loading="lazy">
     <div class="txt">
       <p>Al terminar el año, una <b>ola de luz esmeralda</b> cruza la ciudad y la vuelve a dibujar en el estilo del tramo siguiente. El colegio, las obras y los amigos <b>siguen ahí</b>: cambia la forma de verlo, no lo que construiste.</p>
-      <div class="botones"><a class="btn verde" href="transicion.html?de=BLOQUES&a=PIEZAS">Ver 1 → 2</a><a class="btn verde" href="transicion.html?de=VIVO&a=PROMO">Ver 5 → 6</a></div>
+      <div class="botones"><a class="btn verde" href="transicion/?de=BLOQUES&a=PIEZAS">Ver 1 → 2</a><a class="btn verde" href="transicion/?de=VIVO&a=PROMO">Ver 5 → 6</a></div>
     </div>
   </div>
 
@@ -123,7 +123,7 @@
     <img src="capturas/construir-horizontal.jpg" alt="Prueba de construcción: casona con patio, aljibe y mirador" loading="lazy">
     <div class="txt">
       <p>Tocás una celda y el sistema <b>elige la pieza solo</b>, según lo que hay alrededor: si una celda queda rodeada se vuelve <b>patio</b> (con <b>aljibe</b>); hacia el patio y hacia la calle aparecen <b>galerías con horcones</b>; las casas chicas llevan <b>techo de palma</b> y las grandes de <b>teja</b>; tocás de nuevo y sube un piso; al tercero es <b>mirador</b>. Arriba a la derecha se ven los fps.</p>
-      <div class="botones"><a class="btn verde" href="construir.html?estilo=PIEZAS">Construir (Piezas)</a><a class="btn" href="construir.html?estilo=BLOQUES">Bloques</a><a class="btn" href="construir.html?estilo=REAL">Mundo real</a></div>
+      <div class="botones"><a class="btn verde" href="construir/?estilo=PIEZAS">Construir (Piezas)</a><a class="btn" href="construir/?estilo=BLOQUES">Bloques</a><a class="btn" href="construir/?estilo=REAL">Mundo real</a></div>
     </div>
   </div>
 
@@ -137,7 +137,7 @@
     <img src="../talleres/vista/E-mi-colegio-en-santa-cruz.jpg" alt="Lámina E: Mi colegio en Santa Cruz" loading="lazy">
     <div class="txt">
       <p><b>"Mi colegio en Santa Cruz"</b>: la ciudad por anillos, todavía vacía, con sus hitos (la plaza con la catedral, el Cristo), los colegios marcados en verde y unidos por portales, y las obras que los cursos construyen para la ciudad. Mismo formato A3 que las láminas A–D.</p>
-      <div class="botones"><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.pdf">PDF A3</a><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.png">PNG</a><a class="btn" href="escena.html?estilo=A&tipo=mapa&vista=general">Ver en 3D</a></div>
+      <div class="botones"><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.pdf">PDF A3</a><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.png">PNG</a><a class="btn" href="escena/?estilo=A&tipo=mapa&vista=general">Ver en 3D</a></div>
     </div>
   </div>
 
@@ -173,7 +173,7 @@ const EXPLORA = [
   { k: 'B', l: 'B', n: 'Tierra Pintada', g: 'la elegida', c: '#D9A441' }
 ];
 document.getElementById('pares').innerHTML = TRAMOS.slice(0, -1).map((e, i) =>
-  `<a class="btn verde grande" href="transicion.html?de=${e.k}&a=${TRAMOS[i + 1].k}">${e.l} → ${TRAMOS[i + 1].l}</a>`).join('');
+  `<a class="btn verde grande" href="transicion/?de=${e.k}&a=${TRAMOS[i + 1].k}">${e.l} → ${TRAMOS[i + 1].l}</a>`).join('');
 document.getElementById('fichas').innerHTML = TRAMOS.map(e => `<div class="ficha"><h3><span class="letra" style="background:${e.c}">${e.l}</span>${e.n} · ${e.g}</h3>
   <ul>${e.d.map(x => `<li>${x}</li>`).join('')}</ul><span class="costo">Anda en: <b>${e.eq}</b></span></div>`).join('');
 // formato de las capturas: horizontales si la pantalla está acostada (o es ancha), salvo que se elija a mano
@@ -189,15 +189,15 @@ function tarjetas(lista) {
       <a class="img" href="${img}" data-ver="${e.k}"><img src="${img}" alt="${e.l} · ${e.n} · ${vista}" loading="lazy"></a>
       <div class="pie"><div class="nom"><span class="letra" style="background:${e.c}">${e.l}</span><b>${e.n}</b></div>
       <span class="corto">${e.g}</span>
-      <a class="btn verde" href="escena.html?estilo=${e.k}&vista=${vista}">Abrir en 3D</a></div></div>`;
+      <a class="btn verde" href="escena/?estilo=${e.k}&vista=${vista}">Abrir en 3D</a></div></div>`;
   }).join('');
 }
 const VISTAS = [['colegio', 'Colegio'], ['ciudad', 'Ciudad'], ['obra', 'Obra (zoo)'], ['portal', 'Portal'], ['profes', 'Profes y alumnos']];
 document.getElementById('escalera').innerHTML = TRAMOS.map(e => `<div class="tramo" style="--c:${e.c}">
   <div class="cab"><span class="num">${e.l}</span><div><h3>${e.n}</h3><div class="gr">${e.g}</div></div></div>
-  <a href="escena.html?estilo=${e.k}&vista=colegio"><img src="capturas/${e.k}-colegio-horizontal.jpg" alt="${e.n}: colegio" loading="lazy"></a>
-  <div class="accesos">${VISTAS.map(([v, t]) => `<a class="btn" href="escena.html?estilo=${e.k}&vista=${v}">${t}</a>`).join('')}
-    <a class="btn verde" href="construir.html?estilo=${e.k}">Construir</a></div></div>`).join('');
+  <a href="escena/?estilo=${e.k}&vista=colegio"><img src="capturas/${e.k}-colegio-horizontal.jpg" alt="${e.n}: colegio" loading="lazy"></a>
+  <div class="accesos">${VISTAS.map(([v, t]) => `<a class="btn" href="escena/?estilo=${e.k}&vista=${v}">${t}</a>`).join('')}
+    <a class="btn verde" href="construir/?estilo=${e.k}">Construir</a></div></div>`).join('');
 function pintar() {
   document.getElementById('tramos').innerHTML = tarjetas(TRAMOS);
   document.getElementById('exploracion').innerHTML = tarjetas(EXPLORA);
@@ -221,7 +221,7 @@ function mostrar() {
   const e = lista[pos];
   visorImg.src = `capturas/${e.k}-${vista}-horizontal.jpg`;
   visorPie.textContent = `${e.l} · ${e.n} · ${e.g} — ${{ colegio: 'Colegio', obra: 'Obra', portal: 'Portal' }[vista]}`;
-  visor.querySelector('.abrir3d').href = `escena.html?estilo=${e.k}&vista=${vista}`;
+  visor.querySelector('.abrir3d').href = `escena/?estilo=${e.k}&vista=${vista}`;
 }
 document.addEventListener('click', ev => {
   const a = ev.target.closest('[data-ver]');

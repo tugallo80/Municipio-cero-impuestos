@@ -1,0 +1,19 @@
+{
+  "name": "ÑANDÉ · Mi colegio",
+  "short_name": "ÑANDÉ",
+  "description": "El mundo del curso: misiones, aulas y los profes Taji y Jochi.",
+  "id": "/maqueta/alumno/",
+  "start_url": "/maqueta/alumno/?app=1",
+  "scope": "/maqueta/",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone"],
+  "orientation": "landscape",
+  "background_color": "#000000",
+  "theme_color": "#10B981",
+  "lang": "es",
+  "icons": [
+    { "src": "/maqueta/iconos/icono-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/maqueta/iconos/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/maqueta/iconos/icono-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -5,6 +5,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
 <meta name="theme-color" content="#7cc8f5">
+<!-- EDU.06a: app instalable (pantalla completa y acostada, sin el cartel de Chrome) -->
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/maqueta/iconos/icono-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Alumno · Mundo del curso (maqueta v2)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -205,6 +209,10 @@
   .inicio h1 { font-size: 30px; margin: 10px 0 4px; }
   .inicio p, .girar p { color: #cbd5e1; font-size: 15px; line-height: 1.4; max-width: 320px; margin: 0 auto; }
   .inicio .bj { min-height: 64px; padding: 0 40px; font-size: 22px; margin-top: 18px; }
+  .inicio .instalar-inicio { display: inline-flex; margin-top: 14px; min-height: 52px; padding: 0 20px; font-size: 16px; font-weight: 700; color: #04261B; background: #FDE047; border-color: #FEF9C3; border-radius: 16px; }
+  .inicio .instalar-inicio[hidden], .pasos-instalar[hidden] { display: none; }
+  .pasos-instalar { margin: 12px auto 0; max-width: 340px; text-align: left; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.2); border-radius: 14px; padding: 10px 14px; font-size: 14px; color: #e2e8f0; }
+  .pasos-instalar ol { margin: 6px 0 0 18px; } .pasos-instalar li { margin: 3px 0; }
   .inicio .sug, .girar .sug { margin-top: 14px; background: transparent; color: #cbd5e1; border-color: rgba(255,255,255,.2); }
   .girar { z-index: 95; display: none; }
   .nota-rot { font-size: 13px !important; margin-top: 10px !important; color: #FDE68A !important; }
@@ -294,6 +302,11 @@
     <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
     <p class="solo-vertical nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
     <button class="bj" id="jugar">▶ Jugar</button><br>
+    <button class="sug instalar-inicio" id="instalar-inicio" hidden>📲 Instalar ÑANDÉ (pantalla completa sin avisos)</button>
+    <div class="pasos-instalar" id="pasos-instalar" hidden>
+      <b>Instalar en 2 pasos</b>
+      <ol><li>Tocá los <b>⋮</b> de Chrome (arriba a la derecha).</li><li>Elegí <b>“Instalar app”</b> o <b>“Agregar a pantalla de inicio”</b>, y abrí ÑANDÉ desde el ícono.</li></ol>
+    </div>
     <button class="sug solo-vertical" id="seguir-vertical-1">Seguir en vertical</button>
   </div>
 </div>
@@ -730,6 +743,13 @@ function abrirCasas() {
       <span><b>${c.apodo}</b><small>${S.visitados[c.id] ? 'Le dejaste ' + S.visitados[c.id] : 'Tocá para visitar'}</small></span><span class="derecha">›</span></button>`).join('') + `
     <button class="bj gris ancho" style="margin-top:14px" onclick="abrirMiCasa()">🏠 Ver mi casa</button>`);
 }
+// EDU.06a: el portal junto al colegio (visitas entre colegios del mismo nivel)
+function abrirPortal() {
+  abrir(cab('🌀', 'rgba(16,185,129,.25)', 'Portal · Col. Los Tajibos', 'Visitas entre colegios del mismo nivel') + `
+    <p style="margin:10px 0">Por este portal vas a poder visitar otros colegios de Santa Cruz y ver lo que construyeron, y dejarles una reacción.</p>
+    <p style="margin:10px 0;color:#cbd5e1">En esta demo todavía no se cruza: pronto.</p>
+    <button class="bj ancho" onclick="cerrar()">Volver</button>`);
+}
 function visitar(id) {
   const c = M.companeros.find(x => x.id === id);
   abrir(cab('🏠', c.color + '33', 'Casa de ' + c.apodo, 'De visita', 'abrirCasas()') + dibujoCasa(c.casa, c.casa.adornos) + `
@@ -771,9 +791,41 @@ function abrirAyuda() {
     ${pend.map(x => `<button class="mision" onclick="pedirAyuda('${x.id}')"><span style="font-size:22px">${materia(x.materia).icono}</span><span><b>${x.titulo}</b><small>Avisar al curso</small></span><span class="derecha">🙋</span></button>`).join('')}
     <div class="tit">Tu curso necesita ayuda</div>
     <button class="mision" onclick="ayudar()"><span style="font-size:22px">🐢</span><span><b>Tortuga Verde 9</b><small>pide ayuda con “Tablas en carrera”</small></span><span class="derecha">🤝</span></button>
+    ${yaInstalada() ? '' : `<div class="tit">Jugar como app</div>
+    <button class="mision" onclick="instalarApp()"><span style="font-size:22px">📲</span><span><b>Instalar en el celular</b><small>Se abre a pantalla completa y acostada</small></span></button>`}
     <div class="tit">¿Algo no está bien?</div>
     <button class="mision" style="border-color:rgba(252,165,165,.35)" onclick="avisarProfe()"><span style="font-size:22px">🚩</span><span><b>Avisar a la profe</b><small>Llega solo a tu profe, en secreto</small></span></button>`);
 }
+// ---------------- Instalar la app (EDU.06a) ----------------
+// Instalada y abierta desde el ícono, arranca a pantalla completa y acostada (manifest), sin el
+// cartel de Chrome "para salir de la pantalla completa…".
+let pedidoInstalar = null;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); pedidoInstalar = e; });
+addEventListener('appinstalled', () => { pedidoInstalar = null; toast('📲 ¡Listo! Abrí ÑANDÉ desde el ícono'); });
+const yaInstalada = () => matchMedia('(display-mode: fullscreen)').matches || matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+async function instalarApp() {
+  if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; pedidoInstalar = null; if (r.outcome === 'accepted') cerrar(); return; }
+  abrir(cab('📲', 'rgba(16,185,129,.25)', 'Instalar en el celular', 'Así se abre a pantalla completa, acostada y sin carteles') + `
+    <p style="margin:8px 0">En <b>Chrome</b>: tocá los <b>⋮</b> (arriba a la derecha) → <b>Instalar app</b> o <b>Agregar a la pantalla principal</b>.</p>
+    <p style="margin:8px 0">En <b>iPhone (Safari)</b>: botón <b>Compartir</b> → <b>Agregar a inicio</b>.</p>
+    <p style="margin:8px 0;color:#cbd5e1">Después abrí <b>ÑANDÉ</b> desde el ícono.</p>
+    <button class="bj ancho" onclick="cerrar()">Entendido</button>`);
+}
+// en la pantalla de "▶ Jugar": botón grande para instalar si todavía no está instalada
+{
+  const bInst = document.getElementById('instalar-inicio'), pasos = document.getElementById('pasos-instalar');
+  if (bInst && !yaInstalada()) {
+    bInst.hidden = false;
+    bInst.onclick = async e => {
+      e.stopPropagation();
+      if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; pedidoInstalar = null; if (r.outcome === 'accepted') bInst.hidden = true; }
+      else pasos.hidden = !pasos.hidden;   // Chrome no lo ofreció: los 2 pasos a mano
+    };
+    addEventListener('appinstalled', () => { bInst.hidden = true; pasos.hidden = true; });
+  }
+}
+if ('serviceWorker' in navigator) addEventListener('load', () => { navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {}); });
+
 function pedirAyuda(id) {
   const x = D.misiones.find(m => m.id === id), quien = M.companeros[0];
   abrir(cab('🙋', 'rgba(245,158,11,.25)', 'Pediste ayuda', x.titulo, 'abrirAyuda()') + `
@@ -940,6 +992,69 @@ const FUENTES = [
 ];
 let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
+// ---- EDU.06a: la evolución del mundo según el curso del alumno ----
+// P1–P2 → 1 Bloques · P3–P4 → 2 Piezas · P5–P6 → 3 Mundo real · S1–S2 → 4 Horizonte · S3–S5 → 5 Mundo vivo · S6 → 6 Promo
+const VERSION_ESTILOS = 'edu06a-3';
+// parámetros por ?… o por #… (el # sobrevive a cualquier redirección del servidor)
+const QS = new URLSearchParams(location.search.slice(1) + '&' + location.hash.replace(/^#/, ''));
+// modo demo: ?demo=1 lo prende y queda guardado en este celular (así la app instalada también muestra
+// el 🎓); ?demo=0 lo apaga. El curso elegido en la demo también se recuerda.
+const leerLS = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const guardarLS = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+if (QS.get('demo') === '1') guardarLS('alumno-demo', '1');
+if (QS.get('demo') === '0') { guardarLS('alumno-demo', null); guardarLS('alumno-demo-curso', null); }
+const DEMO_CURSOS = QS.get('demo') !== '0' && (QS.get('demo') === '1' || leerLS('alumno-demo') === '1');
+let EVO = null, EVM = null, CURSO = 'P4';
+if (THREE && !window.__sin3D) {
+  try {
+    EVM = await import(`../estilos/evolucion.js?v=${VERSION_ESTILOS}`);
+    const D0 = window.DEMO, al = (D0.alumnos || []).find(a => a.id === D0.alumnoDemo.id);
+    const cur = (D0.cursos || []).find(c => c.id === (al ? al.curso : '4A'));
+    CURSO = (cur && EVM.cursoDeNombre(cur.nombre)) || 'P4';
+    const pedido = (QS.get('curso') || (DEMO_CURSOS ? leerLS('alumno-demo-curso') : '') || '').toUpperCase();
+    if (DEMO_CURSOS && EVM.CURSOS.includes(pedido)) { CURSO = pedido; guardarLS('alumno-demo-curso', pedido); }
+    EVO = await EVM.crearEvolucion(THREE, EVM.evolucionDeCurso(CURSO));
+  } catch (e) {
+    console.warn('[evolución] se usa el mundo de bloques de siempre', e); EVO = null;
+    window.__errorEvolucion = String(e && e.message || e);
+    if (QS.get('diag') === '1') {
+      const d = document.createElement('div');
+      d.style.cssText = 'position:fixed;left:50%;top:60px;transform:translateX(-50%);z-index:80;background:#7f1d1d;color:#fff;border-radius:12px;padding:8px 12px;font:600 13px Inter,sans-serif;max-width:90vw';
+      d.textContent = '⚠ No cargó la evolución: ' + window.__errorEvolucion;
+      document.body.appendChild(d);
+    }
+  }
+}
+window.__evolucion = () => EVO ? { n: EVO.n, nombre: EVO.nombre, curso: CURSO } : null;   // (para las pruebas)
+// Selector de curso para la presentación (solo con ?demo=1): cambia la evolución; al subir, transición.
+if (EVM) {
+  // en el HUD se ve siempre en qué mundo está (en demo, con el curso elegido)
+  const chico = document.querySelector('.jugador small');
+  chico.textContent = DEMO_CURSOS ? `${EVM.nombreCurso(CURSO)} · mundo ${EVO ? EVO.nombre : 'Bloques'}` : chico.textContent.replace('isla del curso', `mundo ${EVO ? EVO.nombre : 'Bloques'}`);
+  window.__elegirCurso = c => {
+    const nuevo = EVM.evolucionDeCurso(c), viejo = EVO ? EVO.n : 1;
+    const destino = `/maqueta/alumno/?demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '') + `#demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '');
+    // directo a /estilos/transicion/ (sin .html: Firebase redirige y puede perder los datos) y repetidos en el # por las dudas
+    const par = `de=${EVM.EVOLUCIONES[viejo - 1]}&a=${EVM.EVOLUCIONES[nuevo - 1]}&volver=${encodeURIComponent(destino)}` + (QS.get('diag') === '1' ? '&diag=1' : '');
+    if (nuevo > viejo) location.href = `/estilos/transicion/?${par}#${par}`;
+    else location.href = destino;
+  };
+  if (DEMO_CURSOS) {
+    const b = document.createElement('button');
+    b.className = 'boton-hud'; b.id = 'demo-curso'; b.title = 'Cambiar de curso (demo)';
+    b.style.cssText = 'width:auto;padding:0 10px;font-size:13px;font-weight:700;white-space:nowrap';
+    b.textContent = `🎓 ${CURSO} · ${EVO ? EVO.nombre : 'Bloques'}`;
+    document.querySelector('.hud').prepend(b);
+    b.onclick = () => abrir(`<h2 class="t" style="font-size:22px">Curso (demo)</h2>
+      <p style="margin:6px 0 12px;color:#cbd5e1">Elegí un curso: el mundo cambia de evolución. Si sube, ves la transición "pasaste de curso".</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">${EVM.CURSOS.map(c => {
+        const e = EVM.evolucionDeCurso(c);
+        return `<button class="bj ${c === CURSO ? 'oro' : 'gris'}" style="min-height:48px;font-size:15px" onclick="__elegirCurso('${c}')">${c} · ${e}. ${EVM.NOMBRES[e - 1]}</button>`;
+      }).join('')}</div>
+      <button class="bj ancho" style="margin-top:14px" onclick="cerrar()">Seguir jugando</button>`);
+  }
+}
+
 if (window.__sin3D) { /* el chico ya eligió seguir sin 3D */ }
 else if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
 else {
@@ -948,22 +1063,41 @@ else {
 }
 
 function iniciar(THREE) {
+  const N = EVO ? EVO.n : 1;   // evolución (1–6)
   const D = window.DEMO, YO = D.alumnoDemo, M = D.mundo;
   const canvas = document.getElementById('mundo');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, EVO ? EVO.maxPixelRatio : 1.5));
   renderer.setSize(innerWidth, innerHeight);
 
   const escena = new THREE.Scene();
-  escena.background = new THREE.Color('#7cc8f5');
-  escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
-  const camara = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 200);
-  escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
-  const sol = new THREE.DirectionalLight('#fff4d6', 1.6); sol.position.set(12, 20, 8); escena.add(sol);
+  const camara = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 400);
+  if (EVO) EVO.montar(escena);
+  else {
+    escena.background = new THREE.Color('#7cc8f5');
+    escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
+    escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
+    const sol = new THREE.DirectionalLight('#fff4d6', 1.6); sol.position.set(12, 20, 8); escena.add(sol);
+  }
 
-  const caja = new THREE.BoxGeometry(1, 1, 1);
+  // Cada evolución dibuja las mismas piezas con otra forma y otro material (EDU.06a)
+  const caja = EVO ? EVO.caja : new THREE.BoxGeometry(1, 1, 1);
+  const cajaRecta = new THREE.BoxGeometry(1, 1, 1);
   const mats = {};
-  const mat = c => mats[c] || (mats[c] = new THREE.MeshLambertMaterial({ color: c }));
+  const mat = c => mats[c] || (mats[c] = EVO ? EVO.material(c) : new THREE.MeshLambertMaterial({ color: c }));
+  const dinamico = o => { o.userData.dinamico = true; return o; };   // lo que se mueve no se fusiona
+  // copa de árbol / formas redondas: cubo en Bloques, esfera desde Piezas
+  function bola(x, y, z, sx, sy, sz, color, padre = escena) {
+    const m = new THREE.Mesh(N >= 2 ? EVO.bola : caja, mat(color));
+    m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
+  }
+  // techo: escalonado en Bloques, a cuatro aguas desde Piezas
+  function techo(padre, y, w, l, h, color, material) {
+    const c = material || color;
+    if (N === 1) { bloque(0, y + .25, 0, w, .5, l, c, padre); bloque(0, y + .75, 0, w * .75, .5, l * .72, c, padre); bloque(0, y + 1.15, 0, w * .46, .4, l * .44, c, padre); return; }
+    let g = EVO.techoHip(w, l, h); if (!g.attributes.normal) { if (g.index) g = g.toNonIndexed(); g.computeVertexNormals(); }   // sin normales la luz lo deja negro
+    const m = new THREE.Mesh(g, material || mat(color)); m.position.y = y; padre.add(m);
+  }
   function bloque(x, y, z, sx, sy, sz, color, padre = escena) {
     const m = new THREE.Mesh(caja, typeof color === 'string' ? mat(color) : color);
     m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
@@ -980,43 +1114,131 @@ function iniciar(THREE) {
     s.scale.set(ancho / 96 * .75, .75, 1); s.renderOrder = 6; return s;
   }
   const solidos = [];   // cajas de choque
+  const zonasInteriores = []; window.__solidos = solidos;   // { nombre, caja: Box3 }: adentro, cámara peatonal (EDU.06a)
   const tocables = [];  // mallas tocables con userData.toca = { tipo, id }
   const interes = [];   // puntos con botón contextual { pos, texto, accion }
   function hacerTocable(g, toca) { g.traverse(o => { if (o.isMesh || o.isSprite) { o.userData.toca = toca; tocables.push(o); } }); }
 
-  // --- Suelo (una malla instanciada) con arroyo al fondo ---
-  const X0 = -22, X1 = 22, Z0 = -25, Z1 = 20;
-  const enArroyo = z => z >= -19.5 && z <= -16.5;
-  const esCamino = (x, z) => (Math.abs(x) <= 1.5 && z <= 10 && z >= -16) || (Math.abs(z) <= 1.5 && Math.abs(x) <= 10) || Math.hypot(x, z) < 4.2 || (Math.abs(z - 13.5) <= 1 && Math.abs(x) <= 14);
-  const celdas = [];
-  for (let x = X0; x <= X1; x++) for (let z = Z0; z <= Z1; z++) celdas.push([x, z]);
-  const suelo = new THREE.InstancedMesh(caja, new THREE.MeshLambertMaterial(), celdas.length);
-  const m4 = new THREE.Matrix4(), col = new THREE.Color();
-  celdas.forEach(([x, z], k) => {
-    const agua = enArroyo(z), camino = esCamino(x, z), otra = z < -19.5;
-    m4.makeTranslation(x, agua ? -.85 : camino ? -.45 : -.5 + ((x * 7 + z * 13) % 5 === 0 ? .08 : 0), z);
-    suelo.setMatrixAt(k, m4);
-    col.set(agua ? ((x + z) % 2 ? '#38bdf8' : '#0ea5e9') : otra ? ((x + z) % 2 ? '#8b9a7a' : '#7f8f6f') : camino ? ((x + z) % 2 ? '#e7d8b1' : '#ddcb9c') : ((x * 3 + z) % 4 === 0 ? '#5fae4f' : (x + z) % 2 ? '#6bbd57' : '#64b552'));
-    suelo.setColorAt(k, col);
-  });
-  escena.add(suelo);
+  // ================= EDU.06a — La ciudad de Santa Cruz por anillos =================
+  // El colegio del alumno (una casona cruceña con sus 6 aulas alrededor del patio) queda entre
+  // el 3.er y el 4.º anillo. Se camina libre en ±45 m; lo lejano (plaza 24 de Septiembre y
+  // catedral, otros colegios, el río) se ve como hito. La ciudad empieza casi vacía: la
+  // construyen los cursos (el zoológico es la obra de la ciudad).
+  const LIM = 45;                              // área caminable: |x|, |z| ≤ LIM
+  const CEN = new THREE.Vector2(0, 62);        // centro de la ciudad (plaza 24 de Septiembre)
+  const ANILLOS = [12, 24, 40, 82];            // 1.º, 2.º, 3.º y 4.º anillo (el colegio queda entre el 3.º y el 4.º)
+  const AV = [-1.95, -1.2, -0.45, 0.45, 1.2, 1.95, Math.PI / 2];   // avenidas radiales (ángulo desde el centro)
+  const C_PASTO = N >= 2 ? EVO.P.pasto : '#64b552', C_CALLE = N >= 2 ? EVO.P.calle : '#8c8c96', C_PATIO = N >= 2 ? EVO.P.patio : '#e7d8b1';
+  const C_PARED = N >= 2 ? EVO.P.pared : '#f5efe3', C_TEJA = N >= 2 ? EVO.P.teja : '#E8573A', C_HORCON = N >= 2 ? EVO.P.horcon : '#7c4a1e';
 
-  // --- Plaza central ---
-  bloque(0, 1.8, 0, .25, 4, .25, '#e5e7eb');
-  const bandera = bloque(.85, 3.3, 0, 1.4, .8, .08, '#10B981');
-  bloque(0, .15, 0, 2.4, .3, 2.4, '#cbd5e1');
+  // --- Suelo: Bloques = baldosas en el área de juego; desde Piezas = suelo liso ---
+  {
+    const lejos = new THREE.Mesh(new THREE.PlaneGeometry(400, 400).rotateX(-Math.PI / 2), mat(N >= 2 ? EVO.P.pasto2 : '#5fae4f'));
+    lejos.position.y = -.03; escena.add(lejos); if (EVO && EVO.sombras) lejos.receiveShadow = true;
+    if (N === 1) {
+      const celdas = [];
+      for (let x = -LIM - 1; x <= LIM + 1; x += 2) for (let z = -LIM - 1; z <= LIM + 1; z += 2) celdas.push([x, z]);   // baldosas de 2 m (menos piezas)
+      const suelo = new THREE.InstancedMesh(cajaRecta, EVO ? EVO.material('#ffffff', { nuevo: true }) : new THREE.MeshLambertMaterial(), celdas.length);
+      const m4 = new THREE.Matrix4(), col = new THREE.Color();
+      celdas.forEach(([x, z], k) => {
+        m4.makeScale(2, 1, 2).setPosition(x, -.5 + ((x * 7 + z * 13) % 5 === 0 ? .06 : 0), z); suelo.setMatrixAt(k, m4);
+        col.set((x * 3 + z) % 4 === 0 ? '#5fae4f' : ((x + z) / 2) % 2 ? '#6bbd57' : '#64b552'); suelo.setColorAt(k, col);
+      });
+      escena.add(suelo);
+    } else {
+      const piso = new THREE.Mesh(new THREE.PlaneGeometry(2 * LIM + 30, 2 * LIM + 30).rotateX(-Math.PI / 2), mat(C_PASTO));
+      piso.position.y = -.01; escena.add(piso); if (EVO.sombras) piso.receiveShadow = true;
+      if (N === 2) {   // Piezas: base de placas que encastran (juntas cada 4 m, sin pernos)
+        for (let k = -LIM; k <= LIM; k += 4) { bloque(k, .02, 0, .1, .04, 2 * LIM, EVO.P.pasto2); bloque(0, .02, k, 2 * LIM, .04, .1, EVO.P.pasto2); }
+      }
+    }
+  }
+  // --- Calles: anillos y avenidas (en bloques de 4 m, se juntan en una sola malla) ---
+  const enMundo = (x, z) => Math.abs(x) < 120 && Math.abs(z) < 120;
+  const cercaColegio = (x, z, m = 0) => Math.abs(x) < 14 + m && Math.abs(z) < 14 + m;
+  function tramo(x0, z0, x1, z1, ancho, color, y = .03) {
+    const L = Math.hypot(x1 - x0, z1 - z0); if (L < .01) return;
+    bloque((x0 + x1) / 2, y, (z0 + z1) / 2, ancho, .06, L + .1, color).rotation.y = Math.atan2(x1 - x0, z1 - z0);
+  }
+  for (const r of ANILLOS) {
+    const n = Math.round(2 * Math.PI * r / 4);
+    for (let i = 0; i < n; i++) {
+      const a0 = i / n * Math.PI * 2, a1 = (i + 1) / n * Math.PI * 2;
+      const x0 = CEN.x + Math.cos(a0) * r, z0 = CEN.y + Math.sin(a0) * r, x1 = CEN.x + Math.cos(a1) * r, z1 = CEN.y + Math.sin(a1) * r;
+      if (!enMundo(x0, z0) || cercaColegio((x0 + x1) / 2, (z0 + z1) / 2, 2)) continue;
+      tramo(x0, z0, x1, z1, 5, C_CALLE);
+      if (r > 20) tramo(x0, z0, x1, z1, 1, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57', .05);   // cantero central con pasto
+    }
+  }
+  for (const a of AV) for (let r = 6; r < 130; r += 4) {
+    const x0 = CEN.x + Math.cos(a) * r, z0 = CEN.y + Math.sin(a) * r, x1 = CEN.x + Math.cos(a) * (r + 4), z1 = CEN.y + Math.sin(a) * (r + 4);
+    if (!enMundo(x0, z0) || cercaColegio(x0, z0, 4)) continue;
+    tramo(x0, z0, x1, z1, 4, C_CALLE, .025);
+  }
+  const enCalle = (x, z) => {
+    const d = Math.hypot(x - CEN.x, z - CEN.y);
+    if (ANILLOS.some(r => Math.abs(d - r) < 4)) return true;
+    const a = Math.atan2(z - CEN.y, x - CEN.x);
+    return AV.some(av => Math.abs(Math.sin(a - av)) * d < 3.5 && Math.cos(a - av) > 0);
+  };
 
-  // --- Árboles y cerco ---
-  [[-15, 0], [15, -1], [-15, 7], [15, 7], [-18, -6], [18, -6], [-19, 16], [19, 16], [0, 17.5]].forEach(([x, z], i) => {
-    bloque(x, 1, z, .7, 2, .7, '#7c4a1e');
-    bloque(x, 2.6, z, 2.2, 1.6, 2.2, i % 2 ? '#2f8f46' : '#3fa356');
-    bloque(x, 3.6, z, 1.3, .8, 1.3, '#4cb865');
-  });
-  for (let t = -20; t <= 20; t += 2) {
-    [[t, 19.5], [-21.5, t], [21.5, t]].forEach(([x, z]) => { if (z > -16) bloque(x, .5, z, .35, 1, .35, '#f1f5f9'); });
+  // --- Árboles de la flora cruceña (las áreas verdes que todavía están libres) ---
+  function arbol(x, z, k = 1, tipo = 0, padre = escena) {
+    bloque(x, 1.2 * k, z, .6 * k, 2.4 * k, .6 * k, N >= 2 ? EVO.P.tronco || '#6B4A33' : '#7c4a1e', padre);
+    const flor = tipo === 1 ? (N >= 2 ? EVO.P.tajiboAm : '#FDE047') : tipo === 2 ? (N >= 2 ? EVO.P.tajiboRo : '#f472b6') : null;
+    const verde = N >= 2 ? [EVO.P.bosque2, EVO.P.bosque3, EVO.P.bosque4][(Math.abs(x * 7 + z * 3) | 0) % 3] : ['#2f8f46', '#3fa356', '#4cb865'][(Math.abs(x * 7 + z * 3) | 0) % 3];
+    if (N === 1) return [bloque(x, 3 * k, z, 2.6 * k, 1.8 * k, 2.6 * k, flor || verde, padre), bloque(x, 4.1 * k, z, 1.5 * k, .8 * k, 1.5 * k, flor || '#4cb865', padre)];
+    return [bola(x, 3.2 * k, z, 3.2 * k, 2.4 * k, 3.2 * k, flor || verde, padre), bola(x + .6 * k, 4.2 * k, z - .3 * k, 2 * k, 1.6 * k, 2 * k, flor || EVO.P.bosque4, padre)];
   }
 
-  // --- Aulas por materia ---
+  // --- El colegio: casona con galerías y horcones alrededor de un patio con aljibe ---
+  const CE = 13, AL = 6, CI = CE - AL, HW = 3.2, GA = 2.4, CK = CI - GA;   // medio ancho, ala, patio, alto de pared, galería, borde de galería
+  const colegio = new THREE.Group(); escena.add(colegio);
+  const pared = (x, z, w, l) => { bloque(x, HW / 2, z, w, HW, l, C_PARED, colegio); bloque(x, .35, z, w + .06, .7, l + .06, N >= 2 ? EVO.P.zocalo : '#2F9BD6', colegio); solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(w, 3, l))); };
+  pared(0, -(CE - AL / 2), 2 * CE, AL);                      // ala norte
+  pared(-(CE - AL / 2), 0, AL, 2 * CI);                      // ala oeste
+  pared(CE - AL / 2, 0, AL, 2 * CI);                         // ala este
+  pared(-(CE + 2.5) / 2, CE - AL / 2, CE - 2.5, AL);          // ala sur (izquierda del zaguán)
+  pared((CE + 2.5) / 2, CE - AL / 2, CE - 2.5, AL);           // ala sur (derecha del zaguán)
+  if (N === 2) for (const yy of [1.1, 2.3]) for (const [x, z, w, l] of [[0, -CE, 2 * CE, .08], [-CE, 0, .08, 2 * CE], [CE, 0, .08, 2 * CE]]) bloque(x, yy, z, w + .1, .08, l + .1, EVO.P.pared2, colegio);
+  // techos a cuatro aguas sobre cada ala y su galería
+  // los techos del colegio se vuelven transparentes cuando el alumno está adentro (si no, tapan el patio)
+  const matTechoCol = EVO ? EVO.material(C_TEJA, { nuevo: true }) : new THREE.MeshLambertMaterial({ color: C_TEJA });
+  const techosCol = dinamico(new THREE.Group()); colegio.add(techosCol);
+  const techoAla = (x, z, w, l, h) => { const g = new THREE.Group(); g.position.set(x, 0, z); techosCol.add(g); techo(g, HW - .05, w, l, h, C_TEJA, matTechoCol); };
+  techoAla(0, -(CE + CK) / 2, 2 * CE + 1.2, CE - CK + 1, 2.4);
+  techoAla(0, (CE + CK) / 2, 2 * CE + 1.2, CE - CK + 1, 2.4);
+  techoAla(-(CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
+  techoAla((CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
+  techosCol.traverse(o => { o.userData.sinContorno = true; }); window.__techos = techosCol;   // se aclaran adentro: sin contorno de tinta
+  // galería: piso de baldosa y horcones en el borde del patio
+  bloque(0, .04, 0, 2 * CI, .08, 2 * CI, N >= 2 ? EVO.P.piso : '#e08a5e', colegio);
+  bloque(0, .07, 0, 2 * CK, .08, 2 * CK, C_PASTO, colegio);
+  bloque(0, .1, 0, 1.4, .04, 2 * CK, C_PATIO, colegio); bloque(0, .1, 0, 2 * CK, .04, 1.4, C_PATIO, colegio);
+  // horcones: solo en las esquinas y uno al centro de cada lado de la galería, con colisión (caja chica)
+  for (const [x, z] of [[-CK, -CK], [0, -CK], [CK, -CK], [CK, 0], [CK, CK], [0, CK], [-CK, CK], [-CK, 0]]) {
+    bloque(x, HW / 2, z, .34, HW, .34, C_HORCON, colegio); bloque(x, .12, z, .6, .24, .6, N >= 2 ? EVO.P.piedra : '#cbd5e1', colegio);
+    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(.36, 3, .36)));
+  }
+  // zona interior (genérica): adentro, la cámara baja a vista peatonal. Se usa igual para aulas y casas con interior.
+  zonasInteriores.push({ nombre: 'colegio', caja: new THREE.Box3(new THREE.Vector3(-CE + .2, 0, -CE + .2), new THREE.Vector3(CE - .2, 6, CE + .4)) });
+  for (const [x, z, w, l] of [[0, -CK, 2 * CK + .4, .3], [0, CK, 2 * CK + .4, .3], [-CK, 0, .3, 2 * CK + .4], [CK, 0, .3, 2 * CK + .4]]) bloque(x, HW - .1, z, w, .2, l, N >= 2 ? EVO.P.madera : '#8a5a35', colegio);
+  // aljibe en el centro y un toborochi en una esquina del patio
+  bloque(0, .5, 0, 1.8, 1, 1.8, N >= 2 ? EVO.P.piedra : '#cbd5e1', colegio); bloque(0, 1.02, 0, 1.3, .04, 1.3, N >= 2 ? EVO.P.rioOsc : '#0ea5e9', colegio);
+  for (const sx of [-.7, .7]) bloque(sx, 1.6, 0, .14, 2.2, .14, C_HORCON, colegio);
+  techo((() => { const g = new THREE.Group(); g.position.set(0, 0, 0); colegio.add(g); return g; })(), 2.6, 2, 1.2, .6, C_TEJA);
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1.9, 2, 1.9)));
+  // el toborochi del patio se aclara si queda entre la cámara y el alumno (con la cámara a la altura de los ojos)
+  const arbolPatio = dinamico(new THREE.Group()); colegio.add(arbolPatio);
+  const copasPatio = arbol(-3.2, -3.2, .75, 2, arbolPatio);
+  const matCopa = copasPatio[0].material.clone(); copasPatio.forEach(m => { m.material = matCopa; m.userData.sinContorno = true; });
+  // bandera en la plazuela del frente
+  bloque(-4.5, 3, CE + 4, .2, 6, .2, '#e5e7eb');
+  const bandera = dinamico(bloque(-3.7, 5.4, CE + 4, 1.4, .8, .08, '#10B981'));
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-4.5, 1, CE + 4), new THREE.Vector3(.5, 2, .5)));
+  bloque(0, .05, CE + 4.5, 12, .06, 7, C_PATIO);   // plazuela
+
+  // --- Las 6 aulas: puertas que dan a la galería del patio ---
   const aulas = [];
   function cartel(m, av) {
     const c = document.createElement('canvas'); c.width = 320; c.height = 150;
@@ -1031,61 +1253,61 @@ function iniciar(THREE) {
     g.fillStyle = '#fff'; g.font = '700 30px Inter, sans-serif'; g.fillText(av + '%', 236, 112);
     const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; return tex;
   }
-  D.materias.forEach(m => {
-    const [x, z] = m.pos;
-    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.atan2(-x, -z); escena.add(g);
-    bloque(0, 1.6, 0, 5, 3.2, 4.4, '#f5efe3', g);
-    bloque(0, .15, 0, 5.4, .3, 4.8, '#9ca3af', g);
-    bloque(0, 3.45, 0, 5.6, .5, 5, m.color, g); bloque(0, 3.95, 0, 4.2, .5, 3.6, m.color, g); bloque(0, 4.4, 0, 2.6, .4, 2.2, m.color, g);
-    bloque(0, 1.05, 2.21, 1.3, 2.1, .12, '#5b3a1a', g);
-    bloque(-1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g); bloque(1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g);
-    bloque(0, .05, 3.2, 1.8, .1, 1.4, new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 }), g);
+  // puerta: [x, z, giro] sobre la pared interior de cada ala (mira hacia el patio)
+  const PUERTAS = { mat: [-4, -CI, 0], len: [4, -CI, 0], csoc: [-CI, 0, Math.PI / 2], cnat: [CI, 0, -Math.PI / 2], ing: [-7.5, CI, Math.PI], art: [7.5, CI, Math.PI] };
+  D.materias.forEach((m, i) => {
+    const [px, pz, ry] = PUERTAS[m.id] || Object.values(PUERTAS)[i % 6];
+    const g = new THREE.Group(); g.position.set(px, 3.2, pz); g.rotation.y = ry; escena.add(g);
+    // el frente del aula en el color de la materia: marco, puerta, ventanas y franja
+    // en metros: puerta 1,1 × 2,2 m; ventanas de 1,2 m de alto con antepecho de 0,9 m
+    bloque(0, -3.2 + 1.2, .08, 1.45, 2.4, .1, m.color, g);
+    bloque(0, -3.2 + 1.1, .15, 1.1, 2.2, .08, N >= 2 ? EVO.P.maderaOsc : '#5b3a1a', g);
+    for (const sx of [-2.1, 2.1]) { bloque(sx, -3.2 + 1.5, .08, 1.3, 1.4, .08, m.color, g); bloque(sx, -3.2 + 1.5, .13, 1.1, 1.2, .08, N >= 2 ? EVO.P.madera : '#bae6fd', g); }
+    bloque(0, -3.2 + 2.75, .1, 5.4, .22, .08, m.color, g);
+    bloque(0, -3.2 + .06, 1.4, 1.8, .06, 1.4, new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 }), g);
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cartel(m, YO.avance[m.id]), depthTest: false }));
-    sp.scale.set(3.4, 1.6, 1); sp.position.set(0, 6.3, 0); sp.renderOrder = 5; g.add(sp);
+    sp.scale.set(2.8, 1.3, 1); sp.position.set(0, 3.6, 0); sp.renderOrder = 5; g.add(sp);
     let aviso = null;
-    if (D.misiones.some(x => x.materia === m.id && x.estado !== 'hecha')) { aviso = bloque(0, 8, 0, .5, .5, .5, '#FDE047', g); aviso.rotation.set(.6, .6, 0); }
+    if (D.misiones.some(x => x.materia === m.id && x.estado !== 'hecha')) { aviso = dinamico(bloque(0, 5, 0, .45, .45, .45, '#FDE047', g)); aviso.rotation.set(.6, .6, 0); }
     hacerTocable(g, { tipo: 'aula', id: m.id });
-    const puerta = new THREE.Vector3(0, 0, 3.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(g.position);
-    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(5.6, 3, 5.6)));
-    interes.push({ clave: 'aula:' + m.id, pos: puerta, alto: 3.4, texto: `${m.icono} Entrar · ${m.corto}`, accion: () => window.abrirAula(m.id) });
+    const puerta = new THREE.Vector3(0, 0, 1.6).applyAxisAngle(new THREE.Vector3(0, 1, 0), ry).add(new THREE.Vector3(px, 0, pz));
+    interes.push({ clave: 'aula:' + m.id, pos: puerta, alto: 2.6, texto: `${m.icono} Entrar · ${m.corto}`, accion: () => window.abrirAula(m.id) });
     aulas.push({ m, g, sp, aviso });
   });
+  const cartelColegio = etiqueta('🏫 Mi colegio', '#10B981', 340); cartelColegio.position.set(0, 8, -CE - 1); escena.add(cartelColegio);
 
-  // --- Lugares con niebla (parque escondido, cuarto de objetos perdidos) ---
-  const matNiebla = new THREE.MeshLambertMaterial({ color: '#e9d5ff', transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 });
+  // --- Lugares con niebla (parque escondido, cuarto de objetos perdidos) en la manzana ---
+  const matNiebla = EVO ? EVO.material('#e9d5ff', { transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 }) : new THREE.MeshLambertMaterial({ color: '#e9d5ff', transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 });
+  const POS_LUGAR = { parque: [-24, -6], perdidos: [24, 4] };
   const lugares3D = {};
   M.lugares.forEach(l => {
-    const [x, z] = l.pos;
+    const [x, z] = POS_LUGAR[l.id] || l.pos;
     const g = new THREE.Group(); g.position.set(x, 0, z); escena.add(g);
-    const cerrado = new THREE.Group(), abierto = new THREE.Group(); g.add(cerrado, abierto); abierto.visible = false;
+    const cerrado = dinamico(new THREE.Group()), abierto = dinamico(new THREE.Group()); g.add(cerrado, abierto); abierto.visible = false;
     let puertaHoja;
     if (l.id === 'parque') {
-      // cerco de arbustos con portón entreabierto mirando al centro (+x, +z)
+      // cerco de arbustos con portón entreabierto mirando al colegio (+x)
       for (let i = -3; i <= 3; i++) {
         bloque(i, .9, -3, 1, 1.8, 1, '#2f7d3a', g); bloque(-3, .9, i, 1, 1.8, 1, '#2f7d3a', g);
         if (Math.abs(i) > 1) { bloque(i, .9, 3, 1, 1.8, 1, '#2f7d3a', g); bloque(3, .9, i, 1, 1.8, 1, '#2f7d3a', g); }
       }
       bloque(3, 2.2, 0, .5, .6, 3.4, '#78350f', g);
-      puertaHoja = bloque(3, .9, -.8, .2, 1.6, 1.4, '#a16207', g); puertaHoja.rotation.y = .5; puertaHoja.position.set(3.3, .9, -.6);
-      // silueta oscura de árbol grande
+      puertaHoja = dinamico(bloque(3, .9, -.8, .2, 1.6, 1.4, '#a16207', g)); puertaHoja.rotation.y = .5; puertaHoja.position.set(3.3, .9, -.6);
       bloque(0, 1.5, 0, .9, 3, .9, '#1f2937', cerrado); bloque(0, 3.6, 0, 3.6, 2, 3.6, '#111827', cerrado);
-      // abierto: árbol, hamacas, flores, mantel de picnic
       bloque(-1, 1.5, -1, .9, 3, .9, '#7c4a1e', abierto); bloque(-1, 3.6, -1, 3.4, 2, 3.4, '#22c55e', abierto); bloque(-1, 4.9, -1, 2, .8, 2, '#4ade80', abierto);
       bloque(1.2, 1.4, 1.4, .2, 2.8, .2, '#dc2626', abierto); bloque(1.2, 1.4, -.2, .2, 2.8, .2, '#dc2626', abierto); bloque(1.2, 2.8, .6, .2, .2, 1.8, '#dc2626', abierto);
       bloque(1.2, .7, .6, .6, .1, .5, '#facc15', abierto);
       bloque(-.6, .06, 1.6, 1.8, .06, 1.4, '#f87171', abierto);
       [[-2, 2], [-2.2, -.2], [.4, -2.2], [2, -2]].forEach(([fx, fz], i) => bloque(fx, .35, fz, .4, .4, .4, ['#f472b6', '#fde047', '#f97316', '#a78bfa'][i], abierto));
     } else {
-      // cuartito con puerta entreabierta (mirando al centro, -x)
-      bloque(0, 1.6, 0, 5, 3.2, 5, '#d6d3d1', g); bloque(0, 3.4, 0, 5.6, .5, 5.6, '#92400e', g); bloque(0, 3.9, 0, 4, .5, 4, '#92400e', g);
+      // cuartito con puerta entreabierta (mirando al colegio, -x)
+      bloque(0, 1.6, 0, 5, 3.2, 5, N >= 2 ? EVO.P.pared4 || '#d6d3d1' : '#d6d3d1', g); techo(g, 3.15, 5.8, 5.8, 1.6, N >= 3 ? EVO.P.teja2 || '#92400e' : '#92400e');
       bloque(-2.52, 1.1, 0, .06, 2.2, 1.5, '#111827', g);
-      puertaHoja = bloque(-2.9, 1.1, -.55, 1.2, 2.2, .15, '#7c2d12', g); puertaHoja.rotation.y = -.7;
+      puertaHoja = dinamico(bloque(-2.9, 1.1, -.55, 1.2, 2.2, .15, '#7c2d12', g)); puertaHoja.rotation.y = -.7;
       bloque(-2.55, 2.6, 0, .1, .5, 1.8, '#F59E0B', g);
-      // abierto: estantes y cajas de objetos afuera
       [[-3.5, 1.6], [-3.6, -1.7]].forEach(([bx, bz]) => { bloque(bx, .5, bz, .9, 1, .9, '#a16207', abierto); bloque(bx, 1.1, bz, .5, .3, .5, ['#38bdf8', '#f472b6'][bz > 0 ? 0 : 1], abierto); });
       bloque(-2.51, 1.1, 0, .05, 2.2, 1.5, '#fde68a', abierto);
     }
-    // niebla: cubos translúcidos que salen por la entrada
     const nubecitas = [];
     for (let i = 0; i < 9; i++) {
       const lado = l.id === 'parque' ? 1 : -1;
@@ -1107,72 +1329,175 @@ function iniciar(THREE) {
     hacerTocable(L.g, { tipo: 'lugar', id });
   };
 
-  // --- Puente del arroyo (se completa entre todos) y la otra orilla con niebla ---
-  const tablas = [];
-  for (let i = 0; i < 8; i++) tablas.push(bloque(0, -.05, -16.2 - i * .45, 3, .25, .45, '#a16207'));
-  bloque(-1.6, .6, -18, .25, 1.2, 4.4, '#78350f'); bloque(1.6, .6, -18, .25, 1.2, 4.4, '#78350f');
-  const matFantasma = new THREE.MeshLambertMaterial({ color: '#ffffff', transparent: true, opacity: .3 });
+  // --- La obra de la ciudad: el zoológico (avanza con la barra "entre todos" del curso) ---
+  const ZX = 30, ZZ = -24;
+  bloque(ZX, .04, ZZ, 18, .06, 14, N >= 2 ? EVO.P.tierraClara || '#C9A06F' : '#ddcb9c');
+  bloque(ZX - 4, .07, ZZ - 2, 7, .06, 6, N >= 2 ? EVO.P.pasto2 : '#5fae4f'); bloque(ZX - 4.5, .1, ZZ - 2, 4, .06, 3, N >= 2 ? EVO.P.rio : '#38bdf8');
+  arbol(ZX - 6.5, ZZ - 4, .8, 1); arbol(ZX + 5, ZZ - 4.5, .7, 0);
+  const tablas = [];   // las piezas de la obra (cerco y portal de entrada): se completan entre todos
+  for (let i = 0; i < 8; i++) tablas.push(dinamico(bloque(ZX - 7 + i * 2, 1, ZZ + 6.5, 1.8, 2, .3, N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207')));
+  for (const sx of [-2.5, 2.5]) bloque(ZX + sx, 2.2, ZZ + 7.5, .9, 4.4, .9, N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207');
+  bloque(ZX + 9, 5, ZZ - 5, .8, 10, .8, '#FDE047'); bloque(ZX + 6, 10, ZZ - 5, 7, .6, .6, '#FDE047');   // grúa
+  bloque(ZX + 3, 7, ZZ - 5, .06, 6, .06, '#475569'); bloque(ZX + 3, 4, ZZ - 5, .9, .6, .9, '#10B981');
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(ZX, 1.5, ZZ - 1), new THREE.Vector3(17, 3, 13)));
+  const matFantasma = EVO ? EVO.material('#ffffff', { transparent: true, opacity: .3 }) : new THREE.MeshLambertMaterial({ color: '#ffffff', transparent: true, opacity: .3 });
+  const matObra = mat(N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#a16207');
   function pintarPuente() {
     const k = Math.round(tablas.length * Math.min(1, M.puente.hechas / M.puente.meta));
-    tablas.forEach((t, i) => { t.material = i < k ? mat('#a16207') : matFantasma; });
+    tablas.forEach((t, i) => { t.material = i < k ? matObra : matFantasma; });
   }
   pintarPuente();
-  for (let i = 0; i < 14; i++) { const n = bloque(-10 + Math.random() * 20, 1 + Math.random() * 3, -21 - Math.random() * 3, 2, 1.2, 2, matNiebla); n.userData.base = n.position.clone(); n.userData.fase = Math.random() * 6; lugares3D._orilla = lugares3D._orilla || []; lugares3D._orilla.push(n); }
-  bloque(-6, 1.5, -23, 1, 3, 1, '#8b8fa3'); bloque(-6, 3.6, -23, 2.6, 1.4, 2.6, '#7c809a'); bloque(5, 1.4, -22.5, 3.6, 2.8, 3, '#8b8fa3'); bloque(5, 3.1, -22.5, 4.2, .6, 3.6, '#7c809a');
-  const cartelPuente = etiqueta('🌉 ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 300); cartelPuente.position.set(0, 3.2, -15.6); escena.add(cartelPuente);
+  lugares3D._orilla = [];
+  const cartelPuente = etiqueta('🦜 Zoológico · ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 460); cartelPuente.position.set(ZX, 6.5, ZZ + 7); escena.add(cartelPuente);
   hacerTocable(cartelPuente, { tipo: 'puente' }); tablas.forEach(t => hacerTocable(t, { tipo: 'puente' }));
-  interes.push({ clave: 'puente', pos: new THREE.Vector3(0, 0, -15.2), alto: 2.4, texto: '🌉 Ver el puente', accion: () => window.abrirPuente() });
+  interes.push({ clave: 'puente', pos: new THREE.Vector3(ZX, 0, ZZ + 9), alto: 3, texto: '🦜 Ver la obra · Zoológico', accion: () => window.abrirPuente() });
 
-  // --- Casas del curso (la mía + compañeros) ---
+  // --- Portal para visitar otro colegio ---
+  {
+    const PX = -9, PZ = CE + 5.5;
+    for (const sx of [-1.6, 1.6]) bloque(PX + sx, 2, PZ, .45, 4, .45, C_HORCON);
+    bloque(PX, 4.1, PZ, 4, .35, .6, N >= 2 ? EVO.P.madera : '#8a5a35');
+    const disco = new THREE.Mesh(new THREE.CircleGeometry(1.4, N === 1 ? 8 : 28), new THREE.MeshBasicMaterial({ color: '#7DE3BE', transparent: true, opacity: .75, side: THREE.DoubleSide, depthWrite: false }));
+    disco.position.set(PX, 2, PZ); disco.scale.y = 1.35; escena.add(disco);
+    const e = etiqueta('🌀 Portal', '#10B981', 260); e.position.set(PX, 5.4, PZ); escena.add(e);
+    hacerTocable(disco, { tipo: 'portal', id: 'tajibos' });
+    interes.push({ clave: 'portal:tajibos', pos: new THREE.Vector3(PX, 0, PZ + 1.6), alto: 4.4, texto: '🌀 Visitar · Col. Los Tajibos', accion: () => window.abrirPortal && window.abrirPortal() });
+  }
+
+  // --- Casas del curso (la mía + compañeros), cruzando el 3.er anillo ---
   function casa(x, z, cfg, texto, toca, colorEtq) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.PI; escena.add(g);
-    bloque(0, 1.1, 0, 3, 2.2, 2.6, cfg.color, g); bloque(0, 2.45, 0, 3.4, .5, 3, cfg.techo, g); bloque(0, 2.9, 0, 2.2, .4, 1.8, cfg.techo, g);
-    bloque(0, .75, 1.31, .7, 1.5, .06, '#7c4a1e', g); bloque(.95, 1.3, 1.31, .6, .6, .06, '#bae6fd', g);
-    const e = etiqueta(texto, colorEtq, 420); e.position.set(0, 4.2, 0); g.add(e);
+    // en metros: casa de 6 × 5 m, paredes de 2,8 m, puerta de 1 × 2,1 m, ventanas con antepecho de 0,9 m
+    const CW = 6, CL = 5, CH = 2.8;
+    bloque(0, CH / 2, 0, CW, CH, CL, N >= 3 ? EVO.P.pared3 : cfg.color, g); if (N >= 3) bloque(0, .3, 0, CW + .04, .6, CL + .04, cfg.color, g);
+    if (N === 1) { bloque(0, CH + .25, 0, CW + .4, .5, CL + .4, cfg.techo, g); bloque(0, CH + .7, 0, CW * .66, .4, CL * .6, cfg.techo, g); } else techo(g, CH, CW + .6, CL + .6, 1.8, N >= 3 ? EVO.P.teja : cfg.techo);
+    bloque(-1.2, 1.05, CL / 2 + .01, 1, 2.1, .06, '#7c4a1e', g); bloque(1.4, 1.5, CL / 2 + .01, 1.2, 1.2, .06, '#bae6fd', g);
+    const e = etiqueta(texto, colorEtq, 420); e.position.set(0, 5.6, 0); g.add(e);
     hacerTocable(g, toca);
-    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1, z), new THREE.Vector3(3.4, 2, 3)));
+    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1, z), new THREE.Vector3(CW + .2, 2, CL + .2)));
     return g;
   }
-  casa(-13, 16, M.miCasa, '🏠 Tu casa', { tipo: 'micasa' }, '#10B981');
-  interes.push({ clave: 'micasa', pos: new THREE.Vector3(-13, 0, 13.6), alto: 2.6, texto: '🏠 Entrar · Tu casa', accion: () => window.abrirMiCasa() });
-  const posCasas = [[-6.5, 16.5], [6.5, 16.5], [13, 16]];
+  casa(-30, 34, M.miCasa, '🏠 Tu casa', { tipo: 'micasa' }, '#10B981');
+  interes.push({ clave: 'micasa', pos: new THREE.Vector3(-28.8, 0, 30.6), alto: 2.4, texto: '🏠 Entrar · Tu casa', accion: () => window.abrirMiCasa() });
+  const posCasas = [[-21, 34], [21, 34], [29, 34]];
   M.companeros.slice(0, 3).forEach((c, i) => {
     const [x, z] = posCasas[i];
     casa(x, z, c.casa, c.apodo, { tipo: 'casa', id: c.id }, c.color);
-    interes.push({ clave: 'casa:' + c.id, pos: new THREE.Vector3(x, 0, z - 2.4), alto: 2.6, texto: '🏠 Visitar · ' + c.apodo, accion: () => window.visitar(c.id) });
+    interes.push({ clave: 'casa:' + c.id, pos: new THREE.Vector3(x + 1.2, 0, z - 3.4), alto: 2.4, texto: '🏠 Visitar · ' + c.apodo, accion: () => window.visitar(c.id) });
   });
 
+  // --- Hitos: plaza 24 de Septiembre con la catedral, el Cristo, otros colegios, el río ---
+  {
+    const cx = CEN.x, cz = CEN.y;
+    bloque(cx, .05, cz, 20, .08, 20, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57');
+    bloque(cx, .09, cz, 20, .04, 2.4, C_PATIO); bloque(cx, .09, cz, 2.4, .04, 20, C_PATIO);
+    const lad = N >= 2 ? EVO.P.ladrillo || '#b5654a' : '#d1603f';
+    bloque(cx, 6, cz + 13, 12, 12, 18, lad);
+    for (const sx of [-5, 5]) { bloque(cx + sx, 10, cz + 4.5, 4, 20, 4, lad); const g = new THREE.Group(); g.position.set(cx + sx, 0, cz + 4.5); escena.add(g); techo(g, 20, 4.4, 4.4, 4, N >= 2 ? EVO.P.teja2 || C_TEJA : '#c9432a'); }
+    const g = new THREE.Group(); g.position.set(cx, 0, cz + 13); escena.add(g); techo(g, 12, 12.6, 18.6, 4, N >= 2 ? EVO.P.teja2 || C_TEJA : '#c9432a');
+    for (const [x, z] of [[-6, -6], [6, -6], [-6, 6], [6, 6]]) arbol(cx + x, cz + z, 1);
+    const e = etiqueta('⛪ Plaza 24 de Septiembre', '#F2C230', 560); e.position.set(cx, 26, cz + 8); e.scale.multiplyScalar(3); escena.add(e);
+    // Cristo Redentor en su rotonda (sobre el 2.º anillo), mirando al colegio
+    const a = AV[0], kx = CEN.x + Math.cos(a) * ANILLOS[1], kz = CEN.y + Math.sin(a) * ANILLOS[1];
+    bloque(kx, .06, kz, 9, .1, 9, N >= 2 ? EVO.P.cantero || C_PASTO : '#6bbd57');
+    bloque(kx, 2, kz, 3.2, 4, 3.2, N >= 2 ? EVO.P.piedra : '#cbd5e1');
+    bloque(kx, 6.5, kz, 1.6, 5, 1.2, '#F7F4EC'); bloque(kx, 8.4, kz, 7, .6, .6, '#F7F4EC'); bola(kx, 9.6, kz, 1.3, 1.5, 1.3, '#F7F4EC');
+    const ek = etiqueta('Cristo Redentor', '#F2C230', 420); ek.position.set(kx, 13, kz); ek.scale.multiplyScalar(1.8); escena.add(ek);
+    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(kx, 1, kz), new THREE.Vector3(3.4, 2, 3.4)));
+    // otros colegios (se visitan por portales): techos de teja sobre su terreno en verde
+    for (const [x, z] of [[-38, -40], [44, 40], [-70, 20], [60, -60]]) {
+      bloque(x, .05, z, 22, .06, 22, '#10B981');
+      bloque(x, 2, z, 16, 4, 16, C_PARED);
+      const gg = new THREE.Group(); gg.position.set(x, 0, z); escena.add(gg); techo(gg, 3.95, 17.2, 17.2, 2.6, C_TEJA);
+      if (Math.abs(x) <= LIM && Math.abs(z) <= LIM) solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(16.4, 3, 16.4)));
+    }
+    // el río (como el Piraí), al oeste
+    for (let z = -120; z < 120; z += 6) bloque(-82 + Math.sin(z * .04) * 6, .04, z, 9, .06, 6.4, N >= 2 ? EVO.P.rio : '#38bdf8');
+  }
+  // árboles sueltos en las áreas verdes libres
+  for (let gx = -96; gx <= 96; gx += 9) for (let gz = -96; gz <= 96; gz += 9) {
+    const x = gx + ((gx * 13 + gz * 7) % 5), z = gz + ((gx * 5 + gz * 11) % 5), h = (Math.abs(gx * 31 + gz * 17) % 10);
+    if (h < 4 || enCalle(x, z) || cercaColegio(x, z, 8) || Math.hypot(x - CEN.x, z - CEN.y) < 26) continue;
+    if (solidos.some(b => b.distanceToPoint(new THREE.Vector3(x, 1, z)) < 4) || interes.some(p => Math.hypot(p.pos.x - x, p.pos.z - z) < 6)) continue;
+    if (Math.abs(x - ZX) < 12 && Math.abs(z - ZZ) < 10) continue;
+    if (z > 27 && z < 40 && Math.abs(x) > 15 && Math.abs(x) < 36) continue;   // casas
+    arbol(x, z, .9 + (h % 3) * .12, h === 4 ? 1 : h === 5 ? 2 : 0);
+    if (Math.abs(x) <= LIM && Math.abs(z) <= LIM) solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1, z), new THREE.Vector3(.8, 2, .8)));
+  }
+  if (escena.fog) { escena.fog.near = Math.max(escena.fog.near, 55); escena.fog.far = Math.max(escena.fog.far, 190); }
+
+
   // --- Personajes: yo y compañeros (todos de diseño propio) ---
-  function personaje(remera, gorra, piel = '#f2c79b') {
-    const yo = new THREE.Group(); escena.add(yo);
+  // EDU.06a: los mismos personajes que la vitrina de su escalón (proporción en "cabezas" y cara),
+  // en metros reales: estatura según el curso (P1 ~1,15 m · P6 ~1,40 · S6 ~1,65; adultos ~1,70).
+  // Piernas y brazos giran en cadera y hombro para caminar.
+  const CABEZAS = [null, [2.7, 3.1, 3.3], [3.5, 4.0, 4.4], [5.0, 6.4, 6.8], [5.3, 6.8, 7.1], [5.5, 7.0, 7.4], [5.7, 7.3, 7.6]];   // niño, adolescente, adulto
+  function estatura(curso) {
+    const m = /^([PS])(\d)$/.exec(curso || 'P4'); if (!m) return 1.3;
+    return m[1] === 'P' ? 1.15 + (+m[2] - 1) * .05 : 1.45 + (+m[2] - 1) * .04;
+  }
+  const EDAD = /^S/.test(CURSO) ? 1 : 0, ALTO_YO = estatura(CURSO);
+  function personaje(ropa, pelo, piel = '#f2c79b', op = {}) {
+    const H = op.alto || ALTO_YO, cab = CABEZAS[Math.min(6, Math.max(1, N))][op.adulto ? 2 : EDAD], h = H / cab;
+    const luz = N >= 4;                                   // como la vitrina: cuerpos redondeados en 4–6
+    const gCaja = caja, gCaps = luz && EVO ? EVO.capsula : caja, gTorso = luz && EVO ? EVO.torso : caja, gBola = N >= 2 && EVO ? EVO.bola : caja, gCil = luz && EVO ? EVO.cil : caja;
+    const yo = dinamico(new THREE.Group()); escena.add(yo);
     const cuerpo = new THREE.Group(); yo.add(cuerpo);
-    bloque(0, 1.25, 0, .9, 1, .55, remera, cuerpo);
-    bloque(0, 2.1, 0, .8, .7, .7, piel, cuerpo);
-    bloque(0, 2.15, .36, .62, .2, .05, '#0f172a', cuerpo);
-    bloque(0, 2.5, 0, .86, .16, .76, gorra, cuerpo);
-    bloque(0, 2.45, .48, .5, .08, .3, gorra, cuerpo);
-    bloque(0, 1.3, -.38, .6, .7, .25, '#f59e0b', cuerpo);
-    const pI = bloque(-.22, .38, 0, .36, .75, .4, '#334155', cuerpo), pD = bloque(.22, .38, 0, .36, .75, .4, '#334155', cuerpo);
-    const bI = bloque(-.6, 1.3, 0, .26, .8, .3, piel, cuerpo), bD = bloque(.6, 1.3, 0, .26, .8, .3, piel, cuerpo);
-    return { yo, cuerpo, pI, pD, bI, bD, paso: 0 };
+    const pierna = (H - h) * .46, torso = (H - h) * .54, ancho = Math.max(h * .95, H * .2);
+    const cara = [];
+    const parte = (geo, color, x, y, z, sx, sy, sz, padre = cuerpo, rz = 0) => {
+      const m = new THREE.Mesh(geo, mat(color)); m.position.set(x, y, z); m.scale.set(sx, sy, sz); m.rotation.z = rz; padre.add(m);
+      if (EVO && EVO.sombras) m.castShadow = true; return m;
+    };
+    const pivote = (x, y) => { const g = new THREE.Group(); g.position.set(x, y, 0); cuerpo.add(g); return g; };
+    const pI = pivote(-ancho * .22, pierna), pD = pivote(ancho * .22, pierna);
+    for (const pv of [pI, pD]) {
+      parte(gCaps, op.pantalon || '#334155', 0, -pierna / 2 + (luz ? .02 : 0), 0, ancho * .36, luz ? pierna * .55 : pierna, ancho * .4, pv);
+      parte(gCaja, '#1f2937', 0, -pierna + .05, .03, ancho * .38, .1, ancho * .52, pv);
+    }
+    parte(gTorso, ropa, 0, pierna + torso / 2, 0, ancho, torso, ancho * .58);
+    if (luz) parte(gCil, piel, 0, pierna + torso + h * .05, 0, h * .34, h * .3, h * .34);   // cuello
+    const hombro = pierna + torso * .98;
+    const bI = pivote(-ancho * .62, hombro), bD = pivote(ancho * .62, hombro);
+    for (const [s, b] of [[-1, bI], [1, bD]]) {
+      parte(gCaps, ropa, 0, -torso * .38, 0, ancho * .24, luz ? torso * .46 : torso * .8, ancho * .28, b, s * .12);
+      parte(gBola, piel, s * ancho * .06, -torso * .78, 0, ancho * .22, ancho * .22, ancho * .22, b);
+    }
+    const cy = pierna + torso + h * .5;
+    parte(gBola, piel, 0, cy, 0, h * .92, h, h * .9);                                   // cabeza
+    parte(gBola, pelo, 0, cy + h * .14, -h * .06, h * .98, h * .8, h * .95);             // pelo
+    if (op.gorra) { parte(gBola, op.gorra, 0, cy + h * .3, -h * .02, h * 1.0, h * .5, h * .98); parte(gCaja, op.gorra, 0, cy + h * .3, h * .5, h * .7, h * .07, h * .4); }
+    if (op.colita) parte(gBola, pelo, 0, cy - h * .05, -h * .5, h * .3, h * .5, h * .3);
+    // cara: ojos y boca (en 5–6 también nariz, cejas y orejas, como la vitrina)
+    for (const s of [-1, 1]) cara.push(parte(gCaja, '#1C1712', s * h * .2, cy + h * .02, h * .45, h * .11, h * .16, .02));
+    cara.push(parte(gCaja, '#7c2d12', 0, cy - h * .2, h * .45, h * .22, h * .05, .02));
+    if (N >= 5) {
+      cara.push(parte(gBola, piel, 0, cy - h * .06, h * .46, h * .14, h * .16, h * .14));
+      for (const s of [-1, 1]) { cara.push(parte(gCaja, pelo, s * h * .2, cy + h * .16, h * .45, h * .2, h * .04, .02, cuerpo, s * -.12)); parte(gBola, piel, s * h * .47, cy, 0, h * .12, h * .22, h * .14); }
+    }
+    if (op.mochila !== false) parte(gCaja, op.mochila || '#f59e0b', 0, pierna + torso * .55, -ancho * .45, ancho * .75, torso * .75, ancho * .35);
+    cara.forEach(m => { m.userData.sinContorno = true; });
+    if (EVO) { const partes = []; yo.traverse(o => { if (o.isMesh) partes.push(o); }); partes.forEach(o => EVO.contornear(o)); }
+    return { yo, cuerpo, pI, pD, bI, bD, paso: 0, H };
   }
   function animar(P, moviendo, dt, t) {
     if (moviendo) {
       P.paso += dt * 10; const s = Math.sin(P.paso) * .6;
       P.pI.rotation.x = s; P.pD.rotation.x = -s; P.bI.rotation.x = -s; P.bD.rotation.x = s;
-      P.cuerpo.position.y = Math.abs(Math.sin(P.paso)) * .08;
-    } else { P.pI.rotation.x = P.pD.rotation.x = P.bI.rotation.x = P.bD.rotation.x = 0; P.cuerpo.position.y = Math.sin(t * 2) * .03; }
+      P.cuerpo.position.y = Math.abs(Math.sin(P.paso)) * .03 * P.H;
+    } else { P.pI.rotation.x = P.pD.rotation.x = P.bI.rotation.x = P.bD.rotation.x = 0; P.cuerpo.position.y = Math.sin(t * 2) * .01 * P.H; }
   }
-  const YOP = personaje('#10B981', '#1e3a8a');
-  const yo = YOP.yo; yo.position.set(0, 0, 2.6); yo.rotation.y = Math.PI;
-  const sombra = new THREE.Mesh(new THREE.CircleGeometry(.6, 16), new THREE.MeshBasicMaterial({ color: '#000', transparent: true, opacity: .2 }));
+  const YOP = personaje('#10B981', '#3b2314', '#f2c79b', { gorra: '#1e3a8a' });
+  const yo = YOP.yo; yo.position.set(2.2, 0, 3.6); yo.rotation.y = Math.PI;
+  const sombra = new THREE.Mesh(new THREE.CircleGeometry(.36, 16), new THREE.MeshBasicMaterial({ color: "#000", transparent: true, opacity: .2 }));
   sombra.rotation.x = -Math.PI / 2; sombra.position.y = .06; yo.add(sombra);
 
   // Compañeros que pasean por rutas fijas (simulado)
-  const rutas = [[[3, 5], [3, -4], [-4, -4], [-4, 5]], [[-11, 11], [-3, 11], [-3, 12.5], [-11, 12.5]], [[6, -12], [5, -3], [-5, -3]]];
+  const rutas = [[[3, 3], [3, -3], [-3, -3], [-3, 3]], [[-6, 16], [6, 16], [6, 19], [-6, 19]], [[-5.5, -5.8], [5.5, -5.8]]];   // patio, plazuela, galería
   const comp = M.companeros.slice(0, 3).map((c, i) => {
-    const P = personaje(c.color, ['#7c2d12', '#365314', '#831843'][i], ['#d9a274', '#b57a4f', '#e8b98c'][i]);
-    const e = etiqueta(c.apodo, c.color, 420); e.position.y = 3.4; P.yo.add(e);
+    // compañeros del mismo curso: estatura parecida (± unos centímetros)
+    const P = personaje(c.color, ['#3b2314', '#1f1410', '#7c2d12'][i], ['#d9a274', '#b57a4f', '#e8b98c'][i], { alto: ALTO_YO + [-.04, .03, .05][i], colita: i === 2, mochila: ['#0ea5e9', '#f97316', '#a855f7'][i] });
+    const e = etiqueta(c.apodo, c.color, 420); e.position.y = P.H + .75; P.yo.add(e);
     P.ruta = rutas[i]; P.k = 0; P.c = c; P.yo.position.set(...[P.ruta[0][0], 0, P.ruta[0][1]]); P.espera = 0;
     hacerTocable(P.yo, { tipo: 'companero', id: c.id });
     return P;
@@ -1184,12 +1509,12 @@ function iniciar(THREE) {
     let P = YOP;
     if (quien === 'cerca') P = comp.reduce((a, b) => a.yo.position.distanceTo(yo.position) < b.yo.position.distanceTo(yo.position) ? a : b);
     const ancho = Math.min(560, 120 + texto.length * 26);
-    const b = etiqueta(texto, P === YOP ? '#FDE047' : P.c.color, ancho); b.position.y = P === YOP ? 3.4 : 4.3; P.yo.add(b);
+    const b = etiqueta(texto, P === YOP ? '#FDE047' : P.c.color, ancho); b.position.y = P.H + (P === YOP ? .75 : 1.5); P.yo.add(b);
     burbujas.push({ b, P, hasta: performance.now() + 3200 });
   };
   // de vez en cuando un compañero usa un emote (de la lista)
   setInterval(() => { if (!window.__pausa) { const P = comp[Math.floor(Math.random() * comp.length)]; const e = M.emotes[Math.floor(Math.random() * M.emotes.length)];
-    const b = etiqueta(e, P.c.color, 130); b.position.y = 4.3; P.yo.add(b); burbujas.push({ b, P, hasta: performance.now() + 2500 }); } }, 9000);
+    const b = etiqueta(e, P.c.color, 130); b.position.y = P.H + 1.5; P.yo.add(b); burbujas.push({ b, P, hasta: performance.now() + 2500 }); } }, 9000);
 
   // --- Controles: joystick táctil + teclado ---
   const joy = document.getElementById('joy'), perilla = joy.querySelector('i');
@@ -1311,7 +1636,7 @@ function iniciar(THREE) {
       if (a.aviso && !D.misiones.some(x => x.materia === a.m.id && x.estado !== 'hecha')) { a.g.remove(a.aviso); a.aviso = null; }
     });
     pintarPuente();
-    const viejo = cartelPuente.material.map; const nuevo = etiqueta('🌉 ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 300);
+    const viejo = cartelPuente.material.map; const nuevo = etiqueta('🦜 Zoológico · ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 460);
     cartelPuente.material.map = nuevo.material.map; cartelPuente.material.needsUpdate = true; viejo.dispose();
   };
 
@@ -1324,7 +1649,7 @@ function iniciar(THREE) {
     camara.aspect = innerWidth / innerHeight;
     camara.fov = vertical ? 58 : 46;
     // misma vista que antes al arrancar: acostado 16 arriba/12 atrás, parado 27/13
-    const [alto, atras] = vertical ? [27, 13] : [16, 12];
+    const [alto, atras] = vertical ? [23, 11] : [13.5, 10];   // un poco más cerca: los chicos ahora miden lo real
     const p0 = Math.atan2(alto, atras), cambio = CAM.pitch0 === undefined || Math.abs(CAM.pitch0 - p0) > .01;
     CAM.dist = Math.hypot(alto, atras); CAM.pitch0 = p0;
     CAM.max = Math.min(1.25, p0 + .2); CAM.min = .45;
@@ -1338,8 +1663,10 @@ function iniciar(THREE) {
   // --- Bucle ---
   const reloj = new THREE.Clock();
   const objetivoCam = new THREE.Vector3();
+  const cabeza = new THREE.Vector3(), dirCam = new THREE.Vector3(), golpe = new THREE.Vector3(), rayoCam = new THREE.Ray();
+  let adentro = 0;
   const punto = new THREE.Vector3();
-  const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.hypot(x, z) < .9 || z < -16 || Math.abs(x) > 21 || z > 19; };
+  const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.abs(x) > LIM || Math.abs(z) > LIM; };
   function bucle() {
     const dt = Math.min(reloj.getDelta(), .05), t = reloj.elapsedTime;
     let mx = dir.x, mz = dir.z;
@@ -1394,10 +1721,11 @@ function iniciar(THREE) {
     const verCartel = cercano && !window.__pausa && !piloto;
     if (verCartel) {
       if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
-      proy.set(cercano.pos.x, cercano.alto || 3, cercano.pos.z).project(camara);
+      const ad = window.__adentro || 0;   // a la altura de los ojos el cartel va más bajo, para que no lo tape la barra de arriba
+      proy.set(cercano.pos.x, (cercano.alto || 3) * (1 - ad * .45), cercano.pos.z).project(camara);
       const W = innerWidth, H = innerHeight, cw = cartelPuerta.offsetWidth, ch = cartelPuerta.offsetHeight;
       let x = (proy.x + 1) / 2 * W - cw / 2, y = (1 - proy.y) / 2 * H - ch;
-      x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(60, Math.min(H - ch - 90, y));
+      x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(60 + ad * 50, Math.min(H - ch - 90, y));
       cartelPuerta.style.transform = `translate3d(${x | 0}px, ${y | 0}px, 0)`;
     } else if (cartelDe) { cartelPuerta.classList.remove('ver'); cartelDe = null; }
     if (cercano && cercano.lugar && ultimoSonido !== cercano.lugar && !window.S.abiertos.has(cercano.lugar)) { window.sonar(cercano.lugar === 'parque' ? 'pajaros' : 'clic'); }
@@ -1423,6 +1751,10 @@ function iniciar(THREE) {
     const ahora = performance.now();
     for (let i = burbujas.length - 1; i >= 0; i--) if (burbujas[i].hasta < ahora) { burbujas[i].P.yo.remove(burbujas[i].b); burbujas[i].b.material.map.dispose(); burbujas.splice(i, 1); }
     bandera.scale.y = .8 + Math.sin(t * 3) * .05;
+    // adentro del colegio, los techos se ven casi transparentes
+    { const adentro = Math.abs(yo.position.x) < 14 && Math.abs(yo.position.z) < 14;
+      const meta = adentro ? .18 : 1; let op = matTechoCol.opacity + (meta - matTechoCol.opacity) * Math.min(1, dt * 6); if (Math.abs(meta - op) < .01) op = meta;
+      if (op !== matTechoCol.opacity) { matTechoCol.opacity = op; const tr = op < .99; if (tr !== matTechoCol.transparent) { matTechoCol.transparent = tr; matTechoCol.depthWrite = !tr; matTechoCol.needsUpdate = true; } } }
 
     // panel abierto a la derecha → el mundo se corre a la izquierda (suave)
     const quiere = window.__corrimiento || 0;
@@ -1436,12 +1768,67 @@ function iniciar(THREE) {
     let dY = CAM.yawObj - CAM.yaw; dY = Math.atan2(Math.sin(dY), Math.cos(dY)); CAM.yaw += dY * k; CAM.yawObj = CAM.yaw + (dY * (1 - k));
     CAM.pitch += (CAM.pitchObj - CAM.pitch) * k;
     CAM.zoom += (CAM.zoomObj - CAM.zoom) * k;
-    const dist = CAM.dist * CAM.zoom, horiz = Math.cos(CAM.pitch) * dist;
-    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
-    camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
-    camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
-    renderer.render(escena, camara);
+    // vista normal (de arriba) o peatonal en una zona interior: se mezclan suave con "adentro" (0–1)
+    punto.set(yo.position.x, 1, yo.position.z);
+    const quiereAdentro = zonasInteriores.some(zn => zn.caja.containsPoint(punto)) ? 1 : 0;
+    adentro += (quiereAdentro - adentro) * Math.min(1, dt * 3);
+    window.__adentro = adentro;
+    const pitchAfuera = CAM.pitch, pitchAdentro = Math.min(.9, Math.max(.08, .26 + (CAM.pitch - CAM.pitch0) * .7));
+    const distAfuera = CAM.dist * CAM.zoom, distAdentro = 3.2 * Math.min(1.6, Math.max(.7, CAM.zoom));   // el pellizco aleja un poco
+    const pitch = pitchAfuera + (pitchAdentro - pitchAfuera) * adentro;
+    let dist = distAfuera + (distAdentro - distAfuera) * adentro;
+    const ojos = .8 + (YOP.H * .93 + .1 - .8) * adentro, hombro = .42 * adentro;   // a la altura de los ojos (según la estatura), por detrás del hombro
+    cabeza.set(yo.position.x + Math.cos(CAM.yaw) * hombro, yo.position.y + ojos, yo.position.z - Math.sin(CAM.yaw) * hombro);
+    dirCam.set(Math.sin(CAM.yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(CAM.yaw) * Math.cos(pitch));
+    if (adentro > .02) {
+      // que la cámara no atraviese paredes ni horcones: si choca, se acerca
+      rayoCam.set(cabeza, dirCam);
+      for (const b of solidos) { if (b.containsPoint(cabeza)) continue; const hit = rayoCam.intersectBox(b, golpe); if (hit) { const d = hit.distanceTo(cabeza) - .35; if (d < dist) dist = Math.max(.6, d); } }
+    }
+    objetivoCam.copy(cabeza).addScaledVector(dirCam, dist);
+    if (adentro <= .02) objetivoCam.y = yo.position.y + Math.sin(pitch) * dist;
+    camara.position.lerp(objetivoCam, Math.min(1, dt * (adentro > .02 ? 9 : 6)));
+    { // copa del toborochi del patio: ¿queda entre la cámara y el alumno? → se aclara
+      const ax = camara.position.x, az = camara.position.z, bx = cabeza.x - ax, bz = cabeza.z - az, l2 = bx * bx + bz * bz || 1;
+      const u = Math.max(0, Math.min(1, ((-3.2 - ax) * bx + (-3.2 - az) * bz) / l2)), dx = ax + bx * u + 3.2, dz = az + bz * u + 3.2;
+      const meta = adentro > .3 && dx * dx + dz * dz < 2.6 ? .22 : 1;
+      let op = matCopa.opacity + (meta - matCopa.opacity) * Math.min(1, dt * 8); if (Math.abs(meta - op) < .01) op = meta;
+      if (op !== matCopa.opacity) { matCopa.opacity = op; const tr = op < .99; if (tr !== matCopa.transparent) { matCopa.transparent = tr; matCopa.depthWrite = !tr; matCopa.needsUpdate = true; } } }
+    const fovQuiere = (innerHeight > innerWidth ? 58 : 46) + 12 * adentro;
+    if (Math.abs(camara.fov - fovQuiere) > .05) { camara.fov = fovQuiere; camara.updateProjectionMatrix(); }
+    const adelante = 2 - 1.2 * adentro;
+    camara.lookAt(cabeza.x - Math.sin(CAM.yaw) * adelante, cabeza.y - (1 - adentro) * 0 + adentro * .1, cabeza.z - Math.cos(CAM.yaw) * adelante);
+    if (EVO) EVO.render(renderer, escena, camara); else renderer.render(escena, camara);
+    medirFps(t);
     requestAnimationFrame(bucle);
+  }
+  // fps: bajada automática de calidad en 5 y 6 (como en la vitrina) y aviso solo con ?diag=1
+  const diag = QS.get('diag') === '1' ? document.createElement('div') : null;
+  if (diag) { diag.style.cssText = 'position:fixed;left:50%;top:calc(var(--sa) + 54px);transform:translateX(-50%);z-index:70;background:rgba(15,26,23,.9);border:2px solid #10B981;border-radius:12px;padding:4px 10px;font:700 12px ui-monospace,monospace;pointer-events:none'; document.body.appendChild(diag); }
+  let cuadros = 0, tF = performance.now(), lentos = 0, autoTxt = '', segundos = 0;
+  window.__fpsLista = [];
+  function medirFps() {
+    cuadros++;
+    const ahora = performance.now();
+    if (ahora - tF < 1000) return;
+    const fps = Math.round(cuadros * 1000 / (ahora - tF)); cuadros = 0; tF = ahora; segundos++;
+    window.__fpsLista.push(fps);
+    if (EVO && EVO.n >= 5 && segundos > 2 && !window.__pausa) {
+      lentos = fps < 30 ? lentos + 1 : 0;
+      if (lentos >= 2) {
+        lentos = 0;
+        const paso = EVO.bajarCalidad(escena);
+        if (paso) { autoTxt = paso.texto; if (paso.resolucion) { renderer.setPixelRatio(Math.min(renderer.getPixelRatio(), paso.resolucion)); renderer.setSize(innerWidth, innerHeight); } }
+      }
+    }
+    if (diag) diag.innerHTML = `Evolución ${N}${EVO ? ' · ' + EVO.nombre : ''} · ${CURSO} · <span style="color:${fps >= 30 ? '#34D399' : '#F87171'}">${fps} fps</span>` + (fps < 30 ? ' ⚠ no llega a 30' : '') + (autoTxt ? ` · auto: ${autoTxt}` : '');
+  }
+  // lo que no se mueve se junta en pocas mallas (menos llamadas de dibujo) y lleva contorno en 3–5
+  if (EVO) {
+    const mov = []; escena.traverse(o => { if (o.isMesh && o.userData.dinamico && !o.material.transparent && !o.children.some(c => c.userData.esContorno)) mov.push(o); }); mov.forEach(o => EVO.contornear(o));
+    const r = EVO.fusionar(escena, () => false);
+    console.log('[evolución]', EVO.n, EVO.nombre, CURSO, r);
+    window.__escena = escena; window.__renderer = renderer;   // (para las pruebas)
   }
   camara.position.set(yo.position.x, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.pitch) * CAM.dist);
   bucle();

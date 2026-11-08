@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<base href="/estilos/"><!-- Firebase sirve esta página como /estilos/<nombre>/: que lo relativo apunte a /estilos/ -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>Prueba de construcción</title>
@@ -51,17 +52,17 @@
 <script type="module">
 
 // Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
-const VERSION = '20261108-7';
+const VERSION = '20261108-9';
 let ARR;
 try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
-  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
+  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.' + (/[?&#]diag=1/.test(location.href) ? '<br><small style="color:#fca5a5">' + String(e && e.message || e).replace(/</g, '&lt;') + '</small>' : '') + '<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
   window.__listo = 'error'; throw e;
 }
 ARR.avisoGiro();
 ARR.botonVer('▶ Construir');
 const { THREE, crearMundo } = await ARR.cargar(VERSION, ['crearMundo']);
 
-const ESTILO = (new URLSearchParams(location.search).get('estilo') || 'A').toUpperCase();
+const ESTILO = (new URLSearchParams(location.search.slice(1) + '&' + location.hash.slice(1)).get('estilo') || 'A').toUpperCase();
 const kit = crearMundo(THREE, ESTILO, 'kit');
 document.getElementById('titulo').textContent = 'Prueba de construcción · ' + ({ A: 'estilo A', BLOQUES: 'Bloques', PIEZAS: 'Piezas', REAL: 'Mundo real', B: 'estilo B', C: 'estilo C' }[ESTILO] || 'estilo A');
 const { P, G, Lote, M, techoHip } = kit;
@@ -74,7 +75,7 @@ const nivel = (i, j) => enGrilla(i, j) ? niveles[i][j] : 0;
 const centro = (i, j) => [(i - (N - 1) / 2) * T, (j - (N - 1) / 2) * T];
 
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: new URLSearchParams(location.search).has('captura') });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: new URLSearchParams(location.search.slice(1) + '&' + location.hash.slice(1)).has('captura') });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 const escena = new THREE.Scene();
 escena.background = new THREE.Color(P.cielo);
@@ -275,7 +276,7 @@ const objetivo = new THREE.Vector3(0, 0, 1.5);
 const esf = new THREE.Spherical(42, 0.92, 0.55);
 function ajustar() {
   const w = innerWidth, h = innerHeight;
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, new URLSearchParams(location.search).get('calidad') === 'alta' ? 2 : 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, new URLSearchParams(location.search.slice(1) + '&' + location.hash.slice(1)).get('calidad') === 'alta' ? 2 : 1.5));
   renderer.setSize(w, h, false);
   camara.aspect = w / h; camara.fov = h > w ? 55 : 40; camara.updateProjectionMatrix();
   esf.radius = h > w ? 50 : 40;

@@ -53,6 +53,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
 | EDU.05 | Retos / Misiones | Editor del tutor + motor de misiones + tutor IA dentro de la misión | EDU.03–04 | ⏳ |
 | EDU.06 | Mundo 3D del colegio | App del alumno: colegio estilo bloques, aulas por materia, misiones (PWA) | EDU.05 | ⏳ |
+| EDU.06a | Evoluciones en el alumno | El juego del alumno dibuja su mundo con la evolución de su curso (P1–P2 Bloques … S6 Promo), selector de curso con `?demo=1` y transición al subir, calidad automática y `?diag=1` | EDU.01c, EDU.02c | 🔎 PR abierto, publicado en `nande-educacion.web.app/maqueta/alumno.html?demo=1` |
 | EDU.07 | Modelos 3D en Blender | Colegio y aulas en glTF liviano, Blender en la nube con Claude | EDU.01 | ⏳ |
 | EDU.08 | Minijuegos | 2–3 minijuegos que desbloquean las misiones | EDU.05–06 | ⏳ |
 | EDU.09 | App de padres | Avance en tiempo real, cronograma, reportes, permisos, pagos, libretas | EDU.03, 05 | ⏳ |
