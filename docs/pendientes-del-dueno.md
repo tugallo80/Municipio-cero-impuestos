@@ -16,7 +16,6 @@
 
 ## Para probar cuando avise la MAESTRA
 
-- **Entrar a las aulas** (PR #13): cartel "Entrar · …" solo bien cerca de la puerta + tocar el aula para ir solo.
 - **6 evoluciones del mundo** (PR #8): P1–P2, P3–P4, P5–P6, S1–S2, S3–S5 y S6 (promo).
 
 ## Criterio acordado para Blender (8-nov-2026)
@@ -28,4 +27,5 @@
 ## Resueltos
 
 - Estilo gráfico: **B** como base, C (pixel) fuera; 12 evoluciones en el producto final, 6 para la presentación (8-nov).
+- Entrar a las aulas (PR #13): aprobado y en `main` (8-nov).
 - Alumno en horizontal (PR #10) y panel del tutor en el celular (PR #11): probados y en `main` (8-nov).
