@@ -89,6 +89,14 @@ se sigue publicando ahí como material para decidir (igual que `/educacion/talle
   `docs/educacion/talleres/laminas/E-mi-colegio-en-santa-cruz.{pdf,png}`. Todo se regenera con
   `node tools/estilos/generar.mjs <recursos>`.
 
+**Arreglo tras la prueba del dueño en el celular** (vio los botones viejos y la transición en
+negro): su navegador tenía en caché el `mundo.js` anterior. Ahora `arranque.js` carga three.js y
+`mundo.js?v=<VERSION>` (rompecachés; subir `VERSION` en las 3 páginas cuando cambien los .js),
+`firebase.json` manda `Cache-Control: no-cache` para `/educacion/estilos/**`, y si algo no carga
+aparece "No se pudo cargar · Tocá para reintentar" (nunca pantalla negra). En celular vertical las
+páginas 3D muestran "Girá tu pantalla" (con "Seguir así"). Probado con Playwright simulando el
+módulo viejo (muestra el aviso de versión vieja) y con Pixel 5 vertical/horizontal.
+
 **fps medidos** (Chromium del contenedor **sin GPU**, render por CPU; piso pesimista; mediana de
 6 s, vista "Todo") — detalle en `educacion/estilos/capturas/fps.json` y en la página.
 
