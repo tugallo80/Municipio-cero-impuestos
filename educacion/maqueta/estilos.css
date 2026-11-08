@@ -39,17 +39,17 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .pildora.rojo { background: rgba(239,68,68,.12); color: var(--rojo); }
 .pildora.gris { background: var(--sup3); color: var(--texto2); }
 
-.cuerpo { display: flex; flex: 1; }
+.cuerpo { display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .nav { display: flex; gap: 6px; overflow-x: auto; padding: 10px 16px; border-bottom: 1px solid var(--borde); background: var(--sup1); position: sticky; top: 65px; z-index: 15; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 .nav a { white-space: nowrap; padding: 10px 14px; border-radius: 12px; color: var(--texto2); font-weight: 500; font-size: 14px; display: flex; gap: 8px; align-items: center; }
 .nav a.activo { background: var(--verde-suave); color: var(--verde); }
-.principal { flex: 1; padding: 18px 16px 100px; max-width: 1200px; width: 100%; margin: 0 auto; }
+.principal { flex: 1; min-width: 0; padding: 18px 16px 100px; max-width: 1200px; width: 100%; margin: 0 auto; }
 
 @media (min-width: 900px) {
   .cuerpo.con-lateral .nav { flex-direction: column; width: 230px; flex-shrink: 0; border-bottom: 0; border-right: 1px solid var(--borde); position: sticky; top: 65px; height: calc(100vh - 65px); padding: 16px 12px; }
   .cuerpo.con-lateral .nav a { padding: 12px 14px; }
-  .cuerpo.con-lateral { align-items: flex-start; }
+  .cuerpo.con-lateral { flex-direction: row; align-items: flex-start; }
   .principal { padding: 24px 28px 60px; }
 }
 
