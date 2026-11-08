@@ -139,6 +139,25 @@ isla vieja se reemplazó por la ciudad del diseño (vista "Ciudad" de la vitrina
 - Probado contra la config real de Firebase (cleanUrls + trailingSlash): P1→S6, S6→P1, P3→P5,
   P4→P1, P1→P3, S1→S3, P5→S1, los enlaces viejos con `.html` y la vitrina.
 
+**Escala real y personajes de la vitrina**
+- Todo en metros:
+  - puertas de aula de 1,1 × 2,2 m;
+  - ventanas de 1,2 m de alto con antepecho de 0,9 m;
+  - galería y horcones de 3,2 m;
+  - casas de 6 × 5 m con paredes de 2,8 m y puerta de 1 × 2,1 m.
+- Estatura según el curso: P1 1,15 m … P6 1,40 m; S1 1,45 m … S6 1,65 m. Los compañeros miden lo
+  mismo ± unos centímetros.
+- Los personajes del juego usan las proporciones de la vitrina para su escalón (de 2,7 a 7,3
+  "cabezas"):
+  - cuerpo de cápsulas y torso con forma en 4–6;
+  - ojos y boca;
+  - en 5–6, también nariz, cejas y orejas.
+- La cámara interior se pone a la altura de los ojos de cada estatura, más cerca (3,2 m). La cámara
+  de afuera también se acercó un poco.
+- Comparación: `docs/sesiones/capturas/EDU.06a/escala-P1-S6.jpg`.
+- Los profes (~1,70 m) por ahora no tienen cuerpo en el mundo (están como botones arriba). Si se
+  agregan, `personaje(…, { adulto: true, alto: 1.7 })` ya los arma con proporción de adulto.
+
 **Pendiente**
 - **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
   `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los
