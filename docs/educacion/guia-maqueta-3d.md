@@ -39,6 +39,8 @@ Objetos que el juego ya sabe usar (EDU.06b):
 - De cada materia: `obj_abaco_mate`, `obj_microscopio_ciencias`, `obj_cuerpo_ciencias`, `obj_globo_sociales`, `obj_mapa_sociales`, `obj_caballete_artes`, `obj_radio_ingles`, `obj_libros_lenguaje`.
 - Afuera: `obj_arco_futbol_01/02`, `obj_aro_basquet_01/02`, `obj_hamaca_01…`, `obj_resbalin`, `obj_subeybaja`, `obj_kiosco`, `obj_planta_huerto`.
 
+Partes que se mueven (opcional): dentro de `obj_hamaca_01` una pieza hija llamada `asiento` (con el pivote arriba, donde cuelga); dentro de `obj_subeybaja` una pieza hija `tabla` (pivote al centro). Si no las separás, igual funciona.
+
 Si te falta un nombre para algo nuevo, inventalo con la misma lógica y avisame.
 
 ## 3. Colores (opcional, ayuda)
