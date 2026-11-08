@@ -40,8 +40,15 @@ const db = getDatabase();
 
   for (const c of cuentas) {
     await db.ref(`edu/uid_alumno/${c.uid}`).set(c.alumnoId);
-    await db.ref(`edu/alumnos/${c.alumnoId}`).set({ curso: c.curso, estilo: c.estilo });
-    console.log(`✅ Cuenta "${c.usuario}" lista (alumno ${c.alumnoId}, ${c.curso})`);
+    const limites = {};
+    if (c.limiteSesionesDia) limites.limiteSesionesDia = c.limiteSesionesDia;
+    if (c.limiteTokensDia) limites.limiteTokensDia = c.limiteTokensDia;
+    await db.ref(`edu/alumnos/${c.alumnoId}`).set({ curso: c.curso, estilo: c.estilo, ...limites });
+    // Verificación: la cuenta existe con su correo y el perfil quedó guardado.
+    const u = await getAuth().getUser(c.uid);
+    const perfil = (await db.ref(`edu/alumnos/${c.alumnoId}`).once('value')).val();
+    if (u.email !== `${c.usuario}@${dominio}` || !perfil) throw new Error(`La cuenta ${c.usuario} no quedó bien`);
+    console.log(`✅ Cuenta "${c.usuario}" lista (alumno ${c.alumnoId}, ${c.curso}, ${perfil.limiteSesionesDia || 'límite normal de'} charlas/día)`);
   }
 
   for (const [curso, datos] of Object.entries(contenido)) {

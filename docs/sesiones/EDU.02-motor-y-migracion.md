@@ -74,3 +74,14 @@ final la hace el dueño escuchando en el celular (Claude no puede escuchar audio
 - Sin moderación de contenido aparte (solo instrucciones de la personalidad) → antes de usar con
   alumnos reales.
 - `workflow_dispatch` no se puede disparar desde la sesión (403 de la integración): se dispara con push.
+- Cuenta `dueno` para las pruebas del dueño: 40 charlas/día (límite propio en el perfil,
+  `limiteSesionesDia`); `prueba` y alumnos siguen con 8; tope global USD 5/día sin cambios.
+
+**Pedido del dueño para la próxima sesión (no implementado)**
+- **Dos tutores con personalidad propia, siempre disponibles**: "la profe" (voz Sulafat) y "el profe"
+  (voz Achird). El niño llama a uno u otro por su nombre cuando quiere, sin elegir al inicio, y
+  puede preferir uno por materia. Idea técnica: dos personalidades en `tutor/` y cambio de
+  tutor dentro de la charla (herramienta `llamar_tutor` que cierra y abre sesión con la otra
+  voz, o una sola sesión con las dos personalidades si el modelo permite cambiar de voz).
+- **Interfaz final**: no un botón verde, sino toda la pantalla latiendo, como una boca que habla
+  (animación al ritmo del audio de salida).

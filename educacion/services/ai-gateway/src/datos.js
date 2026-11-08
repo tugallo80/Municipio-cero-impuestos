@@ -35,7 +35,12 @@ async function obtenerAlumno(uid) {
   if (!alumnoId) return null;
   const perfil = (await base().ref(`edu/alumnos/${alumnoId}`).once('value')).val();
   if (!perfil) return null;
-  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo } };
+  // Límites propios (opcionales, p. ej. la cuenta de pruebas del dueño). No van al modelo:
+  // construirInstruccion solo usa curso y estilo.
+  const limites = {};
+  if (Number(perfil.limiteSesionesDia) > 0) limites.sesionesPorAlumnoDia = Math.min(Number(perfil.limiteSesionesDia), 100);
+  if (Number(perfil.limiteTokensDia) > 0) limites.tokensPorAlumnoDia = Math.min(Number(perfil.limiteTokensDia), 10_000_000);
+  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo }, limites };
 }
 
 async function obtenerContenido(curso) {

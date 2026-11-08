@@ -33,11 +33,13 @@ async function alumnoDeLaCuenta(request) {
 }
 
 exports.eduKayToken = onCall(OPCIONES, async (request) => {
-  const { alumnoId, perfil } = await alumnoDeLaCuenta(request);
+  const { alumnoId, perfil, limites: propios } = await alumnoDeLaCuenta(request);
+  // El tope global de costo diario (costoGlobalDiaUsd) no se puede cambiar por cuenta.
+  const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd };
   const pedida = String(request.data?.voz || '');
   const voz = VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;
 
-  const reserva = await datos.reservarSesion(alumnoId, LIMITES, { voz, modelo: MODELO_KAY });
+  const reserva = await datos.reservarSesion(alumnoId, limites, { voz, modelo: MODELO_KAY });
   if (!reserva.ok) {
     log('kay_cuota_agotada', { alumnoId, motivo: reserva.motivo });
     return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
