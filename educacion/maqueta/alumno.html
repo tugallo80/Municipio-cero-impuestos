@@ -292,8 +292,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-2"></script>
-<script src="misiones-demo.js?v=edu02c-2"></script>
+<script src="datos-demo.js?v=edu02c-3"></script>
+<script src="misiones-demo.js?v=edu02c-3"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -851,7 +851,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-2').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-3').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
@@ -864,6 +864,7 @@ setTimeout(() => {
 
 // Lista 2D de respaldo si el 3D no carga
 function modo2D(motivo) {
+  window.__sin3D = true;
   $('#cargando').style.display = 'none'; $('#joy').style.display = 'none';
   $('#ayuda').textContent = motivo;
   const l = $('#lista2d'); l.classList.add('ver');
@@ -875,6 +876,19 @@ function modo2D(motivo) {
     + `<button class="mision" style="background:rgba(15,26,23,.9)" onclick="abrirMiCasa()"><span style="font-size:28px">🏠</span><span><b>Tu casa</b></span></button>`;
 }
 window.__modo2D = modo2D;
+
+// Si el 3D no arranca en 8 s (p. ej. el navegador interno de otra app), no dejar la pantalla
+// trabada: ofrecer abrir en Chrome, reintentar o seguir con la lista 2D.
+setTimeout(() => {
+  if (window.__listo3D || window.__sin3D) return;
+  const c = $('#cargando');
+  c.innerHTML = `<div style="max-width:420px">
+    <div class="t">La isla tarda en cargar 🐢</div>
+    <p style="margin:6px 0 14px">Si estás dentro de otra app, abrí este link en <b>Chrome</b>.</p>
+    <button class="bj" onclick="location.reload()">🔄 Reintentar</button>
+    <button class="bj gris" style="margin-left:8px" onclick="modo2D('Sin 3D: elegí un lugar')">📋 Seguir sin 3D</button>
+    <p style="margin-top:12px;font-size:12px;color:#334155;user-select:text;-webkit-user-select:text">${location.href.split('?')[0]}</p></div>`;
+}, 8000);
 </script>
 
 <script type="module">
@@ -889,8 +903,12 @@ const FUENTES = [
 ];
 let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
-if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
-else iniciar(THREE);
+if (window.__sin3D) { /* el chico ya eligió seguir sin 3D */ }
+else if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
+else {
+  // Algunos navegadores internos de apps no tienen WebGL: en vez de quedar trabado, lista 2D.
+  try { iniciar(THREE); } catch (e) { console.warn('[3D]', e); window.__modo2D('Este navegador no muestra el 3D: elegí un lugar'); }
+}
 
 function iniciar(THREE) {
   const D = window.DEMO, YO = D.alumnoDemo, M = D.mundo;

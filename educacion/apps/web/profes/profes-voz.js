@@ -82,9 +82,15 @@ const css = `
 #pv-franja .caja b:nth-child(1){left:-5%}#pv-franja .caja b:nth-child(2){left:28%}#pv-franja .caja b:nth-child(3){left:60%}
 #pv-franja .oye{left:25%;right:25%}
 #pv-marco i{border-radius:28px}
-#pv-entrar{align-items:center;padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
-#pv-entrar form{max-width:460px;max-height:100%;overflow:auto;border-radius:24px;padding:16px;gap:8px;grid-template-columns:1fr 1fr}
-#pv-entrar form>h2,#pv-entrar form>p,#pv-entrar form>.error,#pv-entrar form>.fila{grid-column:1/-1}
+#pv-entrar{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+#pv-entrar form{max-width:560px;margin:auto 0;border-radius:20px;padding:12px 14px;gap:8px;grid-template-columns:1fr 1fr;align-items:center}
+#pv-entrar h2{font-size:17px;grid-column:1/-1}
+#pv-entrar p{font-size:12px;grid-column:1/-1;margin-top:-6px}
+#pv-entrar input{min-height:44px}
+#pv-entrar .error{grid-column:1/-1;min-height:0}
+#pv-entrar .error:empty{display:none}
+#pv-entrar .fila{grid-column:1/-1}
+#pv-entrar button{min-height:46px}
 }
 `
 const estilo = document.createElement('style')
@@ -205,6 +211,10 @@ function pedirEntrada() {
     const error = velo.querySelector('.error')
     error.textContent = ''
     velo.classList.add('ver')
+    // Con el teclado abierto la pantalla acostada queda muy baja: llevar el campo a la vista.
+    for (const campo of form.querySelectorAll('input')) {
+      campo.onfocus = () => setTimeout(() => campo.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300)
+    }
     const fin = (ok) => { velo.classList.remove('ver'); resolver(ok) }
     velo.querySelector('.no').onclick = () => fin(false)
     form.onsubmit = async (e) => {

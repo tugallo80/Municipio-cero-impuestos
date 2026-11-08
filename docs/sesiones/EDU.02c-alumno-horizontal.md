@@ -68,6 +68,19 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
 - Capturas de pantalla: la página no hace nada que las bloquee (no hay `FLAG_SECURE` en la web);
   en pantalla completa se sacan igual con los botones del celular.
 
+**Ajuste 2 (pruebas del dueño en Android)**
+- *Chrome incógnito sigue vertical, otro navegador sí gira*: el diseño ya depende solo del ancho y el alto
+  de la pantalla (`orientation` en CSS es eso mismo) y cambia en caliente. Probado con Pixel 7 rotando
+  en caliente: acostado → layout horizontal; parado → "Girá tu pantalla"; acostado otra vez → se va el aviso
+  (`c1-pixel7-acostado.jpg`). La causa más probable era la página vieja guardada (ajuste 1). Si sigue,
+  "Probar de nuevo" pide pantalla completa y traba horizontal, y el aviso explica la Rotación automática.
+- *Pantalla azul en el navegador interno de la app de Claude*: si el 3D no arranca en 8 s aparece
+  "La isla tarda en cargar" con "Reintentar", "Seguir sin 3D" (lista 2D) y el link para abrir en Chrome.
+  Si el navegador no tiene WebGL, pasa directo a la lista 2D (`c2-3d-trabado.jpg`).
+- *Login de voz cortado en horizontal*: ahora es compacto. El título va arriba, usuario y clave lado a
+  lado y abajo los botones; mide unos 170 px de alto. Con el teclado abierto (alto 200 px) el campo se
+  acomoda solo a la vista y "Entrar" queda visible (`c3-login-*.jpg`).
+
 **Pendiente**
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
