@@ -140,6 +140,8 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 
 ## Decisiones pendientes del dueño
 
+> Lo que el dueño tiene para trabajar o probar está en **`docs/pendientes-del-dueno.md`**.
+
 1. ~~ID del proyecto~~ → nombre **MUNICIPIO IA**, ID `municipio-ia` (si está tomado, `municipio-ia-scz`).
 2. **¿Educación usa el proyecto nuevo o sigue en `rubikeduai`?** Recomendación: proyecto nuevo único
    para toda la súper app; los datos de `rubikeduai` son de prueba familiar y se recrean con el seed.
