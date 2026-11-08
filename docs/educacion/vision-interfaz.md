@@ -151,3 +151,27 @@ Las voces están bien, pero **mezclan camba con neutro**. Para afinar la persona
   o una **base/niebla luminosa abajo que se mueve con el sonido** (tipo la franja de voz de los
   autos Tesla), sin salirse de su espacio.
 - Reemplaza la idea anterior de "toda la pantalla latiendo como una boca".
+
+## Idea del mundo: "Mi colegio en Santa Cruz" — mundo abierto (dueño, 8-nov-2026)
+
+- Cada colegio tiene su terreno **geoubicado** en un mapa de Santa Cruz (por anillos y zonas). El
+  resto, salvo hitos, es baldío o bosque.
+- Los alumnos **construyen su escuela** (tipo Roblox/Minecraft) con **recursos limitados**: la
+  **única moneda es hacer (y rehacer) los deberes** → monedas del juego → ladrillos.
+- **Red social entre colegios del mismo nivel**: se visitan entre sí; un regulador (IA + docente)
+  previene bullying.
+- **Competencia entre colegios**: quién "termina mejor su escuela" en el año.
+- **Acceso verificado**: RUDE + carnet + aval del director → solo estudiantes reales.
+- Visión del dueño: "un mundo abierto donde la moneda es el conocimiento", con los límites y
+  restricciones de ingreso necesarios. (Evitar la palabra "GTA" en presentaciones.)
+
+Respuesta de la MAESTRA (resumen): idea fuerte — competencia **entre equipos** (colegios) con
+cooperación interna, moneda = aprendizaje (mecánica integrada), construcción, identidad local,
+cierre del riesgo de adultos desconocidos. Cuidar: desigualdad entre colegios (premiar mejora,
+por alumno, ligas comparables, retos cooperativos), "farmeo" de monedas (pagar por dominio y
+repaso, rendimientos decrecientes), moderación (frases predefinidas, IA de apoyo al docente,
+revisar construcciones), escala técnica (por etapas). Se suma a los talleres como **mundo E**.
+
+Investigación en curso → `docs/investigacion/mundo-abierto-santa-cruz.md`: economía de fichas
+(tareas como moneda), competencia entre colegios y equidad, verificación de identidad de menores
+en Bolivia (RUDE, carnet), factibilidad técnica en tablets.
