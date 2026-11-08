@@ -1,19 +1,41 @@
 // ÑANDÉ · EDU.01c — Propuestas de estilo visual.
-// La MISMA escena (colegio cruceño, bosque que se restaura, portal, ciudad por anillos,
-// los dos profes y dos alumnos) dibujada en tres direcciones de arte:
+// La MISMA escena (colegio cruceño, terreno vacío de la ciudad con un hito y una obra pública
+// en construcción, portal, ciudad por anillos, los profes y alumnos) dibujada en varios estilos.
+//
+// Escalera por tramo de grados (el mundo "evoluciona" al pasar de curso):
+//   BLOQUES    1.º a 3.º de primaria — cúbico, simple y colorido.
+//   PIEZAS     4.º a 6.º de primaria — piezas redondeadas y encastrables (base: A).
+//   REAL       secundaria — "Mundo real": estilizado maduro, dos-tres tonos + contorno fino (base: B).
+// Exploración inicial:
 //   A "Maqueta Viva"  — low poly facetado, diorama, luz de tarde horneada.
 //   B "Tierra Pintada" — dos tonos + contorno de tinta, paleta más saturada.
-//   C "Pixel Camba"   — la geometría de A a ~50% de resolución y 32 colores.
+//   C "Pixel Camba"   — la geometría de A a ~45% de resolución y 32 colores (modo liviano).
 //
 // Pensado para tablet de gama baja: TODO es MeshBasicMaterial con colores por vértice
 // (la luz y la oclusión se calculan una sola vez al armar la escena), sin sombras en
 // tiempo real (sombras falsas bajo los objetos), pocas llamadas de dibujo (la escena
 // entera se fusiona en unas pocas mallas) y niebla.
 //
-// Uso:  const mundo = crearMundo(THREE, 'A')        // escena completa
-//       const mapa  = crearMundo(THREE, 'A', 'mapa') // lámina E: Santa Cruz por anillos
+// Uso:  const mundo = crearMundo(THREE, 'PIEZAS')        // escena completa
+//       const mapa  = crearMundo(THREE, 'A', 'mapa')     // lámina E: Santa Cruz por anillos
+
+export const TRAMOS = {
+  BLOQUES: {
+    letra: '1', nombre: 'Bloques', grados: '1.º a 3.º de primaria', color: '#F2C230',
+    corto: 'Cúbico, simple y colorido: todo se arma con bloques.', costo: 'bajo'
+  },
+  PIEZAS: {
+    letra: '2', nombre: 'Piezas', grados: '4.º a 6.º de primaria', color: '#10B981',
+    corto: 'Piezas redondeadas que encastran, como un juguete de construcción propio.', costo: 'bajo'
+  },
+  REAL: {
+    letra: '3', nombre: 'Mundo real', grados: 'Secundaria', color: '#5FB7C9',
+    corto: 'Estilizado y maduro: sombras en tres tonos, contorno fino, proporciones reales.', costo: 'medio'
+  }
+};
 
 export const ESTILOS = {
+  ...TRAMOS,
   A: {
     letra: 'A', nombre: 'Maqueta Viva', color: '#10B981',
     corto: 'Low poly facetado, como una maqueta tallada en madera y arcilla.',
@@ -26,7 +48,7 @@ export const ESTILOS = {
   },
   C: {
     letra: 'C', nombre: 'Pixel Camba', color: '#5FB7C9',
-    corto: 'La maqueta dibujada con pocos píxeles y 32 colores.',
+    corto: 'La maqueta dibujada con pocos píxeles y 32 colores (modo liviano).',
     costo: 'el más bajo'
   }
 };
@@ -70,6 +92,47 @@ const PAL_B = {
   ropaJochi: '#13865A', rojo: '#E03A2C', azul: '#2563C9'
 };
 
+// Tramo 1 "Bloques": colores vivos y simples, cielo claro
+const PAL_BLOQUES = {
+  ...PAL_A,
+  cielo: '#BFE3FA', niebla: '#CBE9FB',
+  pasto: '#7CCB5B', pasto2: '#63B24A', tierra: '#C98F55', arena: '#F4DCA6',
+  baseLado: '#9A6B43', baseLado2: '#6E4A2E',
+  pared: '#FFF3D6', pared2: '#FFE2A8', pared3: '#FFE9C2', pared4: '#F7D9C4', zocalo: '#2F9BD6',
+  teja: '#E8573A', teja2: '#C9432A', palma: '#E7B54A', horcon: '#8A5A35', madera: '#B5773E', maderaOsc: '#6B4426',
+  piso: '#E08A5E', patio: '#F0CF8E', techoVerde: '#4CC06A',
+  bosque: '#2E9E55', bosque2: '#3DB563', bosque3: '#55C46F', bosque4: '#7BD67F',
+  tajiboAm: '#FFD23F', tajiboRo: '#FF8CC6', toboTronco: '#A7C46E', toboFlor: '#FF9FCF', motacu: '#4DB548',
+  rio: '#4CC3E8', rioOsc: '#2A9FCB', calle: '#8C8C96', cantero: '#7CCB5B', ladrillo: '#D1603F'
+};
+// Tramo 2 "Piezas": plástico de juguete limpio, colores saturados y claros
+const PAL_PIEZAS = {
+  ...PAL_A,
+  cielo: '#D3ECF5', niebla: '#DCEFF5',
+  pasto: '#71C268', pasto2: '#5DAF57', tierra: '#D29A62', arena: '#F2DDAF',
+  baseLado: '#3E9C6B', baseLado2: '#2B7A52',
+  pared: '#FFF8EC', pared2: '#FCE7C2', pared3: '#FDEFD6', pared4: '#F6DED0', zocalo: '#10B981',
+  teja: '#E4572E', teja2: '#C2441F', palma: '#F0B847', horcon: '#B06F38', madera: '#C98B4B', maderaOsc: '#7A4A26',
+  piso: '#F08C5A', patio: '#F4D79B', techoVerde: '#4FC17A',
+  bosque: '#2F9A5E', bosque2: '#3FB26C', bosque3: '#5BC47C', bosque4: '#86D88E',
+  tajiboAm: '#FFC93C', tajiboRo: '#FF87BE', toboTronco: '#9CC27A', toboFlor: '#FF9CC9', motacu: '#46B058',
+  rio: '#48BEDF', rioOsc: '#2D9CC0', calle: '#7E8794', cantero: '#71C268'
+};
+// Tramo 3 "Mundo real": tonos naturales y algo apagados, tinta marrón oscura
+const PAL_REAL = {
+  ...PAL_A,
+  cielo: '#BCD2DD', niebla: '#C7D5DA',
+  pasto: '#7FA65A', pasto2: '#6A9150', tierra: '#A98458', tierraClara: '#BC9668', arena: '#D9C29A',
+  baseLado: '#5A4330', baseLado2: '#3F2F22',
+  pared: '#EDE3D0', pared2: '#E2CFAE', pared3: '#E9DBC3', pared4: '#DCCBB8', zocalo: '#9C4A35',
+  teja: '#A9503A', teja2: '#8C3F2D', palma: '#B7955A', horcon: '#5A3B26', madera: '#6D4A31', maderaOsc: '#3E2A1C',
+  piso: '#A86448', patio: '#CDB38A', techoVerde: '#5E8F4E',
+  bosque: '#2C5B3E', bosque2: '#3A6E49', bosque3: '#4C8252', bosque4: '#6C9A5C',
+  tajiboAm: '#E6B32E', tajiboRo: '#D97AA6', toboTronco: '#8E9C6A', toboFlor: '#DE97B9', motacu: '#577F3D',
+  rio: '#5D9DB0', rioOsc: '#3F7E92', calle: '#5F5C59', cantero: '#7FA65A', ladrillo: '#9E5640',
+  edificio: '#DDD6C9', tinta: '#1C1712'
+};
+
 // C: 32 colores. La luz horneada de A se "encaja" en la paleta más cercana.
 const PALETA_C = [
   '#0B0B0F', '#2B2420', '#4E3524', '#6E4A2E', '#8A5A35', '#B08257', '#C9A06F', '#E9CFA3',
@@ -90,8 +153,20 @@ function azar(semilla) {
 
 export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   const E = String(estilo).toUpperCase();
-  const P = E === 'B' ? PAL_B : PAL_A;
-  const esB = E === 'B', esC = E === 'C';
+  const P = { B: PAL_B, BLOQUES: PAL_BLOQUES, PIEZAS: PAL_PIEZAS, REAL: PAL_REAL }[E] || PAL_A;
+  const esC = E === 'C';
+  const voxel = E === 'BLOQUES', redondo = E === 'PIEZAS', real = E === 'REAL';
+  const esB = E === 'B' || real;           // familia "dibujo con contorno"
+  const patrones = E === 'B';              // guardas genéricas (solo B)
+  const grosorContorno = real ? 0.028 : 0.045;
+  // proporción en "cabezas" según edad del personaje
+  const CABEZAS = {
+    A: { nino: 3.4, teen: 4.2, adulto: 4.5 }, C: { nino: 3.4, teen: 4.2, adulto: 4.5 },
+    B: { nino: 4.6, teen: 5.8, adulto: 6.3 },
+    BLOQUES: { nino: 2.7, teen: 3.1, adulto: 3.3 },
+    PIEZAS: { nino: 3.5, teen: 4.0, adulto: 4.4 },
+    REAL: { nino: 5.2, teen: 6.6, adulto: 7.0 }
+  }[E] || { nino: 3.4, teen: 4.2, adulto: 4.5 };
   const rnd = azar(tipo === 'mapa' ? 77 : 2026);
   const R = (a, b) => a + (b - a) * rnd();
 
@@ -101,11 +176,36 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   const paletaC = PALETA_C.map(h => new THREE.Color(h));
   const L = new THREE.Vector3(-0.55, 0.78, 0.32).normalize(); // sol de tarde, desde el oeste
   const tmpN = new THREE.Vector3(), tmpC = new THREE.Color();
+  const MEDIO = L.clone().add(new THREE.Vector3(0.35, 0.6, 0.72).normalize()).normalize(); // luz + vista típica
 
   // Luz horneada por cara. y01 = altura relativa dentro de la pieza (oclusión falsa).
   function hornear(base, n, y01, op, salida) {
     salida.copy(base);
     if (op.brillo) return salida;
+    if (voxel) {
+      // caras de cubo: arriba clara, laterales en dos tonos, abajo oscura
+      const k = n.y > 0.6 ? 1.0 : n.y < -0.6 ? 0.55 : (n.x * L.x + n.z * L.z > 0 ? 0.86 : 0.7);
+      const ao = op.ao === false ? 1 : 0.84 + 0.16 * y01;
+      return salida.multiplyScalar(k * ao);
+    }
+    if (redondo) {
+      // plástico: sombreado suave + brillo especular horneado
+      const d = Math.max(0, n.dot(L));
+      const k = 0.6 + 0.44 * d + 0.08 * Math.max(0, n.y);
+      const ao = op.ao === false ? 1 : 0.8 + 0.2 * y01;
+      const sp = 0.3 * Math.pow(Math.max(0, n.dot(MEDIO)), 30);
+      salida.multiplyScalar(k * ao);
+      salida.r += sp; salida.g += sp; salida.b += sp;
+      return salida;
+    }
+    if (real) {
+      // tres tonos, sombra fría
+      const d = n.dot(L);
+      const k = d > 0.45 || n.y > 0.85 ? 1.0 : d > 0.02 ? 0.84 : 0.68;
+      if (k < 1) { salida.r *= 0.96; salida.b *= 1.04; }
+      const ao = op.ao === false ? 1 : 0.86 + 0.14 * y01;
+      return salida.multiplyScalar(k * ao);
+    }
     if (esB) {
       const d = n.dot(L);
       const luz = d > 0.18 || n.y > 0.85;
@@ -138,14 +238,15 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   class Lote {
     constructor() { this.p = []; this.c = []; }
     add(geo, color, m, op = {}) {
+      if (geo === G.caja && G.cajaRedonda && m.getMaxScaleOnAxis() < 3.2) geo = G.cajaRedonda;
       const g = geo.index ? geo.toNonIndexed() : geo.clone();
       g.applyMatrix4(m);
-      g.computeVertexNormals();
+      if (!(redondo && g.attributes.normal && geo.userData.suave)) g.computeVertexNormals();
       const pos = g.attributes.position.array, nor = g.attributes.normal.array;
       let y0 = Infinity, y1 = -Infinity;
       for (let i = 1; i < pos.length; i += 3) { y0 = Math.min(y0, pos[i]); y1 = Math.max(y1, pos[i]); }
       const base = col(color).clone();
-      if (!esB && !op.brillo && op.variar !== false) base.multiplyScalar(0.95 + rnd() * 0.1);
+      if (!esB && !voxel && !op.brillo && op.variar !== false) base.multiplyScalar(0.95 + rnd() * 0.1);
       for (let i = 0; i < pos.length; i += 3) {
         tmpN.set(nor[i], nor[i + 1], nor[i + 2]);
         const y01 = y1 - y0 < 1e-4 ? 1 : (pos[i + 1] - y0) / (y1 - y0);
@@ -200,22 +301,59 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     return new THREE.Mesh(g, m);
   }
 
-  // --- geometrías base (facetadas en A y C; algo más redondas en B)
-  const seg = esB ? 10 : 7;
+  // --- geometrías base (facetadas en A y C; redondas en B, PIEZAS y REAL; cubos en BLOQUES)
+  const seg = redondo ? 12 : esB ? 10 : 7;
+  const suave = g => { g.userData.suave = true; return g; };
   const G = {
     caja: new THREE.BoxGeometry(1, 1, 1),
-    cil: new THREE.CylinderGeometry(0.5, 0.5, 1, seg),
+    cil: suave(new THREE.CylinderGeometry(0.5, 0.5, 1, seg)),
     cil4: new THREE.CylinderGeometry(0.5, 0.5, 1, 6),
-    cono: new THREE.ConeGeometry(0.5, 1, seg),
+    cono: suave(new THREE.ConeGeometry(0.5, 1, seg)),
     piramide: new THREE.ConeGeometry(0.7071, 1, 4).rotateY(Math.PI / 4),
-    bola: esB ? new THREE.SphereGeometry(0.5, 10, 7) : new THREE.IcosahedronGeometry(0.5, 1),
-    bolita: esB ? new THREE.SphereGeometry(0.5, 7, 5) : new THREE.IcosahedronGeometry(0.5, 0),
-    disco: new THREE.CylinderGeometry(0.5, 0.5, 1, esB ? 28 : 20),
+    bola: redondo ? suave(new THREE.SphereGeometry(0.5, 12, 8)) : esB ? new THREE.SphereGeometry(0.5, 10, 7) : new THREE.IcosahedronGeometry(0.5, 1),
+    bolita: redondo ? suave(new THREE.SphereGeometry(0.5, 8, 6)) : esB ? new THREE.SphereGeometry(0.5, 7, 5) : new THREE.IcosahedronGeometry(0.5, 0),
+    disco: suave(new THREE.CylinderGeometry(0.5, 0.5, 1, redondo ? 32 : esB ? 28 : 20)),
     prisma: prisma(),
-    toborochi: new THREE.LatheGeometry([
+    toborochi: suave(new THREE.LatheGeometry([
       [0.30, 0], [0.42, 0.08], [0.52, 0.28], [0.54, 0.45], [0.46, 0.62], [0.30, 0.78], [0.2, 0.9], [0.18, 1]
-    ].map(([x, y]) => new THREE.Vector2(x, y)), seg)
+    ].map(([x, y]) => new THREE.Vector2(x, y)), seg))
   };
+  if (redondo) G.cajaRedonda = cajaRedonda(0.14);
+  if (voxel) {
+    // todo se arma con cubos: bolas, cilindros y conos se vuelven bloques o escalones
+    G.cil = G.caja; G.bola = G.caja; G.bolita = G.caja; G.disco = new THREE.CylinderGeometry(0.5, 0.5, 1, 8).rotateY(Math.PI / 8);
+    G.cono = escalones([[1, 0.34], [0.66, 0.33], [0.33, 0.33]]);
+    G.piramide = G.cono;
+    G.prisma = escalonesZ([[1, 0.34], [0.64, 0.33], [0.28, 0.33]]);
+    G.toborochi = escalones([[0.62, 0.2], [1.0, 0.45], [0.6, 0.2], [0.36, 0.15]]);
+  }
+  // pila de cajas centradas (ancho relativo, alto relativo), de abajo hacia arriba
+  function escalones(capas) {
+    const partes = []; let y = 0;
+    for (const [w, h] of capas) { partes.push(new THREE.BoxGeometry(w, h, w).translate(0, y + h / 2, 0)); y += h; }
+    return unir(partes);
+  }
+  function escalonesZ(capas) { // igual pero solo se angosta en x (techo a dos aguas en bloques)
+    const partes = []; let y = 0;
+    for (const [w, h] of capas) { partes.push(new THREE.BoxGeometry(w, h, 1).translate(0, y + h / 2, 0)); y += h; }
+    return unir(partes);
+  }
+  function unir(partes) {
+    const pos = [];
+    for (const p of partes) pos.push(...p.toNonIndexed().attributes.position.array);
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    return g;
+  }
+  // caja de cantos redondeados (1×1×1), para el estilo PIEZAS
+  function cajaRedonda(r) {
+    const a = 0.5 - r, f = new THREE.Shape();
+    f.moveTo(-a, -a); f.lineTo(a, -a); f.lineTo(a, a); f.lineTo(-a, a); f.lineTo(-a, -a);
+    const g = new THREE.ExtrudeGeometry(f, { depth: 1 - 2 * r, bevelEnabled: true, bevelSize: r, bevelThickness: r, bevelSegments: 2, curveSegments: 1 });
+    g.translate(0, 0, -(1 - 2 * r) / 2);
+    g.deleteAttribute('uv');
+    return g;
+  }
   function prisma() {
     // sección triangular (-.5,0) (.5,0) (0,1), a lo largo de z
     const v = [[-0.5, 0, 0.5], [0.5, 0, 0.5], [0, 1, 0.5], [-0.5, 0, -0.5], [0.5, 0, -0.5], [0, 1, -0.5]];
@@ -239,6 +377,14 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   }
   // Techo a cuatro aguas (w ancho en x, l largo en z, h alto)
   function techoHip(w, l, h) {
+    if (voxel) {
+      const partes = [], n = 3;
+      for (let i = 0; i < n; i++) {
+        const k = 1 - i / n;
+        partes.push(new THREE.BoxGeometry(w * k, h / n, Math.max(l - w * (1 - k), l * 0.2)).translate(0, (i + 0.5) * h / n, 0));
+      }
+      return unir(partes);
+    }
     const r = Math.max(0, (l - w) / 2);
     const v = [[-w / 2, 0, -l / 2], [w / 2, 0, -l / 2], [w / 2, 0, l / 2], [-w / 2, 0, l / 2], [0, h, -r], [0, h, r]];
     if (r === 0) return convexo([...v.slice(0, 4), [0, h, 0]], [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4], [0, 1, 2], [0, 2, 3]]);
@@ -258,7 +404,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   }
 
   // Solo el "kit" de piezas (lo usa la prueba de construcción)
-  if (tipo === 'kit') return { P, G, Lote, M, conBase, techoHip, contorno, rnd, esB, esC };
+  if (tipo === 'kit') return { P, G, Lote, M, conBase, techoHip, contorno, rnd, esB, esC, voxel, redondo, real, grosorContorno };
 
   const solido = new Lote();   // con contorno en B
   const plano = new Lote();    // suelo, calles, agua: sin contorno
@@ -356,7 +502,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
 
   // --- personas (proporción en "cabezas": A/C más tiernas, B más juveniles)
   function persona(x, z, ry, o) {
-    const cab = esB ? o.cabezasB : o.cabezasA;
+    const cab = CABEZAS[o.edad] || 4;
     const H = o.altura, h = H / cab;
     const b = conBase(M(x, 0, z, 1, 1, 1, ry));
     const pierna = (H - h) * 0.46, torso = (H - h) * 0.54;
@@ -412,6 +558,15 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     // ala sur con zaguán (entrada)
     b(solido, G.caja, P.pared, -(E + 1) / 2 - 0.0, Hw / 2, E - D / 2, E - 1, Hw, D);
     b(solido, G.caja, P.pared, (E + 1) / 2, Hw / 2, E - D / 2, E - 1, Hw, D);
+    if (redondo) {
+      // PIEZAS: las paredes se ven armadas con piezas que encastran (ranuras horizontales)
+      for (const yy of [0.85, 1.7]) {
+        b(solido, G.caja, P.pared2, 0, yy, -E - 0.03, 2 * E + 0.06, 0.07, 0.05, 0, 0, 0, { ao: false });
+        b(solido, G.caja, P.pared2, -E - 0.03, yy, 0, 0.05, 0.07, 2 * E + 0.06, 0, 0, 0, { ao: false });
+        b(solido, G.caja, P.pared2, E + 0.03, yy, 0, 0.05, 0.07, 2 * E + 0.06, 0, 0, 0, { ao: false });
+        b(solido, G.caja, P.pared2, 0, yy, E + 0.03, 2 * E + 0.06, 0.07, 0.05, 0, 0, 0, { ao: false });
+      }
+    }
     // zócalos de color en las paredes exteriores
     b(solido, G.caja, P.zocalo, 0, 0.22, -E - 0.02, 2 * E + 0.04, 0.44, 0.04, 0, 0, 0, { ao: false });
     b(solido, G.caja, P.zocalo, -E - 0.02, 0.22, 0, 0.04, 0.44, 2 * E, 0, 0, 0, { ao: false });
@@ -499,7 +654,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     const b = conBase(base);
     b(solido, G.cil, P.piedra, 0, 0.15, 0, 4.6, 0.3, 2.4);
     b(solido, G.cil, P.piedra, 0, 0.36, 0, 3.6, 0.14, 1.8);
-    if (esB) {
+    if (patrones) {
       for (const sx of [-1.75, 1.75]) b(solido, G.cil, P.horcon, sx, 1.6, 0, 0.32, 3.0, 0.32);
     } else {
       for (const sx of [-1.45, 1.45]) {
@@ -518,13 +673,13 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       }
     }
     // superficie del portal: una "ventana" a otro colegio
-    const tex = texturaPortal(THREE, P, esB);
-    const disco = new THREE.Mesh(new THREE.CircleGeometry(esB ? 1.55 : 1.3, esB ? 40 : 24),
+    const tex = texturaPortal(THREE, P, patrones);
+    const disco = new THREE.Mesh(new THREE.CircleGeometry(patrones ? 1.55 : 1.3, voxel ? 8 : patrones ? 40 : 24),
       new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.95, depthWrite: false, side: THREE.DoubleSide }));
-    disco.applyMatrix4(base.clone().multiply(M(0, esB ? 1.9 : 1.75, 0, 1, esB ? 1 : 1.25, 1)));
+    disco.applyMatrix4(base.clone().multiply(M(0, patrones ? 1.9 : 1.75, 0, 1, patrones ? 1 : 1.25, 1)));
     escena.add(disco);
     animados.push(t => { tex.offset.x = (t * 0.03) % 1; disco.material.opacity = 0.82 + 0.13 * Math.sin(t * 2); });
-    if (esB) {
+    if (patrones) {
       // aro con guarda tejida que gira (patrón genérico, a co-diseñar)
       const guarda = texturaGuarda(THREE, P);
       guarda.repeat.set(10, 1);
@@ -595,7 +750,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     }
   }
 
-  function etiqueta(texto, pos, color = '#10B981', maxDist = Infinity) {
+  function etiqueta(texto, pos, color = '#10B981', maxDist = Infinity, radioObjetivo = Infinity) {
     const c = document.createElement('canvas');
     const g = c.getContext('2d');
     const fuente = '600 44px Inter, system-ui, sans-serif';
@@ -615,25 +770,147 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     sp.userData.ancho = w / 84;
     sp.scale.set(w / 84 * 0.05, 0.05, 1);
     sp.position.copy(pos);
-    sp.userData.maxDist = maxDist;
+    sp.userData.maxDist = maxDist; sp.userData.radioObjetivo = radioObjetivo;
     etiquetas.add(sp);
     return sp;
   }
 
   // ============================================================ armar
   const RB = 44; // radio del tablero
-  let vistas;
-  if (tipo === 'mapa') vistas = armarMapa(); else vistas = armarEscena();
 
   function tablero(radio, pastoColor) {
     plano.add(G.disco, pastoColor, M(0, -0.15, 0, radio * 2, 0.3, radio * 2), { ao: false, variar: false });
+    if (redondo) {
+      // PIEZAS: el suelo es una base de placas que encastran (juntas suaves, sin pernos)
+      for (let k = -radio + 4; k < radio; k += 4) {
+        const c = Math.sqrt(Math.max(0, radio * radio - k * k)) * 2 - 0.6;
+        plano.add(G.caja, P.pasto2, M(k, 0.012, 0, 0.1, 0.02, c), { ao: false, variar: false });
+        plano.add(G.caja, P.pasto2, M(0, 0.012, k, c, 0.02, 0.1), { ao: false, variar: false });
+      }
+    }
     solido.add(G.disco, P.baseLado, M(0, -1.8, 0, radio * 2 + 0.3, 3.0, radio * 2 + 0.3), { variar: false });
     plano.add(G.disco, P.baseLado2, M(0, -3.4, 0, radio * 2 + 1.6, 0.4, radio * 2 + 1.6), { variar: false });
   }
 
+  // --- hitos y obras públicas (la ciudad la construyen los colegios)
+  function cristo(x, z, s = 1) {
+    // monumento con brazos abiertos sobre una rotonda (forma genérica)
+    const b = conBase(M(x, 0, z, s, s, s, 0.3));
+    plano.add(G.disco, P.calle, M(x, 0.03, z, 8 * s, 0.05, 8 * s), { ao: false });
+    plano.add(G.disco, P.cantero, M(x, 0.06, z, 6 * s, 0.05, 6 * s), { ao: false });
+    b(solido, G.cil, P.piedra, 0, 0.5, 0, 2.6, 1.0, 2.6);
+    b(solido, G.caja, P.piedra, 0, 2.6, 0, 1.4, 3.4, 1.4);
+    b(solido, G.caja, P.blanco, 0, 4.5, 0, 1.6, 0.4, 1.6);
+    b(solido, G.cono, P.blanco, 0, 4.7, 0, 1.4, 2.6, 1.0);
+    b(solido, G.caja, P.blanco, 0, 6.85, 0, 0.62, 1.5, 0.5);
+    b(solido, G.caja, P.blanco, 0, 7.25, 0, 3.6, 0.36, 0.36);
+    b(solido, G.bolita, P.blanco, 0, 8.0, 0, 0.6, 0.7, 0.6);
+    sombra(x, z, 2.2 * s, 0.35);
+  }
+  function grua(x, z, ry) {
+    const b = conBase(M(x, 0, z, 1, 1, 1, ry));
+    b(solido, G.caja, P.piedra, 0, 0.3, 0, 1.6, 0.6, 1.6);
+    for (let i = 0; i < 7; i++) b(solido, G.caja, P.amarillo, 0, 0.9 + i * 1.2, 0, 0.55, 1.1, 0.55);
+    b(solido, G.caja, P.amarillo, 2.4, 9.2, 0, 7.5, 0.4, 0.45);
+    b(solido, G.caja, P.oscuro, -1.8, 9.0, 0, 1.2, 0.9, 0.9);
+    b(solido, G.caja, P.gris, 4.6, 7.2, 0, 0.04, 3.6, 0.04, 0, 0, 0, { ao: false });
+    b(brillo, G.caja, P.esmeralda, 4.6, 5.2, 0, 0.9, 0.5, 0.9, 0, 0, 0, { brillo: true }); // carga: material de conocimiento
+    sombra(x, z, 1.4, 0.3);
+  }
+  function cartel(x, z, ry, lineas, progreso) {
+    const base = M(x, 0, z, 1, 1, 1, ry);
+    const b = conBase(base);
+    for (const sx of [-1.7, 1.7]) b(solido, G.cil, P.madera, sx, 1.1, 0, 0.16, 2.2, 0.16);
+    b(solido, G.caja, P.madera, 0, 2.3, -0.04, 3.9, 1.95, 0.1);
+    const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+    const g = c.getContext('2d');
+    g.fillStyle = '#FFF8EC'; g.fillRect(0, 0, 512, 256);
+    g.fillStyle = '#10B981'; g.fillRect(0, 0, 512, 56);
+    g.fillStyle = '#00140D'; g.font = '700 34px "Space Grotesk", Inter, sans-serif'; g.textBaseline = 'middle';
+    g.fillText(lineas[0], 18, 30);
+    g.fillStyle = '#1F2937'; g.font = '600 24px Inter, sans-serif';
+    lineas.slice(1).forEach((t, i) => g.fillText(t, 18, 86 + i * 32));
+    if (progreso != null) {
+      g.fillStyle = '#E5E7EB'; g.fillRect(18, 214, 476, 24);
+      g.fillStyle = '#10B981'; g.fillRect(18, 214, 476 * progreso, 24);
+      g.fillStyle = '#00140D'; g.font = '700 18px Inter, sans-serif'; g.fillText(Math.round(progreso * 100) + '%', 26, 227);
+    }
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+    const pl = new THREE.Mesh(new THREE.PlaneGeometry(3.7, 1.85), new THREE.MeshBasicMaterial({ map: t }));
+    pl.applyMatrix4(base.clone().multiply(M(0, 2.3, 0.02)));
+    acentos.add(pl);
+  }
+  function cerco(x0, z0, x1, z1) {
+    const L2 = Math.hypot(x1 - x0, z1 - z0), n = Math.max(1, Math.round(L2 / 1.2)), ry = Math.atan2(x1 - x0, z1 - z0);
+    for (let i = 0; i <= n; i++) { const t = i / n; solido.add(G.caja, P.madera, M(x0 + (x1 - x0) * t, 0.5, z0 + (z1 - z0) * t, 0.14, 1.0, 0.14)); }
+    for (const y of [0.45, 0.85]) solido.add(G.caja, P.madera, M((x0 + x1) / 2, y, (z0 + z1) / 2, 0.06, 0.08, L2, ry));
+  }
+  // Zoológico de la ciudad, en construcción: la obra que eligieron los cursos
+  function zoologico(cx, cz, s = 1, conCartel = true) {
+    const b = (lote, geo, c, x, y, z, ...r) => lote.add(geo, c, M(cx + x * s, y * s, cz + z * s, ...r.slice(0, 3).map(v => v * s), ...r.slice(3)), r[6]);
+    b(plano, G.caja, P.tierraClara, 0, 0.03, 0, 17, 0.04, 13, 0, 0, 0, { ao: false });
+    // recinto 1 (terminado): laguna con isla, motacú y cerco
+    b(plano, G.caja, P.pasto2, -4.5, 0.06, -3, 7, 0.04, 5.5, 0, 0, 0, { ao: false });
+    b(plano, G.disco, P.rio, -5, 0.09, -3.2, 4.2, 0.04, 3.0, 0, 0, 0, { ao: false });
+    b(plano, G.disco, P.pasto, -5.3, 0.12, -3.3, 1.4, 0.05, 1.1, 0, 0, 0, { ao: false });
+    if (s > 0.8) { motacu(cx + (-2.2) * s, cz + (-4.6) * s, 0.7 * s); tajibo(cx + (-7.0) * s, cz + (-1.4) * s, 0.7 * s, P.tajiboAm); }
+    if (s > 0.8) { cerco(cx - 8 * s, cz - 5.75 * s, cx - 1 * s, cz - 5.75 * s); cerco(cx - 1 * s, cz - 5.75 * s, cx - 1 * s, cz - 0.25 * s); cerco(cx - 8 * s, cz - 0.25 * s, cx - 1 * s, cz - 0.25 * s); }
+    // recinto 2 (a medias): postes y material apilado
+    b(plano, G.caja, P.pasto2, 4.2, 0.06, -3, 6.5, 0.04, 5.5, 0, 0, 0, { ao: false });
+    if (s > 0.8) { cerco(cx + 1 * s, cz - 5.75 * s, cx + 7.5 * s, cz - 5.75 * s); }
+    for (let i = 0; i < 3; i++) for (let k = 0; k < 3 - i; k++) b(brillo, G.caja, k % 2 ? P.esmeraldaClaro : P.esmeralda, 3 + k * 0.75 + i * 0.37, 0.3 + i * 0.55, 0.2, 0.7, 0.5, 0.7, 0, 0, 0, { brillo: true });
+    // portal de entrada a medio construir (la parte que falta, en fantasma)
+    for (const sx of [-2, 2]) { b(solido, G.caja, P.ladrillo, sx, 1.5, 5.6, 0.8, 3.0, 0.8); b(solido, G.caja, P.piedra, sx, 3.1, 5.6, 1.0, 0.2, 1.0); }
+    fantasmas.push(M(cx, 3.6 * s, cz + 5.6 * s, 5.2 * s, 0.8 * s, 1.0 * s));
+    fantasmas.push(M(cx + 4.2 * s, 1.0 * s, cz - 3 * s, 6.3 * s, 2.0 * s, 5.3 * s));
+    // andamio + grúa
+    for (const [px, pz] of [[2.6, 4.6], [2.6, 6.6], [3.8, 4.6], [3.8, 6.6]]) b(solido, G.caja, P.madera, px, 1.8, pz, 0.08, 3.6, 0.08);
+    for (const yy of [1.2, 2.4, 3.4]) b(solido, G.caja, P.madera, 3.2, yy, 5.6, 1.3, 0.08, 2.2);
+    if (s > 0.8) grua(cx + 6.5 * s, cz + 3.5 * s, -0.6);
+    if (conCartel) cartel(cx - 5.6 * s, cz + 6.8 * s, 0.35, ['ZOOLÓGICO DE LA CIUDAD', 'Lo construyen: Mi colegio · Col. Los Tajibos', 'U.E. El Motacú · Col. Toborochi', 'Obra elegida por los cursos'], 0.62);
+    sombra(cx, cz, 0, 0);
+  }
+  function parque(cx, cz, s = 1) {
+    plano.add(G.disco, P.pasto2, M(cx, 0.04, cz, 11 * s, 0.04, 11 * s), { ao: false });
+    plano.add(G.disco, P.patio, M(cx, 0.06, cz, 7.4 * s, 0.04, 7.4 * s), { ao: false });
+    plano.add(G.disco, P.pasto2, M(cx, 0.08, cz, 5.6 * s, 0.04, 5.6 * s), { ao: false });
+    solido.add(G.cil, P.piedra, M(cx, 0.35, cz, 2.2 * s, 0.5 * s, 2.2 * s));
+    plano.add(G.disco, P.rio, M(cx, 0.62 * s, cz, 1.8 * s, 0.03, 1.8 * s), { ao: false });
+    brillo.add(G.cil, P.esmeraldaClaro, M(cx, 1.0 * s, cz, 0.25 * s, 0.9 * s, 0.25 * s), { brillo: true });
+    for (let i = 0; i < 6; i++) {
+      const a = i / 6 * Math.PI * 2 + 0.3;
+      if (i % 2) tajibo(cx + Math.cos(a) * 6 * s, cz + Math.sin(a) * 6 * s, 0.75 * s, i % 4 === 1 ? P.tajiboAm : P.tajiboRo);
+      else toborochi(cx + Math.cos(a) * 6 * s, cz + Math.sin(a) * 6 * s, 0.6 * s);
+      solido.add(G.caja, P.madera, M(cx + Math.cos(a + 0.5) * 3.2 * s, 0.3, cz + Math.sin(a + 0.5) * 3.2 * s, 1.2 * s, 0.12, 0.4 * s, -a));
+    }
+  }
+  // un árbol cualquiera de la flora cruceña (para áreas verdes libres)
+  function arbolSuelto(x, z) {
+    const t = rnd();
+    if (t < 0.22) tajibo(x, z, R(0.75, 1.0), P.tajiboAm);
+    else if (t < 0.34) tajibo(x, z, R(0.75, 0.95), P.tajiboRo);
+    else if (t < 0.46) toborochi(x, z, R(0.7, 0.95));
+    else if (t < 0.66) motacu(x, z, R(0.7, 1.0));
+    else arbolBosque(x, z, R(0.8, 1.15));
+  }
+
+  // personajes según el estilo: profes siempre; alumnos del tramo (o los dos en A/B/C)
+  const PERSONAS = {
+    taji: { edad: 'adulto', altura: 1.75, piel: P.piel4, pelo: P.pelo, ropa: P.ropaTaji, pantalon: P.azulUniforme, mono: true, flor: true, ia: true },
+    jochi: { edad: 'adulto', altura: 1.82, piel: P.piel2, pelo: P.pelo2, ropa: P.blanco, chaleco: P.ropaJochi, pantalon: P.maderaOsc, anteojos: true, ia: true },
+    chico: { edad: 'nino', altura: 1.05, piel: P.piel1, pelo: P.pelo, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, colita: true, mochila: P.tajiboRo, ojos: 0.2 },
+    medio: { edad: 'nino', altura: 1.3, piel: P.piel3, pelo: P.pelo2, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, mochila: P.azul, ojos: 0.18 },
+    grande: { edad: 'teen', altura: 1.62, piel: P.piel1, pelo: P.pelo, ropa: P.esmeralda, pantalon: P.azulUniforme, mochila: P.oscuro, auriculares: true }
+  };
+  const ALUMNOS = {
+    BLOQUES: [['chico', 'Alumna de 2.º', '#F2C230']],
+    PIEZAS: [['medio', 'Alumno de 5.º', '#10B981']],
+    REAL: [['grande', 'Alumna de 3.º de secundaria', '#5FB7C9']]
+  }[E] || [['chico', 'Primaria', '#E68AB8'], ['grande', 'Secundaria', '#5FB7C9']];
+
   function armarEscena() {
     tablero(RB, P.pasto);
-    const C = new THREE.Vector2(0, 32); // centro de la ciudad (plaza principal)
+    const C = new THREE.Vector2(0, 32); // centro de la ciudad (plaza 24 de Septiembre)
     const anillos = [5, 9.5, 14.5, 20];
     const dentro = (x, z, m = 1.5) => Math.hypot(x, z) < RB - m;
     const rioPts = [[-10, -44], [-17, -30], [-27, -17], [-31, -6], [-40, 6], [-46, 12]];
@@ -646,14 +923,13 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       }
       return d;
     };
-
     // --- río (como el Piraí) con playas de arena
     for (let i = 0; i < rioPts.length - 1; i++) {
       recta(...rioPts[i], ...rioPts[i + 1], 5.2, P.arena, (x, z) => dentro(x, z, 0.6), 0.02);
       recta(...rioPts[i], ...rioPts[i + 1], 3.0, P.rio, (x, z) => dentro(x, z, 0.6), 0.05);
     }
 
-    // --- ciudad por anillos (al sur)
+    // --- la ciudad empieza VACÍA: anillos, avenidas y solo los hitos
     const enCiudad = (x, z) => z > 11.6 && dentro(x, z);
     plano.add(G.caja, P.cantero, M(C.x, 0.04, C.y, 7, 0.06, 7), { ao: false });
     plano.add(G.caja, P.patio, M(C.x, 0.07, C.y, 7.2, 0.02, 0.8), { ao: false });
@@ -661,6 +937,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     catedral(C.x, C.y + 5.6, Math.PI);
     for (const [px, pz] of [[-2.2, -2.2], [2.2, -2.2], [-2.2, 2.2], [2.2, 2.2]]) arbolBosque(C.x + px, C.y + pz, 0.5, P.bosque3);
     toborochi(C.x - 1.0, C.y - 0.6, 0.5);
+    etiqueta('Plaza 24 de Septiembre', new THREE.Vector3(C.x, 6, C.y + 2), '#F2C230', 60, 26);
     for (const r of anillos) {
       arco(C.x, C.y, r, 1.3, P.calle, enCiudad);
       if (r > 6) arco(C.x, C.y, r, 0.35, P.cantero, enCiudad, plano, 0.09, 0.04);
@@ -669,116 +946,73 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       const a = -Math.PI / 2 + (i - 3.5) * 0.42;
       recta(C.x + Math.cos(a) * 3.6, C.y + Math.sin(a) * 3.6, C.x + Math.cos(a) * 21, C.y + Math.sin(a) * 21, 0.9, P.calle, enCiudad, 0.06);
     }
-    const ocupado = [];
-    const libre = (x, z, r) => ocupado.every(([ox, oz, or]) => Math.hypot(x - ox, z - oz) > r + or);
-    for (let k = 0; k < anillos.length - 1; k++) {
-      const r0 = anillos[k] + 1.4, r1 = anillos[k + 1] - 1.4;
-      for (let r = r0; r <= r1 + 0.01; r += Math.max(1.6, (r1 - r0) / 2)) {
-        const paso = 2.1 / r;
-        for (let a = 0; a < Math.PI * 2; a += paso) {
-          const x = C.x + Math.cos(a) * r + R(-0.3, 0.3), z = C.y + Math.sin(a) * r + R(-0.3, 0.3);
-          if (!enCiudad(x, z) || z < 13 || (Math.abs(x) < 7 && z < 18.5) || (Math.abs(x) < 4.5 && z < 23)) continue;
-          // no tapar las avenidas radiales
-          const ang = Math.atan2(z - C.y, x - C.x);
-          let cerca = false;
-          for (let i = 0; i < 8; i++) { const av = -Math.PI / 2 + (i - 3.5) * 0.42; if (Math.abs(Math.sin(ang - av)) * r < 1.0 && Math.cos(ang - av) > 0) cerca = true; }
-          if (cerca || !libre(x, z, 0.9) || rnd() < 0.12) continue;
-          ocupado.push([x, z, 0.9]);
-          const ry = -a + Math.PI / 2;
-          // casco viejo bajo, con galerías; los edificios altos, del 2do anillo hacia afuera
-          if (k === 1 && rnd() < 0.3) edificio(x, z, ry, R(1.4, 1.8), R(1.4, 1.8), Math.floor(R(4, 9)));
-          else if (k === 2 && rnd() < 0.12) edificio(x, z, ry, R(1.4, 1.7), R(1.3, 1.6), Math.floor(R(2, 5)));
-          else if (k === 0) casita(x, z, ry, R(1.4, 1.8), R(1.2, 1.5), R(1.1, 1.4), [P.pared, P.pared2, P.pared3, P.pared4][Math.floor(rnd() * 4)], true);
-          else if (rnd() < 0.18) arbolBosque(x, z, R(0.5, 0.7));
-          else casita(x, z, ry, R(1.3, 1.8), R(1.2, 1.6), R(1.0, 1.4), [P.pared, P.pared2, P.pared3, P.pared4][Math.floor(rnd() * 4)], k > 0 && rnd() < 0.5);
-        }
-      }
-    }
+    // avenida al norte con el Cristo en su rotonda
+    recta(-3.5, -9.5, -3.5, -42, 1.2, P.calle, (x, z) => dentro(x, z, 1) && Math.abs(z + 16) > 4.2, 0.06);
+    recta(-9.2, 0.6, -3.5, -9.5, 1.0, P.patio, null, 0.05);
+    cristo(-3.5, -16, 1);
+    etiqueta('Cristo Redentor', new THREE.Vector3(-3.5, 9.6, -16), '#F2C230', 60, 26);
 
     // --- el colegio (centro de la escena)
     casona(0, 0, 1, 0, { creciendo: true });
     plano.add(G.caja, P.patio, M(0, 0.04, 9.8, 10, 0.04, 3.6), { ao: false }); // plazuela de entrada
     for (const sx of [-4, 4]) { solido.add(G.caja, P.madera, M(sx, 0.25, 10.8, 1.8, 0.12, 0.5)); solido.add(G.caja, P.madera, M(sx, 0.12, 10.8, 0.1, 0.24, 0.4)); }
     recta(-7, 0, -15.5, -1.2, 1.2, P.patio, null, 0.04); // sendero al portal
-    etiqueta('Mi colegio · creciendo', new THREE.Vector3(0, 6.7, -2), '#10B981', 45);
-    etiqueta('Próxima aula', new THREE.Vector3(8.5, 5.0, -5.5), '#7DE3BE', 26);
+    etiqueta('Mi colegio · creciendo', new THREE.Vector3(0, 6.7, -2), '#10B981', 45, 26);
+    etiqueta('Próxima aula', new THREE.Vector3(8.5, 5.0, -5.5), '#7DE3BE', 26, 14);
+
+    // --- obra pública en construcción: el zoológico que eligieron los cursos
+    zoologico(13, -15, 1);
+    etiqueta('Zoológico de la ciudad · en obra', new THREE.Vector3(12, 7.5, -15), '#10B981', 50, 26);
+    // --- obra ya terminada: un parque
+    parque(-15, -25, 1);
+    etiqueta('Parque · terminado', new THREE.Vector3(-15, 6, -25), '#7DE3BE', 50, 26);
+    // --- otros colegios (se visitan por portales)
+    for (const [x, z, ry] of [[27, 6, -0.9], [8, -34, 0.3]]) {
+      plano.add(G.disco, P.esmeralda, M(x, 0.03, z, 14, 0.03, 14), { brillo: true });
+      casona(x, z, 0.6, ry, { simple: true });
+    }
 
     // --- portal de visita
     portal(-17.5, -1.8, Math.PI / 2 - 0.2, 1, 'Portal → Colegio Los Tajibos');
-    persona(-14.6, -0.4, -Math.PI / 2 - 0.35, { altura: 1.6, cabezasA: 4.2, cabezasB: 5.8, piel: P.piel1, pelo: P.pelo, ropa: P.esmeralda, pantalon: P.azulUniforme, mochila: P.oscuro, auriculares: true });
+    persona(-14.6, -0.4, -Math.PI / 2 - 0.35, PERSONAS[ALUMNOS[ALUMNOS.length - 1][0]]);
 
-    // --- personajes en la plazuela: los dos profes (IA) y dos alumnos
-    const yT = persona(-1.7, 10.1, 0.12, { altura: 1.75, cabezasA: 4.5, cabezasB: 6.3, piel: P.piel4, pelo: P.pelo, ropa: P.ropaTaji, pantalon: P.azulUniforme, mono: true, flor: true, ia: true });
-    const yJ = persona(1.8, 10.1, -0.12, { altura: 1.82, cabezasA: 4.5, cabezasB: 6.3, piel: P.piel2, pelo: P.pelo2, ropa: P.blanco, chaleco: P.ropaJochi, pantalon: P.maderaOsc, anteojos: true, ia: true });
-    const yP = persona(-0.55, 11.2, 0.05, { altura: 1.12, cabezasA: 3.4, cabezasB: 4.6, piel: P.piel1, pelo: P.pelo, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, colita: true, mochila: P.tajiboRo, ojos: 0.2 });
-    const yS = persona(0.65, 11.1, -0.05, { altura: 1.6, cabezasA: 4.2, cabezasB: 5.8, piel: P.piel3, pelo: P.pelo, ropa: P.esmeralda, pantalon: P.azulUniforme, mochila: P.oscuro, auriculares: true });
+    // --- personajes en la plazuela: los dos profes (IA) y los alumnos del tramo
+    const yT = persona(-1.7, 10.1, 0.12, PERSONAS.taji);
+    const yJ = persona(1.8, 10.1, -0.12, PERSONAS.jochi);
     etiqueta('Profe Taji (IA)', new THREE.Vector3(-1.95, yT + 0.75, 10.1), '#F2C230', 13);
     etiqueta('Profe Jochi (IA)', new THREE.Vector3(2.05, yJ + 0.75, 10.1), '#10B981', 13);
-    etiqueta('Primaria', new THREE.Vector3(-0.75, yP + 0.25, 11.2), '#E68AB8', 13);
-    etiqueta('Secundaria', new THREE.Vector3(0.95, yS + 0.42, 11.1), '#5FB7C9', 13);
+    ALUMNOS.forEach(([k, nombre, color], i) => {
+      const x = ALUMNOS.length === 1 ? 0.05 : i ? 0.65 : -0.55, z = ALUMNOS.length === 1 ? 11.0 : 11.15;
+      const y = persona(x, z, i ? -0.05 : 0.05, PERSONAS[k]);
+      etiqueta(nombre, new THREE.Vector3(x + (ALUMNOS.length === 1 ? 0 : i ? 0.3 : -0.2), y + 0.3, z), color, 13);
+    });
 
-    // --- bosque: lejos, maduro; cerca del colegio, en restauración (plantines con estaca)
-    const especiales = [];
-    const fijo = (f, x, z, ...a) => { f(x, z, ...a); especiales.push([x, z]); };
-    fijo(toborochi, 5.5, -13.2, 1.05);
-    fijo(tajibo, 13.5, -18.5, 1.15, P.tajiboAm);
-    fijo(tajibo, 8.2, -22.5, 1.1, P.tajiboRo);
-    fijo(tajibo, 19.5, -14.0, 1.0, P.tajiboAm);
-    fijo(motacu, 16.8, -10.8, 0.95);
-    fijo(motacu, 2.0, -18.5, 1.0);
-    fijo(motacu, 22.0, -21.0, 1.05);
-    peta(9.2, -11.6, -0.6); especiales.push([9.2, -11.6]);
-    // parabas posadas y volando
-    paraba(solido, M(13.5 + 0.9, 4.95, -18.5 + 0.3, 1.1, 1.1, 1.1, 0.8), true);
-    paraba(solido, M(13.5 - 0.7, 5.15, -18.5 - 0.2, 1.1, 1.1, 1.1, -1.9), false);
+    // parabas volando sobre la ciudad y una peta junto al río
     const vuelo = new Lote();
     paraba(vuelo, M(2.2, 0, 0, 1.3, 1.3, 1.3, 0, 0, -0.4), true);
     paraba(vuelo, M(-2.4, 0.6, 0.8, 1.3, 1.3, 1.3, Math.PI, 0, 0.4), false);
     const mVuelo = new THREE.Mesh(vuelo.geometria(), new THREE.MeshBasicMaterial({ vertexColors: true, fog: true }));
-    mVuelo.position.set(11, 8.4, -15);
+    mVuelo.position.set(9, 9.5, -12);
     escena.add(mVuelo);
-    animados.push(t => { mVuelo.rotation.y = -t * 0.45; mVuelo.position.y = 8.4 + Math.sin(t * 1.3) * 0.3; });
+    animados.push(t => { mVuelo.rotation.y = -t * 0.45; mVuelo.position.y = 9.5 + Math.sin(t * 1.3) * 0.3; });
     if (esB) mVuelo.add(contorno(mVuelo.geometry, 0.035));
-    etiqueta('Bosque en restauración', new THREE.Vector3(9, 6.5, -11.5), '#10B981', 45);
+    peta(-21, -12, 0.6);
 
-    // frente de restauración al este: suelo quemado con tocones y primeros plantines
-    for (let i = 0; i < 9; i++) {
-      const x = R(26, 37), z = R(-9, 7);
-      if (dentro(x, z, 3)) tocon(x, z);
-    }
-    for (let i = 0; i < 7; i++) {
-      const x = R(25, 34), z = R(-8, 6);
-      if (dentro(x, z, 3)) plantin(x, z, R(0.8, 1.1));
-    }
-    // grilla con temblor para el resto del bosque
-    const paso = 2.9;
-    for (let gx = -RB; gx <= RB; gx += paso) for (let gz = -RB; gz <= 12; gz += paso) {
-      const x = gx + R(-1, 1), z = gz + R(-1, 1);
-      if (!dentro(x, z, 2)) continue;
-      if (z > 10.5) continue;                                         // ciudad
-      if (Math.abs(x) < 11.3 && z > -9.5 && z < 12.5) continue;        // colegio y andamio
-      if (Math.hypot(x + 17.5, z + 1.8) < 5.5) continue;                  // portal
-      if (Math.abs(z + 0.8) < 2.6 && x < -6 && x > -17) continue;       // sendero
-      if (distRio(x, z) < 3.4) continue;
-      if (x > 24 && z > -10 && z < 8) continue;                         // frente quemado
-      if (especiales.some(([ex, ez]) => Math.hypot(x - ex, z - ez) < 2.8)) continue;
-      const d = Math.hypot(x, z);
-      const restauracion = z < -8 && x > -4 && d < 19;                 // lo que ya plantó el colegio
-      if (restauracion) { if (rnd() < 0.75) plantin(x, z, R(0.9, 1.5), rnd() < 0.6); continue; }
-      if (d < 15 && rnd() < 0.55) continue;
-      const tirada = rnd();
-      if (tirada < 0.12) tajibo(x, z, R(0.8, 1.1), P.tajiboAm);
-      else if (tirada < 0.19) tajibo(x, z, R(0.8, 1.05), P.tajiboRo);
-      else if (tirada < 0.25) toborochi(x, z, R(0.7, 1));
-      else if (tirada < 0.43) motacu(x, z, R(0.75, 1.05));
-      else arbolBosque(x, z, R(0.85, 1.25));
+    // --- áreas verdes libres: pocos árboles sueltos (la ciudad todavía está por construirse)
+    const libres = [[25, -5, 7], [0, 1, 11.6], [13, -15, 10.5], [-15, -25, 6.5], [-17.5, -1.8, 5], [-3.5, -16, 4.5], [27, 6, 7], [8, -34, 7], [9.5, 0, 3]];
+    for (let gx = -RB; gx <= RB; gx += 6.2) for (let gz = -RB; gz <= 12; gz += 6.2) {
+      const x = gx + R(-2, 2), z = gz + R(-2, 2);
+      if (!dentro(x, z, 2) || z > 11 || rnd() < 0.35) continue;
+      if (libres.some(([lx, lz, r]) => Math.hypot(x - lx, z - lz) < r)) continue;
+      if (Math.abs(x + 3.5) < 2.5 || Math.abs(z + 0.8) < 2.6 && x < -6 && x > -17) continue;
+      if (distRio(x, z) < 3.6) continue;
+      arbolSuelto(x, z);
     }
 
-    // distancia de la cámara (horizontal) y alturas para cada vista
     return {
       general: { objetivo: [0, 0, 0], desde: [30, 58, 66] },
       colegio: { objetivo: [0.5, 1.4, 1.2], desde: [15, 13.5, 21] },
-      bosque: { objetivo: [9, 2.0, -16], desde: [19, 13, 1] },
+      obra: { objetivo: [12, 2.0, -14.5], desde: [28, 12, -4] },
       portal: { objetivo: [-16.6, 1.9, -1.4], desde: [-9.2, 3.6, 2.6] },
       ciudad: { objetivo: [0, 1, 22], desde: [-20, 22, 5] },
       profes: { objetivo: [0.1, 1.15, 10.5], desde: [0.5, 2.5, 15.6] }
@@ -809,21 +1043,21 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       const a = i * Math.PI / 4 + 0.2;
       recta(Math.cos(a) * 3.4, Math.sin(a) * 3.4, Math.cos(a) * 27.5, Math.sin(a) * 27.5, 1.0, P.calle, enCiudad, 0.06);
     }
-    // colegios: [x, z, escala, giro] — de todos los anillos, públicos, de convenio y privados por igual
-    const colegios = [[-6.8, -8.2, 0.4, 0.6], [11.5, -3.2, 0.38, -0.4], [2.5, 15.8, 0.4, 2.9], [-19.8, 6.8, 0.4, 1.9], [17.8, 16.2, 0.38, -2.3], [21.2, -17.2, 0.42, -0.8], [-9.5, -24, 0.42, 0.3]];
+    cristo(-4.2, -20.2, 1.2);
+    // colegios: [x, z, escala, giro] — públicos, de convenio y privados por igual
+    const colegios = [[-6.8, -8.2, 0.4, 0.6], [11.5, -3.2, 0.38, -0.4], [2.5, 15.8, 0.4, 2.9], [-19.8, 6.8, 0.4, 1.9], [17.8, 16.2, 0.38, -2.3], [21.2, -17.2, 0.42, -0.8], [-12.5, -27, 0.42, 0.3]];
     const ocupado = colegios.map(([x, z, s]) => [x, z, 11.5 * s]);
     for (const [x, z, s, ry] of colegios) {
       casona(x, z, s, ry, { simple: true });
-      // terreno del colegio marcado en esmeralda + bandera, para encontrarlo en el mapa
       plano.add(G.disco, P.esmeralda, M(x, 0.03, z, 21 * s, 0.03, 21 * s), { brillo: true });
       plano.add(G.disco, P.esmeraldaClaro, M(x, 0.02, z, 22.5 * s, 0.02, 22.5 * s), { brillo: true });
       solido.add(G.cil, P.blanco, M(x + 6.2 * s, 3.2, z + 6.2 * s, 0.14, 6.4, 0.14));
       brillo.add(G.caja, P.esmeralda, M(x + 6.2 * s + 0.8, 5.9, z + 6.2 * s, 1.5, 0.9, 0.06), { brillo: true });
-      // cada colegio restaura un parche de bosque a su lado
-      const ax = x + Math.cos(ry) * 4.6, az = z - Math.sin(ry) * 4.6;
       portal(x - Math.sin(ry) * 4.1, z - Math.cos(ry) * 4.1, ry, 0.55);
-      for (let i = 0; i < 5; i++) plantin(ax + R(-1.4, 1.4), az + R(-1.4, 1.4), 0.9, true);
     }
+    // obras de la ciudad que hacen los colegios
+    zoologico(30, -6, 0.75, false); ocupado.push([30, -6, 8]);
+    parque(-6, 30, 0.8); ocupado.push([-6, 30, 6]);
     // puentes de visita entre portales: línea punteada esmeralda en el aire
     const pos = colegios.map(([x, z, s, ry]) => new THREE.Vector3(x - Math.sin(ry) * 4.1, 1.9, z - Math.cos(ry) * 4.1));
     for (const [a, b2] of [[0, 1], [0, 3], [1, 5], [2, 4], [2, 3], [0, 6], [1, 4]]) {
@@ -832,49 +1066,32 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       const n = Math.round(A.distanceTo(B2) / 0.9);
       for (let i = 1; i < n; i++) brillo.add(G.bolita, i % 2 ? P.esmeralda : P.esmeraldaClaro, M(...curva.getPoint(i / n).toArray(), 0.62, 0.62, 0.62), { brillo: true });
     }
-    // ciudad
-    for (let k = 0; k < anillos.length - 1; k++) {
-      const r = (anillos[k] + anillos[k + 1]) / 2;
-      for (let a = 0; a < Math.PI * 2; a += 1.9 / r) {
-        const x = Math.cos(a) * r + R(-0.6, 0.6), z = Math.sin(a) * r + R(-0.6, 0.6);
-        if (!enCiudad(x, z) || ocupado.some(([ox, oz, or]) => Math.hypot(x - ox, z - oz) < or + 1)) continue;
-        let cerca = false;
-        for (let i = 0; i < 8; i++) { const av = i * Math.PI / 4 + 0.2; if (Math.abs(Math.sin(a - av)) * r < 1.1 && Math.cos(a - av) > 0) cerca = true; }
-        if (cerca || rnd() < 0.15) continue;
-        if (k === 1 && rnd() < 0.35) edificio(x, z, -a, 1.5, 1.5, Math.floor(R(4, 9)));
-        else if (rnd() < 0.15) arbolBosque(x, z, 0.6);
-        else casita(x, z, -a + Math.PI / 2, R(1.3, 1.7), R(1.2, 1.5), R(1.0, 1.3), [P.pared, P.pared2, P.pared3, P.pared4][Math.floor(rnd() * 4)], false);
-      }
-    }
-    // bosque alrededor de la ciudad (los colegios lo van haciendo crecer)
-    for (let gx = -RM; gx <= RM; gx += 3.1) for (let gz = -RM; gz <= RM; gz += 3.1) {
-      const x = gx + R(-1, 1), z = gz + R(-1, 1), d = Math.hypot(x, z);
-      if (!dentro(x, z, 2) || d < 30 || distRio(x, z) < 4) continue;
+    // áreas verdes libres con árboles sueltos (la ciudad está por construirse)
+    for (let gx = -RM; gx <= RM; gx += 5.2) for (let gz = -RM; gz <= RM; gz += 5.2) {
+      const x = gx + R(-1.8, 1.8), z = gz + R(-1.8, 1.8);
+      if (!dentro(x, z, 2) || distRio(x, z) < 4 || rnd() < 0.4) continue;
+      if (Math.hypot(x, z) < 4 || Math.hypot(x + 4.2, z + 20.2) < 4) continue;
       if (ocupado.some(([ox, oz, or]) => Math.hypot(x - ox, z - oz) < or + 2)) continue;
-      // un sector todavía quemado, para restaurar
-      if (x > 18 && z > 22) { if (rnd() < 0.35) tocon(x, z); else if (rnd() < 0.3) plantin(x, z, 1.1); continue; }
-      const t = rnd();
-      if (t < 0.13) tajibo(x, z, R(0.8, 1.1), P.tajiboAm);
-      else if (t < 0.2) tajibo(x, z, R(0.8, 1.0), P.tajiboRo);
-      else if (t < 0.26) toborochi(x, z, R(0.7, 1));
-      else if (t < 0.42) motacu(x, z, R(0.75, 1));
-      else arbolBosque(x, z, R(0.85, 1.2));
+      // no tapar calles
+      const r = Math.hypot(x, z);
+      if (r < 28.5 && anillos.some(a => Math.abs(r - a) < 1.6)) continue;
+      arbolSuelto(x, z);
     }
-    // un par de parabas sobre el bosque y una peta
     paraba(solido, M(-14, 9, -36, 1.8, 1.8, 1.8, 0.6), true);
     paraba(solido, M(-10, 9.6, -35, 1.8, 1.8, 1.8, 0.3), false);
-    peta(30, -8, 2.2);
     return {
       general: { objetivo: [0, 0, 1], desde: [0, 78, 54] },
       lamina: { objetivo: [0, 0, 2.5], desde: [0, 74, 49] }
     };
   }
 
+  const vistas = tipo === 'mapa' ? armarMapa() : armarEscena();
+
   // ============================================================ mallas
   const mBasic = () => new THREE.MeshBasicMaterial({ vertexColors: true, fog: true });
   const gSolido = solido.geometria();
   escena.add(new THREE.Mesh(gSolido, mBasic()));
-  if (esB) escena.add(contorno(gSolido, 0.045));
+  if (esB) escena.add(contorno(gSolido, grosorContorno));
   escena.add(new THREE.Mesh(plano.geometria(), mBasic()));
   if (brillo.p.length) escena.add(new THREE.Mesh(brillo.geometria(), mBasic()));
   // sombras falsas (un disco con degradé por objeto, todo en una malla)
@@ -915,7 +1132,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     animados.push(t => { mf.material.opacity = 0.22 + 0.14 * (0.5 + 0.5 * Math.sin(t * 2.4)); });
   }
   escena.add(acentos);
-  if (esB) {
+  if (patrones) {
     // banderines con guarda en la entrada del colegio (patrón genérico de muestra)
     if (tipo !== 'mapa') {
       const gt = texturaGuarda(THREE, P); gt.repeat.set(3, 1);
@@ -946,10 +1163,13 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   return {
     escena, vistas, etiquetas, estilo: E, paleta: P,
     // en C la imagen se dibuja a baja resolución y se amplía sin suavizar
-    escalaResolucion: esC ? 0.45 : 1,
-    animar(t, camara) {
+    escalaResolucion: esC ? 0.45 : 1, conContorno: esB,
+    animar(t, camara, objetivo) {
       for (const f of animados) f(t);
-      if (camara) for (const e of etiquetas.children) e.visible = e.position.distanceTo(camara.position) < e.userData.maxDist;
+      if (camara) for (const e of etiquetas.children) {
+        e.visible = e.position.distanceTo(camara.position) < e.userData.maxDist &&
+          (!objetivo || e.position.distanceTo(objetivo) < e.userData.radioObjetivo);
+      }
     },
     ajustarNiebla(dist) { escena.fog.near = dist * 0.85; escena.fog.far = dist * 2.6 + 20; }
   };

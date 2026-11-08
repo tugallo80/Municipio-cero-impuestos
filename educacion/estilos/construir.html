@@ -37,7 +37,7 @@
   <div id="fps">— fps</div>
 </div>
 <div id="panel">
-  <b>Prueba de construcción · estilo A</b>
+  <b id="titulo">Prueba de construcción · estilo A</b>
   <p>Tocá una celda: el sistema elige la pieza (galería con horcones, techo de palma o teja, patio, aljibe, mirador). Tocá de nuevo para subir un piso.</p>
   <div id="pieza"></div>
 </div>
@@ -59,7 +59,9 @@ let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* siguiente */ } }
 if (!THREE) { document.getElementById('cargando').textContent = 'No se pudo cargar three.js. Probá con conexión.'; window.__listo = 'sin-three'; throw new Error('sin three'); }
 
-const kit = crearMundo(THREE, 'A', 'kit');
+const ESTILO = (new URLSearchParams(location.search).get('estilo') || 'A').toUpperCase();
+const kit = crearMundo(THREE, ESTILO, 'kit');
+document.getElementById('titulo').textContent = 'Prueba de construcción · ' + ({ A: 'estilo A', BLOQUES: 'Bloques', PIEZAS: 'Piezas', REAL: 'Mundo real', B: 'estilo B', C: 'estilo C' }[ESTILO] || 'estilo A');
 const { P, G, Lote, M, techoHip } = kit;
 
 const N = 7, T = 3;                 // grilla 7×7, celdas de 3 unidades

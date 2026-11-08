@@ -1,5 +1,6 @@
 // EDU.01c — Genera las láminas de comparación de estilos y la lámina E de los talleres.
-//   · educacion/estilos/capturas/{A,B,C}-{colegio,bosque,portal}-{celular,horizontal}.jpg
+//   · educacion/estilos/capturas/{BLOQUES,PIEZAS,REAL,A,B,C}-{colegio,obra,portal}-{celular,horizontal}.jpg
+//   · educacion/estilos/capturas/transicion-{1a2,2a3}-{celular,horizontal}.jpg
 //   · educacion/estilos/capturas/construir-{celular,horizontal}.jpg
 //   · educacion/estilos/capturas/fps.json  (medido en el navegador del contenedor, sin GPU)
 //   · docs/educacion/talleres/laminas/E-mi-colegio-en-santa-cruz.{png,pdf} + vista/…jpg
@@ -50,14 +51,24 @@ async function abrir(p, url) {
 }
 
 const FORMATOS = { celular: [390, 844], horizontal: [1280, 800] };
+const ESTILOS = ['BLOQUES', 'PIEZAS', 'REAL', 'A', 'B', 'C'];
+const NOMBRE = { BLOQUES: '1 · Bloques', PIEZAS: '2 · Piezas', REAL: '3 · Mundo real', A: 'A · Maqueta Viva', B: 'B · Tierra Pintada', C: 'C · Pixel Camba (modo liviano)' };
 
 if (solo === 'todo' || solo === 'capturas') {
-  for (const e of ['A', 'B', 'C']) for (const v of ['colegio', 'bosque', 'portal']) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
+  for (const e of ESTILOS) for (const v of ['colegio', 'obra', 'portal']) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
     const p = await pagina(w, h, 2);
     await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=${v}&captura=1&calidad=alta`);
     const out = path.join(CAP, `${e}-${v}-${f}.jpg`);
     await p.screenshot({ path: out, type: 'jpeg', quality: 84 });
     console.log('captura', path.relative(RAIZ, out));
+    await p.close();
+  }
+  for (const [de, a, n] of [['BLOQUES', 'PIEZAS', '1a2'], ['PIEZAS', 'REAL', '2a3']]) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
+    const p = await pagina(w, h, 2);
+    await abrir(p, `/educacion/estilos/transicion.html?de=${de}&a=${a}&captura=1&calidad=alta&t=2.75`);
+    await p.waitForTimeout(300);
+    await p.screenshot({ path: path.join(CAP, `transicion-${n}-${f}.jpg`), type: 'jpeg', quality: 84 });
+    console.log('captura transición', n, f);
     await p.close();
   }
   for (const [f, [w, h]] of Object.entries(FORMATOS)) {
@@ -75,13 +86,22 @@ if (solo === 'todo' || solo === 'fps') {
   const res = { nota: 'Chromium headless con SwiftShader (CPU, sin GPU) en el contenedor de la sesión. Resolución normal (no la de captura). Mediana de 6 s.', fecha: new Date().toISOString().slice(0, 10), medidas: [] };
   const mediana = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
   for (const [f, [w, h]] of Object.entries(FORMATOS)) {
-    for (const e of ['A', 'B', 'C']) {
+    for (const e of ESTILOS) {
       const p = await pagina(w, h, 1);
       await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=general`);
       await p.waitForTimeout(7000);
       const d = await p.evaluate(() => ({ fps: window.__fps.slice(1), ...window.__info() }));
-      res.medidas.push({ pagina: `escena ${e} (vista Todo)`, formato: f, fps: mediana(d.fps), llamadasDeDibujo: d.llamadas, triangulos: d.triangulos, armadoMs: d.armadoMs });
+      res.medidas.push({ estilo: e, pagina: `${NOMBRE[e]} (vista Todo)`, formato: f, fps: mediana(d.fps), llamadasDeDibujo: d.llamadas, triangulos: d.triangulos, armadoMs: d.armadoMs });
       console.log('fps', e, f, mediana(d.fps));
+      await p.close();
+    }
+    {
+      const p = await pagina(w, h, 1);
+      await abrir(p, '/educacion/estilos/transicion.html?de=PIEZAS&a=REAL');
+      await p.waitForTimeout(6000);
+      const fps = await p.evaluate(() => window.__fps.slice(1));
+      res.medidas.push({ pagina: 'transición 2 → 3 (dos mundos a la vez)', formato: f, fps: mediana(fps) });
+      console.log('fps transición', f, mediana(fps));
       await p.close();
     }
     const p = await pagina(w, h, 1);

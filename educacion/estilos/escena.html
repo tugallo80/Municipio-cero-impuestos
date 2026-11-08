@@ -23,6 +23,7 @@
   .estilo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
   .estilos { display: flex; gap: 6px; }
   .estilos .chip { min-width: 44px; justify-content: center; padding: 0 10px; }
+  @media (max-width: 420px) { .estilos { gap: 4px; } .estilos .chip { min-width: 36px; padding: 0 4px; } .arriba { gap: 5px; padding-left: 8px; padding-right: 8px; } }
   #fps { margin-left: auto; font: 700 13px ui-monospace, monospace; padding: 0 12px; min-height: 36px; border-radius: 12px; background: var(--sup); border: 1px solid var(--borde); display: flex; align-items: center; }
   #fps.bien { color: #34D399; } #fps.medio { color: #F2C230; } #fps.mal { color: #F87171; }
   #nombre { position: fixed; left: 12px; top: calc(max(10px, env(safe-area-inset-top)) + 54px); background: var(--sup); border: 1px solid var(--borde);
@@ -64,7 +65,7 @@ const tipo = q.get('tipo') === 'mapa' ? 'mapa' : 'escena';
 if (captura) document.body.classList.add('captura');
 if (q.has('limpia')) document.getElementById('marca').style.visibility = 'hidden';
 
-const NOMBRES_VISTA = { colegio: 'Colegio', bosque: 'Bosque', portal: 'Portal', ciudad: 'Ciudad', profes: 'Profes y alumnos', general: 'Todo', lamina: 'Lámina E' };
+const NOMBRES_VISTA = { colegio: 'Colegio', obra: 'Obra de la ciudad', portal: 'Portal', ciudad: 'Ciudad', profes: 'Profes y alumnos', general: 'Todo', lamina: 'Lámina E' };
 
 // three.js con versión exacta, desde CDN (con una segunda fuente por si la primera falla)
 const FUENTES = [
@@ -80,14 +81,15 @@ if (!THREE) {
 }
 
 const info = ESTILOS[estilo] || ESTILOS.A;
-document.title = `${info.letra} · ${info.nombre}`;
-document.getElementById('nTitulo').textContent = `${info.letra} · ${info.nombre}`;
+const titulo = info.grados ? `${info.letra} · ${info.nombre} (${info.grados})` : `${info.letra} · ${info.nombre}`;
+document.title = titulo;
+document.getElementById('nTitulo').textContent = titulo;
 document.getElementById('nTexto').textContent = info.corto;
 if (estilo === 'B') document.getElementById('nota').style.display = 'block';
 
 // --- selector de estilos y vistas
-document.getElementById('estilos').innerHTML = Object.values(ESTILOS).map(e =>
-  `<a class="chip estilo ${e.letra === estilo ? 'on' : ''}" href="?estilo=${e.letra}&vista=${vista}${tipo === 'mapa' ? '&tipo=mapa' : ''}" title="${e.nombre}">${e.letra}</a>`).join('');
+document.getElementById('estilos').innerHTML = Object.entries(ESTILOS).map(([k, e]) =>
+  `<a class="chip estilo ${k === estilo ? 'on' : ''}" href="?estilo=${k}&vista=${vista}${tipo === 'mapa' ? '&tipo=mapa' : ''}" title="${e.nombre}">${e.letra}</a>`).join('');
 
 const t0 = performance.now();
 const mundo = crearMundo(THREE, estilo, tipo);
@@ -121,13 +123,13 @@ function ponerVista(nombre, suave) {
   const s = new THREE.Spherical().setFromVector3(off);
   if (vertical) {
     // en celular (vertical) hace falta alejarse y mirar un poco más desde arriba
-    s.radius *= { profes: 2.0, colegio: 1.9, bosque: 1.35, portal: 1.6 }[nombre] || 1.5;
+    s.radius *= { profes: 2.0, colegio: 1.9, obra: 1.45, portal: 1.6 }[nombre] || 1.5;
     if (nombre !== 'profes') s.phi *= 0.85;
   } // en celular hace falta alejarse
   if (suave) destino = { ob, s }; else { objetivo.copy(ob); esf.copy(s); }
   vista = nombre;
   document.querySelectorAll('[data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === nombre));
-  document.getElementById('marca').innerHTML = `${info.letra} · ${info.nombre}<small>${NOMBRES_VISTA[nombre] || nombre}</small>`;
+  document.getElementById('marca').innerHTML = `${info.letra} · ${info.nombre}<small>${info.grados ? info.grados + ' · ' : ''}${NOMBRES_VISTA[nombre] || nombre}</small>`;
 }
 function ajustar() {
   const w = innerWidth, h = innerHeight;
@@ -191,7 +193,7 @@ function cuadro() {
   camara.position.setFromSpherical(esf).add(objetivo);
   camara.lookAt(objetivo);
   mundo.ajustarNiebla(esf.radius);
-  mundo.animar(captura ? 1.2 : t, camara);
+  mundo.animar(captura ? 1.2 : t, camara, objetivo);
   renderer.render(mundo.escena, camara);
   cuadros++;
   const ahora = performance.now();
