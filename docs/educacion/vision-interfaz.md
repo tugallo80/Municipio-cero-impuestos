@@ -175,3 +175,31 @@ revisar construcciones), escala técnica (por etapas). Se suma a los talleres co
 Investigación hecha → `docs/investigacion/mundo-abierto-santa-cruz.md`: economía de fichas
 (tareas como moneda), competencia entre colegios y equidad, verificación de identidad de menores
 en Bolivia (RUDE, carnet), factibilidad técnica en tablets.
+
+## Evolución de la visión del mundo (dueño, 8-nov-2026)
+
+> **"Acá no vale lo que tenés, sino lo que sabés."**
+
+- **Primaria y secundaria.** El mundo debe servir a los dos: **estética propia ÑANDÉ** (no
+  "Roblox/Minecraft"), que no resulte infantil para un adolescente ni pierda gracia para un niño.
+- **Une todas las ideas anteriores**: misiones, lugares secretos, profes por voz, casa propia,
+  construcción con materiales de conocimiento, mundo cerrado y seguro.
+- **La magia está en los portales**: visitar otros colegios a través de portales.
+- **Construir** es el reto que más le gusta al público objetivo.
+- **El mapa**: la ciudad de Santa Cruz mezclada con un **bosque abierto** que los colegios van
+  ocupando y haciendo crecer.
+- **Evolución**: olimpiadas y retos entre colegios.
+- **Conectar clases sociales**: colegios públicos, de convenio y privados en el mismo mundo,
+  donde lo que cuenta es el conocimiento.
+
+Notas de la MAESTRA:
+- **Bosque**: en Santa Cruz la deforestación y los incendios son un tema sensible. Conviene que el
+  bosque **no se tale**: que los colegios lo **restauren, cuiden y hagan crecer** al aprender
+  (sumar árboles, fauna, río limpio). Refuerza el mensaje y conecta con el resto de ÑANDÉ.
+- **Secundaria (13–17 años)** cambia la seguridad: más autonomía y más riesgos (acoso, contenido,
+  contacto). Los mundos siguen separados por nivel; las reglas de comunicación se adaptan por edad.
+- **Mezcla social**: para que sea justo, las ligas y premios ya miden mejora y participación (no
+  recursos); los eventos cooperativos entre colegios de distinto origen (padrinos entre anillos)
+  son la herramienta principal para "conectar clases sociales".
+- **Estética propia**: definir una dirección de arte que escale por edad (mismo mundo, distinto
+  nivel de detalle y tono de interfaz/avatares por nivel).
