@@ -38,5 +38,24 @@ alcanza una página técnica mínima.
 - Las Functions aparecen desplegadas en `municipio-ia` y sus logs se ven con `claude-code`.
 - Ningún módulo de la raíz cambió de comportamiento.
 
-## Cierre
-(pendientes de la sesión)
+## Cierre (8-nov-2026, en curso)
+
+**Hecho**
+- Educación es app aparte: sitio de Hosting `nande-educacion` (https://nande-educacion.web.app),
+  con `/prueba-motor/` (página técnica) y `/maqueta/` (EDU.01). Workflow `.github/workflows/educacion.yml`.
+- Base propia `municipio-ia-educacion` (Realtime Database, cerrada al navegador), separada de la del municipio.
+- Functions `eduKayToken` y `eduKayUso` (codebase `educacion`) — ver `educacion/services/ai-gateway/README.md`.
+- Personalidad camba original: `educacion/services/ai-gateway/tutor/personalidad-kay.md`.
+- Voz por defecto **Sulafat** (Google la describe como "cálida"); la página deja elegir entre 6.
+- Privacidad: instrucción armada en el servidor y bloqueada en el token efímero; sin nombre del alumno.
+- Cuota: 8 charlas/día, 10 min/charla, 600.000 tokens/día por alumno, tope global USD 5/día.
+- Cuenta de prueba `prueba` (sin nombre; clave solo como hash bcrypt en el repo, la tiene el dueño por chat).
+- Registro libre de cuentas desactivado.
+
+**Pendiente**
+- El dueño corre en Cloud Shell `tools/cloudshell/configurar-nande.sh municipio-ia aplicar` (activa
+  `cloudbilling` y otras APIs que pide el deploy de Functions, deja compilar a la cuenta de
+  cómputo, y da `apiKeysAdmin` al deploy para limitar la clave pública del navegador).
+- WhatsApp fuera de alcance (falta firma de Twilio) → ficha nueva. Procesador de PDF → EDU.04.
+- Precios de la voz tomados de agregadores: confirmar en ai.google.dev/pricing.
+
