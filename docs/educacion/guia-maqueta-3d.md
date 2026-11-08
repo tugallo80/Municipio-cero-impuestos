@@ -11,7 +11,8 @@
   - puerta de aula: 1,1 × 2,2 m · ventana: 1,2 m de alto, a 0,9 m del piso;
   - altura de pared/galería: 3,2 m · horcón: 0,3 m de grueso;
   - alumnos: 1,15 m (P1) a 1,65 m (S6) · adulto: 1,70 m.
-- El **piso del patio en altura 0**. El norte hacia el eje −Z (o avisá cuál usaste).
+- El **piso del patio en altura 0**, **Y hacia arriba**.
+- Cada objeto con su **punto de giro (pivote) abajo y al centro**, y su **frente hacia +Z** (el lado por donde se entra o se usa).
 - Liviano: formas simples. Nada de detalles chicos (tornillos, letras en 3D): eso lo agrega Claude.
 
 ## 2. Una pieza = un objeto, con nombre
@@ -29,6 +30,9 @@ El juego **lee los nombres** para saber qué se puede tocar. Usá minúsculas, s
 | `deco_` | Decoración sin interacción | `deco_banco_01`, `deco_arbol_toborochi` |
 
 Si hay varios iguales, numeralos: `deco_banco_01`, `deco_banco_02`.
+
+Materias: `mate`, `lenguaje`, `ciencias` (Naturales), `sociales`, `artes`, `ingles`.
+Lugares: `biblioteca`, `cancha`, `huerto`, `kiosco`, `direccion`.
 
 ## 3. Colores (opcional, ayuda)
 
