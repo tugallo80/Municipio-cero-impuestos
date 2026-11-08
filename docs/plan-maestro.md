@@ -26,11 +26,11 @@ módulos suman o gastan créditos en la misma cuenta.
 
 | Pieza | Dónde está | Estado |
 |---|---|---|
-| Hub + 6 prototipos HTML | Raíz de este repo | Maquetas estáticas con datos de ejemplo. Sin backend. Todos enlazados en el Hub (INF.01) |
+| Hub + 6 prototipos HTML | Raíz de este repo | Maquetas estáticas con datos de ejemplo. Sin backend. `municipio0_transporte_mvp.html` no está enlazado en el Hub |
 | Educación — backend WhatsApp + PDF | `tugallo80/rubikeduai-backend` rama `main` (Vercel) | Funcional en código. Sin validación de firma Twilio. Manda nombre del alumno a Gemini |
 | Educación — dashboard de los chicos (voz en vivo con Kay) | `rubikeduai-backend` rama `claude/dashboard-hijos-kay` | Sin mergear. Nunca desplegado (Cloud Functions apagadas en el proyecto `rubikeduai`) |
 | Educación — panel del profesor | No encontrado en ningún repo | `api/process-pdf.js` lo menciona pero el código no está |
-| Deploy | `firebase.json`, `.github/workflows/`, `vercel.json` | INF.01 (PR #1): push a `main` → `municipio-ia.web.app`; cada PR → vista previa con URL comentada. Vercel publica `_site/` |
+| Deploy | — | Sin `firebase.json`, `vercel.json` ni GitHub Actions. Vercel falla por carpeta de salida |
 | Proyecto Google Cloud/Firebase propio | `municipio-ia` ("MUNICIPIO IA") | ✅ Creado 7-nov: Blaze, Firebase, deploy por Workload Identity, `GEMINI_API_KEY` en Secret Manager, `claude-code` con solo lectura (probado) |
 
 ## Orden de trabajo
@@ -41,8 +41,9 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | Código | Sub-sesión | Objetivo | Depende de | Estado |
 |---|---|---|---|---|
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
-| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | 🔎 PR #1 en revisión del dueño |
-| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | 🟡 PR abierto: `educacion/maqueta/` + capturas en `docs/educacion/capturas-maqueta/`; falta OK del dueño |
+| INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏸️ PR #1 aprobado por el dueño en lo técnico, **en espera** hasta definir apps separadas |
+| EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | 🔎 PR #2 listo, capturas revisadas por el dueño |
+| EDU.01b | Láminas y maqueta v2 | Láminas de los 4 mundos + cartas para talleres con niños; maqueta del alumno v2 (misión→llave→lugar, sin ranking, perfil sin "estilo de aprendizaje") | EDU.01 | 🛠️ en curso |
 | EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | ⏳ |
 | EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
@@ -92,6 +93,35 @@ WIF_PROVIDER=projects/359679900643/locations/global/workloadIdentityPools/github
 DEPLOY_SA=github-deploy@municipio-ia.iam.gserviceaccount.com
 ```
 Facturación: cuenta "Pago de Firebase" (`01853C-…`), la misma de `nutri-piloto-rubik`.
+
+## Decisiones del 7-nov-2026 (dueño)
+
+- **Apps separadas, no una sola web enlazada**: Educación es una app propia; Salud probablemente también.
+  La app del municipio se centra en: estado de "impuestos" → **suscripciones**, **referéndums
+  digitales** (el vecino elige entre obras para su zona, "el ciudadano como un concejal más") y
+  **transparencia en tiempo real** (cuánto dinero hay, cuánto entra, en qué se gasta).
+- Pendiente: ¿eMarket y transporte van dentro de la app del municipio o aparte? → investigación
+  en curso (sociología, psicología, neurociencias, marketing, casos reales). Resultado en
+  `docs/investigacion/una-app-o-varias.md`.
+- INF.01 queda **en espera** (PR #1 abierto, sin mergear) hasta definir cómo se separan las apps
+  (probablemente un sitio de Hosting por app).
+
+- **Investigación "una app o varias"** aceptada por el dueño como criterio: ÑANDÉ ID único, app
+  núcleo con pocos accesos (Mi aporte, Mi ciudad, Comprar, Viajar), lo cívico protegido (sin
+  premios por votar), Educación y Salud aparte. Ver `docs/investigacion/una-app-o-varias.md`.
+- **Modelo económico** (impuesto → suscripción con beneficio personal): `docs/vision-modelo-economico.md`.
+- **Educación pública gratuita**; financiamiento buscado con Google y otros.
+
+## Material para la presentación
+
+Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, financiadores):
+- `docs/investigacion/una-app-o-varias.md` — por qué este diseño (con fuentes).
+- `docs/vision-modelo-economico.md` — de impuesto a suscripción.
+- `docs/educacion/vision-plataforma-educativa.md` y `vision-interfaz.md`.
+- `docs/investigacion/educacion-piloto-y-financiamiento.md` — piloto, evidencia y financiamiento.
+- `docs/investigacion/transporte-municipal.md` — parque, modelo financiero y ley del transporte.
+- `docs/investigacion/experiencia-del-alumno.md` — psicología infantil, juego y mundo compartido.
+- `docs/educacion/protocolo-focus-group.md` — talleres de co-diseño con niños.
 
 ## Decisiones pendientes del dueño
 
