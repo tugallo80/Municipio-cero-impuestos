@@ -128,7 +128,7 @@ async function abrirCharla(datosToken, configCliente = {}) {
   })
   const inicio = Date.now()
 
-  const esperarTurno = (ms = 40000) =>
+  const esperarTurno = (ms = 60000) =>
     new Promise((res) => {
       const t = setTimeout(() => res(false), ms)
       alTerminarTurno = () => {
@@ -150,6 +150,9 @@ async function abrirCharla(datosToken, configCliente = {}) {
       sesion.sendRealtimeInput({ audio: { data: silencio.toString('base64'), mimeType: 'audio/pcm;rate=16000' } })
       await esperar(100)
     }
+    // Avisa que se cortó el micrófono: el modelo cierra el turno aunque la voz
+    // sintética no dispare bien la detección automática de fin de frase.
+    sesion.sendRealtimeInput({ audioStreamEnd: true })
     return fin
   }
 
