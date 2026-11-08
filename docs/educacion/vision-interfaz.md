@@ -143,3 +143,11 @@ Las voces están bien, pero **mezclan camba con neutro**. Para afinar la persona
   - "**otro level**" como elogio.
 - Se sigue ajustando con el dueño. Limitación técnica a probar: las voces de Gemini se guían por
   instrucciones; la aspiración de la "s" puede lograrse solo en parte.
+
+## Los profes dentro del mundo (dueño, 8-nov-2026)
+
+- El tutor de voz vive **dentro del mundo del niño**: no debe tapar ni cortar la interfaz del juego.
+- Se nota que está acompañando con un **detalle**: un **marco que palpita** alrededor de la pantalla,
+  o una **base/niebla luminosa abajo que se mueve con el sonido** (tipo la franja de voz de los
+  autos Tesla), sin salirse de su espacio.
+- Reemplaza la idea anterior de "toda la pantalla latiendo como una boca".
