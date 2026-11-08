@@ -127,6 +127,16 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/investigacion/mundo-abierto-santa-cruz.md` — mundo abierto, moneda de conocimiento, colegios, identidad y técnica.
 - `docs/investigacion/estilo-visual.md` — 3 direcciones de arte para 6–17 años.
 
+## Decisión del 8-nov-2026: seguir con la visión completa, validar en cancha
+
+- El dueño mantiene la visión completa de Educación (tutor + mundo abierto + ciudad que construyen
+  los colegios). "La forma puede cambiar; el fondo tiene esencia": la prueba se ve **en cancha**.
+- Criterio de la MAESTRA acordado: el **corazón** es el tutor que enseña a cada niño a su manera
+  (lo que tiene evidencia). Todo lo demás se valida con niños reales (talleres y piloto en aula
+  con curso de comparación) y se ajusta según los datos.
+- Presupuesto del dueño para pruebas: bajo (orden de USD 100). Se mantiene el tope de USD 5/día de
+  IA y se reporta el gasto.
+
 ## Decisiones pendientes del dueño
 
 1. ~~ID del proyecto~~ → nombre **MUNICIPIO IA**, ID `municipio-ia` (si está tomado, `municipio-ia-scz`).
