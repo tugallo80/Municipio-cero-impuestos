@@ -43,6 +43,16 @@
     .letra { width: 26px; height: 26px; font-size: 15px; }
     .carta a.btn { min-height: 44px; padding: 0 6px; font-size: 13px; }
   }
+  .escalera { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .tramo { background: var(--sup2); border: 1px solid var(--borde); border-radius: 18px; overflow: hidden; border-top: 6px solid var(--c); }
+  .tramo .cab { display: flex; gap: 12px; align-items: center; padding: 14px 14px 10px; }
+  .tramo .num { width: 52px; height: 52px; border-radius: 50%; background: var(--c); color: #000; display: grid; place-items: center; font: 700 28px 'Space Grotesk', Inter, sans-serif; flex: none; }
+  .tramo h3 { font-size: 22px; line-height: 1.1; }
+  .tramo .gr { color: var(--t2); font-size: 14px; }
+  .tramo img { width: 100%; display: block; aspect-ratio: 1280 / 800; object-fit: cover; }
+  .tramo .accesos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px; }
+  .tramo .accesos a { min-height: 48px; padding: 0 6px; font-size: 14px; }
+  a.btn.grande { min-height: 52px; font-size: 16px; padding: 0 18px; }
   .fichas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
   .ficha { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 14px 16px; }
   .ficha h3 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
@@ -72,13 +82,17 @@
   <div class="lema">"Acá no vale lo que tenés, sino lo que sabés."</div>
   <p class="sec"><b>Tu mundo crece con vos.</b> Cada tramo de grados tiene su propia gráfica y, al pasar de curso, el mundo se transforma. Las tres muestran <b>la misma escena</b>: tu colegio cruceño creciendo, la ciudad de Santa Cruz que empieza vacía (solo con sus hitos) y que los cursos construyen, una obra pública en marcha (el zoológico), un portal para visitar otro colegio, los profes Taji y Jochi y un alumno de ese tramo.</p>
 
+  <h2>La escalera: elegí un tramo</h2>
+  <div class="escalera" id="escalera"></div>
+  <div class="botones" style="margin-top:12px"><a class="btn verde grande" href="transicion.html?de=BLOQUES&a=PIEZAS">▶ Ver transición de curso 1 → 2</a><a class="btn verde grande" href="transicion.html?de=PIEZAS&a=REAL">▶ 2 → 3</a></div>
+  <p class="nota">📱 Las escenas en 3D se ven y se juegan mejor con el celular <b>en horizontal</b>.</p>
+
+  <h2>Comparar los 3 tramos lado a lado</h2>
   <div class="controles">
     <div class="seg" id="segVista"><button data-v="colegio" class="on">Colegio</button><button data-v="obra">Obra</button><button data-v="portal">Portal</button></div>
     <div class="seg" id="segFormato"><button data-f="celular">Celular</button><button data-f="horizontal">Horizontal</button></div>
   </div>
 
-  <h2>La escalera: 3 tramos</h2>
-  <p class="nota" style="margin:-4px 0 12px">📱 Las escenas en 3D se ven y se juegan mejor con el celular <b>en horizontal</b>.</p>
   <div class="tres" id="tramos"></div>
 
   <h2>Pasaste de curso: tu mundo se transforma</h2>
@@ -161,6 +175,12 @@ function tarjetas(lista) {
       <a class="btn verde" href="escena.html?estilo=${e.k}&vista=${vista}">Abrir en 3D</a></div></div>`;
   }).join('');
 }
+const VISTAS = [['colegio', 'Colegio'], ['ciudad', 'Ciudad'], ['obra', 'Obra (zoo)'], ['portal', 'Portal'], ['profes', 'Profes y alumnos']];
+document.getElementById('escalera').innerHTML = TRAMOS.map(e => `<div class="tramo" style="--c:${e.c}">
+  <div class="cab"><span class="num">${e.l}</span><div><h3>${e.n}</h3><div class="gr">${e.g === 'Secundaria' ? 'Secundaria' : e.g + ' de primaria'}</div></div></div>
+  <a href="escena.html?estilo=${e.k}&vista=colegio"><img src="capturas/${e.k}-colegio-horizontal.jpg" alt="${e.n}: colegio" loading="lazy"></a>
+  <div class="accesos">${VISTAS.map(([v, t]) => `<a class="btn" href="escena.html?estilo=${e.k}&vista=${v}">${t}</a>`).join('')}
+    <a class="btn verde" href="construir.html?estilo=${e.k}">Construir</a></div></div>`).join('');
 function pintar() {
   document.getElementById('tramos').innerHTML = tarjetas(TRAMOS);
   document.getElementById('exploracion').innerHTML = tarjetas(EXPLORA);
