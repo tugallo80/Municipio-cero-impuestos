@@ -184,7 +184,7 @@ exports.eduClase = onCall(
   }
 );
 
-exports.eduClases = // invoker public: cualquiera puede LLAMARLA, pero la Function exige cuenta de profe/dirección.
+// invoker public: cualquiera puede LLAMARLA, pero la Function exige cuenta de profe/dirección.
 exports.eduClases = onCall({ region: 'us-central1', invoker: 'public', timeoutSeconds: 30, memory: '256MiB', maxInstances: 10 }, async (request) => {
   const yo = await personalDeLaCuenta(request);
   const accion = String(request.data?.accion || 'listar');
