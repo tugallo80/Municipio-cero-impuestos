@@ -203,3 +203,23 @@ Notas de la MAESTRA:
   son la herramienta principal para "conectar clases sociales".
 - **Estética propia**: definir una dirección de arte que escale por edad (mismo mundo, distinto
   nivel de detalle y tono de interfaz/avatares por nivel).
+
+## Estilo que evoluciona por tramo de grados (dueño, 8-nov-2026)
+
+- Cada tramo tiene su propia gráfica y **el mundo se transforma al pasar de curso** ("vencer el
+  curso para vivir la nueva interfaz") → motivación para subir de nivel.
+  - **1.º–3.º primaria**: cúbico / bloques (estilo propio).
+  - **4.º–6.º primaria**: piezas redondeadas y encastrables, tipo juguete de construcción.
+  - **Secundaria**: más realista / estilizado.
+- Nombres propios sin marcas (ej. "Bloques", "Piezas", "Mundo real"); no copiar Minecraft, Lego
+  ni Playmobil.
+
+Notas de la MAESTRA:
+- Encaja con la investigación: lo que los adolescentes rechazan es lo infantil, y aquí cada edad
+  tiene lo suyo; los mundos ya están separados por nivel.
+- **Repitentes**: que quedarse en un tramo no se sienta castigo (ej. el mundo igual mejora con lo
+  que construyen; la transformación es un premio, no una vergüenza).
+- **Costo**: tres líneas de arte. Mitigar con una base común (mismas piezas lógicas y mapa) y tres
+  "pieles" de render.
+- **Rendimiento**: el tramo "realista" es el más pesado; debe seguir andando en tablets baratas.
+- Se prueba en EDU.01c (pedido enviado a la sub-sesión).
