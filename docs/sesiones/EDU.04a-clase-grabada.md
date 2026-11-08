@@ -14,7 +14,9 @@ devuelve un resumen con 3 usos:
 
 ## Dónde está
 - Panel del profe: `https://nande-educacion.web.app/maqueta/tutor.html#clase` (y tarjeta en "Hoy").
-- Dirección (los mismos informes): `https://nande-educacion.web.app/maqueta/direccion.html#clases`.
+- Dirección: **escondida por ahora** (pedido del dueño, 8-nov). Solo con `?direccion=1`:
+  `…/maqueta/tutor.html?direccion=1#clase` (el informe muestra también "Para la dirección") y
+  `…/maqueta/direccion.html?direccion=1#clases`. La Function la sigue armando.
 - Ejemplo sin cuenta ni internet: `…/maqueta/tutor.html#clase/ejemplo`.
 - Cuenta: la del dueño (`dueno`), que ahora también es profe y dirección **demo** (curso ficticio 4to/5to).
 
@@ -55,6 +57,12 @@ devuelve un resumen con 3 usos:
 - **El profe ve exactamente lo que ve la dirección**: un solo informe; la pantalla lo dice arriba.
 - Detrás de login (cuenta demo `dueno` con rol de profe/dirección). Sin login: solo el ejemplo inventado.
 - Demo con datos ficticios; el aviso pide hablar con nombres inventados.
+
+## Pendiente de diseño fino con el dueño (protección de los chicos)
+- La parte **"para la dirección"** (resumen y alertas de riesgo): qué señales, quién las revisa, en
+  cuánto tiempo y a dónde se derivan. Hasta entonces queda escondida en la pantalla (`?direccion=1`).
+- Regla que no cambia: cuando se active, **el profe ve exactamente lo mismo que la dirección**.
+- Va junto con los consentimientos de abajo.
 
 ## Consentimientos para el piloto real (antes de grabar una clase de verdad)
 1. **Profe**: consentimiento escrito e informado, revocable; él decide cuándo graba y puede pausar

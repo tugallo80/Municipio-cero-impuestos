@@ -17,6 +17,10 @@
   const DURACION_MIN = 45;      // una hora pedagógica (demo)
   const MAX_MIN = 75;           // tope duro, igual que el servidor
   const KBPS = 16000;           // voz: alcanza y pesa poco (~7 MB por hora)
+  // La parte "para la dirección" (resumen y alertas) está pendiente de diseño fino con el dueño:
+  // la Function la sigue armando, pero en pantalla solo aparece con ?direccion=1.
+  // Regla cuando se active: el profe ve exactamente lo mismo que la dirección.
+  const DIR = new URLSearchParams(location.search).get('direccion') === '1';
 
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const dosDig = (n) => String(n).padStart(2, '0');
@@ -51,6 +55,9 @@
   .cg-bloque{margin-top:14px}
   .cg-bloque h4{font-size:13px;color:var(--texto2);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.04em}
   .cg-bloque ul{margin-left:18px}.cg-bloque li{margin:4px 0}
+  .cg-profe{border-color:#10B98155}
+  .cg-ideas{background:var(--verde-suave);border-radius:12px;padding:10px 12px}
+  .cg-ideas h4{color:var(--verde)}
   .cg-alerta{border:1px solid var(--ambar);background:rgba(245,158,11,.08);border-radius:12px;padding:10px 12px;margin-top:8px}
   .cg-transcripcion{white-space:pre-wrap;font-size:13px;color:var(--texto2);max-height:360px;overflow:auto;background:var(--sup1);border-radius:12px;padding:12px;margin-top:8px}
   .cg-espera{text-align:center;padding:40px 16px}
@@ -106,7 +113,7 @@
           <li><b>Avisale al curso</b> que la clase se graba.</li>
           <li>El audio va a la IA para el resumen y <b>se borra enseguida</b>: no se guarda en ningún lado.</li>
           <li>En el resumen, los <b>nombres de los alumnos se cambian por "un alumno"</b>.</li>
-          <li>El informe <b>lo ves vos y la dirección, el mismo</b>. Se borra solo a los 30 días (la transcripción, a los 7).</li>
+          <li>${DIR ? 'El informe <b>lo ves vos y la dirección, el mismo</b>.' : 'El informe <b>lo ves vos</b>.'} Se borra solo a los 30 días (la transcripción, a los 7).</li>
           <li>Es una ayuda para planificar, <b>no una evaluación</b>.</li>
           <li class="ter">Demo: hablá vos simulando una clase, con nombres inventados. Nada de chicos reales.</li>
         </ul>
@@ -278,28 +285,28 @@
     return `<a href="${volver}" class="chica">← Clases</a>
     <div class="encab" style="margin-top:12px"><div><h1>${esc(c.materia)} · ${esc(curso)}</h1>
       <p>${esc(c.tema)}${c.pensum ? ' · ' + esc(c.pensum) : ''}<br>${esc(c.fecha)} · ${Math.max(1, Math.round((c.segundos || 0) / 60))} min grabados${c.ejemplo ? ' · <b style="color:var(--ambar)">EJEMPLO con datos inventados</b>' : ''}</p></div></div>
-    <div class="cg-mismo"><span>👁️</span><span><b>Este informe es el mismo para el profe y para la dirección.</b> Es una ayuda para planificar, no una evaluación. Los nombres de los alumnos se cambiaron por "un alumno". El audio no se guardó.</span></div>
+    <div class="cg-mismo"><span>👁️</span><span>${DIR ? '<b>Este informe es el mismo para el profe y para la dirección.</b> ' : ''}Es una ayuda para planificar, no una evaluación. Los nombres de los alumnos se cambiaron por "un alumno". El audio no se guardó.</span></div>
     ${inf.huboClase === false ? `<div class="cg-alerta" style="margin-top:12px">La IA no encontró una clase en el audio (¿silencio o ruido?). Calidad del audio: ${esc(inf.calidadAudio)}.</div>` : ''}
 
     <div class="grilla cg-dos" style="margin-top:14px">
-      <div class="tarjeta">
+      <div class="tarjeta cg-profe">
         <h3>👩‍🏫 Para el profe</h3>
         <p class="chica" style="margin-top:8px">${esc(p.resumen)}</p>
         <div class="cg-bloque"><h4>Lo que se vio</h4>${lis(p.vistos, 'Nada registrado')}</div>
         <div class="cg-bloque"><h4>Contra el pensum de hoy</h4><p class="chica">${esc(p.comparacionPensum) || '—'}</p></div>
         <div class="cg-bloque"><h4>Quedó pendiente</h4>${lis(p.pendiente, 'Nada: se llegó a todo 🎉')}</div>
-        <div class="cg-bloque"><h4>💡 Ideas para la próxima</h4>${lis(p.sugerencias, '—')}</div>
+        <div class="cg-bloque cg-ideas"><h4>💡 Ideas para la próxima</h4>${lis(p.sugerencias, '—')}</div>
         <div class="cg-bloque"><h4>📝 Tareas que se dieron</h4>${p.tareas && p.tareas.length ? `<ul>${p.tareas.map((t) => `<li>${esc(t.descripcion)}${t.para ? ` <span class="pildora gris">${esc(t.para)}</span>` : ''}</li>`).join('')}</ul>` : '<p class="ter">No se dieron tareas</p>'}</div>
       </div>
       <div class="pila">
-        <div class="tarjeta">
+        ${DIR ? `<div class="tarjeta">
           <h3>🏫 Para la dirección</h3>
           <p class="chica" style="margin-top:8px">${esc(d.resumen)}</p>
           <div class="cg-bloque"><h4>Señales para revisar</h4>
             ${d.alertas && d.alertas.length ? d.alertas.map((a) => `<div class="cg-alerta chica"><b>⚠️ ${esc(ALERTA[a.tipo] || 'Señal')}</b>${a.minuto ? ` · minuto ${esc(a.minuto)}` : ''}<br>${esc(a.queSeEscucho)}<div class="ter" style="margin-top:4px">Para revisar por una persona. No es una conclusión: la IA puede equivocarse.</div></div>`).join('')
               : '<p class="chica"><span class="pildora">Sin señales de riesgo</span></p>'}
           </div>
-        </div>
+        </div>` : ''}
         <div class="tarjeta">
           <h3>🦜 Lo que van a saber Taji y Jochi</h3>
           <p class="ter" style="margin-top:4px">Si un alumno pregunta "¿qué tarea dejó el profe?" o "no entendí lo de hoy", los profes IA responden con esto (sin nombres). Se borra a los 14 días.</p>
@@ -357,7 +364,7 @@
       <a class="tarjeta click fila" href="${base}${esc(c.id)}" style="color:inherit">
         <div class="ico-caja" style="background:#10B98122">🎙️</div>
         <div class="crece"><b>${esc(c.materia)} · ${esc(CURSO_MAQUETA[c.curso] || c.curso)}</b><div class="ter">${esc(c.fecha)} · ${Math.max(1, Math.round(c.segundos / 60))} min · ${esc(c.tema)}</div></div>
-        ${al ? `<span class="pildora ambar">⚠️ ${al} para revisar</span>` : '<span class="pildora">listo</span>'}
+        ${al && DIR ? `<span class="pildora ambar">⚠️ ${al} para revisar</span>` : '<span class="pildora">listo</span>'}
       </a>`; }).join('')}</div>`;
     return `<div class="seccion"><div class="fila entre"><h3>Informes recientes</h3>
       <span class="fila" style="gap:8px">${conectado && api().usuario() ? `<span class="ter">cuenta: ${esc(api().usuario())}</span><button class="btn chico sec2" onclick="Clase.salir()">Salir</button>` : ''}<a class="btn chico sec2" href="${base}ejemplo">Ver un ejemplo</a></span></div>${cuerpo}</div>`;

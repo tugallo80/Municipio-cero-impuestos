@@ -20,7 +20,6 @@
   <div class="cuerpo con-lateral">
     <nav class="nav">
       <a href="#resumen" data-ruta="resumen">🏫 Cursos</a>
-      <a href="#clases" data-ruta="clases">🎙️ Clases grabadas</a>
       <a href="#finanzas" data-ruta="finanzas">💰 Finanzas</a>
       <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
       <a href="#planificacion" data-ruta="planificacion">🧭 Planificación</a>
@@ -31,8 +30,8 @@
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script src="comun.js?v=edu02d-2"></script>
-<script src="clase.js?v=edu04a-1"></script>
-<script type="module">import('/voz/clase.js?v=edu04a-1').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
+<script src="clase.js?v=edu04a-2"></script>
+<script type="module">import('/voz/clase.js?v=edu04a-2').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
 U.$('#nom-colegio').textContent = D.colegio.nombre;
@@ -175,6 +174,10 @@ function descargar(curso) {
   U.toast('📄 Archivo de ejemplo descargado');
 }
 
+// EDU.04a: "Clases grabadas" solo con ?direccion=1 (pendiente de diseño fino con el dueño).
+if (new URLSearchParams(location.search).get('direccion') === '1') {
+  document.querySelector('.nav a[data-ruta="resumen"]').insertAdjacentHTML('afterend', '<a href="#clases" data-ruta="clases">🎙️ Clases grabadas</a>');
+} else delete rutas.clases;
 U.router(rutas, 'resumen');
 Clase.alRepintar = () => {
   if ((location.hash.slice(1) || '').split('/')[0] === 'clases') window.dispatchEvent(new HashChangeEvent('hashchange'));
