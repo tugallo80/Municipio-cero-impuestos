@@ -81,3 +81,20 @@ Solo consulta (no editan contenidos):
   usa voces predefinidas, no clonadas). Si en el futuro se quisiera una referencia a una persona
   real, solo con autorización escrita de sus herederos y evaluación del riesgo político.
 - Nombre provisional: Kay (puede cambiar).
+
+## Revisión de la maqueta por el dueño (8-nov-2026)
+
+- La maqueta está bien y el mundo 3D se mueve **fluido** en su celular. El diseño final cambiará.
+- **Foco ahora: la experiencia del alumno.** Tutor, padres y dirección son más técnicos e
+  informativos; se trabajan después.
+- **Comunidad**: los compañeros del curso se encuentran en el mismo mundo, ven los retos de los
+  demás y quieren superarse → efecto comunitario y "viral" como Roblox/Minecraft (con seguridad).
+- **Duda abierta**: ¿el mundo debe ser el colegio ("salen del colegio y entran a otro colegio")
+  o algo fantástico, su casa, su barrio, o un mundo que crean ellos? → investigar y hacer un
+  **focus group con niños** antes de decidir.
+- **Minijuegos y recompensas**: no solo "un reto después del juego". Vencer un reto da acceso a
+  **lugares especiales o "prohibidos"** (ej.: un parque solo para quienes vencieron el reto, el
+  cuarto de objetos perdidos). El dueño escribirá el guion.
+- Investigación en curso (psicología infantil, por qué enganchan Roblox/Minecraft, escenario del
+  mundo + protocolo de focus group, mundo compartido seguro) →
+  `docs/investigacion/experiencia-del-alumno.md`.

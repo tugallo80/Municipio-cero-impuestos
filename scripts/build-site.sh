@@ -14,6 +14,12 @@ if [ -d educacion/maqueta ]; then
   cp -r educacion/maqueta/. _site/educacion/maqueta/
 fi
 
+# Educación: material de los talleres con niños (EDU.01b) en /educacion/talleres.
+if [ -d docs/educacion/talleres ]; then
+  mkdir -p _site/educacion/talleres
+  cp -r docs/educacion/talleres/. _site/educacion/talleres/
+fi
+
 # Educación: si existe la app de la tablet, se compila y se publica en /educacion.
 APP=educacion/apps/tablet-client
 if [ -f "$APP/package.json" ]; then

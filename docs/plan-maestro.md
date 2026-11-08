@@ -43,6 +43,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | MAESTRA | Coordinación | Ordenar visión, plan, reglas y permisos; lanzar y revisar sub-sesiones | — | ✅ activa |
 | INF.01 | Deploy automático | Firebase Hosting + Vercel, vista previa por PR, publicación al mergear | ✅ proyecto `municipio-ia` | ⏸️ PR #1 aprobado por el dueño en lo técnico, **en espera** hasta definir apps separadas |
 | EDU.01 | Maqueta navegable | Los 4 perfiles (tutor, alumno, padres, dirección) con datos de demo, para validar antes de programar | — (link con INF.01) | 🔎 PR #2 listo, capturas revisadas por el dueño |
+| EDU.01b | Láminas y maqueta v2 | Láminas de los 4 mundos + cartas para talleres con niños; maqueta del alumno v2 (misión→llave→lugar, sin ranking, perfil sin "estilo de aprendizaje") | EDU.01 | 🔎 PR #4 abierto: láminas en `/educacion/talleres/` + maqueta v2; falta OK del dueño |
 | EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | 🔎 PR #3 listo: `nande-educacion.web.app/prueba-motor/` habla por voz con Kay (prueba automática OK); ~USD 0,025–0,03 por minuto; falta prueba del dueño en el celular |
 | EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
@@ -119,6 +120,8 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/educacion/vision-plataforma-educativa.md` y `vision-interfaz.md`.
 - `docs/investigacion/educacion-piloto-y-financiamiento.md` — piloto, evidencia y financiamiento.
 - `docs/investigacion/transporte-municipal.md` — parque, modelo financiero y ley del transporte.
+- `docs/investigacion/experiencia-del-alumno.md` — psicología infantil, juego y mundo compartido.
+- `docs/educacion/protocolo-focus-group.md` — talleres de co-diseño con niños.
 
 ## Decisiones pendientes del dueño
 
