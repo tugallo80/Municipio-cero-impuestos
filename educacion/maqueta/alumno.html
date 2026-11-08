@@ -940,6 +940,48 @@ const FUENTES = [
 ];
 let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
+// ---- EDU.06a: la evolución del mundo según el curso del alumno ----
+// P1–P2 → 1 Bloques · P3–P4 → 2 Piezas · P5–P6 → 3 Mundo real · S1–S2 → 4 Horizonte · S3–S5 → 5 Mundo vivo · S6 → 6 Promo
+const VERSION_ESTILOS = 'edu06a-1';
+const QS = new URLSearchParams(location.search);
+const DEMO_CURSOS = QS.get('demo') === '1';
+let EVO = null, EVM = null, CURSO = 'P4';
+if (THREE && !window.__sin3D) {
+  try {
+    EVM = await import(`../estilos/evolucion.js?v=${VERSION_ESTILOS}`);
+    const D0 = window.DEMO, al = (D0.alumnos || []).find(a => a.id === D0.alumnoDemo.id);
+    const cur = (D0.cursos || []).find(c => c.id === (al ? al.curso : '4A'));
+    CURSO = (cur && EVM.cursoDeNombre(cur.nombre)) || 'P4';
+    if (DEMO_CURSOS && EVM.CURSOS.includes((QS.get('curso') || '').toUpperCase())) CURSO = QS.get('curso').toUpperCase();
+    EVO = await EVM.crearEvolucion(THREE, EVM.evolucionDeCurso(CURSO));
+  } catch (e) { console.warn('[evolución] se usa el mundo de bloques de siempre', e); EVO = null; }
+}
+window.__evolucion = () => EVO ? { n: EVO.n, nombre: EVO.nombre, curso: CURSO } : null;   // (para las pruebas)
+// Selector de curso para la presentación (solo con ?demo=1): cambia la evolución; al subir, transición.
+if (EVM) {
+  if (DEMO_CURSOS) document.querySelector('.jugador small').textContent = `${EVM.nombreCurso(CURSO)} · mundo ${EVO ? EVO.nombre : 'Bloques'}`;
+  window.__elegirCurso = c => {
+    const nuevo = EVM.evolucionDeCurso(c), viejo = EVO ? EVO.n : 1;
+    const destino = `/maqueta/alumno.html?demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '');
+    if (nuevo > viejo) location.href = `/estilos/transicion.html?de=${EVM.EVOLUCIONES[viejo - 1]}&a=${EVM.EVOLUCIONES[nuevo - 1]}&volver=${encodeURIComponent(destino)}`;
+    else location.href = destino;
+  };
+  if (DEMO_CURSOS) {
+    const b = document.createElement('button');
+    b.className = 'boton-hud'; b.id = 'demo-curso'; b.title = 'Cambiar de curso (demo)';
+    b.style.cssText = 'width:auto;padding:0 10px;font-size:13px;font-weight:700;white-space:nowrap';
+    b.textContent = `🎓 ${CURSO} · ${EVO ? EVO.nombre : 'Bloques'}`;
+    document.querySelector('.hud').prepend(b);
+    b.onclick = () => abrir(`<h2 class="t" style="font-size:22px">Curso (demo)</h2>
+      <p style="margin:6px 0 12px;color:#cbd5e1">Elegí un curso: el mundo cambia de evolución. Si sube, ves la transición "pasaste de curso".</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px">${EVM.CURSOS.map(c => {
+        const e = EVM.evolucionDeCurso(c);
+        return `<button class="bj ${c === CURSO ? 'oro' : 'gris'}" style="min-height:48px;font-size:15px" onclick="__elegirCurso('${c}')">${c} · ${e}. ${EVM.NOMBRES[e - 1]}</button>`;
+      }).join('')}</div>
+      <button class="bj ancho" style="margin-top:14px" onclick="cerrar()">Seguir jugando</button>`);
+  }
+}
+
 if (window.__sin3D) { /* el chico ya eligió seguir sin 3D */ }
 else if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
 else {
@@ -948,22 +990,39 @@ else {
 }
 
 function iniciar(THREE) {
+  const N = EVO ? EVO.n : 1;   // evolución (1–6)
   const D = window.DEMO, YO = D.alumnoDemo, M = D.mundo;
   const canvas = document.getElementById('mundo');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, EVO ? EVO.maxPixelRatio : 1.5));
   renderer.setSize(innerWidth, innerHeight);
 
   const escena = new THREE.Scene();
-  escena.background = new THREE.Color('#7cc8f5');
-  escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
-  const camara = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 200);
-  escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
-  const sol = new THREE.DirectionalLight('#fff4d6', 1.6); sol.position.set(12, 20, 8); escena.add(sol);
+  const camara = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 400);
+  if (EVO) EVO.montar(escena);
+  else {
+    escena.background = new THREE.Color('#7cc8f5');
+    escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
+    escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
+    const sol = new THREE.DirectionalLight('#fff4d6', 1.6); sol.position.set(12, 20, 8); escena.add(sol);
+  }
 
-  const caja = new THREE.BoxGeometry(1, 1, 1);
+  // Cada evolución dibuja las mismas piezas con otra forma y otro material (EDU.06a)
+  const caja = EVO ? EVO.caja : new THREE.BoxGeometry(1, 1, 1);
+  const cajaRecta = new THREE.BoxGeometry(1, 1, 1);
   const mats = {};
-  const mat = c => mats[c] || (mats[c] = new THREE.MeshLambertMaterial({ color: c }));
+  const mat = c => mats[c] || (mats[c] = EVO ? EVO.material(c) : new THREE.MeshLambertMaterial({ color: c }));
+  const dinamico = o => { o.userData.dinamico = true; return o; };   // lo que se mueve no se fusiona
+  // copa de árbol / formas redondas: cubo en Bloques, esfera desde Piezas
+  function bola(x, y, z, sx, sy, sz, color, padre = escena) {
+    const m = new THREE.Mesh(N >= 2 ? EVO.bola : caja, mat(color));
+    m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
+  }
+  // techo: escalonado en Bloques, a cuatro aguas desde Piezas
+  function techo(padre, y, w, l, h, color) {
+    if (N === 1) { bloque(0, y + .25, 0, w, .5, l, color, padre); bloque(0, y + .75, 0, w * .75, .5, l * .72, color, padre); bloque(0, y + 1.15, 0, w * .46, .4, l * .44, color, padre); return; }
+    const m = new THREE.Mesh(EVO.techoHip(w, l, h), mat(color)); m.position.y = y; padre.add(m);
+  }
   function bloque(x, y, z, sx, sy, sz, color, padre = escena) {
     const m = new THREE.Mesh(caja, typeof color === 'string' ? mat(color) : color);
     m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m;
@@ -990,12 +1049,21 @@ function iniciar(THREE) {
   const esCamino = (x, z) => (Math.abs(x) <= 1.5 && z <= 10 && z >= -16) || (Math.abs(z) <= 1.5 && Math.abs(x) <= 10) || Math.hypot(x, z) < 4.2 || (Math.abs(z - 13.5) <= 1 && Math.abs(x) <= 14);
   const celdas = [];
   for (let x = X0; x <= X1; x++) for (let z = Z0; z <= Z1; z++) celdas.push([x, z]);
-  const suelo = new THREE.InstancedMesh(caja, new THREE.MeshLambertMaterial(), celdas.length);
+  const suelo = new THREE.InstancedMesh(cajaRecta, EVO ? EVO.material('#ffffff', { nuevo: true }) : new THREE.MeshLambertMaterial(), celdas.length);
+  if (EVO && EVO.sombras) suelo.receiveShadow = true;
+  const PS = EVO ? EVO.P : null;
   const m4 = new THREE.Matrix4(), col = new THREE.Color();
   celdas.forEach(([x, z], k) => {
     const agua = enArroyo(z), camino = esCamino(x, z), otra = z < -19.5;
-    m4.makeTranslation(x, agua ? -.85 : camino ? -.45 : -.5 + ((x * 7 + z * 13) % 5 === 0 ? .08 : 0), z);
+    // Bloques: baldosas con escalones; desde Mundo real el suelo es parejo y los colores más suaves
+    const liso = N >= 3;
+    m4.makeTranslation(x, agua ? -.85 : camino ? (liso ? -.47 : -.45) : -.5 + (!liso && (x * 7 + z * 13) % 5 === 0 ? .08 : 0), z);
     suelo.setMatrixAt(k, m4);
+    if (N >= 2) {
+      const v = ((x * 3 + z * 7) % 5) / 5 * (liso ? .04 : .1);
+      const ondas = liso ? .035 * Math.sin(x * .31) * Math.cos(z * .27) : ((x + z) % 2 ? .02 : -.02) + v - .02;   // liso: manchas suaves, sin damero
+      col.set(agua ? PS.rio : otra ? '#8b9a7a' : camino ? PS.patio : PS.pasto).offsetHSL(0, 0, ondas);
+    } else
     col.set(agua ? ((x + z) % 2 ? '#38bdf8' : '#0ea5e9') : otra ? ((x + z) % 2 ? '#8b9a7a' : '#7f8f6f') : camino ? ((x + z) % 2 ? '#e7d8b1' : '#ddcb9c') : ((x * 3 + z) % 4 === 0 ? '#5fae4f' : (x + z) % 2 ? '#6bbd57' : '#64b552'));
     suelo.setColorAt(k, col);
   });
@@ -1003,14 +1071,19 @@ function iniciar(THREE) {
 
   // --- Plaza central ---
   bloque(0, 1.8, 0, .25, 4, .25, '#e5e7eb');
-  const bandera = bloque(.85, 3.3, 0, 1.4, .8, .08, '#10B981');
+  const bandera = dinamico(bloque(.85, 3.3, 0, 1.4, .8, .08, '#10B981'));
   bloque(0, .15, 0, 2.4, .3, 2.4, '#cbd5e1');
 
   // --- Árboles y cerco ---
   [[-15, 0], [15, -1], [-15, 7], [15, 7], [-18, -6], [18, -6], [-19, 16], [19, 16], [0, 17.5]].forEach(([x, z], i) => {
     bloque(x, 1, z, .7, 2, .7, '#7c4a1e');
-    bloque(x, 2.6, z, 2.2, 1.6, 2.2, i % 2 ? '#2f8f46' : '#3fa356');
-    bloque(x, 3.6, z, 1.3, .8, 1.3, '#4cb865');
+    if (N === 1) { bloque(x, 2.6, z, 2.2, 1.6, 2.2, i % 2 ? '#2f8f46' : '#3fa356'); bloque(x, 3.6, z, 1.3, .8, 1.3, '#4cb865'); }
+    else {
+      // copas redondas; algunos tajibos en flor (amarillo / rosado)
+      const flor = N >= 3 && i % 3 === 1 ? (i % 2 ? EVO.P.tajiboAm : EVO.P.tajiboRo) : null;
+      bola(x, 2.9, z, 2.8, 2.1, 2.8, flor || (i % 2 ? EVO.P.bosque2 : EVO.P.bosque3));
+      bola(x + .5, 3.8, z - .3, 1.7, 1.4, 1.7, flor || EVO.P.bosque4);
+    }
   });
   for (let t = -20; t <= 20; t += 2) {
     [[t, 19.5], [-21.5, t], [21.5, t]].forEach(([x, z]) => { if (z > -16) bloque(x, .5, z, .35, 1, .35, '#f1f5f9'); });
@@ -1036,14 +1109,14 @@ function iniciar(THREE) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.atan2(-x, -z); escena.add(g);
     bloque(0, 1.6, 0, 5, 3.2, 4.4, '#f5efe3', g);
     bloque(0, .15, 0, 5.4, .3, 4.8, '#9ca3af', g);
-    bloque(0, 3.45, 0, 5.6, .5, 5, m.color, g); bloque(0, 3.95, 0, 4.2, .5, 3.6, m.color, g); bloque(0, 4.4, 0, 2.6, .4, 2.2, m.color, g);
+    techo(g, 3.2, 5.8, 5.2, 1.7, m.color);
     bloque(0, 1.05, 2.21, 1.3, 2.1, .12, '#5b3a1a', g);
     bloque(-1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g); bloque(1.65, 1.9, 2.21, .9, .9, .12, '#bae6fd', g);
     bloque(0, .05, 3.2, 1.8, .1, 1.4, new THREE.MeshBasicMaterial({ color: m.color, transparent: true, opacity: .85 }), g);
     const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: cartel(m, YO.avance[m.id]), depthTest: false }));
     sp.scale.set(3.4, 1.6, 1); sp.position.set(0, 6.3, 0); sp.renderOrder = 5; g.add(sp);
     let aviso = null;
-    if (D.misiones.some(x => x.materia === m.id && x.estado !== 'hecha')) { aviso = bloque(0, 8, 0, .5, .5, .5, '#FDE047', g); aviso.rotation.set(.6, .6, 0); }
+    if (D.misiones.some(x => x.materia === m.id && x.estado !== 'hecha')) { aviso = dinamico(bloque(0, 8, 0, .5, .5, .5, '#FDE047', g)); aviso.rotation.set(.6, .6, 0); }
     hacerTocable(g, { tipo: 'aula', id: m.id });
     const puerta = new THREE.Vector3(0, 0, 3.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(g.position);
     solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(5.6, 3, 5.6)));
@@ -1052,12 +1125,12 @@ function iniciar(THREE) {
   });
 
   // --- Lugares con niebla (parque escondido, cuarto de objetos perdidos) ---
-  const matNiebla = new THREE.MeshLambertMaterial({ color: '#e9d5ff', transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 });
+  const matNiebla = EVO ? EVO.material('#e9d5ff', { transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 }) : new THREE.MeshLambertMaterial({ color: '#e9d5ff', transparent: true, opacity: .55, emissive: '#6d28d9', emissiveIntensity: .25 });
   const lugares3D = {};
   M.lugares.forEach(l => {
     const [x, z] = l.pos;
     const g = new THREE.Group(); g.position.set(x, 0, z); escena.add(g);
-    const cerrado = new THREE.Group(), abierto = new THREE.Group(); g.add(cerrado, abierto); abierto.visible = false;
+    const cerrado = dinamico(new THREE.Group()), abierto = dinamico(new THREE.Group()); g.add(cerrado, abierto); abierto.visible = false;
     let puertaHoja;
     if (l.id === 'parque') {
       // cerco de arbustos con portón entreabierto mirando al centro (+x, +z)
@@ -1066,7 +1139,7 @@ function iniciar(THREE) {
         if (Math.abs(i) > 1) { bloque(i, .9, 3, 1, 1.8, 1, '#2f7d3a', g); bloque(3, .9, i, 1, 1.8, 1, '#2f7d3a', g); }
       }
       bloque(3, 2.2, 0, .5, .6, 3.4, '#78350f', g);
-      puertaHoja = bloque(3, .9, -.8, .2, 1.6, 1.4, '#a16207', g); puertaHoja.rotation.y = .5; puertaHoja.position.set(3.3, .9, -.6);
+      puertaHoja = dinamico(bloque(3, .9, -.8, .2, 1.6, 1.4, '#a16207', g)); puertaHoja.rotation.y = .5; puertaHoja.position.set(3.3, .9, -.6);
       // silueta oscura de árbol grande
       bloque(0, 1.5, 0, .9, 3, .9, '#1f2937', cerrado); bloque(0, 3.6, 0, 3.6, 2, 3.6, '#111827', cerrado);
       // abierto: árbol, hamacas, flores, mantel de picnic
@@ -1077,9 +1150,9 @@ function iniciar(THREE) {
       [[-2, 2], [-2.2, -.2], [.4, -2.2], [2, -2]].forEach(([fx, fz], i) => bloque(fx, .35, fz, .4, .4, .4, ['#f472b6', '#fde047', '#f97316', '#a78bfa'][i], abierto));
     } else {
       // cuartito con puerta entreabierta (mirando al centro, -x)
-      bloque(0, 1.6, 0, 5, 3.2, 5, '#d6d3d1', g); bloque(0, 3.4, 0, 5.6, .5, 5.6, '#92400e', g); bloque(0, 3.9, 0, 4, .5, 4, '#92400e', g);
+      bloque(0, 1.6, 0, 5, 3.2, 5, '#d6d3d1', g); techo(g, 3.15, 5.8, 5.8, 1.6, '#92400e');
       bloque(-2.52, 1.1, 0, .06, 2.2, 1.5, '#111827', g);
-      puertaHoja = bloque(-2.9, 1.1, -.55, 1.2, 2.2, .15, '#7c2d12', g); puertaHoja.rotation.y = -.7;
+      puertaHoja = dinamico(bloque(-2.9, 1.1, -.55, 1.2, 2.2, .15, '#7c2d12', g)); puertaHoja.rotation.y = -.7;
       bloque(-2.55, 2.6, 0, .1, .5, 1.8, '#F59E0B', g);
       // abierto: estantes y cajas de objetos afuera
       [[-3.5, 1.6], [-3.6, -1.7]].forEach(([bx, bz]) => { bloque(bx, .5, bz, .9, 1, .9, '#a16207', abierto); bloque(bx, 1.1, bz, .5, .3, .5, ['#38bdf8', '#f472b6'][bz > 0 ? 0 : 1], abierto); });
@@ -1109,9 +1182,9 @@ function iniciar(THREE) {
 
   // --- Puente del arroyo (se completa entre todos) y la otra orilla con niebla ---
   const tablas = [];
-  for (let i = 0; i < 8; i++) tablas.push(bloque(0, -.05, -16.2 - i * .45, 3, .25, .45, '#a16207'));
+  for (let i = 0; i < 8; i++) tablas.push(dinamico(bloque(0, -.05, -16.2 - i * .45, 3, .25, .45, '#a16207')));
   bloque(-1.6, .6, -18, .25, 1.2, 4.4, '#78350f'); bloque(1.6, .6, -18, .25, 1.2, 4.4, '#78350f');
-  const matFantasma = new THREE.MeshLambertMaterial({ color: '#ffffff', transparent: true, opacity: .3 });
+  const matFantasma = EVO ? EVO.material('#ffffff', { transparent: true, opacity: .3 }) : new THREE.MeshLambertMaterial({ color: '#ffffff', transparent: true, opacity: .3 });
   function pintarPuente() {
     const k = Math.round(tablas.length * Math.min(1, M.puente.hechas / M.puente.meta));
     tablas.forEach((t, i) => { t.material = i < k ? mat('#a16207') : matFantasma; });
@@ -1126,7 +1199,7 @@ function iniciar(THREE) {
   // --- Casas del curso (la mía + compañeros) ---
   function casa(x, z, cfg, texto, toca, colorEtq) {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = Math.PI; escena.add(g);
-    bloque(0, 1.1, 0, 3, 2.2, 2.6, cfg.color, g); bloque(0, 2.45, 0, 3.4, .5, 3, cfg.techo, g); bloque(0, 2.9, 0, 2.2, .4, 1.8, cfg.techo, g);
+    bloque(0, 1.1, 0, 3, 2.2, 2.6, cfg.color, g); if (N === 1) { bloque(0, 2.45, 0, 3.4, .5, 3, cfg.techo, g); bloque(0, 2.9, 0, 2.2, .4, 1.8, cfg.techo, g); } else techo(g, 2.2, 3.6, 3.2, 1.3, cfg.techo);
     bloque(0, .75, 1.31, .7, 1.5, .06, '#7c4a1e', g); bloque(.95, 1.3, 1.31, .6, .6, .06, '#bae6fd', g);
     const e = etiqueta(texto, colorEtq, 420); e.position.set(0, 4.2, 0); g.add(e);
     hacerTocable(g, toca);
@@ -1144,7 +1217,8 @@ function iniciar(THREE) {
 
   // --- Personajes: yo y compañeros (todos de diseño propio) ---
   function personaje(remera, gorra, piel = '#f2c79b') {
-    const yo = new THREE.Group(); escena.add(yo);
+    if (N >= 2) return personajeEvo(remera, gorra, piel);
+    const yo = dinamico(new THREE.Group()); escena.add(yo);
     const cuerpo = new THREE.Group(); yo.add(cuerpo);
     bloque(0, 1.25, 0, .9, 1, .55, remera, cuerpo);
     bloque(0, 2.1, 0, .8, .7, .7, piel, cuerpo);
@@ -1154,6 +1228,38 @@ function iniciar(THREE) {
     bloque(0, 1.3, -.38, .6, .7, .25, '#f59e0b', cuerpo);
     const pI = bloque(-.22, .38, 0, .36, .75, .4, '#334155', cuerpo), pD = bloque(.22, .38, 0, .36, .75, .4, '#334155', cuerpo);
     const bI = bloque(-.6, 1.3, 0, .26, .8, .3, piel, cuerpo), bD = bloque(.6, 1.3, 0, .26, .8, .3, piel, cuerpo);
+    return { yo, cuerpo, pI, pD, bI, bD, paso: 0 };
+  }
+  // EDU.06a: el mismo esqueleto (piernas y brazos que giran en cadera y hombro) con la forma de
+  // cada evolución: redondeado (2), cuerpo con cápsulas (3), más alto y proporciones reales (4–6).
+  function personajeEvo(remera, gorra, piel) {
+    const yo = dinamico(new THREE.Group()); escena.add(yo);
+    const cuerpo = new THREE.Group(); yo.add(cuerpo);
+    const alto = N >= 4 ? 1.25 : N === 3 ? 1.12 : 1;               // más estirado en secundaria
+    const pierna = .78 * alto * (N >= 4 ? 1.12 : 1), torsoH = .95 * alto, cab = N >= 4 ? .62 : N === 3 ? .7 : .8;
+    const parte = (geo, color, x, y, z, sx, sy, sz, padre) => { const m = new THREE.Mesh(geo, mat(color)); m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); if (EVO.sombras) m.castShadow = true; return m; };
+    const pivote = (x, y) => { const g = new THREE.Group(); g.position.set(x, y, 0); cuerpo.add(g); return g; };
+    const pI = pivote(-.2, pierna), pD = pivote(.2, pierna);
+    for (const p of [pI, pD]) {
+      parte(N >= 3 ? EVO.capsula : caja, '#334155', 0, -pierna / 2, 0, .3, N >= 3 ? pierna * .5 : pierna, .32, p);
+      parte(caja, '#1f2937', 0, -pierna + .06, .06, .32, .12, .44, p);
+    }
+    parte(N >= 4 ? EVO.torso : caja, remera, 0, pierna + torsoH / 2, 0, N >= 4 ? .78 : .86, torsoH, .5, cuerpo);
+    const hombro = pierna + torsoH * .92;
+    const bI = pivote(-.5, hombro), bD = pivote(.5, hombro);
+    for (const b of [bI, bD]) {
+      parte(N >= 3 ? EVO.capsula : caja, remera, 0, -torsoH * .4, 0, .22, N >= 3 ? torsoH * .42 : torsoH * .8, .24, b);
+      parte(EVO.bola, piel, 0, -torsoH * .86, 0, .2, .2, .2, b);
+    }
+    const cy = pierna + torsoH + cab * .55;
+    if (N >= 4) parte(EVO.cil, piel, 0, pierna + torsoH + .05, 0, .2, .18, .2, cuerpo);
+    parte(EVO.bola, piel, 0, cy, 0, cab, cab * 1.05, cab * .95, cuerpo);
+    parte(EVO.bola, gorra, 0, cy + cab * .18, -.04, cab * 1.04, cab * .72, cab * 1.02, cuerpo);   // pelo / gorra
+    parte(caja, gorra, 0, cy + cab * .32, cab * .45, cab * .62, .07, cab * .35, cuerpo);           // visera
+    for (const sx of [-1, 1]) parte(caja, '#0f172a', sx * cab * .19, cy + .02, cab * .46, cab * .12, cab * .16, .03, cuerpo);
+    parte(caja, '#7c2d12', 0, cy - cab * .2, cab * .46, cab * .22, .03, .03, cuerpo);
+    parte(caja, '#f59e0b', 0, pierna + torsoH * .55, -.3, .56, torsoH * .62, .22, cuerpo);       // mochila
+    const partes = []; yo.traverse(o => { if (o.isMesh) partes.push(o); }); partes.forEach(o => EVO.contornear(o));
     return { yo, cuerpo, pI, pD, bI, bD, paso: 0 };
   }
   function animar(P, moviendo, dt, t) {
@@ -1440,8 +1546,37 @@ function iniciar(THREE) {
     objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
     camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
     camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
-    renderer.render(escena, camara);
+    if (EVO) EVO.render(renderer, escena, camara); else renderer.render(escena, camara);
+    medirFps(t);
     requestAnimationFrame(bucle);
+  }
+  // fps: bajada automática de calidad en 5 y 6 (como en la vitrina) y aviso solo con ?diag=1
+  const diag = QS.get('diag') === '1' ? document.createElement('div') : null;
+  if (diag) { diag.style.cssText = 'position:fixed;left:50%;top:calc(var(--sa) + 54px);transform:translateX(-50%);z-index:70;background:rgba(15,26,23,.9);border:2px solid #10B981;border-radius:12px;padding:4px 10px;font:700 12px ui-monospace,monospace;pointer-events:none'; document.body.appendChild(diag); }
+  let cuadros = 0, tF = performance.now(), lentos = 0, autoTxt = '', segundos = 0;
+  window.__fpsLista = [];
+  function medirFps() {
+    cuadros++;
+    const ahora = performance.now();
+    if (ahora - tF < 1000) return;
+    const fps = Math.round(cuadros * 1000 / (ahora - tF)); cuadros = 0; tF = ahora; segundos++;
+    window.__fpsLista.push(fps);
+    if (EVO && EVO.n >= 5 && segundos > 2 && !window.__pausa) {
+      lentos = fps < 30 ? lentos + 1 : 0;
+      if (lentos >= 2) {
+        lentos = 0;
+        const paso = EVO.bajarCalidad(escena);
+        if (paso) { autoTxt = paso.texto; if (paso.resolucion) { renderer.setPixelRatio(Math.min(renderer.getPixelRatio(), paso.resolucion)); renderer.setSize(innerWidth, innerHeight); } }
+      }
+    }
+    if (diag) diag.innerHTML = `Evolución ${N}${EVO ? ' · ' + EVO.nombre : ''} · ${CURSO} · <span style="color:${fps >= 30 ? '#34D399' : '#F87171'}">${fps} fps</span>` + (fps < 30 ? ' ⚠ no llega a 30' : '') + (autoTxt ? ` · auto: ${autoTxt}` : '');
+  }
+  // lo que no se mueve se junta en pocas mallas (menos llamadas de dibujo) y lleva contorno en 3–5
+  if (EVO) {
+    const mov = []; escena.traverse(o => { if (o.isMesh && o.userData.dinamico && !o.material.transparent && !o.children.some(c => c.userData.esContorno)) mov.push(o); }); mov.forEach(o => EVO.contornear(o));
+    const r = EVO.fusionar(escena, () => false);
+    console.log('[evolución]', EVO.n, EVO.nombre, CURSO, r);
+    window.__escena = escena; window.__renderer = renderer;   // (para las pruebas)
   }
   camara.position.set(yo.position.x, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.pitch) * CAM.dist);
   bucle();

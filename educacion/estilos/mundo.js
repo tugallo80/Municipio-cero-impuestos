@@ -1482,7 +1482,7 @@ function texturaGuarda(THREE, P) {
 
 // Brillo (bloom) y corrección de color de la evolución 6, sin librerías extra:
 // escena → textura HDR → partes muy claras → desenfoque en 2 tamaños → suma + ACES + sRGB.
-function crearBloom(THREE, renderer) {
+export function crearBloom(THREE, renderer) {
   const tam = new THREE.Vector2();
   const op = { type: THREE.HalfFloatType };
   const rt = new THREE.WebGLRenderTarget(1, 1, { ...op, samples: 4 });
