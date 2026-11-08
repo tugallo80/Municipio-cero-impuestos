@@ -8,7 +8,7 @@ name: Educación — deploy
 
 on:
   push:
-    branches: [main, sesion/edu-02, sesion/edu-02b]
+    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c]
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'

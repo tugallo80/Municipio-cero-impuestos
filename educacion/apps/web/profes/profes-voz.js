@@ -72,6 +72,20 @@ const css = `
 #pv-entrar .no{background:#262626;color:#fff}
 #pv-entrar .error{color:#FCA5A5;font-size:14px;min-height:18px}
 @media (prefers-reduced-motion: reduce){#pv-franja .caja b{animation:none}}
+/* EDU.02c — horizontal primero: la píldora va debajo de las caras (arriba a la izquierda),
+   la franja es más baja para no tapar el círculo de caminar ni los botones, y el login
+   aparece centrado y compacto. En vertical queda como antes. */
+@media (orientation:landscape){
+#pv-pildora{left:max(10px,env(safe-area-inset-left));top:calc(max(8px,env(safe-area-inset-top)) + 60px);transform:none}
+#pv-franja{height:70px}
+#pv-franja .caja b{width:45%;height:110px;bottom:-70px}
+#pv-franja .caja b:nth-child(1){left:-5%}#pv-franja .caja b:nth-child(2){left:28%}#pv-franja .caja b:nth-child(3){left:60%}
+#pv-franja .oye{left:25%;right:25%}
+#pv-marco i{border-radius:28px}
+#pv-entrar{align-items:center;padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+#pv-entrar form{max-width:460px;max-height:100%;overflow:auto;border-radius:24px;padding:16px;gap:8px;grid-template-columns:1fr 1fr}
+#pv-entrar form>h2,#pv-entrar form>p,#pv-entrar form>.error,#pv-entrar form>.fila{grid-column:1/-1}
+}
 `
 const estilo = document.createElement('style')
 estilo.textContent = css
