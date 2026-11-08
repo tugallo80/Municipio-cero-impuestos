@@ -13,14 +13,19 @@
 //    edu/sesiones/{sesionId}           → { alumnoId, inicio, voz, modelo, cerrada }
 // ══════════════════════════════════════════════════
 const { initializeApp, getApps } = require('firebase-admin/app');
+const NOMBRE_APP = 'educacion';
 const { getDatabase, ServerValue } = require('firebase-admin/database');
 const { fechaBolivia, evaluarCuota } = require('./cuota');
 
 let db = null;
 function base() {
   if (!db) {
-    if (!getApps().length) initializeApp({ databaseURL: process.env.EDU_DATABASE_URL });
-    db = getDatabase();
+    // App con nombre propio: firebase-functions crea su propia app interna, así que
+    // "si no hay apps, inicializar" no sirve para saber si existe la nuestra.
+    const app =
+      getApps().find((a) => a.name === NOMBRE_APP) ||
+      initializeApp({ databaseURL: process.env.EDU_DATABASE_URL }, NOMBRE_APP);
+    db = getDatabase(app);
   }
   return db;
 }
