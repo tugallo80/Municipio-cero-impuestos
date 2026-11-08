@@ -64,10 +64,19 @@
   .pista-mirar.ver { opacity: 1; }
   .pista-mirar .mano { display: inline-block; font-size: 22px; animation: deslizar 1.4s ease-in-out infinite; }
   @keyframes deslizar { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(14px); } }
-  body.con-panel .joy, body.con-panel .ayuda, body.con-panel .acciones { visibility: hidden; }
+  body.con-panel .joy, body.con-panel .ayuda, body.con-panel .acciones, body.con-panel .cartel, body.con-panel .rumbo { visibility: hidden; }
   .boton-hud.pc[hidden] { display: none; }
   .boton-hud.pc.resaltado { background: var(--oro); color: #422006; border-color: #fff; animation: latido 1.1s ease-in-out infinite; }
-  .entrar { display: none; max-width: min(300px, 40vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  /* EDU.02d — Cartel flotante sobre la puerta más cercana ("Entrar · Mate"), diseño propio */
+  .cartel { position: fixed; left: 0; top: 0; z-index: 11; display: none; flex-direction: column; align-items: center; pointer-events: none; will-change: transform; }
+  .cartel.ver { display: flex; animation: aparece .2s ease; }
+  .cartel .bj { pointer-events: auto; min-height: 58px; padding: 0 22px; font-size: 18px; max-width: min(320px, 46vw); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 3px solid #D1FAE5; box-shadow: 0 5px 0 var(--verde-osc), 0 0 0 6px rgba(16,185,129,.25); }
+  .cartel .bj small { font-family: 'Inter'; font-weight: 600; font-size: 12px; opacity: .8; }
+  .cartel .pico { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 13px solid #D1FAE5; margin-top: 4px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)); animation: rebota 1s ease-in-out infinite; }
+  @keyframes rebota { 50% { transform: translateY(4px); } }
+  .rumbo { position: fixed; left: 50%; bottom: calc(var(--sb) + 52px); transform: translateX(-50%); z-index: 10; display: none; align-items: center; gap: 8px; background: rgba(15,26,23,.88); border: 2px solid var(--verde); border-radius: 99px; padding: 6px 8px 6px 14px; font-size: 14px; font-weight: 600; white-space: nowrap; }
+  .rumbo.ver { display: flex; }
+  .rumbo button { background: rgba(255,255,255,.12); border-radius: 99px; min-height: 34px; padding: 0 12px; }
 
   /* Botones de juego */
   .bj { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; padding: 0 20px; border-radius: 16px; background: var(--verde); color: #04261B; font-family: 'Space Grotesk'; font-weight: 700; font-size: 17px; box-shadow: 0 5px 0 var(--verde-osc); transition: transform .08s, box-shadow .08s; }
@@ -265,7 +274,6 @@
 <div class="aviso-ayuda" id="aviso-ayuda"></div>
 <div class="joy" id="joy"><i></i></div>
 <div class="acciones">
-  <button class="bj entrar" id="entrar"></button>
   <div class="fila-acc">
     <button class="redondo" onclick="abrirFrases()" title="Frases">😄<small>Frases</small></button>
     <button class="redondo" onclick="abrirMochila()" title="Mochila">🎒<small>Mochila</small></button>
@@ -273,6 +281,8 @@
   </div>
 </div>
 <div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar · pellizcá para acercar</div>
+<div class="cartel" id="cartel" aria-live="polite"><button class="bj" id="entrar"></button><span class="pico"></span></div>
+<div class="rumbo" id="rumbo"><span id="rumbo-txt"></span><button type="button" id="rumbo-parar">✕ Parar</button></div>
 <div class="lista2d" id="lista2d"></div>
 
 <div class="cargando" id="cargando"><div><div class="t">Armando la isla del curso…</div><div>bloque por bloque 🧱</div></div></div>
@@ -300,8 +310,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-7"></script>
-<script src="misiones-demo.js?v=edu02c-7"></script>
+<script src="datos-demo.js?v=edu02d-1"></script>
+<script src="misiones-demo.js?v=edu02d-1"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -878,7 +888,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-7').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02d-1').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
@@ -1037,7 +1047,7 @@ function iniciar(THREE) {
     hacerTocable(g, { tipo: 'aula', id: m.id });
     const puerta = new THREE.Vector3(0, 0, 3.4).applyAxisAngle(new THREE.Vector3(0, 1, 0), g.rotation.y).add(g.position);
     solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(5.6, 3, 5.6)));
-    interes.push({ pos: puerta, texto: `${m.icono} Entrar a ${m.corto}`, accion: () => window.abrirAula(m.id) });
+    interes.push({ clave: 'aula:' + m.id, pos: puerta, alto: 3.4, texto: `${m.icono} Entrar · ${m.corto}`, accion: () => window.abrirAula(m.id) });
     aulas.push({ m, g, sp, aviso });
   });
 
@@ -1087,7 +1097,7 @@ function iniciar(THREE) {
     hacerTocable(g, { tipo: 'lugar', id: l.id });
     solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(6.4, 3, 6.4)));
     const entrada = new THREE.Vector3(x + (l.id === 'parque' ? 4.4 : -4.4), 0, z);
-    interes.push({ pos: entrada, texto: `${l.icono} ${l.nombre}`, accion: () => window.abrirLugar(l.id), lugar: l.id });
+    interes.push({ clave: 'lugar:' + l.id, pos: entrada, alto: 3, texto: `${l.icono} Entrar · ${l.nombre}`, accion: () => window.abrirLugar(l.id), lugar: l.id });
     lugares3D[l.id] = { g, cerrado, abierto, candado, nubecitas, puertaHoja, entrada, l, abriendo: 0 };
   });
   window.__abrirLugar3D = id => {
@@ -1111,7 +1121,7 @@ function iniciar(THREE) {
   bloque(-6, 1.5, -23, 1, 3, 1, '#8b8fa3'); bloque(-6, 3.6, -23, 2.6, 1.4, 2.6, '#7c809a'); bloque(5, 1.4, -22.5, 3.6, 2.8, 3, '#8b8fa3'); bloque(5, 3.1, -22.5, 4.2, .6, 3.6, '#7c809a');
   const cartelPuente = etiqueta('🌉 ' + M.puente.hechas + '/' + M.puente.meta, '#FDE047', 300); cartelPuente.position.set(0, 3.2, -15.6); escena.add(cartelPuente);
   hacerTocable(cartelPuente, { tipo: 'puente' }); tablas.forEach(t => hacerTocable(t, { tipo: 'puente' }));
-  interes.push({ pos: new THREE.Vector3(0, 0, -15.2), texto: '🌉 Entre todos abrimos el puente', accion: () => window.abrirPuente() });
+  interes.push({ clave: 'puente', pos: new THREE.Vector3(0, 0, -15.2), alto: 2.4, texto: '🌉 Ver el puente', accion: () => window.abrirPuente() });
 
   // --- Casas del curso (la mía + compañeros) ---
   function casa(x, z, cfg, texto, toca, colorEtq) {
@@ -1124,12 +1134,12 @@ function iniciar(THREE) {
     return g;
   }
   casa(-13, 16, M.miCasa, '🏠 Tu casa', { tipo: 'micasa' }, '#10B981');
-  interes.push({ pos: new THREE.Vector3(-13, 0, 13.6), texto: '🏠 Entrar a tu casa', accion: () => window.abrirMiCasa() });
+  interes.push({ clave: 'micasa', pos: new THREE.Vector3(-13, 0, 13.6), alto: 2.6, texto: '🏠 Entrar · Tu casa', accion: () => window.abrirMiCasa() });
   const posCasas = [[-6.5, 16.5], [6.5, 16.5], [13, 16]];
   M.companeros.slice(0, 3).forEach((c, i) => {
     const [x, z] = posCasas[i];
     casa(x, z, c.casa, c.apodo, { tipo: 'casa', id: c.id }, c.color);
-    interes.push({ pos: new THREE.Vector3(x, 0, z - 2.4), texto: '🏠 Visitar a ' + c.apodo, accion: () => window.visitar(c.id) });
+    interes.push({ clave: 'casa:' + c.id, pos: new THREE.Vector3(x, 0, z - 2.4), alto: 2.6, texto: '🏠 Visitar · ' + c.apodo, accion: () => window.visitar(c.id) });
   });
 
   // --- Personajes: yo y compañeros (todos de diseño propio) ---
@@ -1209,7 +1219,8 @@ function iniciar(THREE) {
   const ZOOM_MIN = .45, ZOOM_MAX = 1.5;   // ~9 a ~30 unidades: ni dentro del personaje ni demasiado lejos
   const zoomA = z => { CAM.zoomObj = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z)); };
   let pellizco = null;   // { d0, z0 } mientras hay dos dedos sobre el mundo
-  window.__cam = CAM; window.__yo = yo;   // (para las pruebas automáticas)
+  window.__cam = CAM; window.__yo = yo; window.__interes = interes; window.__piloto = () => piloto;
+  window.__queToca = (x, y) => { ptr.set(x / innerWidth * 2 - 1, -(y / innerHeight) * 2 + 1); ray.setFromCamera(ptr, camara); const h = ray.intersectObjects(tocables, false)[0]; if (!h) return null; const t = h.object.userData.toca; return t.tipo === 'puente' || t.tipo === 'micasa' ? t.tipo : t.tipo + ':' + t.id; };   // (para las pruebas automáticas)
   const dedos = new Map();  // pointerId → { x, y, x0, y0, t0, mirar }
   let ultimoTap = { t: 0, x: 0, y: 0 };
   const SENS = 0.0085;      // radianes por píxel
@@ -1219,12 +1230,11 @@ function iniciar(THREE) {
     const hit = ray.intersectObjects(tocables, false)[0]; if (!hit) return false;
     ocultarAyuda();
     const t = hit.object.userData.toca;
-    if (t.tipo === 'aula') window.abrirAula(t.id);
-    if (t.tipo === 'lugar') window.abrirLugar(t.id);
-    if (t.tipo === 'puente') window.abrirPuente();
-    if (t.tipo === 'micasa') window.abrirMiCasa();
-    if (t.tipo === 'casa') window.visitar(t.id);
-    if (t.tipo === 'companero') window.visitar(t.id);
+    if (t.tipo === 'companero') { window.visitar(t.id); return true; }
+    // Aula, lugar, casa o puente: el personaje camina solo hasta la puerta y entra.
+    const clave = t.tipo === 'puente' || t.tipo === 'micasa' ? t.tipo : t.tipo + ':' + t.id;
+    const p = interes.find(x => x.clave === clave);
+    if (p) irHacia(p);
     return true;
   }
   function detrasDelPersonaje() { CAM.yawObj = yo.rotation.y + Math.PI; CAM.pitchObj = CAM.pitch0; }
@@ -1250,6 +1260,7 @@ function iniciar(THREE) {
     if (!d || e.type === 'pointercancel' || d.pellizco) return;
     const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
     if (!corto) return;
+    if (piloto) { pararPiloto(); return; }   // tocar durante la caminata la cancela
     const ahora = performance.now();
     const doble = d.mirar && ahora - ultimoTap.t < 320 && Math.hypot(e.clientX - ultimoTap.x, e.clientY - ultimoTap.y) < 40;
     ultimoTap = { t: ahora, x: e.clientX, y: e.clientY };
@@ -1270,9 +1281,29 @@ function iniciar(THREE) {
   }
   if (!pistaVista) setTimeout(() => { if (!pistaVista) { pistaMirar.classList.add('ver'); setTimeout(() => pistaMirar.classList.remove('ver'), 7000); } }, 6000);
 
-  const btnEntrar = document.getElementById('entrar');
-  let cercano = null, ultimoSonido = null;
-  btnEntrar.onclick = () => cercano && cercano.accion();
+  // --- Entrar como en los juegos de mundo abierto (EDU.02d) ---
+  // 1) Cerca de una puerta (≈2–3 pasos) aparece un cartel flotante sobre ella con un botón grande.
+  // 2) Tocar el aula/lugar en el mundo: el personaje camina solo hasta la puerta y entra.
+  const btnEntrar = document.getElementById('entrar'), cartelPuerta = document.getElementById('cartel');
+  const rumbo = document.getElementById('rumbo'), rumboTxt = document.getElementById('rumbo-txt');
+  const RADIO_PUERTA = 3;
+  let cercano = null, ultimoSonido = null, cartelDe = null, piloto = null;
+  const entrarEn = p => { pararPiloto(); window.sonar('pop'); p.accion(); };
+  btnEntrar.onclick = () => cercano && entrarEn(cercano);
+  addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && cercano && !window.__pausa && !e.target.closest('input,button,textarea')) { e.preventDefault(); entrarEn(cercano); } });
+  // marca en el piso adonde va caminando
+  const marca = new THREE.Mesh(new THREE.RingGeometry(.45, .7, 28), new THREE.MeshBasicMaterial({ color: '#10B981', transparent: true, opacity: .9, depthWrite: false }));
+  marca.rotation.x = -Math.PI / 2; marca.position.y = .08; marca.visible = false; escena.add(marca);
+  function irHacia(p) {
+    if (p.pos.distanceTo(yo.position) < RADIO_PUERTA) return entrarEn(p);
+    piloto = { p, t: 0, mejor: Infinity, sinAvanzar: 0, esquive: 0, lado: Math.random() < .5 ? 1 : -1 };
+    marca.position.x = p.pos.x; marca.position.z = p.pos.z; marca.visible = true;
+    rumboTxt.textContent = 'Yendo a ' + p.texto.replace(/^\S+\s/, '').replace(/^Entrar · |^Visitar · |^Ver el /, '') + '…';
+    rumbo.classList.add('ver'); window.sonar('pop');
+  }
+  function pararPiloto() { piloto = null; marca.visible = false; rumbo.classList.remove('ver'); }
+  document.getElementById('rumbo-parar').onclick = pararPiloto;
+  const proy = new THREE.Vector3();
   window.__irA = id => { const L = lugares3D[id]; if (L) { yo.position.set(L.entrada.x + (L.entrada.x < 0 ? 1.2 : -1.2), 0, L.entrada.z); } };
   window.__actualizarMundo = () => {
     aulas.forEach(a => {
@@ -1320,6 +1351,21 @@ function iniciar(THREE) {
     if (teclas['e']) CAM.yawObj -= dt * 2;
     // caminar relativo a la cámara: arriba en el círculo = hacia adonde mira la cámara
     { const c = Math.cos(CAM.yaw), sn = Math.sin(CAM.yaw); const wx = c * mx + sn * mz, wz = -sn * mx + c * mz; mx = wx; mz = wz; }
+    if (piloto && (Math.hypot(mx, mz) > .1 || window.__pausa)) pararPiloto();   // el círculo manda: se cancela
+    else if (piloto) {
+      const dx = piloto.p.pos.x - yo.position.x, dz = piloto.p.pos.z - yo.position.z, d = Math.hypot(dx, dz);
+      piloto.t += dt;
+      if (d < .7) { const p = piloto.p; entrarEn(p); }
+      else {
+        // si no avanza (algo en el medio), rodea un ratito por el costado; si igual no llega, entra igual
+        if (d < piloto.mejor - .05) { piloto.mejor = d; piloto.sinAvanzar = 0; } else piloto.sinAvanzar += dt;
+        if (piloto.sinAvanzar > .5 && piloto.esquive <= 0) { piloto.esquive = .7; piloto.lado *= -1; piloto.sinAvanzar = 0; }
+        if (piloto.t > 12) { const p = piloto.p; entrarEn(p); }
+        else if (piloto.esquive > 0) { piloto.esquive -= dt; mx = -dz / d * piloto.lado + dx / d * .3; mz = dx / d * piloto.lado + dz / d * .3; }
+        else { mx = dx / d; mz = dz / d; }
+      }
+    }
+    marca.visible = !!piloto; if (piloto) { const k2 = 1 + Math.sin(t * 6) * .12; marca.scale.set(k2, k2, k2); }
     const largo = Math.hypot(mx, mz), moviendo = largo > .1 && !window.__pausa;
     if (moviendo) {
       const v = 6 * Math.min(1, largo);
@@ -1342,10 +1388,18 @@ function iniciar(THREE) {
     });
 
     // punto de interés cercano → botón contextual (y sonido de los lugares con niebla)
-    cercano = null; let mejor = 2.8;
-    for (const p of interes) { const d = p.pos.distanceTo(yo.position); if (d < mejor) { mejor = d; cercano = p; } }
-    btnEntrar.style.display = cercano && !window.__pausa ? 'inline-flex' : 'none';
-    if (cercano) btnEntrar.textContent = cercano.texto;
+    // (con un poco de margen al alejarse para que el cartel no parpadee en el borde)
+    cercano = null; let mejor = RADIO_PUERTA;
+    for (const p of interes) { const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .5 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
+    const verCartel = cercano && !window.__pausa && !piloto;
+    if (verCartel) {
+      if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
+      proy.set(cercano.pos.x, cercano.alto || 3, cercano.pos.z).project(camara);
+      const W = innerWidth, H = innerHeight, cw = cartelPuerta.offsetWidth, ch = cartelPuerta.offsetHeight;
+      let x = (proy.x + 1) / 2 * W - cw / 2, y = (1 - proy.y) / 2 * H - ch;
+      x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(60, Math.min(H - ch - 90, y));
+      cartelPuerta.style.transform = `translate3d(${x | 0}px, ${y | 0}px, 0)`;
+    } else if (cartelDe) { cartelPuerta.classList.remove('ver'); cartelDe = null; }
     if (cercano && cercano.lugar && ultimoSonido !== cercano.lugar && !window.S.abiertos.has(cercano.lugar)) { window.sonar(cercano.lugar === 'parque' ? 'pajaros' : 'clic'); }
     ultimoSonido = cercano ? cercano.lugar : null;
 
