@@ -82,7 +82,13 @@ devuelve un resumen con 3 usos:
 ## Costo
 - Estimado: audio ≈ 32 tokens/s → ~115.000 tokens por hora. Con Flash-Lite ≈ **USD 0,05–0,08 por
   hora de clase** (precios de agregadores; confirmar en ai.google.dev/pricing).
-- **Medido**: ver la sección "Prueba de la clase grabada" del resumen del workflow (anotado abajo).
+- **Medido (8-nov, `gemini-3.1-flash-lite`)**: clase de prueba de 69 s → **USD 0,0020** (3.067 tokens),
+  respuesta en ~3 s. Extrapolado linealmente da USD 0,11/hora, pero en clips cortos pesa la parte fija
+  (instrucción + JSON ≈ 850 tokens). Para una hora real: ~115.000 tokens de audio (USD 0,058) + salida
+  con transcripción (~15.000 tokens, USD 0,022) ≈ **USD 0,08 por hora de clase**. 5 horas por día ≈
+  USD 0,40/día por profe → USD 72 por profe por año escolar (180 días). El log `clase_resumida`
+  guarda `costoPorHoraUsd` de cada clase real para confirmarlo.
+- Si se quiere bajar: no pedir la transcripción (ahorra ~25 %), o resumir solo la voz del profe.
 
 ## Cierre
 (se completa al cerrar la sesión)
