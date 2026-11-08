@@ -98,3 +98,56 @@ Solo consulta (no editan contenidos):
 - Investigación en curso (psicología infantil, por qué enganchan Roblox/Minecraft, escenario del
   mundo + protocolo de focus group, mundo compartido seguro) →
   `docs/investigacion/experiencia-del-alumno.md`.
+
+## Prueba de voz del dueño (8-nov-2026)
+
+- Probó a Kay por voz en `/prueba-motor/`: "está bastante bien".
+- **Dos voces candidatas**: femenina **Sulafat** (la que más le gusta) y masculina a elegir entre
+  **Achird** y **Sadaltager**.
+- Idea: tener **las dos voces**. Duda: ¿los niños confían más en una voz femenina o masculina, y
+  las niñas? → investigación en curso (`docs/investigacion/voz-del-tutor.md`); probar también en
+  los talleres con niños.
+- Con la cuenta de prueba llegó al límite de **8 charlas por día**.
+
+## Dos tutores con personalidad: "la profe" y "el profe" (dueño, 8-nov-2026)
+
+- No es "una voz": son **dos personalidades (arquetipos)**. Voz femenina **Sulafat** → *la profe*;
+  voz masculina **Achird** → *el profe* (en Santa Cruz a los docentes se les dice "profe").
+  Nombres propios a definir.
+- **Ambos siempre disponibles.** No se obliga a elegir al empezar: el niño llama al que quiere
+  ("quiero hacer la tarea con la profe") y puede preferir uno por materia.
+- **Interfaz**: no un botón verde; la idea es que **toda la pantalla lata, como una boca que
+  habla**. Se afina después.
+- **Más adelante**: si el municipio lanza el proyecto, habrá una etapa de concientización sobre la
+  entrada de la IA a la educación (publicidad, socialización, **acciones BTL en colegios**), y los
+  dos tutores se **personificarán físicamente** como personajes.
+
+Criterios para diseñarlos (de `docs/investigacion/voz-del-tutor.md` y `experiencia-del-alumno.md`):
+- **Mismo nivel de calidez y de saber** en los dos; ninguno es "el sabio" ni "la tierna".
+- **Ninguna materia asignada por defecto** a uno u otro (nada de "el profe para matemática, la
+  profe para lenguaje"); la preferencia por materia la decide el niño.
+- **Memoria compartida**: los dos ven el mismo progreso del alumno; cambiar de profe no reinicia nada.
+- **Siempre dicen que son una IA** (UNESCO); importante sobre todo cuando haya personajes físicos
+  en colegios, para que los niños no los confundan con personas.
+- Medir en el piloto: con quién habla cada niño, por materia y edad, y si cambiar de profe ayuda o distrae.
+
+## Ajuste del habla camba (dueño escuchó las voces, 8-nov-2026)
+
+Las voces están bien, pero **mezclan camba con neutro**. Para afinar la personalidad:
+- **Terminaciones**: el camba aspira la "s" final y antes de consonante, suena como una "j" suave
+  ("loj chicoj", "ejtá", "ej") — no la "s" neutra.
+- **Vocabulario camba** que debe aparecer con naturalidad:
+  - "**belleza**" en vez de "lindo" ("¡belleza, lo lograste!").
+  - "**la tuti**" cuando algo está muy bueno.
+  - "**mucha dosis**" cuando algo es de buen nivel.
+  - "**otro level**" como elogio.
+- Se sigue ajustando con el dueño. Limitación técnica a probar: las voces de Gemini se guían por
+  instrucciones; la aspiración de la "s" puede lograrse solo en parte.
+
+## Los profes dentro del mundo (dueño, 8-nov-2026)
+
+- El tutor de voz vive **dentro del mundo del niño**: no debe tapar ni cortar la interfaz del juego.
+- Se nota que está acompañando con un **detalle**: un **marco que palpita** alrededor de la pantalla,
+  o una **base/niebla luminosa abajo que se mueve con el sonido** (tipo la franja de voz de los
+  autos Tesla), sin salirse de su espacio.
+- Reemplaza la idea anterior de "toda la pantalla latiendo como una boca".
