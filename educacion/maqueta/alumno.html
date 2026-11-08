@@ -942,8 +942,9 @@ let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
 // ---- EDU.06a: la evolución del mundo según el curso del alumno ----
 // P1–P2 → 1 Bloques · P3–P4 → 2 Piezas · P5–P6 → 3 Mundo real · S1–S2 → 4 Horizonte · S3–S5 → 5 Mundo vivo · S6 → 6 Promo
-const VERSION_ESTILOS = 'edu06a-1';
-const QS = new URLSearchParams(location.search);
+const VERSION_ESTILOS = 'edu06a-2';
+// parámetros por ?… o por #… (el # sobrevive a cualquier redirección del servidor)
+const QS = new URLSearchParams(location.search.slice(1) + '&' + location.hash.replace(/^#/, ''));
 const DEMO_CURSOS = QS.get('demo') === '1';
 let EVO = null, EVM = null, CURSO = 'P4';
 if (THREE && !window.__sin3D) {
@@ -954,15 +955,26 @@ if (THREE && !window.__sin3D) {
     CURSO = (cur && EVM.cursoDeNombre(cur.nombre)) || 'P4';
     if (DEMO_CURSOS && EVM.CURSOS.includes((QS.get('curso') || '').toUpperCase())) CURSO = QS.get('curso').toUpperCase();
     EVO = await EVM.crearEvolucion(THREE, EVM.evolucionDeCurso(CURSO));
-  } catch (e) { console.warn('[evolución] se usa el mundo de bloques de siempre', e); EVO = null; }
+  } catch (e) {
+    console.warn('[evolución] se usa el mundo de bloques de siempre', e); EVO = null;
+    window.__errorEvolucion = String(e && e.message || e);
+    if (QS.get('diag') === '1') {
+      const d = document.createElement('div');
+      d.style.cssText = 'position:fixed;left:50%;top:60px;transform:translateX(-50%);z-index:80;background:#7f1d1d;color:#fff;border-radius:12px;padding:8px 12px;font:600 13px Inter,sans-serif;max-width:90vw';
+      d.textContent = '⚠ No cargó la evolución: ' + window.__errorEvolucion;
+      document.body.appendChild(d);
+    }
+  }
 }
 window.__evolucion = () => EVO ? { n: EVO.n, nombre: EVO.nombre, curso: CURSO } : null;   // (para las pruebas)
 // Selector de curso para la presentación (solo con ?demo=1): cambia la evolución; al subir, transición.
 if (EVM) {
-  if (DEMO_CURSOS) document.querySelector('.jugador small').textContent = `${EVM.nombreCurso(CURSO)} · mundo ${EVO ? EVO.nombre : 'Bloques'}`;
+  // en el HUD se ve siempre en qué mundo está (en demo, con el curso elegido)
+  const chico = document.querySelector('.jugador small');
+  chico.textContent = DEMO_CURSOS ? `${EVM.nombreCurso(CURSO)} · mundo ${EVO ? EVO.nombre : 'Bloques'}` : chico.textContent.replace('isla del curso', `mundo ${EVO ? EVO.nombre : 'Bloques'}`);
   window.__elegirCurso = c => {
     const nuevo = EVM.evolucionDeCurso(c), viejo = EVO ? EVO.n : 1;
-    const destino = `/maqueta/alumno.html?demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '');
+    const destino = `/maqueta/alumno/?demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '') + `#demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '');
     if (nuevo > viejo) location.href = `/estilos/transicion.html?de=${EVM.EVOLUCIONES[viejo - 1]}&a=${EVM.EVOLUCIONES[nuevo - 1]}&volver=${encodeURIComponent(destino)}`;
     else location.href = destino;
   };
