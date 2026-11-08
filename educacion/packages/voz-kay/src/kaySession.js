@@ -16,7 +16,8 @@
 //   arma ni ve la instrucción de sistema (privacidad + nadie la puede cambiar).
 //   construirSystemInstruction queda solo para tokens sin bloqueo.
 // - Nuevos callbacks: onUso (usageMetadata de cada turno, para medir costo),
-//   onTranscripcion (texto de lo que dijo cada uno) y onTurnoCompleto.
+//   onTranscripcion (texto de lo que dijo cada uno), onTurnoCompleto y
+//   onSilencio (terminó de sonar el audio de Kay).
 
 import { GoogleGenAI } from '@google/genai'
 
@@ -108,6 +109,7 @@ async function prepararAudio(workletBasePath) {
  *   la Live API (uno por turno). Mandarlo al servidor al cerrar para medir costo.
  * @param {(t: {quien: 'alumno'|'kay', texto: string}) => void} [args.onTranscripcion]
  * @param {() => void} [args.onTurnoCompleto]
+ * @param {() => void} [args.onSilencio] Terminó de sonar todo el audio de Kay.
  * @param {string[]} [args.modelosFallback] Default: MODELOS_FALLBACK_DEFAULT.
  * @param {string} [args.voz] Nombre de voz prebuilt de Gemini. Default: 'Kore'.
  * @param {string} [args.workletBasePath] Carpeta pública donde serviste los
@@ -126,6 +128,7 @@ export async function iniciarSesionKay({
   onUso,
   onTranscripcion,
   onTurnoCompleto,
+  onSilencio,
   modelosFallback = MODELOS_FALLBACK_DEFAULT,
   voz = 'Kore',
   workletBasePath = '/audioWorklets',
@@ -156,6 +159,10 @@ export async function iniciarSesionKay({
       `El navegador no dejó activar el audio (entrada: ${ctxEntrada.state}, salida: ${ctxSalida.state}). ` +
         'Probá tocar en cualquier parte de la pantalla y reintentar.'
     )
+  }
+
+  nodoSalida.port.onmessage = (e) => {
+    if (e.data?.tipo === 'vacio') onSilencio?.()
   }
 
   nodoEntrada.port.onmessage = (e) => {

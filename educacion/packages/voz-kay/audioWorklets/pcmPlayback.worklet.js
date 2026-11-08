@@ -59,6 +59,9 @@ class PcmPlaybackProcessor extends AudioWorkletProcessor {
         // un hueco real más largo) — vuelve a juntar colchón antes de seguir
         // en vez de arrancar y frenar en seco de nuevo enseguida.
         salida[i] = 0
+        // Avisa una vez que terminó de sonar todo lo que había (ÑANDÉ: sirve
+        // para cortar la charla recién cuando Kay terminó de despedirse).
+        if (this.listo) this.port.postMessage({ tipo: 'vacio' })
         this.listo = false
         continue
       }

@@ -80,6 +80,7 @@ export function useKayLive({
   onUso,
   onTranscripcion,
   onTurnoCompleto,
+  onSilencio,
   modelosFallback,
   voz,
   workletBasePath,
@@ -154,6 +155,7 @@ export function useKayLive({
         onUso,
         onTranscripcion,
         onTurnoCompleto,
+        onSilencio,
         onError: (msg) => {
           if (vivoRef.current) setError(msg)
           onErrorExterno?.(msg)
@@ -170,7 +172,7 @@ export function useKayLive({
         detener()
       }
     }
-  }, [obtenerToken, construirSystemInstruction, tools, modelosFallback, voz, workletBasePath, manejarFunctionCall, detener, onErrorExterno, onUso, onTranscripcion, onTurnoCompleto])
+  }, [obtenerToken, construirSystemInstruction, tools, modelosFallback, voz, workletBasePath, manejarFunctionCall, detener, onErrorExterno, onUso, onTranscripcion, onTurnoCompleto, onSilencio])
 
   return { activo, estado, error, iniciar, detener }
 }

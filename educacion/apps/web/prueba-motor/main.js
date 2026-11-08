@@ -98,8 +98,27 @@ function ponerEstado(e) {
   orbe.disabled = e === 'conectando'
 }
 
+// Cierre al despedirse: Kay debería llamar a terminar_conversacion, pero el modelo
+// a veces se despide sin llamarla. Respaldo: si el alumno se despidió, se corta
+// cuando termina de sonar la despedida de Kay (o a los 15 s, por las dudas).
+const DESPEDIDA = /\b(chau|chao|adi[oó]s|nos vemos|hasta (luego|mañana)|ya termin[eé])\b/i
+let textoAlumnoTurno = ''
+let cierrePendiente = null
+function programarCierre(motivo) {
+  if (cierrePendiente || !sesion) return
+  cierrePendiente = { motivo, respaldo: setTimeout(() => cerrarPendiente(), 15000) }
+}
+function cerrarPendiente() {
+  if (!cierrePendiente) return
+  clearTimeout(cierrePendiente.respaldo)
+  const { motivo } = cierrePendiente
+  cierrePendiente = null
+  terminar(motivo)
+}
+
 let ultimaBurbuja = null
 function agregarTexto({ quien, texto }) {
+  if (quien === 'alumno') textoAlumnoTurno += texto
   if (quien === 'kay') $('orbe').classList.add('habla')
   if (!ultimaBurbuja || ultimaBurbuja.dataset.quien !== quien) {
     ultimaBurbuja = document.createElement('div')
@@ -152,13 +171,19 @@ async function empezar() {
       onTurnoCompleto: () => {
         $('orbe').classList.remove('habla')
         ultimaBurbuja = null
+        if (DESPEDIDA.test(textoAlumnoTurno)) programarCierre('despedida')
+        textoAlumnoTurno = ''
+      },
+      onSilencio: () => {
+        $('orbe').classList.remove('habla')
+        cerrarPendiente()
       },
       onUso: (u) => charla?.usos.push(u),
       onFunctionCall: (llamada, responder) => {
         if (llamada.name === 'terminar_conversacion') {
           responder({ output: 'Listo, charla cerrada.' })
-          // Deja terminar de sonar la despedida antes de cortar.
-          setTimeout(() => terminar('despedida'), 2500)
+          // Corta cuando termine de sonar la despedida.
+          programarCierre('herramienta')
         } else {
           responder({ error: `Herramienta desconocida: ${llamada.name}` })
         }
@@ -176,6 +201,11 @@ async function empezar() {
 }
 
 async function terminar(motivo) {
+  if (cierrePendiente) {
+    clearTimeout(cierrePendiente.respaldo)
+    cierrePendiente = null
+  }
+  textoAlumnoTurno = ''
   const s = sesion
   const c = charla
   sesion = null

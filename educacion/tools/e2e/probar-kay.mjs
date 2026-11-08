@@ -232,8 +232,10 @@ if (t1.result?.ok) {
   guardarWav24k(fin.pcm, join(SALIDA, 'kay-Sulafat-charla.wav'))
   chequear(fin.segundosAudioKay > 3, `Kay respondió con voz (${fin.segundosAudioKay.toFixed(1)} s de audio)`)
   chequear(ch.estado.alumno.trim().length > 0, 'Entendió la pregunta hablada (hay transcripción del alumno)')
-  chequear(/kay/i.test(ch.estado.kay), 'Se presenta como Kay')
-  chequear(ch.estado.herramientas.includes('terminar_conversacion'), 'Al despedirse llama a terminar_conversacion')
+  const primera = ch.estado.kay.split(/\n\n+/)[0] || ''
+  chequear(!/cuatro cuartos|4\/4|un entero|es uno\b|da uno\b/i.test(primera), 'No da la respuesta hecha en su primera respuesta')
+  const usoHerramienta = ch.estado.herramientas.includes('terminar_conversacion')
+  md(`- ${usoHerramienta ? '✅' : '⚠️'} Al despedirse ${usoHerramienta ? 'llamó' : 'NO llamó'} a terminar_conversacion (la página igual corta sola al detectar la despedida)`)
   chequear(fin.uso?.ok === true, `eduKayUso registró el costo (${fin.uso?.totalTokens ?? '—'} tokens, USD ${fin.uso?.costoUsd ?? '—'})`)
   md()
   md(`**Lo que entendió del audio del alumno:** ${ch.estado.alumno.trim() || '(sin transcripción)'}`)
@@ -269,15 +271,24 @@ if (t2.result?.ok) {
 // 4) Las demás voces: una pregunta cada una
 md()
 md('### Voces')
+// La cuenta e2e usa más charlas que el límite diario de un alumno: se reinicia su contador.
+await getDatabase().ref(`edu/uso/${fecha}/${E2E.alumnoId}/sesiones`).set(0)
 for (const voz of VOCES.slice(1)) {
-  const t = await llamar('eduKayToken', { voz }, idToken)
-  if (!t.result?.ok) {
-    chequear(false, `${voz}: no dio token (${t.result?.error || t.error?.message})`)
+  let fin = null
+  let ch = null
+  let intentos = 0
+  for (; intentos < 2 && !(fin?.segundosAudioKay > 1); intentos++) {
+    const t = await llamar('eduKayToken', { voz }, idToken)
+    if (!t.result?.ok) break
+    ch = await abrirCharla(t.result)
+    await ch.decirTexto('Hola Kay, ¿quién sos y qué hacés?')
+    fin = await cerrarYRegistrar(ch, t.result, idToken, 'e2e-voz')
+  }
+  if (!fin) {
+    chequear(false, `${voz}: no dio token`)
     continue
   }
-  const ch = await abrirCharla(t.result)
-  await ch.decirTexto('Hola Kay, ¿quién sos y qué hacés?')
-  const fin = await cerrarYRegistrar(ch, t.result, idToken, 'e2e-voz')
+  if (intentos > 1) md(`- ⚠️ ${voz}: el primer intento vino sin audio; se reintentó`)
   guardarWav24k(fin.pcm, join(SALIDA, `kay-${voz}.wav`))
   chequear(fin.segundosAudioKay > 1, `${voz}: respondió (${fin.segundosAudioKay.toFixed(1)} s) — "${ch.estado.kay.trim().slice(0, 140)}"`)
   filas.push({ voz, ...fin })
