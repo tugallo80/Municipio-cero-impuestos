@@ -98,3 +98,13 @@ Solo consulta (no editan contenidos):
 - Investigación en curso (psicología infantil, por qué enganchan Roblox/Minecraft, escenario del
   mundo + protocolo de focus group, mundo compartido seguro) →
   `docs/investigacion/experiencia-del-alumno.md`.
+
+## Prueba de voz del dueño (8-nov-2026)
+
+- Probó a Kay por voz en `/prueba-motor/`: "está bastante bien".
+- **Dos voces candidatas**: femenina **Sulafat** (la que más le gusta) y masculina a elegir entre
+  **Achird** y **Sadaltager**.
+- Idea: tener **las dos voces**. Duda: ¿los niños confían más en una voz femenina o masculina, y
+  las niñas? → investigación en curso (`docs/investigacion/voz-del-tutor.md`); probar también en
+  los talleres con niños.
+- Con la cuenta de prueba llegó al límite de **8 charlas por día**.
