@@ -16,42 +16,58 @@
   button { font: inherit; color: inherit; border: 0; background: none; cursor: pointer; }
   #mundo { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
 
-  /* HUD */
-  .hud { position: fixed; top: 0; left: 0; right: 0; padding: calc(10px + env(safe-area-inset-top)) 12px 0; display: flex; gap: 8px; align-items: center; z-index: 10; pointer-events: none; }
+  /* ============================================================
+     EDU.02c — Horizontal primero (los chicos juegan con el celular acostado).
+     Zonas seguras (notch) en las 4 orillas. Vertical = respaldo (ver más abajo).
+     ============================================================ */
+  :root { --si: max(10px, env(safe-area-inset-left)); --sd: max(10px, env(safe-area-inset-right)); --sa: max(8px, env(safe-area-inset-top)); --sb: max(10px, env(safe-area-inset-bottom)); }
+
+  /* HUD arriba a la derecha: barra del curso + llaves + salir (compacto) */
+  .hud { position: fixed; top: var(--sa); right: var(--sd); display: flex; gap: 8px; align-items: center; z-index: 10; pointer-events: none; }
   .hud > * { pointer-events: auto; }
-  .boton-hud { width: 46px; height: 46px; border-radius: 14px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); display: grid; place-items: center; font-size: 20px; color: #fff; text-decoration: none; box-shadow: 0 4px 0 rgba(0,0,0,.25); flex-shrink: 0; }
-  .jugador { flex: 1; display: flex; align-items: center; gap: 10px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); border-radius: 16px; padding: 6px 10px 6px 6px; box-shadow: 0 4px 0 rgba(0,0,0,.25); min-width: 0; }
-  .jugador .cara { width: 34px; height: 34px; border-radius: 10px; background: var(--verde); display: grid; place-items: center; font-size: 20px; flex-shrink: 0; }
-  .jugador b { font-family: 'Space Grotesk'; font-size: 14px; display: block; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .jugador small { font-size: 11px; color: #cbd5e1; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .boton-hud { width: 44px; height: 44px; border-radius: 14px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); display: grid; place-items: center; font-size: 19px; color: #fff; text-decoration: none; box-shadow: 0 4px 0 rgba(0,0,0,.25); flex-shrink: 0; }
+  .jugador { display: flex; align-items: center; gap: 8px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); border-radius: 14px; height: 44px; padding: 0 10px 0 4px; box-shadow: 0 4px 0 rgba(0,0,0,.25); min-width: 0; max-width: 250px; }
+  .jugador .cara { width: 32px; height: 32px; border-radius: 10px; background: var(--verde); display: grid; place-items: center; font-size: 19px; flex-shrink: 0; }
+  .jugador b { font-family: 'Space Grotesk'; font-size: 13px; display: block; line-height: 1.1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .jugador small { font-size: 10px; color: #cbd5e1; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .jugador > div:nth-child(2) { min-width: 0; flex: 1; }
   .llaves { font-family: 'Space Grotesk'; font-weight: 700; color: var(--oro); white-space: nowrap; font-size: 15px; }
-  /* Los dos profes de voz (EDU.02b): siempre disponibles, cada uno con su cara y color */
-  .profe { padding: 0; background: var(--pc); border-color: rgba(255,255,255,.5); position: relative; }
-  .profe svg { width: 40px; height: 40px; display: block; }
+  .chip-puente { display: flex; align-items: center; gap: 6px; height: 44px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); border-radius: 14px; padding: 0 10px; font-size: 12px; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
+  .chip-puente .mini { width: 56px; height: 8px; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
+  .chip-puente .mini i { display: block; height: 100%; background: var(--oro); border-radius: 99px; transition: width .6s; }
+  /* Las caras de los profes, arriba a la izquierda. Quedan por encima de los paneles
+     (z 60) para poder llamarlos mientras se resuelve una misión. */
+  .hud-profes { position: fixed; top: var(--sa); left: var(--si); z-index: 60; display: flex; gap: 8px; }
+  .profe { width: 50px; height: 50px; padding: 0; background: var(--pc); border-color: rgba(255,255,255,.5); position: relative; }
+  .profe svg { width: 44px; height: 44px; display: block; }
   .profe .estrella { position: absolute; top: -7px; right: -7px; font-size: 14px; display: none; filter: drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
   .profe.pref .estrella { display: block; }
   .profe.hablando { border-color: #fff; animation: latido 1.1s ease-in-out infinite; }
   .profe.llamando { opacity: .7; animation: latido .5s ease-in-out infinite; }
   @keyframes latido { 50% { transform: scale(1.08); } }
-  .chip-puente { position: fixed; top: calc(66px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 10; display: flex; align-items: center; gap: 8px; background: rgba(15,26,23,.85); border: 2px solid rgba(255,255,255,.15); border-radius: 99px; padding: 6px 12px; font-size: 13px; font-weight: 600; white-space: nowrap; box-shadow: 0 4px 0 rgba(0,0,0,.25); }
-  .chip-puente .mini { width: 70px; height: 8px; border-radius: 99px; background: rgba(255,255,255,.15); overflow: hidden; }
-  .chip-puente .mini i { display: block; height: 100%; background: var(--oro); border-radius: 99px; transition: width .6s; }
-  .ayuda { position: fixed; top: calc(108px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); background: rgba(15,26,23,.8); border-radius: 99px; padding: 8px 14px; font-size: 13px; z-index: 10; white-space: nowrap; pointer-events: none; transition: opacity .4s; }
-  .aviso-ayuda { position: fixed; left: 12px; right: 12px; top: calc(108px + env(safe-area-inset-top)); z-index: 12; display: none; align-items: center; gap: 10px; background: #FEF3C7; color: #422006; border-radius: 16px; padding: 10px 12px; box-shadow: 0 5px 0 #CA8A04; font-size: 14px; max-width: 460px; margin: 0 auto; animation: sube .3s ease; }
+  .ayuda { position: fixed; bottom: calc(var(--sb) + 6px); left: 50%; transform: translateX(-50%); background: rgba(15,26,23,.8); border-radius: 99px; padding: 8px 14px; font-size: 13px; z-index: 10; white-space: nowrap; pointer-events: none; transition: opacity .4s; }
+  .aviso-ayuda { position: fixed; left: 50%; transform: translateX(-50%); width: min(460px, calc(100vw - 260px)); top: calc(var(--sa) + 56px); z-index: 12; display: none; align-items: center; gap: 10px; background: #FEF3C7; color: #422006; border-radius: 16px; padding: 8px 10px; box-shadow: 0 5px 0 #CA8A04; font-size: 14px; animation: aparece .3s ease; }
   .aviso-ayuda.ver { display: flex; }
   .aviso-ayuda b { font-family: 'Space Grotesk'; }
   .aviso-ayuda .bj { min-height: 40px; padding: 0 12px; font-size: 14px; }
+  @keyframes aparece { from { opacity: 0; } }
 
-  /* Joystick y botones de acción */
-  .joy { position: fixed; left: 18px; bottom: calc(22px + env(safe-area-inset-bottom)); width: 116px; height: 116px; border-radius: 50%; background: rgba(15,26,23,.35); border: 3px solid rgba(255,255,255,.35); z-index: 10; touch-action: none; }
-  .joy i { position: absolute; left: 50%; top: 50%; width: 50px; height: 50px; margin: -25px 0 0 -25px; border-radius: 50%; background: rgba(255,255,255,.85); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
-  .acciones { position: fixed; right: 12px; bottom: calc(22px + env(safe-area-inset-bottom)); z-index: 10; display: flex; flex-direction: column; gap: 10px; align-items: flex-end; }
-  .acciones .fila-acc { display: flex; gap: 8px; }
+  /* Círculo de caminar abajo a la izquierda; acciones abajo a la derecha */
+  .joy { position: fixed; left: calc(var(--si) + 10px); bottom: calc(var(--sb) + 8px); width: 124px; height: 124px; border-radius: 50%; background: rgba(15,26,23,.35); border: 3px solid rgba(255,255,255,.35); z-index: 10; touch-action: none; }
+  .joy i { position: absolute; left: 50%; top: 50%; width: 52px; height: 52px; margin: -26px 0 0 -26px; border-radius: 50%; background: rgba(255,255,255,.85); box-shadow: 0 3px 0 rgba(0,0,0,.25); }
+  .acciones { position: fixed; right: calc(var(--sd) + 4px); bottom: calc(var(--sb) + 16px); z-index: 10; display: flex; flex-direction: column; gap: 12px; align-items: flex-end; }
+  .acciones .fila-acc { display: flex; gap: 10px; align-items: flex-end; }
   .redondo { width: 54px; height: 54px; border-radius: 18px; background: rgba(15,26,23,.88); border: 2px solid rgba(255,255,255,.18); display: grid; place-items: center; font-size: 24px; box-shadow: 0 4px 0 rgba(0,0,0,.3); position: relative; }
   .redondo small { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
-  .redondo.ayudar { background: #F59E0B; border-color: #FDE68A; }
-  .entrar { display: none; margin-bottom: 8px; }
+  .redondo.ayudar { width: 64px; height: 64px; font-size: 30px; border-radius: 22px; background: #F59E0B; border-color: #FDE68A; }
+  .pista-mirar { position: fixed; right: calc(var(--sd) + 40px); top: 45%; z-index: 9; pointer-events: none; display: flex; align-items: center; gap: 8px; background: rgba(15,26,23,.82); border: 2px solid rgba(255,255,255,.25); border-radius: 99px; padding: 8px 14px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .4s; }
+  .pista-mirar.ver { opacity: 1; }
+  .pista-mirar .mano { display: inline-block; font-size: 22px; animation: deslizar 1.4s ease-in-out infinite; }
+  @keyframes deslizar { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(14px); } }
+  body.con-panel .joy, body.con-panel .ayuda, body.con-panel .acciones { visibility: hidden; }
+  .boton-hud.pc[hidden] { display: none; }
+  .boton-hud.pc.resaltado { background: var(--oro); color: #422006; border-color: #fff; animation: latido 1.1s ease-in-out infinite; }
+  .entrar { display: none; max-width: min(300px, 40vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
   /* Botones de juego */
   .bj { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 54px; padding: 0 20px; border-radius: 16px; background: var(--verde); color: #04261B; font-family: 'Space Grotesk'; font-weight: 700; font-size: 17px; box-shadow: 0 5px 0 var(--verde-osc); transition: transform .08s, box-shadow .08s; }
@@ -62,10 +78,14 @@
   .bj[disabled] { opacity: .45; }
 
   /* Paneles */
-  .panel-velo { position: fixed; inset: 0; z-index: 50; background: rgba(4,12,10,.55); display: none; align-items: flex-end; justify-content: center; }
+  /* Paneles: en horizontal, una hoja lateral a la derecha; el mundo y las caras de los
+     profes siguen a la vista a la izquierda (tocar el mundo cierra el panel). */
+  .panel-velo { position: fixed; inset: 0; z-index: 50; background: linear-gradient(90deg, rgba(4,12,10,0) 0%, rgba(4,12,10,.12) 30%, rgba(4,12,10,.5) 100%); display: none; align-items: stretch; justify-content: flex-end; }
   .panel-velo.abierto { display: flex; }
-  .panel { width: 100%; max-width: 520px; max-height: 88vh; overflow: auto; background: var(--panel); border: 3px solid var(--borde); border-bottom: 0; border-radius: 26px 26px 0 0; padding: 18px 16px calc(22px + env(safe-area-inset-bottom)); animation: sube .25s ease; touch-action: pan-y; }
-  @media (min-width: 700px) { .panel-velo { align-items: center; } .panel { border-radius: 26px; border-bottom: 3px solid var(--borde); } }
+  .panel { width: var(--ancho-panel); height: 100%; overflow: auto; overscroll-behavior: contain; background: var(--panel); border: 3px solid var(--borde); border-right: 0; border-radius: 24px 0 0 24px; padding: calc(var(--sa) + 6px) calc(var(--sd) + 4px) calc(var(--sb) + 12px) 16px; animation: entra .25s ease; touch-action: pan-y; }
+  :root { --ancho-panel: min(480px, 58vw); }
+  @media (min-width: 1100px) { :root { --ancho-panel: 520px; } }
+  @keyframes entra { from { transform: translateX(48px); opacity: 0; } }
   @keyframes sube { from { transform: translateY(40px); opacity: 0; } }
   .panel .cab { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   .panel .cab .icono { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 30px; flex-shrink: 0; }
@@ -149,25 +169,98 @@
 
   .cargando { position: fixed; inset: 0; z-index: 40; display: grid; place-items: center; background: linear-gradient(#7cc8f5, #bfe6fb); color: #0F172A; text-align: center; padding: 24px; }
   .cargando .t { font-size: 22px; margin-bottom: 6px; }
-  .lista2d { display: none; position: fixed; inset: 110px 12px 160px; overflow: auto; z-index: 5; }
-  .lista2d.ver { display: grid; gap: 10px; align-content: start; }
-  .toast { position: fixed; left: 50%; top: calc(110px + env(safe-area-inset-top)); transform: translateX(-50%); background: var(--oro); color: #422006; padding: 12px 18px; border-radius: 16px; font-family: 'Space Grotesk'; font-weight: 700; z-index: 200; box-shadow: 0 5px 0 #CA8A04; max-width: 92vw; text-align: center; animation: sube .25s ease; }
+  .lista2d { display: none; position: fixed; top: calc(var(--sa) + 60px); bottom: calc(var(--sb) + 92px); left: calc(var(--si) + 4px); right: calc(var(--sd) + 4px); overflow: auto; z-index: 5; touch-action: pan-y; }
+  .lista2d.ver { display: grid; gap: 10px; align-content: start; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+  .lista2d .mision { margin-top: 0; }
+  .toast { position: fixed; left: 50%; top: calc(var(--sa) + 58px); transform: translateX(-50%); background: var(--oro); color: #422006; padding: 12px 18px; border-radius: 16px; font-family: 'Space Grotesk'; font-weight: 700; z-index: 200; box-shadow: 0 5px 0 #CA8A04; max-width: min(92vw, 520px); text-align: center; animation: sube .25s ease; }
+  /* Contenido de los paneles más compacto: la pantalla acostada es baja (≈390 px) */
+  .panel .cab { margin-bottom: 10px; }
+  .panel .cab .icono { width: 46px; height: 46px; font-size: 26px; border-radius: 14px; }
+  .panel .cab h2 { font-size: 19px; }
+  .tit { margin-top: 14px; }
+  .pregunta { font-size: 19px; margin: 4px 0 12px; }
+  .opciones { grid-template-columns: 1fr 1fr; }
+  .opcion { min-height: 52px; }
+  .pizza { width: 190px; height: 190px; }
+  .objetos { grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .objeto { font-size: 30px; border-radius: 14px; }
+  .casa { height: 140px; }
+  .niebla { height: 100px; font-size: 46px; }
+  .premio .grande { font-size: 60px; }
+  .premio h2 { font-size: 22px; }
+  .emotes { grid-template-columns: repeat(8, 1fr); }
+
+  /* Pantalla de inicio "Jugar" y aviso "Girá tu pantalla" */
+  .inicio, .girar { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; text-align: center; padding: var(--sa) var(--sd) var(--sb) var(--si); background: radial-gradient(circle at 50% 35%, #134e3a, #04110c 75%); color: #fff; }
+  .inicio[hidden], .girar[hidden] { display: none; }
+  .inicio h1 { font-size: 30px; margin: 10px 0 4px; }
+  .inicio p, .girar p { color: #cbd5e1; font-size: 15px; line-height: 1.4; max-width: 320px; margin: 0 auto; }
+  .inicio .bj { min-height: 64px; padding: 0 40px; font-size: 22px; margin-top: 18px; }
+  .inicio .sug, .girar .sug { margin-top: 14px; background: transparent; color: #cbd5e1; border-color: rgba(255,255,255,.2); }
+  .girar { z-index: 95; display: none; }
+  .nota-rot { font-size: 13px !important; margin-top: 10px !important; color: #FDE68A !important; }
+  .solo-vertical { display: none; }
+  .tel { width: 54px; height: 92px; margin: 0 auto 6px; border: 4px solid #fff; border-radius: 12px; position: relative; animation: girar-tel 2.6s ease-in-out infinite; }
+  .tel::before { content: ''; position: absolute; left: 50%; top: 5px; width: 14px; height: 3px; margin-left: -7px; border-radius: 3px; background: #fff; }
+  .tel::after { content: '🧱'; position: absolute; inset: 0; display: grid; place-items: center; font-size: 22px; }
+  @keyframes girar-tel { 0%, 20% { transform: rotate(0); } 55%, 85% { transform: rotate(-90deg); } 100% { transform: rotate(0); } }
+  @media (prefers-reduced-motion: reduce) { .tel { animation: none; transform: rotate(-90deg); } }
+
+  /* ============================================================
+     Vertical (respaldo): si el chico elige seguir sin girar, todo vuelve
+     a acomodarse como antes (HUD arriba, hoja de abajo).
+     ============================================================ */
+  @media (orientation: portrait) {
+    .solo-vertical { display: block; }
+    .inicio .solo-vertical.sug { display: inline-flex; }
+    body.jugando:not(.vertical-ok) .girar { display: grid; }
+    .hud { left: var(--si); right: calc(var(--sd) + 112px); }
+    .hud .jugador { flex: 1; max-width: none; }
+    .hud .salir { order: -1; }
+    .chip-puente { position: fixed; top: calc(var(--sa) + 58px); left: 50%; transform: translateX(-50%); height: 36px; border-radius: 99px; }
+    .hud-profes { left: auto; right: var(--sd); }
+    .profe { width: 46px; height: 46px; }
+    .profe svg { width: 40px; height: 40px; }
+    .ayuda { bottom: auto; top: calc(var(--sa) + 102px); }
+    .aviso-ayuda { width: calc(100vw - 24px); top: calc(var(--sa) + 102px); }
+    .toast { top: calc(var(--sa) + 102px); }
+    .acciones { bottom: calc(var(--sb) + 18px); }
+    .lista2d { top: calc(var(--sa) + 104px); bottom: calc(var(--sb) + 100px); }
+    .panel-velo { background: rgba(4,12,10,.55); align-items: flex-end; justify-content: center; }
+    .panel { width: 100%; max-width: 520px; height: auto; max-height: 82vh; border: 3px solid var(--borde); border-bottom: 0; border-radius: 26px 26px 0 0; padding: 18px 16px calc(22px + env(safe-area-inset-bottom)); animation: sube .25s ease; }
+    .opciones { grid-template-columns: 1fr; }
+    .objetos { grid-template-columns: repeat(3, 1fr); }
+    .objeto { font-size: 44px; }
+    .pizza { width: 230px; height: 230px; }
+    .emotes { grid-template-columns: repeat(6, 1fr); }
+  }
+  @media (orientation: portrait) and (min-width: 700px) { .panel-velo { align-items: center; } .panel { border-radius: 26px; border-bottom: 3px solid var(--borde); } }
+  /* Celular acostado muy bajito: achicar un poco los controles */
+  @media (orientation: landscape) and (max-height: 360px) {
+    .joy { width: 108px; height: 108px; }
+    .redondo { width: 48px; height: 48px; font-size: 21px; }
+    .redondo.ayudar { width: 56px; height: 56px; }
+    .chip-puente .txt-largo { display: none; }
+  }
 </style>
 </head>
 <body>
 <canvas id="mundo"></canvas>
 
+<div class="hud-profes">
+  <button class="boton-hud profe" data-profe="la_profe" style="--pc:#FBBF24" title="La profe Taji (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#f2c79b"/><path d="M8 21c0-9 5-14 12-14s12 5 12 14c-2-5-6-8-12-8s-10 3-12 8z" fill="#3b2314"/><circle cx="31" cy="9" r="5" fill="#3b2314"/><circle cx="10" cy="14" r="3.2" fill="#f472b6"/><circle cx="10" cy="14" r="1.2" fill="#fde047"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M15 27q5 4 10 0" stroke="#7c2d12" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
+  <button class="boton-hud profe" data-profe="el_profe" style="--pc:#8B5CF6" title="El profe Jochi (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#c98e5f"/><path d="M8 19c1-8 6-12 12-12s11 4 12 12c-3-4-7-5-12-5s-9 1-12 5z" fill="#1f1410"/><path d="M7 13h26l-3-6H11z" fill="#0f766e"/><rect x="5" y="12" width="17" height="3" rx="1.5" fill="#115e59"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M14 27q6 5 12 0" stroke="#5b2a0e" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
+</div>
 <div class="hud">
-  <a class="boton-hud" href="index.html" title="Salir">←</a>
+  <button class="chip-puente" id="chip-puente" onclick="abrirPuente()" title="El puente del curso">🌉 <span id="puente-txt"></span><span class="mini"><i id="puente-mini"></i></span></button>
   <div class="jugador">
     <div class="cara" id="cara"></div>
     <div><b id="apodo"></b><small>4to A · isla del curso</small></div>
     <span class="llaves" id="llaves" title="Tus llaves"></span>
   </div>
-  <button class="boton-hud profe" data-profe="la_profe" style="--pc:#FBBF24" title="La profe Taji (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#f2c79b"/><path d="M8 21c0-9 5-14 12-14s12 5 12 14c-2-5-6-8-12-8s-10 3-12 8z" fill="#3b2314"/><circle cx="31" cy="9" r="5" fill="#3b2314"/><circle cx="10" cy="14" r="3.2" fill="#f472b6"/><circle cx="10" cy="14" r="1.2" fill="#fde047"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M15 27q5 4 10 0" stroke="#7c2d12" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
-  <button class="boton-hud profe" data-profe="el_profe" style="--pc:#8B5CF6" title="El profe Jochi (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#c98e5f"/><path d="M8 19c1-8 6-12 12-12s11 4 12 12c-3-4-7-5-12-5s-9 1-12 5z" fill="#1f1410"/><path d="M7 13h26l-3-6H11z" fill="#0f766e"/><rect x="5" y="12" width="17" height="3" rx="1.5" fill="#115e59"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M14 27q6 5 12 0" stroke="#5b2a0e" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
+  <button class="boton-hud pc" id="pantalla-completa" title="Pantalla completa" hidden>⛶</button>
+  <a class="boton-hud salir" href="index.html" title="Salir">✕</a>
 </div>
-<button class="chip-puente" id="chip-puente" onclick="abrirPuente()">🌉 <span id="puente-txt"></span><span class="mini"><i id="puente-mini"></i></span></button>
 <div class="ayuda" id="ayuda">Mové el círculo para caminar · tocá un aula</div>
 <div class="aviso-ayuda" id="aviso-ayuda"></div>
 <div class="joy" id="joy"><i></i></div>
@@ -175,18 +268,40 @@
   <button class="bj entrar" id="entrar"></button>
   <div class="fila-acc">
     <button class="redondo" onclick="abrirFrases()" title="Frases">😄<small>Frases</small></button>
-    <button class="redondo ayudar" onclick="abrirAyuda()" title="Pedir ayuda">🙋<small>Ayuda</small></button>
     <button class="redondo" onclick="abrirMochila()" title="Mochila">🎒<small>Mochila</small></button>
+    <button class="redondo ayudar" onclick="abrirAyuda()" title="Pedir ayuda">🙋<small>Ayuda</small></button>
   </div>
 </div>
+<div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar · pellizcá para acercar</div>
 <div class="lista2d" id="lista2d"></div>
 
 <div class="cargando" id="cargando"><div><div class="t">Armando la isla del curso…</div><div>bloque por bloque 🧱</div></div></div>
 
+<div class="inicio" id="inicio">
+  <div>
+    <div class="tel solo-vertical" aria-hidden="true"></div>
+    <h1>La isla de 4A</h1>
+    <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
+    <p class="solo-vertical nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
+    <button class="bj" id="jugar">▶ Jugar</button><br>
+    <button class="sug solo-vertical" id="seguir-vertical-1">Seguir en vertical</button>
+  </div>
+</div>
+<div class="girar" id="girar" role="alert">
+  <div>
+    <div class="tel" aria-hidden="true"></div>
+    <h2 class="t" style="font-size:24px;margin:10px 0 6px">Girá tu pantalla</h2>
+    <p>La isla se ve mejor con el celular acostado 🙂</p>
+    <p class="nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
+    <button class="bj" id="girar-jugar" style="margin-top:14px">🔄 Probar de nuevo</button><br>
+    <button class="sug" id="seguir-vertical-2">Seguir en vertical</button>
+  </div>
+</div>
+
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js"></script>
-<script src="misiones-demo.js"></script>
+<script src="datos-demo.js?v=edu02c-7"></script>
+<script src="misiones-demo.js?v=edu02c-7"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -213,7 +328,7 @@ $('#apodo').textContent = YO.apodo;
 function pintarHud() {
   $('#llaves').textContent = '🗝️ ' + (S.llaves.size + S.mentor);
   const p = M.puente;
-  $('#puente-txt').textContent = `${p.hechas}/${p.meta} entre todos`;
+  $('#puente-txt').innerHTML = `${p.hechas}/${p.meta}<span class="txt-largo"> entre todos</span>`;
   $('#puente-mini').style.width = Math.min(100, p.hechas / p.meta * 100) + '%';
 }
 pintarHud();
@@ -240,10 +355,68 @@ window.sonar = tipo => {
 };
 addEventListener('pointerdown', () => audio(), { once: true });
 
+// ---------------- Jugar en horizontal (EDU.02c) ----------------
+// "Jugar" pide pantalla completa y traba la pantalla acostada (Screen Orientation API).
+// Si el aparato no deja (iPhone, escritorio), no pasa nada: queda el aviso "Girá tu pantalla"
+// mientras esté en vertical, con la opción de seguir en vertical igual.
+const leerSS = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
+const guardarSS = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
+async function pantallaJuego() {
+  // Se intenta SIEMPRE: con la Rotación automática apagada, pantalla completa + lock('landscape') igual acuesta la pantalla en Android.
+  const el = document.documentElement;
+  try {
+    if (!document.fullscreenElement && el.requestFullscreen) await el.requestFullscreen({ navigationUI: 'hide' });
+    else if (!document.webkitFullscreenElement && el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  } catch (e) { /* sin pantalla completa: seguimos igual */ }
+  try { if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch (e) { /* no se puede trabar: queda el aviso */ }
+}
+function empezar() {
+  audio();
+  const yaJugaba = document.body.classList.contains('jugando');
+  $('#inicio').hidden = true;
+  quierePC = hayPC;
+  document.body.classList.add('jugando');
+  guardarSS('alumno-jugando', '1');
+  pantallaJuego().then(pintarPC);
+  if (!yaJugaba) setTimeout(() => toast('🎙️ Tocá la cara de un profe para hablarle', 3200), 2500);
+}
+function seguirVertical() { document.body.classList.add('vertical-ok'); guardarSS('alumno-vertical', '1'); if (!document.body.classList.contains('jugando')) empezar(); }
+$('#jugar').onclick = empezar;
+$('#seguir-vertical-1').onclick = seguirVertical;
+$('#seguir-vertical-2').onclick = seguirVertical;
+$('#girar-jugar').onclick = pantallaJuego;
+if (leerSS('alumno-vertical')) document.body.classList.add('vertical-ok');
+// "Jugar" aparece SIEMPRE al cargar: pantalla completa y trabar horizontal solo se pueden pedir con un toque.
+// Botón ⛶ arriba para volver a pantalla completa en cualquier momento (resaltado si se salió).
+const btnPC = $('#pantalla-completa');
+const hayPC = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+let quierePC = false;
+const enPC = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+function pintarPC() {
+  btnPC.hidden = !hayPC || enPC();
+  btnPC.classList.toggle('resaltado', quierePC && !enPC());
+}
+btnPC.onclick = () => { pantallaJuego(); };
+addEventListener('fullscreenchange', pintarPC);
+addEventListener('webkitfullscreenchange', pintarPC);
+// Si vuelve del fondo (otra app, pantalla apagada) y ya no está en pantalla completa: otra vez "Jugar".
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && quierePC && hayPC && !enPC() && document.body.classList.contains('jugando')) $('#inicio').hidden = false;
+});
+pintarPC();
+
 // ---------------- Paneles ----------------
 const velo = $('#velo'), panel = $('#panel');
-function abrir(html) { panel.innerHTML = html; velo.classList.add('abierto'); panel.scrollTop = 0; window.__pausa = true; }
-function cerrar() { velo.classList.remove('abierto'); window.__pausa = false; }
+function abrir(html) { panel.innerHTML = html; velo.classList.add('abierto'); panel.scrollTop = 0; window.__pausa = true; vistaPanel(); }
+function cerrar() { velo.classList.remove('abierto'); window.__pausa = false; vistaPanel(); }
+// En horizontal el panel va a la derecha: la cámara corre el mundo a la izquierda para
+// que el personaje quede a la vista (lo hace el 3D con setViewOffset).
+function vistaPanel() {
+  const abierto = velo.classList.contains('abierto') && innerWidth > innerHeight;
+  window.__corrimiento = abierto ? panel.offsetWidth / 2 : 0;
+  document.body.classList.toggle('con-panel', velo.classList.contains('abierto'));
+}
+addEventListener('resize', vistaPanel);
 velo.addEventListener('click', e => { if (e.target === velo) cerrar(); });
 const cab = (icono, fondo, titulo, sub, volver = 'cerrar()', etq = '') => `
   <div class="cab"><div class="icono" style="background:${fondo}">${icono}</div>
@@ -705,9 +878,8 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-7').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
-setTimeout(() => toast('🎙️ Tocá la cara de un profe (arriba) para hablarle', 3200), 4500);
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
 setTimeout(() => {
@@ -719,6 +891,7 @@ setTimeout(() => {
 
 // Lista 2D de respaldo si el 3D no carga
 function modo2D(motivo) {
+  window.__sin3D = true;
   $('#cargando').style.display = 'none'; $('#joy').style.display = 'none';
   $('#ayuda').textContent = motivo;
   const l = $('#lista2d'); l.classList.add('ver');
@@ -730,6 +903,19 @@ function modo2D(motivo) {
     + `<button class="mision" style="background:rgba(15,26,23,.9)" onclick="abrirMiCasa()"><span style="font-size:28px">🏠</span><span><b>Tu casa</b></span></button>`;
 }
 window.__modo2D = modo2D;
+
+// Si el 3D no arranca en 8 s (p. ej. el navegador interno de otra app), no dejar la pantalla
+// trabada: ofrecer abrir en Chrome, reintentar o seguir con la lista 2D.
+setTimeout(() => {
+  if (window.__listo3D || window.__sin3D) return;
+  const c = $('#cargando');
+  c.innerHTML = `<div style="max-width:420px">
+    <div class="t">La isla tarda en cargar 🐢</div>
+    <p style="margin:6px 0 14px">Si estás dentro de otra app, abrí este link en <b>Chrome</b>.</p>
+    <button class="bj" onclick="location.reload()">🔄 Reintentar</button>
+    <button class="bj gris" style="margin-left:8px" onclick="modo2D('Sin 3D: elegí un lugar')">📋 Seguir sin 3D</button>
+    <p style="margin-top:12px;font-size:12px;color:#334155;user-select:text;-webkit-user-select:text">${location.href.split('?')[0]}</p></div>`;
+}, 8000);
 </script>
 
 <script type="module">
@@ -744,8 +930,12 @@ const FUENTES = [
 ];
 let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
-if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
-else iniciar(THREE);
+if (window.__sin3D) { /* el chico ya eligió seguir sin 3D */ }
+else if (!THREE) { window.__modo2D('Sin conexión para el 3D: elegí un lugar'); }
+else {
+  // Algunos navegadores internos de apps no tienen WebGL: en vez de quedar trabado, lista 2D.
+  try { iniciar(THREE); } catch (e) { console.warn('[3D]', e); window.__modo2D('Este navegador no muestra el 3D: elegí un lugar'); }
+}
 
 function iniciar(THREE) {
   const D = window.DEMO, YO = D.alumnoDemo, M = D.mundo;
@@ -757,7 +947,7 @@ function iniciar(THREE) {
   const escena = new THREE.Scene();
   escena.background = new THREE.Color('#7cc8f5');
   escena.fog = new THREE.Fog('#a9dcf8', 34, 70);
-  const camara = new THREE.PerspectiveCamera(innerHeight > innerWidth ? 58 : 50, innerWidth / innerHeight, 0.1, 200);
+  const camara = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 200);
   escena.add(new THREE.HemisphereLight('#ffffff', '#5b7a3a', 1.6));
   const sol = new THREE.DirectionalLight('#fff4d6', 1.6); sol.position.set(12, 20, 8); escena.add(sol);
 
@@ -1011,15 +1201,22 @@ function iniciar(THREE) {
   addEventListener('keyup', e => { teclas[e.key.toLowerCase()] = false; });
   function ocultarAyuda() { document.getElementById('ayuda').style.opacity = 0; }
 
-  // Tocar cosas del mundo
+  // Tocar cosas del mundo (toque corto) y girar la cámara (arrastrar con el pulgar derecho).
+  // Cada dedo se sigue por separado: el izquierdo puede caminar con el círculo mientras
+  // el derecho gira la cámara.
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
-  let inicioToque = null;
-  canvas.addEventListener('pointerdown', e => { inicioToque = { x: e.clientX, y: e.clientY }; });
-  canvas.addEventListener('pointerup', e => {
-    if (!inicioToque || Math.hypot(e.clientX - inicioToque.x, e.clientY - inicioToque.y) > 12) return;
+  const CAM = { yaw: 0, pitch: 0, yawObj: 0, pitchObj: 0, dist: 20, min: .45, max: 1.2, zoom: 1, zoomObj: 1 };
+  const ZOOM_MIN = .45, ZOOM_MAX = 1.5;   // ~9 a ~30 unidades: ni dentro del personaje ni demasiado lejos
+  const zoomA = z => { CAM.zoomObj = Math.min(ZOOM_MAX, Math.max(ZOOM_MIN, z)); };
+  let pellizco = null;   // { d0, z0 } mientras hay dos dedos sobre el mundo
+  window.__cam = CAM; window.__yo = yo;   // (para las pruebas automáticas)
+  const dedos = new Map();  // pointerId → { x, y, x0, y0, t0, mirar }
+  let ultimoTap = { t: 0, x: 0, y: 0 };
+  const SENS = 0.0085;      // radianes por píxel
+  function tocar(e) {
     ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
     ray.setFromCamera(ptr, camara);
-    const hit = ray.intersectObjects(tocables, false)[0]; if (!hit) return;
+    const hit = ray.intersectObjects(tocables, false)[0]; if (!hit) return false;
     ocultarAyuda();
     const t = hit.object.userData.toca;
     if (t.tipo === 'aula') window.abrirAula(t.id);
@@ -1028,7 +1225,50 @@ function iniciar(THREE) {
     if (t.tipo === 'micasa') window.abrirMiCasa();
     if (t.tipo === 'casa') window.visitar(t.id);
     if (t.tipo === 'companero') window.visitar(t.id);
+    return true;
+  }
+  function detrasDelPersonaje() { CAM.yawObj = yo.rotation.y + Math.PI; CAM.pitchObj = CAM.pitch0; }
+  const distDedos = () => { const [a, b] = [...dedos.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
+  canvas.addEventListener('pointerdown', e => {
+    dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: e.clientX > innerWidth / 2 });
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+    // Dos dedos sobre el mundo (el círculo de caminar no cuenta: es otro elemento) = pellizco para zoom
+    if (dedos.size === 2) { pellizco = { d0: distDedos(), z0: CAM.zoomObj }; dedos.forEach(d => { d.pellizco = true; }); ocultarPistaMirar(); }
   });
+  canvas.addEventListener('pointermove', e => {
+    const d = dedos.get(e.pointerId); if (!d) return;
+    const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
+    if (pellizco && dedos.size >= 2) { if (!window.__pausa) zoomA(pellizco.z0 * pellizco.d0 / distDedos()); return; }
+    if (d.pellizco || !d.mirar || window.__pausa) return;
+    if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 10) return;   // todavía puede ser un toque
+    CAM.yawObj -= dx * SENS;
+    CAM.pitchObj = Math.min(CAM.max, Math.max(CAM.min, CAM.pitchObj + dy * SENS * .7));
+    ocultarPistaMirar();
+  });
+  const soltarDedo = e => {
+    const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (dedos.size < 2) pellizco = null;
+    if (!d || e.type === 'pointercancel' || d.pellizco) return;
+    const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
+    if (!corto) return;
+    const ahora = performance.now();
+    const doble = d.mirar && ahora - ultimoTap.t < 320 && Math.hypot(e.clientX - ultimoTap.x, e.clientY - ultimoTap.y) < 40;
+    ultimoTap = { t: ahora, x: e.clientX, y: e.clientY };
+    if (doble) { detrasDelPersonaje(); ultimoTap.t = 0; return; }
+    tocar(e);
+  };
+  canvas.addEventListener('pointerup', soltarDedo);
+  // En compu: rueda del mouse o teclas + / -
+  canvas.addEventListener('wheel', e => { e.preventDefault(); zoomA(CAM.zoomObj * Math.exp(e.deltaY * .0015)); }, { passive: false });
+  addEventListener('keydown', e => { if (e.key === '+' || e.key === '=') zoomA(CAM.zoomObj / 1.15); if (e.key === '-' || e.key === '_') zoomA(CAM.zoomObj * 1.15); });
+  canvas.addEventListener('pointercancel', soltarDedo);
+  // Pista la primera vez
+  const pistaMirar = document.getElementById('pista-mirar');
+  let pistaVista = false; try { pistaVista = localStorage.getItem('alumno-pista-mirar') === '1'; } catch (_) {}
+  function ocultarPistaMirar() {
+    if (pistaVista) return; pistaVista = true; pistaMirar.classList.remove('ver');
+    try { localStorage.setItem('alumno-pista-mirar', '1'); } catch (_) {}
+  }
+  if (!pistaVista) setTimeout(() => { if (!pistaVista) { pistaMirar.classList.add('ver'); setTimeout(() => pistaMirar.classList.remove('ver'), 7000); } }, 6000);
 
   const btnEntrar = document.getElementById('entrar');
   let cercano = null, ultimoSonido = null;
@@ -1044,16 +1284,29 @@ function iniciar(THREE) {
     cartelPuente.material.map = nuevo.material.map; cartelPuente.material.needsUpdate = true; viejo.dispose();
   };
 
-  addEventListener('resize', () => {
+  // Cámara según la pantalla: acostada (la normal) ve más a lo ancho y más cerca;
+  // parada (respaldo) se aleja para que entre la isla.
+  let corrido = 0;
+  function ajustarCamara() {
+    const vertical = innerHeight > innerWidth;
     renderer.setSize(innerWidth, innerHeight);
-    camara.aspect = innerWidth / innerHeight; camara.updateProjectionMatrix();
-  });
+    camara.aspect = innerWidth / innerHeight;
+    camara.fov = vertical ? 58 : 46;
+    // misma vista que antes al arrancar: acostado 16 arriba/12 atrás, parado 27/13
+    const [alto, atras] = vertical ? [27, 13] : [16, 12];
+    const p0 = Math.atan2(alto, atras), cambio = CAM.pitch0 === undefined || Math.abs(CAM.pitch0 - p0) > .01;
+    CAM.dist = Math.hypot(alto, atras); CAM.pitch0 = p0;
+    CAM.max = Math.min(1.25, p0 + .2); CAM.min = .45;
+    if (cambio) { CAM.pitch = CAM.pitchObj = p0; }
+    corrido = -1;   // fuerza a recalcular el corrimiento del panel
+  }
+  ajustarCamara();
+  addEventListener('resize', ajustarCamara);
+  addEventListener('orientationchange', () => setTimeout(ajustarCamara, 250));
 
   // --- Bucle ---
   const reloj = new THREE.Clock();
   const objetivoCam = new THREE.Vector3();
-  const vertical = innerHeight > innerWidth;
-  const offset = new THREE.Vector3(0, vertical ? 27 : 17, 13);
   const punto = new THREE.Vector3();
   const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.hypot(x, z) < .9 || z < -16 || Math.abs(x) > 21 || z > 19; };
   function bucle() {
@@ -1063,6 +1316,10 @@ function iniciar(THREE) {
     if (teclas['arrowright'] || teclas['d']) mx += 1;
     if (teclas['arrowup'] || teclas['w']) mz -= 1;
     if (teclas['arrowdown'] || teclas['s']) mz += 1;
+    if (teclas['q']) CAM.yawObj += dt * 2;
+    if (teclas['e']) CAM.yawObj -= dt * 2;
+    // caminar relativo a la cámara: arriba en el círculo = hacia adonde mira la cámara
+    { const c = Math.cos(CAM.yaw), sn = Math.sin(CAM.yaw); const wx = c * mx + sn * mz, wz = -sn * mx + c * mz; mx = wx; mz = wz; }
     const largo = Math.hypot(mx, mz), moviendo = largo > .1 && !window.__pausa;
     if (moviendo) {
       const v = 6 * Math.min(1, largo);
@@ -1113,13 +1370,26 @@ function iniciar(THREE) {
     for (let i = burbujas.length - 1; i >= 0; i--) if (burbujas[i].hasta < ahora) { burbujas[i].P.yo.remove(burbujas[i].b); burbujas[i].b.material.map.dispose(); burbujas.splice(i, 1); }
     bandera.scale.y = .8 + Math.sin(t * 3) * .05;
 
-    objetivoCam.copy(yo.position).add(offset);
-    camara.position.lerp(objetivoCam, Math.min(1, dt * 4));
-    camara.lookAt(yo.position.x, yo.position.y + 1, yo.position.z - 2);
+    // panel abierto a la derecha → el mundo se corre a la izquierda (suave)
+    const quiere = window.__corrimiento || 0;
+    if (corrido !== quiere) {
+      corrido = Math.abs(quiere - corrido) < 1 ? quiere : corrido + (quiere - corrido) * Math.min(1, dt * 8);
+      if (corrido) camara.setViewOffset(innerWidth, innerHeight, corrido, 0, innerWidth, innerHeight); else camara.clearViewOffset();
+      camara.updateProjectionMatrix();
+    }
+    // cámara en órbita alrededor del personaje, con suavizado
+    const k = Math.min(1, dt * 10);
+    let dY = CAM.yawObj - CAM.yaw; dY = Math.atan2(Math.sin(dY), Math.cos(dY)); CAM.yaw += dY * k; CAM.yawObj = CAM.yaw + (dY * (1 - k));
+    CAM.pitch += (CAM.pitchObj - CAM.pitch) * k;
+    CAM.zoom += (CAM.zoomObj - CAM.zoom) * k;
+    const dist = CAM.dist * CAM.zoom, horiz = Math.cos(CAM.pitch) * dist;
+    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
+    camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
+    camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
     renderer.render(escena, camara);
     requestAnimationFrame(bucle);
   }
-  camara.position.copy(yo.position).add(offset);
+  camara.position.set(yo.position.x, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.pitch) * CAM.dist);
   bucle();
   document.getElementById('cargando').style.display = 'none';
   window.__listo3D = true;
