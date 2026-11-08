@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Estilo visual · escena 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root { --verde: #10B981; --sup: rgba(10,10,10,.82); --borde: #262626; --t2: #A3A3A3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; background: #000; color: #fff; font-family: Inter, system-ui, sans-serif; }
+  canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; display: block; touch-action: none; }
+  canvas.pixel { image-rendering: pixelated; image-rendering: crisp-edges; }
+  .barra { position: fixed; left: 0; right: 0; display: flex; gap: 8px; padding: 10px 12px; align-items: center; pointer-events: none; }
+  .barra > * { pointer-events: auto; }
+  .arriba { top: 0; padding-top: max(10px, env(safe-area-inset-top)); }
+  .abajo { bottom: 0; padding-bottom: max(12px, env(safe-area-inset-bottom)); overflow-x: auto; scrollbar-width: none; }
+  .chip, .btn { min-height: 44px; padding: 0 14px; border-radius: 14px; border: 1px solid var(--borde); background: var(--sup); color: #fff;
+    font: 600 14px Inter, sans-serif; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; white-space: nowrap; cursor: pointer; backdrop-filter: blur(6px); }
+  .chip.on { background: var(--verde); color: #00140D; border-color: var(--verde); }
+  .estilo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; }
+  .estilos { display: flex; gap: 6px; }
+  .estilos .chip { min-width: 44px; justify-content: center; padding: 0 10px; }
+  @media (max-width: 420px) { .estilos { gap: 4px; } .estilos .chip { min-width: 36px; padding: 0 4px; } .arriba { gap: 5px; padding-left: 8px; padding-right: 8px; } }
+  #fps { margin-left: auto; font: 700 13px ui-monospace, monospace; padding: 0 12px; min-height: 36px; border-radius: 12px; background: var(--sup); border: 1px solid var(--borde); display: flex; align-items: center; }
+  #fps.bien { color: #34D399; } #fps.medio { color: #F2C230; } #fps.mal { color: #F87171; }
+  #nombre { position: fixed; left: 12px; top: calc(max(10px, env(safe-area-inset-top)) + 54px); background: var(--sup); border: 1px solid var(--borde);
+    border-radius: 14px; padding: 8px 12px; max-width: min(420px, calc(100vw - 24px)); }
+  #nombre b { font-family: 'Space Grotesk', sans-serif; font-size: 17px; display: block; }
+  #nombre span { color: var(--t2); font-size: 13px; }
+  #nota { display: none; margin-top: 6px; font-size: 12px; color: #F2C230; }
+  #cargando { position: fixed; inset: 0; display: grid; place-items: center; color: var(--t2); font-size: 15px; text-align: center; padding: 24px; }
+  /* modo captura (láminas): sin botones, solo la etiqueta del estilo */
+  body.captura .barra, body.captura #nombre { display: none; }
+  /* celular acostado: menos alto disponible → controles más chicos y sin descripción */
+  @media (max-height: 500px) {
+    .chip, .btn { min-height: 38px; font-size: 13px; padding: 0 10px; }
+    .estilos .chip { min-width: 34px; }
+    #nombre { top: calc(max(8px, env(safe-area-inset-top)) + 46px); padding: 5px 10px; }
+    #nombre b { font-size: 14px; } #nombre span, #nombre #nota { display: none; }
+    .arriba { padding-top: 6px; } .abajo { padding-bottom: 6px; }
+  }
+  #marca { display: none; position: fixed; left: 14px; top: 14px; background: rgba(0,0,0,.78); color: #fff; border-radius: 14px; padding: 8px 14px 9px;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; border-left: 6px solid var(--verde); }
+  #marca small { display: block; font: 600 12px Inter, sans-serif; color: #D4D4D4; margin-top: 1px; }
+  body.captura #marca { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="cargando">Cargando la escena 3D…</div>
+
+<div class="barra arriba">
+  <a class="btn" href="./" aria-label="Volver a la comparación">←</a>
+  <div class="estilos" id="estilos"></div>
+  <div id="fps">— fps</div>
+</div>
+<div id="nombre"><b id="nTitulo"></b><span id="nTexto"></span><div id="nota">Patrones geométricos genéricos de muestra: el diseño final se co-diseña y acredita con Artecampo / las comunidades. Nunca se copian diseños indígenas reales.</div></div>
+<div class="barra abajo" id="vistas"></div>
+<div id="marca"></div>
+
+<script type="module">
+
+const q = new URLSearchParams(location.search);
+const estilo = (q.get('estilo') || 'A').toUpperCase();
+let vista = q.get('vista') || 'colegio';
+const captura = q.has('captura');
+const alta = q.get('calidad') === 'alta';
+const tipo = q.get('tipo') === 'mapa' ? 'mapa' : 'escena';
+if (captura) document.body.classList.add('captura');
+if (q.has('limpia')) document.getElementById('marca').style.visibility = 'hidden';
+
+const NOMBRES_VISTA = { colegio: 'Colegio', obra: 'Obra de la ciudad', portal: 'Portal', ciudad: 'Ciudad', profes: 'Profes y alumnos', general: 'Todo', lamina: 'Lámina E' };
+
+// Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
+const VERSION = '20261108-7';
+let ARR;
+try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
+  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
+  window.__listo = 'error'; throw e;
+}
+ARR.avisoGiro();
+const { THREE, crearMundo, ESTILOS } = await ARR.cargar(VERSION, ['crearMundo', 'ESTILOS', 'TRAMOS']);
+
+const info = ESTILOS[estilo] || ESTILOS.A;
+const titulo = info.grados ? `${info.letra} · ${info.nombre} (${info.grados})` : `${info.letra} · ${info.nombre}`;
+document.title = titulo;
+ARR.botonVer('▶ Ver en 3D');
+document.getElementById('nTitulo').textContent = titulo;
+document.getElementById('nTexto').textContent = info.corto;
+if (estilo === 'B') document.getElementById('nota').style.display = 'block';
+
+// --- selector de estilos y vistas
+document.getElementById('estilos').innerHTML = Object.entries(ESTILOS).filter(([k, e]) => !e.oculto || k === estilo).map(([k, e]) =>
+  `<a class="chip estilo ${k === estilo ? 'on' : ''}" href="?estilo=${k}&vista=${vista}${tipo === 'mapa' ? '&tipo=mapa' : ''}" title="${e.nombre}">${e.letra}</a>`).join('');
+
+const t0 = performance.now();
+const mundo = crearMundo(THREE, estilo, tipo);
+const tArmado = Math.round(performance.now() - t0);
+if (!mundo.vistas[vista]) vista = Object.keys(mundo.vistas)[0];
+
+document.getElementById('vistas').innerHTML = Object.keys(mundo.vistas).map(v =>
+  `<button class="chip ${v === vista ? 'on' : ''}" data-v="${v}">${NOMBRES_VISTA[v] || v}</button>`).join('') +
+  `<button class="chip" id="bNombres">Nombres ✓</button>`;
+
+const canvas = document.getElementById('c');
+if (mundo.escalaResolucion < 1) canvas.classList.add('pixel');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !!mundo.antialias, powerPreference: 'high-performance', preserveDrawingBuffer: captura });
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.info.autoReset = false; // contar todas las pasadas del cuadro (sombras, brillo)
+function resolucion() {
+  const dpr = window.devicePixelRatio || 1;
+  if (mundo.escalaResolucion < 1) return mundo.escalaResolucion; // C: ~50% de los píxeles CSS, ampliado sin suavizar
+  return alta ? Math.min(dpr, 2) : Math.min(dpr, mundo.maxPixelRatio || 1.5);
+}
+const camara = new THREE.PerspectiveCamera(45, 1, 0.3, 400);
+
+// --- cámara orbital simple (arrastrar = girar, pellizcar/rueda = acercar)
+const objetivo = new THREE.Vector3();
+const esf = new THREE.Spherical();
+let destino = null;
+function ponerVista(nombre, suave) {
+  const v = mundo.vistas[nombre];
+  const ob = new THREE.Vector3(...v.objetivo), de = new THREE.Vector3(...v.desde);
+  const vertical = innerHeight > innerWidth;
+  const off = de.clone().sub(ob);
+  const s = new THREE.Spherical().setFromVector3(off);
+  if (vertical) {
+    // en celular (vertical) hace falta alejarse y mirar un poco más desde arriba
+    s.radius *= { profes: 2.0, colegio: 1.9, obra: 1.45, portal: 1.6 }[nombre] || 1.5;
+    if (nombre !== 'profes') s.phi *= 0.85;
+  } // en celular hace falta alejarse
+  if (suave) destino = { ob, s }; else { objetivo.copy(ob); esf.copy(s); }
+  vista = nombre;
+  document.querySelectorAll('[data-v]').forEach(b => b.classList.toggle('on', b.dataset.v === nombre));
+  document.getElementById('marca').innerHTML = `${info.letra} · ${info.nombre}<small>${info.grados ? info.grados + ' · ' : ''}${NOMBRES_VISTA[nombre] || nombre}</small>`;
+}
+function ajustar() {
+  const w = innerWidth, h = innerHeight;
+  renderer.setPixelRatio(resolucion());
+  renderer.setSize(w, h, false);
+  camara.aspect = w / h;
+  camara.fov = h > w ? 52 : 40;
+  camara.updateProjectionMatrix();
+}
+addEventListener('resize', () => { ajustar(); ponerVista(vista, false); });
+ajustar();
+ponerVista(vista, false);
+
+const punteros = new Map();
+let distPellizco = 0;
+canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); punteros.set(e.pointerId, [e.clientX, e.clientY]); destino = null; });
+canvas.addEventListener('pointermove', e => {
+  if (!punteros.has(e.pointerId)) return;
+  const [px, py] = punteros.get(e.pointerId);
+  punteros.set(e.pointerId, [e.clientX, e.clientY]);
+  if (punteros.size === 1) {
+    esf.theta -= (e.clientX - px) * 0.006;
+    esf.phi = Math.min(1.45, Math.max(0.2, esf.phi - (e.clientY - py) * 0.005));
+  } else if (punteros.size === 2) {
+    const [a, b] = [...punteros.values()];
+    const d = Math.hypot(a[0] - b[0], a[1] - b[1]);
+    if (distPellizco) esf.radius = Math.min(150, Math.max(4, esf.radius * distPellizco / d));
+    distPellizco = d;
+  }
+});
+const soltar = e => { punteros.delete(e.pointerId); if (punteros.size < 2) distPellizco = 0; };
+canvas.addEventListener('pointerup', soltar); canvas.addEventListener('pointercancel', soltar);
+canvas.addEventListener('wheel', e => { e.preventDefault(); destino = null; esf.radius = Math.min(150, Math.max(4, esf.radius * (1 + e.deltaY * 0.001))); }, { passive: false });
+
+document.getElementById('vistas').addEventListener('click', e => {
+  const b = e.target.closest('[data-v]');
+  if (b) ponerVista(b.dataset.v, true);
+});
+document.getElementById('bNombres').addEventListener('click', e => {
+  mundo.etiquetas.visible = !mundo.etiquetas.visible;
+  e.target.textContent = mundo.etiquetas.visible ? 'Nombres ✓' : 'Nombres';
+});
+if (q.get('etiquetas') === '0') mundo.etiquetas.visible = false;
+
+// --- fps visible
+const fpsEl = document.getElementById('fps');
+let cuadros = 0, tFps = performance.now();
+window.__fps = []; window.__cuadrosCaptura = 0;
+let lentos = 0, autoTexto = '';
+
+const reloj = new THREE.Clock();
+function cuadro() {
+  const t = reloj.getElapsedTime();
+  if (destino) {
+    objetivo.lerp(destino.ob, 0.08);
+    esf.radius += (destino.s.radius - esf.radius) * 0.08;
+    esf.phi += (destino.s.phi - esf.phi) * 0.08;
+    let dt = destino.s.theta - esf.theta; dt = Math.atan2(Math.sin(dt), Math.cos(dt));
+    esf.theta += dt * 0.08;
+    if (Math.abs(dt) < 1e-3 && Math.abs(destino.s.radius - esf.radius) < 0.01) destino = null;
+  }
+  camara.position.setFromSpherical(esf).add(objetivo);
+  camara.lookAt(objetivo);
+  mundo.ajustarNiebla(esf.radius);
+  mundo.animar(captura ? 1.2 : t, camara, objetivo);
+  renderer.info.reset();
+  if (mundo.render) mundo.render(renderer, camara); else renderer.render(mundo.escena, camara);
+  cuadros++;
+  const ahora = performance.now();
+  if (ahora - tFps >= 1000) {
+    const fps = Math.round(cuadros * 1000 / (ahora - tFps));
+    window.__fps.push(fps);
+    // calidad automática: 2 segundos seguidos debajo de 30 fps → bajar un paso (salvo ?calidad=fija o captura)
+    if (mundo.bajarCalidad && !captura && q.get('calidad') !== 'fija' && window.__fps.length > 2) {
+      lentos = fps < 30 ? lentos + 1 : 0;
+      if (lentos >= 2) {
+        lentos = 0;
+        const paso = mundo.bajarCalidad();
+        if (paso) {
+          if (paso.resolucion) { renderer.setPixelRatio(Math.min(renderer.getPixelRatio(), paso.resolucion)); renderer.setSize(innerWidth, innerHeight, false); }
+          autoTexto = paso.texto;
+        }
+      }
+    }
+    fpsEl.textContent = `${fps} fps` + (autoTexto ? ` · auto: ${autoTexto}` : '');
+    fpsEl.className = fps >= 30 ? 'bien' : fps >= 20 ? 'medio' : 'mal';
+    cuadros = 0; tFps = ahora;
+  }
+  // en modo captura se dibujan pocos cuadros y se para (las escenas pesadas no traban la foto)
+  if (!(captura && ++window.__cuadrosCaptura > 6)) requestAnimationFrame(cuadro);
+}
+document.getElementById('cargando').remove();
+cuadro();
+const ri = renderer.info.render;
+window.__info = () => ({ llamadas: ri.calls, triangulos: ri.triangles, armadoMs: tArmado });
+window.__ponerVista = v => ponerVista(v, false);
+// esperar dos cuadros para que la captura salga completa
+requestAnimationFrame(() => requestAnimationFrame(() => { window.__listo = 'ok'; }));
+</script>
+</body>
+</html>

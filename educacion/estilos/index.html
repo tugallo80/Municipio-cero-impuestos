@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Estilo visual ÑANDÉ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --verde: #10B981; --sup: #0A0A0A; --sup2: #111111; --borde: #222; --t2: #A3A3A3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; color: #fff; font-family: Inter, system-ui, sans-serif; line-height: 1.45; padding: 20px 16px 64px; max-width: 1180px; margin: 0 auto; }
+  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+  h1 { font-size: 27px; line-height: 1.15; }
+  .lema { margin-top: 10px; padding: 10px 14px; border-left: 4px solid var(--verde); background: var(--sup2); border-radius: 0 12px 12px 0; font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 600; font-size: 17px; }
+  p.sec { color: var(--t2); margin-top: 10px; font-size: 15px; max-width: 760px; }
+  h2 { font-size: 13px; margin: 34px 0 12px; color: var(--t2); text-transform: uppercase; letter-spacing: .07em; }
+  .controles { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; position: sticky; top: 0; padding: 10px 0; background: rgba(0,0,0,.92); z-index: 5; }
+  .seg { display: inline-flex; background: var(--sup2); border: 1px solid var(--borde); border-radius: 14px; padding: 3px; }
+  .seg button { min-height: 42px; padding: 0 14px; border: 0; border-radius: 11px; background: transparent; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
+  .seg button.on { background: var(--verde); color: #00140D; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  #exploracion { grid-template-columns: repeat(2, 1fr); }
+  .carta { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .carta a.img { display: block; background: #0a0a0a; }
+  .carta img { width: 100%; display: block; aspect-ratio: var(--ar); object-fit: cover; }
+  .carta .pie { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .carta .nom { display: flex; align-items: center; gap: 8px; }
+  .letra { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 700 18px 'Space Grotesk', Inter, sans-serif; color: #000; }
+  .carta b { font-family: 'Space Grotesk', Inter, sans-serif; font-size: 16px; line-height: 1.1; }
+  .carta .corto { color: var(--t2); font-size: 13px; }
+  a.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 12px; background: #1a1a1a;
+    border: 1px solid var(--borde); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; text-align: center; }
+  a.btn.verde { background: var(--verde); color: #00140D; border: 0; }
+  .carta a.btn { margin-top: auto; }
+  @media (max-width: 640px) {
+    body { padding: 16px 16px 56px; }
+    .tres { gap: 6px; }
+    .carta { border-radius: 12px; }
+    .carta .pie { padding: 7px; gap: 6px; }
+    .carta .corto { display: none; }
+    .carta b { font-size: 13px; }
+    .letra { width: 26px; height: 26px; font-size: 15px; }
+    .carta a.btn { min-height: 44px; padding: 0 6px; font-size: 13px; }
+  }
+  .escalera { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .tramo { background: var(--sup2); border: 1px solid var(--borde); border-radius: 18px; overflow: hidden; border-top: 6px solid var(--c); }
+  .tramo .cab { display: flex; gap: 12px; align-items: center; padding: 14px 14px 10px; }
+  .tramo .num { width: 52px; height: 52px; border-radius: 50%; background: var(--c); color: #000; display: grid; place-items: center; font: 700 28px 'Space Grotesk', Inter, sans-serif; flex: none; }
+  .tramo h3 { font-size: 22px; line-height: 1.1; }
+  .tramo .gr { color: var(--t2); font-size: 14px; }
+  .tramo img { width: 100%; display: block; aspect-ratio: 1280 / 800; object-fit: cover; }
+  .tramo .accesos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 10px; }
+  .tramo .accesos a { min-height: 48px; padding: 0 6px; font-size: 14px; }
+  a.btn.grande { min-height: 52px; font-size: 16px; padding: 0 18px; }
+  #visor { position: fixed; inset: 0; z-index: 100; background: #000; display: grid; place-items: center; }
+  #visor[hidden] { display: none; }
+  #visor img { width: 100%; height: 100%; object-fit: contain; }
+  #visor .arriba, #visor .abajo { position: absolute; left: 0; right: 0; display: flex; gap: 8px; align-items: center; padding: 10px 12px; }
+  #visor .arriba { top: 0; background: linear-gradient(rgba(0,0,0,.7), transparent); }
+  #visor .abajo { bottom: 0; justify-content: center; background: linear-gradient(transparent, rgba(0,0,0,.7)); }
+  #visor .pie { flex: 1; visibility: hidden; } /* la captura ya trae su etiqueta */
+  #visor button { min-width: 48px; min-height: 48px; border-radius: 14px; border: 1px solid #333; background: rgba(10,10,10,.84); color: #fff; font: 600 18px Inter, sans-serif; }
+  .fichas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .ficha { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 14px 16px; }
+  .ficha h3 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .ficha ul { margin: 10px 0 0 18px; color: #D4D4D4; font-size: 14px; }
+  .ficha li { margin: 3px 0; }
+  .ficha .costo { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--t2); }
+  .aviso { margin-top: 12px; padding: 10px 12px; border-radius: 12px; background: #1f1806; border: 1px solid #4d3b0d; color: #F2C230; font-size: 13px; }
+  .bloque { display: grid; gap: 14px; grid-template-columns: 1fr; background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; }
+  @media (min-width: 760px) { .bloque { grid-template-columns: 1.3fr 1fr; } }
+  .bloque img { width: 100%; display: block; }
+  .bloque img { background: #0a0a0a; aspect-ratio: auto; }
+  .bloque .txt { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .bloque .txt p { color: #D4D4D4; font-size: 14px; }
+  .botones { display: flex; gap: 8px; flex-wrap: wrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--sup2); border-radius: 14px; overflow: hidden; }
+  th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
+  th { color: var(--t2); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  td.n { font: 700 14px ui-monospace, monospace; }
+  .preg { counter-reset: p; display: grid; gap: 8px; }
+  .preg div { background: var(--sup2); border: 1px solid var(--borde); border-radius: 14px; padding: 12px 14px 12px 50px; position: relative; font-size: 15px; }
+  .preg div::before { counter-increment: p; content: counter(p); position: absolute; left: 14px; top: 11px; width: 26px; height: 26px; border-radius: 50%; background: var(--verde); color: #00140D; font: 700 14px 'Space Grotesk', Inter, sans-serif; display: grid; place-items: center; }
+  .nota { margin-top: 10px; color: var(--t2); font-size: 13px; }
+</style>
+</head>
+<body>
+  <h1>Estilo visual del mundo ÑANDÉ</h1>
+  <div class="lema">"Acá no vale lo que tenés, sino lo que sabés."</div>
+  <p class="sec"><b>Tu mundo crece con vos.</b> La visión final son <b>12 evoluciones, una por año</b>, de 1.º de primaria a la promoción. Para la presentación hay <b>6 escalones</b> en la línea del estilo B que elegiste: cada uno se ve mejor que el anterior y, al pasar de curso, el mundo se transforma. Todos muestran <b>la misma escena</b>: tu colegio cruceño creciendo, la ciudad de Santa Cruz que empieza vacía (solo con sus hitos) y que los cursos construyen, una obra pública en marcha (el zoológico), un portal para visitar otro colegio, los profes Taji y Jochi y un alumno de ese tramo.</p>
+
+  <h2>La escalera: 6 escalones (elegí uno)</h2>
+  <div class="escalera" id="escalera"></div>
+  <h2>▶ Pasaste de curso: ver la transformación</h2>
+  <div class="botones" id="pares"></div>
+  <p class="nota">📱 Las escenas en 3D se ven y se juegan mejor con el celular <b>en horizontal</b>.</p>
+
+  <h2>Comparar los 6 escalones</h2>
+  <div class="controles">
+    <div class="seg" id="segVista"><button data-v="colegio" class="on">Colegio</button><button data-v="obra">Obra</button><button data-v="portal">Portal</button></div>
+    <div class="seg" id="segFormato"><button data-f="celular">Celular</button><button data-f="horizontal">Horizontal</button></div>
+  </div>
+
+  <div class="tres" id="tramos"></div>
+
+  <h2>Pasaste de curso: tu mundo se transforma</h2>
+  <div class="bloque">
+    <img id="imgTrans" src="capturas/transicion-1a2-horizontal.jpg" alt="Transición de Bloques a Piezas: una ola de luz transforma el mundo" loading="lazy">
+    <div class="txt">
+      <p>Al terminar el año, una <b>ola de luz esmeralda</b> cruza la ciudad y la vuelve a dibujar en el estilo del tramo siguiente. El colegio, las obras y los amigos <b>siguen ahí</b>: cambia la forma de verlo, no lo que construiste.</p>
+      <div class="botones"><a class="btn verde" href="transicion.html?de=BLOQUES&a=PIEZAS">Ver 1 → 2</a><a class="btn verde" href="transicion.html?de=VIVO&a=PROMO">Ver 5 → 6</a></div>
+    </div>
+  </div>
+
+  <h2>Qué tiene cada escalón (y en qué equipo anda)</h2>
+  <div class="fichas" id="fichas"></div>
+  <p class="nota">"Anda en" es una estimación: en el servidor de pruebas no hay tarjeta gráfica (ver la tabla de fps). Hay que confirmarlo en las tablets reales.</p>
+
+  <h2>Prueba de construcción</h2>
+  <div class="bloque">
+    <img src="capturas/construir-horizontal.jpg" alt="Prueba de construcción: casona con patio, aljibe y mirador" loading="lazy">
+    <div class="txt">
+      <p>Tocás una celda y el sistema <b>elige la pieza solo</b>, según lo que hay alrededor: si una celda queda rodeada se vuelve <b>patio</b> (con <b>aljibe</b>); hacia el patio y hacia la calle aparecen <b>galerías con horcones</b>; las casas chicas llevan <b>techo de palma</b> y las grandes de <b>teja</b>; tocás de nuevo y sube un piso; al tercero es <b>mirador</b>. Arriba a la derecha se ven los fps.</p>
+      <div class="botones"><a class="btn verde" href="construir.html?estilo=PIEZAS">Construir (Piezas)</a><a class="btn" href="construir.html?estilo=BLOQUES">Bloques</a><a class="btn" href="construir.html?estilo=REAL">Mundo real</a></div>
+    </div>
+  </div>
+
+  <h2>Exploración anterior: A y B</h2>
+  <p class="sec" style="margin:-4px 0 12px">Las direcciones de arte de la investigación. Elegiste <b>B</b>: los escalones 3 a 6 siguen su línea. "Piezas" sale de A. C (pixel) quedó fuera por decisión tuya.</p>
+  <div class="tres" id="exploracion"></div>
+  <div class="aviso">B: los patrones que se ven son <b>genéricos, de muestra</b>. El diseño final se <b>co-diseña y acredita con Artecampo / las comunidades</b>; nunca se copian diseños indígenas reales.</div>
+
+  <h2>Lámina E para los talleres con niños</h2>
+  <div class="bloque">
+    <img src="../talleres/vista/E-mi-colegio-en-santa-cruz.jpg" alt="Lámina E: Mi colegio en Santa Cruz" loading="lazy">
+    <div class="txt">
+      <p><b>"Mi colegio en Santa Cruz"</b>: la ciudad por anillos, todavía vacía, con sus hitos (la plaza con la catedral, el Cristo), los colegios marcados en verde y unidos por portales, y las obras que los cursos construyen para la ciudad. Mismo formato A3 que las láminas A–D.</p>
+      <div class="botones"><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.pdf">PDF A3</a><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.png">PNG</a><a class="btn" href="escena.html?estilo=A&tipo=mapa&vista=general">Ver en 3D</a></div>
+    </div>
+  </div>
+
+  <h2>Rendimiento medido</h2>
+  <div id="fps"><p class="nota">Cargando…</p></div>
+  <p class="nota">Medido en el navegador del servidor de pruebas, <b>sin tarjeta gráfica</b> (todo por procesador): es un piso pesimista. La meta es ≥ 30 fps en la tablet real de gama baja; hay que medirlo ahí. Cada escena abierta muestra sus fps arriba a la derecha.</p>
+
+  <h2>Para mirar</h2>
+  <div class="preg">
+    <div>¿Cada escalón se ve claramente mejor que el anterior? Mirá sobre todo 3 → 4 → 5 → 6.</div>
+    <div>¿El 6 (Promo) está a la altura de la presentación? ¿Qué le falta para "juego comercial"?</div>
+    <div>Personajes: ¿se ven bien de grandes (secundaria)? ¿Los profes Taji y Jochi, igual de cálidos?</div>
+    <div>Transición de curso: ¿emociona igual en 1 → 2 que en 5 → 6?</div>
+  </div>
+
+<div id="visor" hidden>
+  <img alt="">
+  <div class="arriba"><span class="pie"></span><button class="pc" title="Pantalla completa">⛶</button><button class="cerrar" title="Cerrar">✕</button></div>
+  <div class="abajo"><button class="ant">◀</button><a class="abrir3d btn verde">Abrir en 3D</a><button class="sig">▶</button></div>
+</div>
+
+<script>
+const TRAMOS = [
+  { k: 'BLOQUES', l: '1', n: 'Bloques', g: 'P1–P2', c: '#F2C230', d: ['Todo con cubos: techos en escalón, árboles cúbicos.', 'Colores vivos y simples; personajes de ~3 cabezas.'], eq: 'cualquier tablet' },
+  { k: 'PIEZAS', l: '2', n: 'Piezas', g: 'P3–P4', c: '#10B981', d: ['Piezas redondeadas que encastran por ranuras (sin pernos).', 'Brillo de plástico; ~4 cabezas. Sale de A.'], eq: 'tablet de gama baja' },
+  { k: 'REAL', l: '3', n: 'Mundo real', g: 'P5–P6', c: '#5FB7C9', d: ['La línea de B: tres tonos y contorno fino.', 'Proporciones reales (~6,5–7 cabezas).'], eq: 'tablet de gama baja/media' },
+  { k: 'HORIZONTE', l: '4', n: 'Horizonte', g: 'S1–S2', c: '#A78BFA', d: ['Luz calculada en tiempo real (dibujo en tonos) y más detalle.', 'Personajes con cuerpo y animación: saludan, respiran, caminan.'], eq: 'tablet media' },
+  { k: 'VIVO', l: '5', n: 'Mundo vivo', g: 'S3–S5', c: '#F472B6', d: ['Sombras reales, cielo con sol, nubes que pasan.', 'Viento en los árboles, agua que se mueve, tejas y revoque.'], eq: 'tablet/celular medio-alto' },
+  { k: 'PROMO', l: '6', n: 'Promo', g: 'S6 · promoción', c: '#F59E0B', d: ['Materiales de juego comercial, luz de cielo y sombras suaves.', 'Brillo en portal y conocimiento, pétalos de tajibo, luciérnagas, chamarra de promo.'], eq: 'celular/tablet buena (con GPU)' }
+];
+const EXPLORA = [
+  { k: 'A', l: 'A', n: 'Maqueta Viva', g: 'base de Piezas', c: '#10B981' },
+  { k: 'B', l: 'B', n: 'Tierra Pintada', g: 'la elegida', c: '#D9A441' }
+];
+document.getElementById('pares').innerHTML = TRAMOS.slice(0, -1).map((e, i) =>
+  `<a class="btn verde grande" href="transicion.html?de=${e.k}&a=${TRAMOS[i + 1].k}">${e.l} → ${TRAMOS[i + 1].l}</a>`).join('');
+document.getElementById('fichas').innerHTML = TRAMOS.map(e => `<div class="ficha"><h3><span class="letra" style="background:${e.c}">${e.l}</span>${e.n} · ${e.g}</h3>
+  <ul>${e.d.map(x => `<li>${x}</li>`).join('')}</ul><span class="costo">Anda en: <b>${e.eq}</b></span></div>`).join('');
+// formato de las capturas: horizontales si la pantalla está acostada (o es ancha), salvo que se elija a mano
+const acostado = matchMedia('(orientation: landscape)');
+const formatoAuto = () => acostado.matches || innerWidth >= 700 ? 'horizontal' : 'celular';
+let vista = 'colegio', formato = formatoAuto(), formatoManual = false;
+acostado.addEventListener('change', () => { if (!formatoManual) { formato = formatoAuto(); pintar(); } });
+function tarjetas(lista) {
+  const ar = formato === 'celular' ? '390 / 844' : '1280 / 800';
+  return lista.map(e => {
+    const img = `capturas/${e.k}-${vista}-${formato}.jpg`;
+    return `<div class="carta" style="--ar:${ar}">
+      <a class="img" href="${img}" data-ver="${e.k}"><img src="${img}" alt="${e.l} · ${e.n} · ${vista}" loading="lazy"></a>
+      <div class="pie"><div class="nom"><span class="letra" style="background:${e.c}">${e.l}</span><b>${e.n}</b></div>
+      <span class="corto">${e.g}</span>
+      <a class="btn verde" href="escena.html?estilo=${e.k}&vista=${vista}">Abrir en 3D</a></div></div>`;
+  }).join('');
+}
+const VISTAS = [['colegio', 'Colegio'], ['ciudad', 'Ciudad'], ['obra', 'Obra (zoo)'], ['portal', 'Portal'], ['profes', 'Profes y alumnos']];
+document.getElementById('escalera').innerHTML = TRAMOS.map(e => `<div class="tramo" style="--c:${e.c}">
+  <div class="cab"><span class="num">${e.l}</span><div><h3>${e.n}</h3><div class="gr">${e.g}</div></div></div>
+  <a href="escena.html?estilo=${e.k}&vista=colegio"><img src="capturas/${e.k}-colegio-horizontal.jpg" alt="${e.n}: colegio" loading="lazy"></a>
+  <div class="accesos">${VISTAS.map(([v, t]) => `<a class="btn" href="escena.html?estilo=${e.k}&vista=${v}">${t}</a>`).join('')}
+    <a class="btn verde" href="construir.html?estilo=${e.k}">Construir</a></div></div>`).join('');
+function pintar() {
+  document.getElementById('tramos').innerHTML = tarjetas(TRAMOS);
+  document.getElementById('exploracion').innerHTML = tarjetas(EXPLORA);
+  document.getElementById('imgTrans').src = `capturas/transicion-1a2-${formato}.jpg`;
+  document.querySelectorAll('#segVista button').forEach(b => b.classList.toggle('on', b.dataset.v === vista));
+  document.querySelectorAll('#segFormato button').forEach(b => b.classList.toggle('on', b.dataset.f === formato));
+}
+document.getElementById('segVista').onclick = e => { if (e.target.dataset.v) { vista = e.target.dataset.v; pintar(); } };
+document.getElementById('segFormato').onclick = e => { if (e.target.dataset.f) { formato = e.target.dataset.f; formatoManual = true; pintar(); } };
+pintar();
+
+// ---------------- Visor de capturas a pantalla completa (acostado, como EDU.02c) ----------------
+const visor = document.getElementById('visor'), visorImg = visor.querySelector('img'), visorPie = visor.querySelector('.pie');
+const enPC = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+async function pantallaHorizontal(el) {
+  try { if (!enPC()) { if (el.requestFullscreen) await el.requestFullscreen({ navigationUI: 'hide' }); else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen(); } } catch (e) {}
+  try { if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch (e) {}
+}
+let lista = [], pos = 0;
+function mostrar() {
+  const e = lista[pos];
+  visorImg.src = `capturas/${e.k}-${vista}-horizontal.jpg`;
+  visorPie.textContent = `${e.l} · ${e.n} · ${e.g} — ${{ colegio: 'Colegio', obra: 'Obra', portal: 'Portal' }[vista]}`;
+  visor.querySelector('.abrir3d').href = `escena.html?estilo=${e.k}&vista=${vista}`;
+}
+document.addEventListener('click', ev => {
+  const a = ev.target.closest('[data-ver]');
+  if (!a) return;
+  ev.preventDefault();
+  lista = TRAMOS.some(t => t.k === a.dataset.ver) ? TRAMOS : EXPLORA;
+  pos = lista.findIndex(t => t.k === a.dataset.ver);
+  mostrar(); visor.hidden = false;
+  pantallaHorizontal(visor);
+});
+visor.querySelector('.ant').onclick = () => { pos = (pos + lista.length - 1) % lista.length; mostrar(); };
+visor.querySelector('.sig').onclick = () => { pos = (pos + 1) % lista.length; mostrar(); };
+visor.querySelector('.pc').onclick = () => pantallaHorizontal(visor);
+visor.querySelector('.cerrar').onclick = async () => {
+  visor.hidden = true;
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+  try { if (enPC()) await (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) {}
+};
+const pintarPC = () => { visor.querySelector('.pc').hidden = enPC(); };
+addEventListener('fullscreenchange', pintarPC); pintarPC();
+
+fetch('capturas/fps.json').then(r => r.json()).then(d => {
+  document.getElementById('fps').innerHTML = `<table><tr><th>Qué</th><th>Pantalla</th><th>fps</th><th>Dibujos</th></tr>${d.medidas.map(m =>
+    `<tr><td>${m.pagina}</td><td>${m.formato}</td><td class="n" style="color:${m.fps >= 30 ? '#34D399' : m.fps >= 20 ? '#F2C230' : '#F87171'}">${m.fps}</td><td>${m.llamadasDeDibujo ? m.llamadasDeDibujo + ' llamadas · ' + Math.round(m.triangulos / 1000) + ' mil triáng.' : '—'}</td></tr>`).join('')}</table>`;
+}).catch(() => { document.getElementById('fps').innerHTML = '<p class="nota">No se pudo cargar la tabla.</p>'; });
+</script>
+</body>
+</html>

@@ -16,5 +16,12 @@ if [ -d docs/educacion/talleres ]; then
   cp -r docs/educacion/talleres/. _site/educacion/talleres/
 fi
 
+# Educación: propuestas de estilo visual para que el dueño elija (EDU.01c), en
+# /educacion/estilos. Es material de decisión, como los talleres; no es la app.
+if [ -d educacion/estilos ]; then
+  mkdir -p _site/educacion/estilos
+  cp -r educacion/estilos/. _site/educacion/estilos/
+fi
+
 echo "Sitio listo en _site/:"
 ls -R _site | head -50

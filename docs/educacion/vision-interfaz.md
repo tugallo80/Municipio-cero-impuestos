@@ -263,3 +263,28 @@ Notas de la MAESTRA (para hacerlo sano):
   categorías y ligas (no ranking único); moderación de lo construido (aprobación docente).
 - Herramientas simples en tablet: pintar bloques, simetría, copiar/pegar, deshacer, plantillas
   opcionales para quien no sabe por dónde empezar.
+
+## Estilo visual elegido: 12 evoluciones (dueño, 8-nov-2026)
+
+Tras ver las propuestas de EDU.01c (`/educacion/estilos/`):
+- **B "Tierra Pintada" es la mejor dirección** (más detalle que A; A también se ve bien). **C (pixel)
+  se ve mal**: queda fuera de la vitrina (el código se conserva).
+- **Visión final: 12 evoluciones, una por año**, de 1.º de primaria a la promoción. Al pasar de curso
+  el mundo se transforma ("pasaste de curso"). La promo debe tener **acabado de juego comercial**
+  (nivel "Fortnite") con **estilo propio**, sin copiar arte, personajes ni el look de ningún juego.
+- **Para la presentación, 6 escalones** (en la línea de B desde el 3):
+
+| Escalón | Cursos | Nombre | Qué suma |
+|---|---|---|---|
+| 1 | P1–P2 | Bloques | Cubos, colores vivos |
+| 2 | P3–P4 | Piezas | Piezas redondeadas que encastran (base A) |
+| 3 | P5–P6 | Mundo real | Línea B: tres tonos, contorno, proporciones reales |
+| 4 | S1–S2 | Horizonte | Luz en tiempo real (toon), personajes animados, más detalle |
+| 5 | S3–S5 | Mundo vivo | Sombras reales, viento, agua, nubes, tejas y revoque |
+| 6 | S6 (promo) | Promo | Materiales PBR estilizados, luz de cielo, brillo, partículas |
+
+- Los escalones altos piden mejor equipo: 1–3 andan en tablets de gama baja; 4 en tablet media;
+  5 en tablet/celular medio-alto; 6 en celular/tablet buena con GPU (vitrina de la presentación).
+- Para producción, la evolución 6 (y las intermedias) conviene hacerla con **Blender (EDU.07)**:
+  personajes con esqueleto y animaciones, modelos glTF con texturas y luz horneada. Ver
+  `docs/sesiones/EDU.01c-estilo-visual.md`.
