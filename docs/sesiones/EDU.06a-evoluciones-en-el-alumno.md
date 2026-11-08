@@ -74,6 +74,11 @@ El juego del alumno ya daba ~18 fps en este servidor (EDU.01b): sin GPU todo es 
 medir en el celular real con `?diag=1`.
 
 **Pendiente**
+- **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
+  `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los
+  materiales están escritos dos veces (en `mundo.js` para la vitrina, horneados en lotes, y en
+  `evolucion.js` para el juego, por material). Unificarlos implica reescribir cómo arma la vitrina
+  sus escenas: queda para una próxima sesión, para no romper la vitrina ya aprobada.
 - Medir en el celular/tablet real cada evolución con `?diag=1`.
 - Los lugares con niebla, el puente y las casas usan las mismas piezas con otra forma: el arte
   propio de cada evolución (Blender, EDU.07) los va a reemplazar.
