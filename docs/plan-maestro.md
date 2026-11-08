@@ -119,7 +119,8 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/educacion/vision-plataforma-educativa.md` y `vision-interfaz.md`.
 - `docs/investigacion/educacion-piloto-y-financiamiento.md` — piloto, evidencia y financiamiento.
 - `docs/investigacion/transporte-municipal.md` — parque, modelo financiero y ley del transporte.
-- (en curso) `docs/investigacion/experiencia-del-alumno.md` — psicología infantil, juego y mundo compartido.
+- `docs/investigacion/experiencia-del-alumno.md` — psicología infantil, juego y mundo compartido.
+- `docs/educacion/protocolo-focus-group.md` — talleres de co-diseño con niños.
 
 ## Decisiones pendientes del dueño
 
