@@ -8,7 +8,7 @@ name: Educación — deploy
 
 on:
   push:
-    branches: [main, sesion/edu-02]
+    branches: [main, sesion/edu-02, sesion/edu-02b]
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'
@@ -106,4 +106,5 @@ jobs:
             echo "### Publicado"
             echo "- Sitio: https://nande-educacion.web.app/"
             echo "- Probar la voz: https://nande-educacion.web.app/prueba-motor/"
+            echo "- Los profes en el mundo: https://nande-educacion.web.app/maqueta/alumno.html"
           } >> "$GITHUB_STEP_SUMMARY"

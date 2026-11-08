@@ -27,6 +27,10 @@
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       },
       {
+        "source": "/voz/**",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
         "source": "/firebase-config.json",
         "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
       }

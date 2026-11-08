@@ -6,7 +6,10 @@ const aqui = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   resolve: {
-    alias: { '@voz-kay': resolve(aqui, '../../packages/voz-kay/src') },
+    alias: {
+      '@voz-kay': resolve(aqui, '../../packages/voz-kay/src'),
+      '@tutor': resolve(aqui, '../../services/ai-gateway/tutor'),
+    },
     // voz-kay vive fuera de esta carpeta: sus imports se resuelven con los node_modules de acá.
     dedupe: ['@google/genai'],
   },
@@ -18,6 +21,14 @@ export default defineConfig({
       input: {
         portada: resolve(aqui, 'index.html'),
         pruebaMotor: resolve(aqui, 'prueba-motor/index.html'),
+        // Módulo de voz de los profes para la maqueta del alumno: nombre fijo
+        // (/voz/profes.js) porque lo importa una página que no pasa por Vite.
+        profes: resolve(aqui, 'profes/profes-voz.js'),
+      },
+      // El módulo de los profes no exporta nada: que Vite no le quite el código.
+      preserveEntrySignatures: 'allow-extension',
+      output: {
+        entryFileNames: (c) => (c.name === 'profes' ? 'voz/profes.js' : 'assets/[name]-[hash].js'),
       },
     },
   },

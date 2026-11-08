@@ -78,4 +78,4 @@ const HERRAMIENTAS = [
   },
 ];
 
-module.exports = { construirInstruccion, HERRAMIENTAS, PERSONALIDAD };
+module.exports = { construirInstruccion, HERRAMIENTAS, PERSONALIDAD, cursoLegible };

@@ -41,3 +41,13 @@ gcloud logging read 'jsonPayload.evento="kay_uso"' --project=municipio-ia --limi
 - **Procesador de PDF** (`api/process-pdf.js`): es del panel del tutor (EDU.04). No tiene
   autenticación; al migrarlo, exigir rol de tutor.
 - **Interfaz vieja** (React, `RobotFace`): no se migra; la reemplaza la nueva (EDU.04 en adelante).
+
+## Los dos profes (EDU.02b)
+
+- `eduKayToken` con `profe: 'la_profe' | 'el_profe'` usa la personalidad de `tutor/profes/` y la voz
+  fija de `tutor/profes.json`. `mision: { id, fase, paso, peldano, completa }` (solo IDs y números,
+  validados contra `tutor/misiones-demo.js`). `relevoDe: sesionId` = cambio de profe: no cuenta
+  como charla nueva y hereda el reloj.
+- `eduProfes`: lista de profes y a cuál eligió la última vez en cada materia.
+- `eduKayUso` acepta `resumen` (mismo formato que `mision`) y lo guarda en `edu/memoria/{alumnoId}`.
+- Sin `profe`, todo sigue como en EDU.02 (Kay + voz elegible, usado por `/prueba-motor/`).

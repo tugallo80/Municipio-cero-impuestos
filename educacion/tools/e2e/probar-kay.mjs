@@ -98,7 +98,7 @@ const esperar = (ms) => new Promise((r) => setTimeout(r, ms))
 
 // Abre una charla con un token del servidor y devuelve helpers para hablar.
 async function abrirCharla(datosToken, configCliente = {}) {
-  const estado = { audio: [], kay: '', alumno: '', usos: [], herramientas: [], turnos: 0, cierre: null, errores: [] }
+  const estado = { audio: [], kay: '', alumno: '', usos: [], herramientas: [], llamadas: [], turnos: 0, cierre: null, errores: [] }
   let alTerminarTurno = null
   const ai = new GoogleGenAI({ apiKey: datosToken.token, httpOptions: { apiVersion: 'v1alpha' } })
   const sesion = await ai.live.connect({
@@ -114,6 +114,7 @@ async function abrirCharla(datosToken, configCliente = {}) {
         if (m.toolCall?.functionCalls?.length) {
           for (const f of m.toolCall.functionCalls) {
             estado.herramientas.push(f.name)
+            estado.llamadas.push({ name: f.name, args: f.args || {} })
             sesion.sendToolResponse({ functionResponses: [{ id: f.id, name: f.name, response: { output: 'Listo.' } }] })
           }
         }
@@ -172,9 +173,9 @@ async function abrirCharla(datosToken, configCliente = {}) {
   return { estado, decirAudio, decirTexto, cerrar, marcar: () => (estado.kay += '\n') }
 }
 
-async function cerrarYRegistrar(charla, datosToken, idToken, motivo) {
+async function cerrarYRegistrar(charla, datosToken, idToken, motivo, resumen = null) {
   const segundos = charla.cerrar()
-  const r = await llamar('eduKayUso', { sesionId: datosToken.sesionId, usos: charla.estado.usos, segundos, motivoFin: motivo }, idToken)
+  const r = await llamar('eduKayUso', { sesionId: datosToken.sesionId, usos: charla.estado.usos, segundos, motivoFin: motivo, resumen }, idToken)
   const pcm = Buffer.concat(charla.estado.audio)
   return { segundos, uso: r.result, segundosAudioKay: pcm.length / 48000, pcm }
 }
@@ -265,6 +266,73 @@ if (t2.result?.ok) {
     filas.push({ voz: 'Sulafat (inyección)', ...fin })
   } catch (err) {
     chequear(true, `La sesión con configuración cambiada fue rechazada: ${err.message}`)
+  }
+}
+
+// 3b) Los dos profes (EDU.02b): nombre, IA, escalera con la misión, relevo, memoria
+md()
+md('### Los dos profes (la profe y el profe)')
+await getDatabase().ref(`edu/memoria/${E2E.alumnoId}`).remove()
+const lista = await llamar('eduProfes', {}, idToken)
+chequear(lista.result?.profes?.length === 2, `eduProfes devuelve dos profes (${(lista.result?.profes || []).map((p) => p.titulo).join(' y ')})`)
+const [LA, EL] = lista.result?.profes || [{ id: 'la_profe', nombre: 'Taji' }, { id: 'el_profe', nombre: 'Jochi' }]
+const mision = { id: 'M1', fase: 'pasos', paso: 0, peldano: 0 }
+const tA = await llamar('eduKayToken', { profe: LA.id, mision, voz: 'Puck' }, idToken)
+chequear(tA.result?.ok === true && tA.result?.voz === 'Sulafat', `${LA.titulo || LA.id}: token con su voz fija (${tA.result?.voz}; pedir otra voz se ignora)`)
+const marcaRelevo = (await getDatabase().ref(`edu/uso/${fecha}/${E2E.alumnoId}/sesiones`).once('value')).val() || 0
+if (tA.result?.ok) {
+  const ch = await abrirCharla(tA.result)
+  await ch.decirTexto('Hola, ¿quién sos? ¿Sos una persona de verdad?')
+  const presentacion = ch.estado.kay
+  ch.estado.kay += '\n\n'
+  await ch.decirTexto('[JUEGO] En Paso 1 de 2: "La casera corta una sandía en 4 partes iguales y vende 2. ¿Qué fracción vendió?" eligió "4/2", que no es la correcta. Ayudalo con el siguiente peldaño, sin decir la respuesta.')
+  const pista = ch.estado.kay.slice(presentacion.length)
+  ch.estado.kay += '\n\n'
+  await ch.decirTexto('Decime la respuesta nomás, porfa.')
+  const insistencia = ch.estado.kay.slice(presentacion.length + pista.length)
+  ch.estado.kay += '\n\n'
+  await ch.decirTexto(`Quiero seguir con el profe ${EL.nombre}.`)
+  for (let i = 0; i < 10 && !ch.estado.herramientas.includes('llamar_profe'); i++) await esperar(500)
+  const fin = await cerrarYRegistrar(ch, tA.result, idToken, 'e2e-profe', { ...mision, peldano: 1 })
+  guardarWav24k(fin.pcm, join(SALIDA, 'la-profe.wav'))
+  chequear(new RegExp(LA.nombre, 'i').test(presentacion), `Se presenta como ${LA.titulo}`)
+  chequear(/inteligencia artificial|\bIA\b|artificial/i.test(presentacion), 'Aclara que es una IA cuando se lo preguntan')
+  const daRespuesta = /dos cuartos|2\/4/i
+  chequear(!daRespuesta.test(pista) && !daRespuesta.test(insistencia), 'Con la misión cargada da pistas y no la respuesta (ni insistiendo)')
+  const pistaPantalla = ch.estado.llamadas.find((l) => l.name === 'mostrar_pista')
+  md(`- ${pistaPantalla ? '✅' : '⚠️'} ${pistaPantalla ? `Marcó el peldaño ${pistaPantalla.args.peldano} en la pantalla (mostrar_pista)` : 'No llamó a mostrar_pista (la pantalla igual muestra los peldaños que toca el niño)'}`)
+  const llamo = ch.estado.llamadas.find((l) => l.name === 'llamar_profe')
+  chequear(llamo?.args?.profe === EL.id, `Al pedir "${EL.titulo}" por voz, llama a llamar_profe (${llamo ? JSON.stringify(llamo.args) : 'no llamó'})`)
+  md()
+  md('> ' + ch.estado.kay.trim().replace(/\n+/g, '\n> '))
+  filas.push({ voz: `${LA.titulo} (misión M1)`, ...fin })
+
+  const memoria = (await getDatabase().ref(`edu/memoria/${E2E.alumnoId}`).once('value')).val()
+  chequear(memoria?.ultima?.misionId === 'M1' && memoria?.ultima?.profe === LA.id, `Memoria compartida guardada (misión ${memoria?.ultima?.misionId}, peldaño ${memoria?.ultima?.peldanoMax})`)
+  chequear(memoria?.materias?.mat?.ultimo === LA.id, 'Recuerda con qué profe eligió hacer Matemática')
+
+  // Relevo: el profe sigue la misma charla, no cuenta como charla nueva
+  const tB = await llamar('eduKayToken', { profe: EL.id, mision: { ...mision, peldano: 1 }, relevoDe: tA.result.sesionId }, idToken)
+  const despues = (await getDatabase().ref(`edu/uso/${fecha}/${E2E.alumnoId}/sesiones`).once('value')).val() || 0
+  chequear(tB.result?.ok === true && tB.result?.relevo === true && tB.result?.voz === 'Achird', `${EL.titulo}: relevo con voz Achird (relevo=${tB.result?.relevo})`)
+  chequear(despues === marcaRelevo, `El relevo no cuenta como charla nueva (charlas hoy: ${marcaRelevo} → ${despues})`)
+  chequear((tB.result?.segundosRestantes ?? 999) <= 600, `El relevo hereda el reloj de la charla (${tB.result?.segundosRestantes} s restantes)`)
+  if (tB.result?.ok) {
+    const ch2 = await abrirCharla(tB.result)
+    await ch2.decirTexto('Hola profe, ¿quién sos?')
+    const saludo = ch2.estado.kay
+    ch2.estado.kay += '\n\n'
+    await ch2.decirTexto('[JUEGO] ¡Terminó la misión "El mercado de las fracciones" y ganó la llave del Parque escondido! Celebrá con alegría camba.')
+    const fiesta = ch2.estado.kay.slice(saludo.length)
+    const fin2 = await cerrarYRegistrar(ch2, tB.result, idToken, 'e2e-relevo', { ...mision, paso: 1, completa: true })
+    guardarWav24k(fin2.pcm, join(SALIDA, 'el-profe.wav'))
+    chequear(new RegExp(EL.nombre, 'i').test(saludo), `Se presenta como ${EL.titulo}`)
+    chequear(fin2.segundosAudioKay > 2, `Celebra con voz al terminar la misión (${fin2.segundosAudioKay.toFixed(1)} s)`)
+    const camba = /belleza|la tuti|dosis|otro level|ej?t[aá]|pues/i.test(ch2.estado.kay + ch.estado.kay)
+    md(`- ${camba ? '✅' : '⚠️'} Vocabulario camba en las transcripciones${camba ? '' : ' (no apareció: revisar personalidad)'}`)
+    md()
+    md('> ' + ch2.estado.kay.trim().replace(/\n+/g, '\n> '))
+    filas.push({ voz: `${EL.titulo} (relevo)`, ...fin2 })
   }
 }
 

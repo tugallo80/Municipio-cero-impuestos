@@ -74,6 +74,15 @@ async function prepararAudio(workletBasePath) {
   const nodoEntrada = new AudioWorkletNode(ctxEntrada, 'pcm-capture')
   fuente.connect(nodoEntrada)
 
+  // Medidores de volumen (para animaciones que siguen la voz). Baratos: se leen
+  // solo cuando la interfaz los pide, 128 muestras.
+  const analizadorSalida = ctxSalida.createAnalyser()
+  analizadorSalida.fftSize = 256
+  nodoSalida.connect(analizadorSalida)
+  const analizadorEntrada = ctxEntrada.createAnalyser()
+  analizadorEntrada.fftSize = 256
+  fuente.connect(analizadorEntrada)
+
   // Los AudioContext pueden arrancar "suspended" (política de autoplay del
   // navegador) — sobre todo acá, que se crean después de un par de await,
   // lejos del click original que arrancó la conversación. Si quedan
@@ -83,7 +92,7 @@ async function prepararAudio(workletBasePath) {
   // es un no-op si ya estaban corriendo, así que es seguro llamarlo siempre.
   await Promise.all([ctxEntrada.resume(), ctxSalida.resume()])
 
-  return { ctxSalida, ctxEntrada, nodoSalida, nodoEntrada, stream }
+  return { ctxSalida, ctxEntrada, nodoSalida, nodoEntrada, stream, analizadorSalida, analizadorEntrada }
 }
 
 /**
@@ -115,7 +124,7 @@ async function prepararAudio(workletBasePath) {
  * @param {string} [args.workletBasePath] Carpeta pública donde serviste los
  *   worklets (ver README — tiene que ser una URL real, no un import de
  *   Vite). Default: '/audioWorklets'.
- * @returns {Promise<{cerrar: () => void}>}
+ * @returns {Promise<{cerrar: () => void, enviarTexto: (t: string) => void, nivelSalida: () => number, nivelEntrada: () => number}>}
  */
 export async function iniciarSesionKay({
   obtenerToken,
@@ -139,7 +148,7 @@ export async function iniciarSesionKay({
   // de mic + worklets, todo local salvo el propio permiso) no dependen uno
   // del otro — se piden a la vez en vez de en serie.
   const [datos, audio] = await Promise.all([obtenerToken(), prepararAudio(workletBasePath)])
-  const { ctxSalida, ctxEntrada, nodoSalida, nodoEntrada, stream } = audio
+  const { ctxSalida, ctxEntrada, nodoSalida, nodoEntrada, stream, analizadorSalida, analizadorEntrada } = audio
 
   if (!datos.ok) {
     stream.getTracks().forEach((t) => t.stop())
@@ -291,5 +300,27 @@ export async function iniciarSesionKay({
     ctxSalida.close().catch(() => {})
   }
 
-  return { cerrar: cerrarTodo }
+  // Volumen 0..1 (RMS) de lo que suena (Kay) o de lo que entra por el micrófono.
+  const muestras = new Uint8Array(128)
+  const nivel = (analizador) => {
+    if (cerrado) return 0
+    analizador.getByteTimeDomainData(muestras)
+    let suma = 0
+    for (let i = 0; i < muestras.length; i++) {
+      const v = (muestras[i] - 128) / 128
+      suma += v * v
+    }
+    return Math.min(1, Math.sqrt(suma / muestras.length) * 4)
+  }
+
+  return {
+    cerrar: cerrarTodo,
+    // Texto para el modelo en medio de la charla (ej. avisos del juego). El modelo
+    // responde con voz como a cualquier turno.
+    enviarTexto: (texto) => {
+      if (!cerrado && sesion) sesion.sendRealtimeInput({ text: String(texto) })
+    },
+    nivelSalida: () => nivel(analizadorSalida),
+    nivelEntrada: () => nivel(analizadorEntrada),
+  }
 }

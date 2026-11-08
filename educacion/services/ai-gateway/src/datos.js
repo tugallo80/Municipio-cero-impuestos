@@ -10,12 +10,18 @@
 //    edu/contenido/{curso}/agenda/{id} → { tipo, titulo, fecha, descripcion }
 //    edu/uso/{fecha}/{alumnoId}        → { sesiones, tokens, segundos, costoUsd }
 //    edu/uso_global/{fecha}            → { sesiones, tokens, segundos, costoUsd }
-//    edu/sesiones/{sesionId}           → { alumnoId, inicio, voz, modelo, cerrada }
+//    edu/sesiones/{sesionId}           → { alumnoId, inicio, inicioCadena, voz, modelo, profe, relevo, cerrada }
+//    edu/memoria/{alumnoId}            → { ultima: {profe, misionId, paso, peldanoMax, completa, fecha},
+//                                          materias: {mat: {la_profe: n, el_profe: n, ultimo}} }
+//                                          (memoria compartida de los dos profes: solo datos pedagógicos)
 // ══════════════════════════════════════════════════
 const { initializeApp, getApps } = require('firebase-admin/app');
 const NOMBRE_APP = 'educacion';
 const { getDatabase, ServerValue } = require('firebase-admin/database');
 const { fechaBolivia, evaluarCuota } = require('./cuota');
+
+// Cambios de profe por día (cada uno es una conexión nueva a Gemini).
+const MAX_RELEVOS_DIA = 40;
 
 let db = null;
 function base() {
@@ -60,31 +66,87 @@ async function obtenerContenido(curso) {
 /**
  * Revisa la cuota y, si alcanza, reserva una charla (suma 1 sesión) en una
  * transacción, para que dos pedidos al mismo tiempo no se salteen el límite.
+ *
+ * Relevo (cambio de profe dentro de la misma charla): si `relevoDe` es una sesión
+ * del mismo alumno que sigue dentro de su tiempo, NO cuenta como charla nueva y
+ * hereda el reloj (inicioCadena): la cadena entera dura como mucho minutosPorSesion.
+ * El tope de tokens del alumno y el de costo global se siguen revisando.
  */
-async function reservarSesion(alumnoId, limites, datosSesion) {
+async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null) {
   const fecha = fechaBolivia();
   const usoGlobal = (await base().ref(`edu/uso_global/${fecha}`).once('value')).val() || {};
+  const ahora = Date.now();
+
+  let inicioCadena = ahora;
+  let esRelevo = false;
+  if (relevoDe && /^[-_A-Za-z0-9]{10,40}$/.test(relevoDe)) {
+    const previa = (await base().ref(`edu/sesiones/${relevoDe}`).once('value')).val();
+    const raiz = Number(previa?.inicioCadena || previa?.inicio || 0);
+    if (previa && previa.alumnoId === alumnoId && raiz + limites.minutosPorSesion * 60e3 > ahora + 30e3) {
+      inicioCadena = raiz;
+      esRelevo = true;
+    }
+  }
 
   let rechazo = null;
   const tx = await base()
     .ref(`edu/uso/${fecha}/${alumnoId}`)
     .transaction((actual) => {
       const uso = actual || {};
-      const ev = evaluarCuota(uso, usoGlobal, limites);
+      // En un relevo no se cuenta la charla, pero sí tokens y costo global.
+      const ev = evaluarCuota(esRelevo ? { ...uso, sesiones: 0 } : uso, usoGlobal, limites);
+      if (ev.ok && esRelevo && (uso.relevos || 0) >= MAX_RELEVOS_DIA) {
+        rechazo = { ok: false, motivo: 'relevos', mensaje: 'Hoy ya cambiaste muchas veces de profe. ¡Seguí con este!' };
+        return undefined;
+      }
       if (!ev.ok) {
         rechazo = ev;
         return undefined; // aborta la transacción
       }
       rechazo = null;
-      return { ...uso, sesiones: (uso.sesiones || 0) + 1 };
+      return esRelevo ? { ...uso, relevos: (uso.relevos || 0) + 1 } : { ...uso, sesiones: (uso.sesiones || 0) + 1 };
     });
   if (!tx.committed) return rechazo || { ok: false, motivo: 'error', mensaje: 'No se pudo reservar la charla.' };
 
-  await base().ref(`edu/uso_global/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
+  if (!esRelevo) await base().ref(`edu/uso_global/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
   const ref = base().ref('edu/sesiones').push();
-  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, cerrada: false, ...datosSesion });
+  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, inicioCadena, relevo: esRelevo, cerrada: false, ...datosSesion });
   const usoAlumno = tx.snapshot.val() || {};
-  return { ok: true, sesionId: ref.key, fecha, sesionesRestantes: limites.sesionesPorAlumnoDia - (usoAlumno.sesiones || 0) };
+  return {
+    ok: true,
+    sesionId: ref.key,
+    fecha,
+    relevo: esRelevo,
+    venceEn: inicioCadena + limites.minutosPorSesion * 60e3,
+    sesionesRestantes: limites.sesionesPorAlumnoDia - (usoAlumno.sesiones || 0),
+  };
+}
+
+// ── Memoria compartida de los profes ───────────────
+async function obtenerMemoria(alumnoId) {
+  return (await base().ref(`edu/memoria/${alumnoId}`).once('value')).val() || {};
+}
+
+/** Suma que el alumno eligió a este profe para esta materia (para recordar, no imponer). */
+async function anotarEleccion(alumnoId, materia, profeId) {
+  if (!/^[a-z]{2,6}$/.test(materia || '')) return;
+  await base()
+    .ref(`edu/memoria/${alumnoId}/materias/${materia}`)
+    .transaction((x) => {
+      const m = x || {};
+      return { ...m, [profeId]: (m[profeId] || 0) + 1, ultimo: profeId };
+    });
+}
+
+/** Guarda en qué quedó (ya validado por el llamador: solo IDs y números). */
+async function guardarUltima(alumnoId, ultima) {
+  await base().ref(`edu/memoria/${alumnoId}/ultima`).set({ ...ultima, fecha: fechaBolivia() });
+}
+
+/** La sesión (para saber qué profe era al cerrar). */
+async function obtenerSesion(sesionId) {
+  if (!/^[-_A-Za-z0-9]{10,40}$/.test(sesionId || '')) return null;
+  return (await base().ref(`edu/sesiones/${sesionId}`).once('value')).val();
 }
 
 /** Cierra la charla (una sola vez) y suma tokens/costo al día del alumno y global. */
@@ -119,4 +181,4 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
   return { ok: true };
 }
 
-module.exports = { obtenerAlumno, obtenerContenido, reservarSesion, registrarUso };
+module.exports = { obtenerAlumno, obtenerContenido, reservarSesion, registrarUso, obtenerMemoria, anotarEleccion, guardarUltima, obtenerSesion };

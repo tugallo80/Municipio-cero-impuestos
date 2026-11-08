@@ -12,7 +12,8 @@ const { defineSecret } = require('firebase-functions/params');
 const { GoogleGenAI, Modality } = require('@google/genai');
 
 const { MODELO_KAY, VOCES, VOZ_POR_DEFECTO, LIMITES } = require('../tutor/config');
-const { construirInstruccion, HERRAMIENTAS } = require('../tutor/instruccion');
+const { construirInstruccion, HERRAMIENTAS, cursoLegible } = require('../tutor/instruccion');
+const profes = require('../tutor/profes');
 const { resumirUso, PRECIOS_USD_POR_MILLON } = require('./costos');
 const datos = require('./datos');
 
@@ -32,36 +33,60 @@ async function alumnoDeLaCuenta(request) {
   return alumno;
 }
 
+// Pide un token efímero para hablar por voz.
+//  - Con `profe` ('la_profe' | 'el_profe'): uno de los dos profes (EDU.02b), con su voz
+//    fija, la misión en la que está el alumno (`mision`: solo IDs y números) y la
+//    memoria compartida. `relevoDe`: sesión anterior si es un cambio de profe.
+//  - Sin `profe`: Kay con la voz elegida (página técnica /prueba-motor/, EDU.02).
 exports.eduKayToken = onCall(OPCIONES, async (request) => {
   const { alumnoId, perfil, limites: propios } = await alumnoDeLaCuenta(request);
   // El tope global de costo diario (costoGlobalDiaUsd) no se puede cambiar por cuenta.
   const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd };
+  const profe = profes.profePorId(String(request.data?.profe || ''));
   const pedida = String(request.data?.voz || '');
-  const voz = VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;
+  const voz = profe ? profe.voz : VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;
+  const mision = profe ? profes.validarMision(request.data?.mision) : null;
+  const relevoDe = profe ? String(request.data?.relevoDe || '') || null : null;
 
-  const reserva = await datos.reservarSesion(alumnoId, limites, { voz, modelo: MODELO_KAY });
+  const reserva = await datos.reservarSesion(
+    alumnoId,
+    limites,
+    { voz, modelo: MODELO_KAY, ...(profe ? { profe: profe.id } : {}) },
+    relevoDe
+  );
   if (!reserva.ok) {
     log('kay_cuota_agotada', { alumnoId, motivo: reserva.motivo });
     return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
   }
 
-  const contenido = await datos.obtenerContenido(perfil.curso);
-  const instruccion = construirInstruccion(perfil, contenido);
+  let instruccion;
+  let herramientas = HERRAMIENTAS;
+  if (profe) {
+    const memoria = await datos.obtenerMemoria(alumnoId);
+    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, relevo: reserva.relevo, cursoLegible });
+    herramientas = profes.HERRAMIENTAS_PROFES;
+    if (mision && !reserva.relevo) await datos.anotarEleccion(alumnoId, mision.materia, profe.id);
+  } else {
+    const contenido = await datos.obtenerContenido(perfil.curso);
+    instruccion = construirInstruccion(perfil, contenido);
+  }
 
   const ahora = Date.now();
+  const vence = Math.min(reserva.venceEn || Infinity, ahora + LIMITES.minutosPorSesion * 60 * 1000);
   const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY.value(), httpOptions: { apiVersion: 'v1alpha' } });
   const token = await ai.authTokens.create({
     config: {
       uses: 1,
-      // La charla se corta sola al vencer el token: es el límite duro de minutos.
-      expireTime: new Date(ahora + LIMITES.minutosPorSesion * 60 * 1000).toISOString(),
+      // La charla se corta sola al vencer el token: es el límite duro de minutos
+      // (en un relevo, el reloj sigue el de la charla original).
+      expireTime: new Date(vence).toISOString(),
       newSessionExpireTime: new Date(ahora + 60 * 1000).toISOString(),
       liveConnectConstraints: {
         model: MODELO_KAY,
         config: {
           responseModalities: [Modality.AUDIO],
           systemInstruction: instruccion,
-          tools: [{ functionDeclarations: HERRAMIENTAS }],
+          tools: [{ functionDeclarations: herramientas }],
           speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: voz } } },
           realtimeInputConfig: { automaticActivityDetection: { disabled: false } },
           inputAudioTranscription: {},
@@ -77,22 +102,45 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
   });
   if (!token?.name) throw new HttpsError('unavailable', 'Gemini no devolvió el token.');
 
-  log('kay_sesion_iniciada', { alumnoId, sesionId: reserva.sesionId, curso: perfil.curso, voz, modelo: MODELO_KAY, caracteresInstruccion: instruccion.length });
+  log('kay_sesion_iniciada', {
+    alumnoId,
+    sesionId: reserva.sesionId,
+    curso: perfil.curso,
+    voz,
+    profe: profe?.id || null,
+    mision: mision ? `${mision.id}/${mision.fase}/${mision.paso}/${mision.peldano}` : null,
+    relevo: reserva.relevo,
+    modelo: MODELO_KAY,
+    caracteresInstruccion: instruccion.length,
+  });
 
   return {
     ok: true,
     token: token.name,
     modelo: MODELO_KAY,
     voz,
+    profe: profe?.id || null,
+    relevo: reserva.relevo,
     sesionId: reserva.sesionId,
     minutosMaximos: LIMITES.minutosPorSesion,
+    segundosRestantes: Math.round((vence - ahora) / 1000),
     sesionesRestantes: reserva.sesionesRestantes,
   };
 });
 
+// Los profes que puede llamar el alumno y a cuál eligió la última vez en cada materia
+// (para recordarlo con una estrellita, nunca para imponerlo).
+exports.eduProfes = onCall({ ...OPCIONES, secrets: [] }, async (request) => {
+  const { alumnoId } = await alumnoDeLaCuenta(request);
+  const memoria = await datos.obtenerMemoria(alumnoId);
+  const preferencias = {};
+  for (const [materia, m] of Object.entries(memoria.materias || {})) if (profes.profePorId(m?.ultimo)) preferencias[materia] = m.ultimo;
+  return { ok: true, profes: profes.profesPublicos(), preferencias };
+});
+
 exports.eduKayUso = onCall({ ...OPCIONES, secrets: [] }, async (request) => {
   const { alumnoId, perfil } = await alumnoDeLaCuenta(request);
-  const { sesionId, usos, segundos, motivoFin } = request.data || {};
+  const { sesionId, usos, segundos, motivoFin, resumen: resumenMision } = request.data || {};
 
   const resumen = resumirUso(usos);
   const seg = Math.max(0, Math.min(Number(segundos) || 0, LIMITES.minutosPorSesion * 60 + 60));
@@ -104,6 +152,21 @@ exports.eduKayUso = onCall({ ...OPCIONES, secrets: [] }, async (request) => {
     segundos: Math.round(seg),
   });
   if (!r.ok) return r;
+
+  // Memoria compartida de los profes: en qué misión quedó (solo IDs y números validados).
+  const m = profes.validarMision(resumenMision);
+  if (m) {
+    const sesion = await datos.obtenerSesion(String(sesionId || ''));
+    if (sesion?.profe) {
+      await datos.guardarUltima(alumnoId, {
+        profe: sesion.profe,
+        misionId: m.id,
+        paso: m.paso,
+        peldanoMax: m.peldano,
+        completa: m.completa,
+      });
+    }
+  }
 
   const costoPorMinutoUsd = minutos > 0 ? Math.round((resumen.costoUsd / minutos) * 1e6) / 1e6 : 0;
   log('kay_uso', {
