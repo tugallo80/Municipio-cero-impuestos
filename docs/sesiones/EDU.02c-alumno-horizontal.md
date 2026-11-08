@@ -81,6 +81,20 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
   lado y abajo los botones; mide unos 170 px de alto. Con el teclado abierto (alto 200 px) el campo se
   acomoda solo a la vista y "Entrar" queda visible (`c3-login-*.jpg`).
 
+**Ajuste 3 — girar la cámara con el pulgar derecho (pedido del dueño)**
+- Arrastrar en la mitad derecha (fuera de botones y paneles) gira la cámara alrededor del personaje:
+  libre para los costados; para arriba y abajo con límites (no se mete bajo el suelo ni mira desde arriba del todo).
+  Con suavizado. Cada dedo se sigue por separado: se camina con el izquierdo y se mira con el derecho a la vez.
+- Caminar es relativo a la cámara (arriba en el círculo = adelante de la cámara).
+- Doble toque en la mitad derecha: la cámara vuelve detrás del personaje.
+- Toque corto (< 12 px y < 0,4 s) sigue abriendo aulas y lugares; si se arrastra, no.
+- Pista la primera vez: "👆 Deslizá acá para mirar" (se guarda en el celular que ya se vio).
+- En compu: Q y E giran la cámara.
+- Probado con Playwright y dos dedos a la vez (CDP touch) en 844×390 y 915×412: gira ~1,3 rad mientras
+  camina; caminar "arriba" coincide con adelante de la cámara en las 4 direcciones (cos = 1,00);
+  doble toque deja la cámara detrás (error 0,00 rad); toque corto en Artes abre "Aula de Artes". Sin errores.
+  Capturas `d0-pista-*`, `d1-girada-*`.
+
 **Pendiente**
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?

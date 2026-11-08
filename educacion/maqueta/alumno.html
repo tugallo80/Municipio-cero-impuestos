@@ -60,6 +60,10 @@
   .redondo { width: 54px; height: 54px; border-radius: 18px; background: rgba(15,26,23,.88); border: 2px solid rgba(255,255,255,.18); display: grid; place-items: center; font-size: 24px; box-shadow: 0 4px 0 rgba(0,0,0,.3); position: relative; }
   .redondo small { position: absolute; bottom: -16px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: 700; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,.7); }
   .redondo.ayudar { width: 64px; height: 64px; font-size: 30px; border-radius: 22px; background: #F59E0B; border-color: #FDE68A; }
+  .pista-mirar { position: fixed; right: calc(var(--sd) + 40px); top: 45%; z-index: 9; pointer-events: none; display: flex; align-items: center; gap: 8px; background: rgba(15,26,23,.82); border: 2px solid rgba(255,255,255,.25); border-radius: 99px; padding: 8px 14px; font-size: 14px; font-weight: 600; opacity: 0; transition: opacity .4s; }
+  .pista-mirar.ver { opacity: 1; }
+  .pista-mirar .mano { display: inline-block; font-size: 22px; animation: deslizar 1.4s ease-in-out infinite; }
+  @keyframes deslizar { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(14px); } }
   body.con-panel .joy, body.con-panel .ayuda, body.con-panel .acciones { visibility: hidden; }
   .entrar { display: none; max-width: min(300px, 40vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
@@ -265,6 +269,7 @@
     <button class="redondo ayudar" onclick="abrirAyuda()" title="Pedir ayuda">🙋<small>Ayuda</small></button>
   </div>
 </div>
+<div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar</div>
 <div class="lista2d" id="lista2d"></div>
 
 <div class="cargando" id="cargando"><div><div class="t">Armando la isla del curso…</div><div>bloque por bloque 🧱</div></div></div>
@@ -292,8 +297,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-3"></script>
-<script src="misiones-demo.js?v=edu02c-3"></script>
+<script src="datos-demo.js?v=edu02c-4"></script>
+<script src="misiones-demo.js?v=edu02c-4"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -851,7 +856,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-3').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-4').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
@@ -1174,15 +1179,19 @@ function iniciar(THREE) {
   addEventListener('keyup', e => { teclas[e.key.toLowerCase()] = false; });
   function ocultarAyuda() { document.getElementById('ayuda').style.opacity = 0; }
 
-  // Tocar cosas del mundo
+  // Tocar cosas del mundo (toque corto) y girar la cámara (arrastrar con el pulgar derecho).
+  // Cada dedo se sigue por separado: el izquierdo puede caminar con el círculo mientras
+  // el derecho gira la cámara.
   const ray = new THREE.Raycaster(), ptr = new THREE.Vector2();
-  let inicioToque = null;
-  canvas.addEventListener('pointerdown', e => { inicioToque = { x: e.clientX, y: e.clientY }; });
-  canvas.addEventListener('pointerup', e => {
-    if (!inicioToque || Math.hypot(e.clientX - inicioToque.x, e.clientY - inicioToque.y) > 12) return;
+  const CAM = { yaw: 0, pitch: 0, yawObj: 0, pitchObj: 0, dist: 20, min: .45, max: 1.2 };
+  window.__cam = CAM; window.__yo = yo;   // (para las pruebas automáticas)
+  const dedos = new Map();  // pointerId → { x, y, x0, y0, t0, mirar }
+  let ultimoTap = { t: 0, x: 0, y: 0 };
+  const SENS = 0.0085;      // radianes por píxel
+  function tocar(e) {
     ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1);
     ray.setFromCamera(ptr, camara);
-    const hit = ray.intersectObjects(tocables, false)[0]; if (!hit) return;
+    const hit = ray.intersectObjects(tocables, false)[0]; if (!hit) return false;
     ocultarAyuda();
     const t = hit.object.userData.toca;
     if (t.tipo === 'aula') window.abrirAula(t.id);
@@ -1191,7 +1200,42 @@ function iniciar(THREE) {
     if (t.tipo === 'micasa') window.abrirMiCasa();
     if (t.tipo === 'casa') window.visitar(t.id);
     if (t.tipo === 'companero') window.visitar(t.id);
+    return true;
+  }
+  function detrasDelPersonaje() { CAM.yawObj = yo.rotation.y + Math.PI; CAM.pitchObj = CAM.pitch0; }
+  canvas.addEventListener('pointerdown', e => {
+    dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: e.clientX > innerWidth / 2 });
+    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
   });
+  canvas.addEventListener('pointermove', e => {
+    const d = dedos.get(e.pointerId); if (!d) return;
+    const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
+    if (!d.mirar || window.__pausa) return;
+    if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 10) return;   // todavía puede ser un toque
+    CAM.yawObj -= dx * SENS;
+    CAM.pitchObj = Math.min(CAM.max, Math.max(CAM.min, CAM.pitchObj + dy * SENS * .7));
+    ocultarPistaMirar();
+  });
+  const soltarDedo = e => {
+    const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (!d || e.type === 'pointercancel') return;
+    const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
+    if (!corto) return;
+    const ahora = performance.now();
+    const doble = d.mirar && ahora - ultimoTap.t < 320 && Math.hypot(e.clientX - ultimoTap.x, e.clientY - ultimoTap.y) < 40;
+    ultimoTap = { t: ahora, x: e.clientX, y: e.clientY };
+    if (doble) { detrasDelPersonaje(); ultimoTap.t = 0; return; }
+    tocar(e);
+  };
+  canvas.addEventListener('pointerup', soltarDedo);
+  canvas.addEventListener('pointercancel', soltarDedo);
+  // Pista la primera vez
+  const pistaMirar = document.getElementById('pista-mirar');
+  let pistaVista = false; try { pistaVista = localStorage.getItem('alumno-pista-mirar') === '1'; } catch (_) {}
+  function ocultarPistaMirar() {
+    if (pistaVista) return; pistaVista = true; pistaMirar.classList.remove('ver');
+    try { localStorage.setItem('alumno-pista-mirar', '1'); } catch (_) {}
+  }
+  if (!pistaVista) setTimeout(() => { if (!pistaVista) { pistaMirar.classList.add('ver'); setTimeout(() => pistaMirar.classList.remove('ver'), 7000); } }, 6000);
 
   const btnEntrar = document.getElementById('entrar');
   let cercano = null, ultimoSonido = null;
@@ -1209,14 +1253,18 @@ function iniciar(THREE) {
 
   // Cámara según la pantalla: acostada (la normal) ve más a lo ancho y más cerca;
   // parada (respaldo) se aleja para que entre la isla.
-  const offset = new THREE.Vector3();
   let corrido = 0;
   function ajustarCamara() {
     const vertical = innerHeight > innerWidth;
     renderer.setSize(innerWidth, innerHeight);
     camara.aspect = innerWidth / innerHeight;
     camara.fov = vertical ? 58 : 46;
-    offset.set(0, vertical ? 27 : 16, vertical ? 13 : 12);
+    // misma vista que antes al arrancar: acostado 16 arriba/12 atrás, parado 27/13
+    const [alto, atras] = vertical ? [27, 13] : [16, 12];
+    const p0 = Math.atan2(alto, atras), cambio = CAM.pitch0 === undefined || Math.abs(CAM.pitch0 - p0) > .01;
+    CAM.dist = Math.hypot(alto, atras); CAM.pitch0 = p0;
+    CAM.max = Math.min(1.25, p0 + .2); CAM.min = .45;
+    if (cambio) { CAM.pitch = CAM.pitchObj = p0; }
     corrido = -1;   // fuerza a recalcular el corrimiento del panel
   }
   ajustarCamara();
@@ -1235,6 +1283,10 @@ function iniciar(THREE) {
     if (teclas['arrowright'] || teclas['d']) mx += 1;
     if (teclas['arrowup'] || teclas['w']) mz -= 1;
     if (teclas['arrowdown'] || teclas['s']) mz += 1;
+    if (teclas['q']) CAM.yawObj += dt * 2;
+    if (teclas['e']) CAM.yawObj -= dt * 2;
+    // caminar relativo a la cámara: arriba en el círculo = hacia adonde mira la cámara
+    { const c = Math.cos(CAM.yaw), sn = Math.sin(CAM.yaw); const wx = c * mx + sn * mz, wz = -sn * mx + c * mz; mx = wx; mz = wz; }
     const largo = Math.hypot(mx, mz), moviendo = largo > .1 && !window.__pausa;
     if (moviendo) {
       const v = 6 * Math.min(1, largo);
@@ -1292,13 +1344,18 @@ function iniciar(THREE) {
       if (corrido) camara.setViewOffset(innerWidth, innerHeight, corrido, 0, innerWidth, innerHeight); else camara.clearViewOffset();
       camara.updateProjectionMatrix();
     }
-    objetivoCam.copy(yo.position).add(offset);
-    camara.position.lerp(objetivoCam, Math.min(1, dt * 4));
-    camara.lookAt(yo.position.x, yo.position.y + 1, yo.position.z - 2);
+    // cámara en órbita alrededor del personaje, con suavizado
+    const k = Math.min(1, dt * 10);
+    let dY = CAM.yawObj - CAM.yaw; dY = Math.atan2(Math.sin(dY), Math.cos(dY)); CAM.yaw += dY * k; CAM.yawObj = CAM.yaw + (dY * (1 - k));
+    CAM.pitch += (CAM.pitchObj - CAM.pitch) * k;
+    const horiz = Math.cos(CAM.pitch) * CAM.dist;
+    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
+    camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
+    camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
     renderer.render(escena, camara);
     requestAnimationFrame(bucle);
   }
-  camara.position.copy(yo.position).add(offset);
+  camara.position.set(yo.position.x, yo.position.y + Math.sin(CAM.pitch) * CAM.dist, yo.position.z + Math.cos(CAM.pitch) * CAM.dist);
   bucle();
   document.getElementById('cargando').style.display = 'none';
   window.__listo3D = true;
