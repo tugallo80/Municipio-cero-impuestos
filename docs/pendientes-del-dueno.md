@@ -12,6 +12,7 @@
 | 3 | **Nombres de los profes** | Elegir Taji / Jochi u otros | Los dos profes de voz |
 | 4 | **Marco o franja de la voz** | Elegir cómo se ve el profe cuando habla | App del alumno |
 | 5 | **Talleres con niños** | Hacerlos con las láminas de `/educacion/talleres/` (incluida la E) | Validar el diseño con chicos reales |
+| 7 | **Cartas del piloto (U.E. Nuevo Horizonte)** | Completar y hacer firmar `docs/piloto/carta-intencion-UE-Nuevo-Horizonte.docx` (director/a) y, si se puede, la de la Alcaldía. Preguntas para la visita en `docs/piloto/README.md` | Respaldo para Google y otros financiadores; arrancar el piloto |
 | 6 | **Correo de contacto** | Un correo para la página del proyecto | Enviar la solicitud de créditos de Google (cuando el proyecto esté terminado) |
 
 ## Para probar cuando avise la MAESTRA
@@ -25,6 +26,8 @@
 - Antes de pagar el plan de USD 200: la prueba del punto 1.
 
 ## Resueltos
+
+- Facturación: tarjeta sin crédito → saldo USD 16,61 pagado; aviso de presupuesto USD 20/mes creado en la cuenta 01853C (8-nov).
 
 - Estilo gráfico: **B** como base, C (pixel) fuera; 12 evoluciones en el producto final, 6 para la presentación (8-nov).
 - Entrar a las aulas (PR #13): aprobado y en `main` (8-nov).
