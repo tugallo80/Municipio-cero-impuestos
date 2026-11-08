@@ -11,7 +11,9 @@ import { execFileSync } from 'node:child_process'
 import { randomBytes } from 'node:crypto'
 import { appendFileSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { join } from 'node:path'
-import admin from 'firebase-admin'
+import { initializeApp } from 'firebase-admin/app'
+import { getAuth } from 'firebase-admin/auth'
+import { getDatabase } from 'firebase-admin/database'
 import { GoogleGenAI, Modality } from '@google/genai'
 
 const PROYECTO = process.env.PROYECTO || 'municipio-ia'
@@ -34,17 +36,17 @@ const chequear = (ok, texto) => {
 }
 
 // ── Cuenta e2e ────────────────────────────────────
-admin.initializeApp({ projectId: PROYECTO, databaseURL: process.env.EDU_DATABASE_URL })
+initializeApp({ projectId: PROYECTO, databaseURL: process.env.EDU_DATABASE_URL })
 const clave = randomBytes(24).toString('base64url')
 try {
-  await admin.auth().updateUser(E2E.uid, { email: E2E.email, password: clave })
+  await getAuth().updateUser(E2E.uid, { email: E2E.email, password: clave })
 } catch {
-  await admin.auth().createUser({ uid: E2E.uid, email: E2E.email, password: clave })
+  await getAuth().createUser({ uid: E2E.uid, email: E2E.email, password: clave })
 }
 const fecha = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
-await admin.database().ref(`edu/uid_alumno/${E2E.uid}`).set(E2E.alumnoId)
-await admin.database().ref(`edu/alumnos/${E2E.alumnoId}`).set({ curso: '4to_primaria', estilo: 'auditivo' })
-await admin.database().ref(`edu/uso/${fecha}/${E2E.alumnoId}`).remove()
+await getDatabase().ref(`edu/uid_alumno/${E2E.uid}`).set(E2E.alumnoId)
+await getDatabase().ref(`edu/alumnos/${E2E.alumnoId}`).set({ curso: '4to_primaria', estilo: 'auditivo' })
+await getDatabase().ref(`edu/uso/${fecha}/${E2E.alumnoId}`).remove()
 
 async function entrar() {
   const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {

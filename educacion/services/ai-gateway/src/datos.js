@@ -12,14 +12,15 @@
 //    edu/uso_global/{fecha}            → { sesiones, tokens, segundos, costoUsd }
 //    edu/sesiones/{sesionId}           → { alumnoId, inicio, voz, modelo, cerrada }
 // ══════════════════════════════════════════════════
-const admin = require('firebase-admin');
+const { initializeApp, getApps } = require('firebase-admin/app');
+const { getDatabase, ServerValue } = require('firebase-admin/database');
 const { fechaBolivia, evaluarCuota } = require('./cuota');
 
 let db = null;
 function base() {
   if (!db) {
-    if (!admin.apps.length) admin.initializeApp({ databaseURL: process.env.EDU_DATABASE_URL });
-    db = admin.database();
+    if (!getApps().length) initializeApp({ databaseURL: process.env.EDU_DATABASE_URL });
+    db = getDatabase();
   }
   return db;
 }
@@ -71,7 +72,7 @@ async function reservarSesion(alumnoId, limites, datosSesion) {
 
   await base().ref(`edu/uso_global/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
   const ref = base().ref('edu/sesiones').push();
-  await ref.set({ alumnoId, fecha, inicio: admin.database.ServerValue.TIMESTAMP, cerrada: false, ...datosSesion });
+  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, cerrada: false, ...datosSesion });
   const usoAlumno = tx.snapshot.val() || {};
   return { ok: true, sesionId: ref.key, fecha, sesionesRestantes: limites.sesionesPorAlumnoDia - (usoAlumno.sesiones || 0) };
 }

@@ -8,16 +8,18 @@
 //
 //  Uso: EDU_DATABASE_URL=https://….firebaseio.com node seed/crear-cuentas-prueba.js
 // ══════════════════════════════════════════════════
-const admin = require('firebase-admin');
+const { initializeApp } = require('firebase-admin/app');
+const { getAuth } = require('firebase-admin/auth');
+const { getDatabase } = require('firebase-admin/database');
 const { cuentas, dominio } = require('./cuentas-prueba.json');
 const contenido = require('./contenido-demo.json');
 const reglas = require('../../database.rules.json');
 
-admin.initializeApp({
+initializeApp({
   projectId: process.env.PROYECTO || 'municipio-ia',
   databaseURL: process.env.EDU_DATABASE_URL,
 });
-const db = admin.database();
+const db = getDatabase();
 
 (async () => {
   // Reglas de la base: todo cerrado al navegador (solo el servidor lee/escribe).
@@ -30,7 +32,7 @@ const db = admin.database();
     emailVerified: true,
     passwordHash: Buffer.from(c.hashBcrypt),
   }));
-  const r = await admin.auth().importUsers(usuarios, { hash: { algorithm: 'BCRYPT' } });
+  const r = await getAuth().importUsers(usuarios, { hash: { algorithm: 'BCRYPT' } });
   if (r.failureCount) {
     for (const e of r.errors) console.error(`❌ Cuenta ${usuarios[e.index].uid}: ${e.error.message}`);
     process.exit(1);
