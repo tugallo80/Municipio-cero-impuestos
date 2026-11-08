@@ -172,6 +172,6 @@ por alumno, ligas comparables, retos cooperativos), "farmeo" de monedas (pagar p
 repaso, rendimientos decrecientes), moderación (frases predefinidas, IA de apoyo al docente,
 revisar construcciones), escala técnica (por etapas). Se suma a los talleres como **mundo E**.
 
-Investigación en curso → `docs/investigacion/mundo-abierto-santa-cruz.md`: economía de fichas
+Investigación hecha → `docs/investigacion/mundo-abierto-santa-cruz.md`: economía de fichas
 (tareas como moneda), competencia entre colegios y equidad, verificación de identidad de menores
 en Bolivia (RUDE, carnet), factibilidad técnica en tablets.
