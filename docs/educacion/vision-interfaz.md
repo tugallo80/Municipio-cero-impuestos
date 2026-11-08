@@ -108,3 +108,25 @@ Solo consulta (no editan contenidos):
   las niñas? → investigación en curso (`docs/investigacion/voz-del-tutor.md`); probar también en
   los talleres con niños.
 - Con la cuenta de prueba llegó al límite de **8 charlas por día**.
+
+## Dos tutores con personalidad: "la profe" y "el profe" (dueño, 8-nov-2026)
+
+- No es "una voz": son **dos personalidades (arquetipos)**. Voz femenina **Sulafat** → *la profe*;
+  voz masculina **Achird** → *el profe* (en Santa Cruz a los docentes se les dice "profe").
+  Nombres propios a definir.
+- **Ambos siempre disponibles.** No se obliga a elegir al empezar: el niño llama al que quiere
+  ("quiero hacer la tarea con la profe") y puede preferir uno por materia.
+- **Interfaz**: no un botón verde; la idea es que **toda la pantalla lata, como una boca que
+  habla**. Se afina después.
+- **Más adelante**: si el municipio lanza el proyecto, habrá una etapa de concientización sobre la
+  entrada de la IA a la educación (publicidad, socialización, **acciones BTL en colegios**), y los
+  dos tutores se **personificarán físicamente** como personajes.
+
+Criterios para diseñarlos (de `docs/investigacion/voz-del-tutor.md` y `experiencia-del-alumno.md`):
+- **Mismo nivel de calidez y de saber** en los dos; ninguno es "el sabio" ni "la tierna".
+- **Ninguna materia asignada por defecto** a uno u otro (nada de "el profe para matemática, la
+  profe para lenguaje"); la preferencia por materia la decide el niño.
+- **Memoria compartida**: los dos ven el mismo progreso del alumno; cambiar de profe no reinicia nada.
+- **Siempre dicen que son una IA** (UNESCO); importante sobre todo cuando haya personajes físicos
+  en colegios, para que los niños no los confundan con personas.
+- Medir en el piloto: con quién habla cada niño, por materia y edad, y si cambiar de profe ayuda o distrae.
