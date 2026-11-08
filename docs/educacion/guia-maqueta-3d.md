@@ -32,7 +32,14 @@ El juego **lee los nombres** para saber qué se puede tocar. Usá minúsculas, s
 Si hay varios iguales, numeralos: `deco_banco_01`, `deco_banco_02`.
 
 Materias: `mate`, `lenguaje`, `ciencias` (Naturales), `sociales`, `artes`, `ingles`.
-Lugares: `biblioteca`, `cancha`, `huerto`, `kiosco`, `direccion`.
+Lugares: `biblioteca`, `futbol`, `basquet`, `parque` (infantil), `huerto`, `kiosco`, `direccion`.
+
+Objetos que el juego ya sabe usar (EDU.06b):
+- En cada aula: `obj_pizarra_<materia>`, `obj_estante_<materia>`, `obj_silla_<materia>_01…` (se sientan), `deco_mesa_<materia>_01…`.
+- De cada materia: `obj_abaco_mate`, `obj_microscopio_ciencias`, `obj_cuerpo_ciencias`, `obj_globo_sociales`, `obj_mapa_sociales`, `obj_caballete_artes`, `obj_radio_ingles`, `obj_libros_lenguaje`.
+- Afuera: `obj_arco_futbol_01/02`, `obj_aro_basquet_01/02`, `obj_hamaca_01…`, `obj_resbalin`, `obj_subeybaja`, `obj_kiosco`, `obj_planta_huerto`.
+
+Si te falta un nombre para algo nuevo, inventalo con la misma lógica y avisame.
 
 ## 3. Colores (opcional, ayuda)
 
