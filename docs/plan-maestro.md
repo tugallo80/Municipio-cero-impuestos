@@ -123,6 +123,7 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/educacion/protocolo-focus-group.md` — talleres de co-diseño con niños.
 - `docs/investigacion/voz-del-tutor.md` — voz femenina, masculina o que elija el niño.
 - `docs/investigacion/mundo-abierto-santa-cruz.md` — mundo abierto, moneda de conocimiento, colegios, identidad y técnica.
+- `docs/investigacion/estilo-visual.md` — 3 direcciones de arte para 6–17 años.
 
 ## Decisiones pendientes del dueño
 
