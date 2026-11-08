@@ -17,6 +17,12 @@ que sabés"*.
    capital con sus misiones y deciden con el docente qué obra hacer para la ciudad (ej. un
    zoológico): **los alumnos construyen la ciudad**. El reto entre colegios es quién aporta más.
 
+**Decisión del dueño (vía MAESTRA 2, 8-nov, tarde):** B es la mejor dirección; C se ve mal y
+sale de la vitrina (el código queda). Visión final: **12 evoluciones, una por año**, la promo con
+acabado de juego comercial y estilo propio. Para la presentación, **6 escalones**: P1–P2 Bloques,
+P3–P4 Piezas, P5–P6 Mundo real (base B), S1–S2 **Horizonte** (nuevo), S3–S5 **Mundo vivo** (nuevo),
+S6 **Promo** (nuevo, el tope). La transición funciona entre cualquier par de escalones seguidos.
+
 ## Antes de empezar
 
 - `CLAUDE.md`, `docs/plan-maestro.md`, `docs/sesiones/README.md`.
@@ -114,6 +120,40 @@ módulo viejo (muestra el aviso de versión vieja) y con Pixel 5 vertical/horizo
 Sin GPU, el horizontal sufre por la cantidad de píxeles; en una tablet con GPU el orden debería
 mantenerse (Bloques/C < A < Piezas ≈ Mundo real < transición).
 
+**Segunda ronda (8-nov, tarde): 6 escalones + evoluciones 4, 5 y 6**
+- Vitrina rehecha: la página abre con los **6 escalones** (P1–P2 Bloques · P3–P4 Piezas · P5–P6
+  Mundo real · S1–S2 Horizonte · S3–S5 Mundo vivo · S6 Promo), cada uno con accesos a Colegio,
+  Ciudad, Obra, Portal, Profes y alumnos (y Construir en 1–3), y la transición entre **cualquier par
+  seguido** (1→2 … 5→6). A y B quedan como "Exploración anterior"; **C fuera de la vitrina** (el código
+  queda en `mundo.js`, marcado `oculto`). El escalón 3 ahora usa la paleta de B.
+- **Evolución 4 "Horizonte"**: la luz se calcula en la GPU (material toon de 3 tonos + sol + cielo),
+  contorno fino, más geometría redonda, y **personajes por partes** (cuerpo con cintura y hombros,
+  cuello, brazos y piernas) que **respiran, saludan (Taji) y caminan** (el alumno va y vuelve al portal).
+- **Evolución 5 "Mundo vivo"**: + **sombras reales** (mapa de 1024), cielo con degradé y sol, nubes que
+  pasan, **viento** en las copas y **agua** con ondas (shaders), tejas y revoque dibujados por shader,
+  cara con nariz, cejas y orejas, antialias.
+- **Evolución 6 "Promo"**: + materiales **PBR estilizados**, luz de cielo (PMREM), sombras de 2048 y
+  sombras de nubes, **ACES + brillo (bloom) propio** en portal, faroles y "conocimiento", pétalos de
+  tajibo y luciérnagas, viñeta, chamarra de promoción, resolución hasta 2x. Sin librerías extra.
+- Antes de programarla se mandó el plan de 5 líneas a la MAESTRA 2 (técnica, costo, Blender).
+
+**fps por escalón** (mismo servidor **sin GPU**, render por CPU, vista "Todo"; `capturas/fps.json`):
+
+| Escalón | Celular 390×844 | Horizontal 1280×800 | Anda en (estimación honesta) |
+|---|---|---|---|
+| 1 Bloques | 55 | 34 | cualquier tablet |
+| 2 Piezas | 37 | 24 | tablet de gama baja |
+| 3 Mundo real | 36 | 22 | tablet de gama baja/media |
+| 4 Horizonte | 29 | 17 | tablet media (con GPU) |
+| 5 Mundo vivo | 9 | 7 | tablet/celular medio-alto (sombras en GPU) |
+| 6 Promo | 6 | 4 | celular/tablet buena, 2021+ con GPU (vitrina) |
+| Transición 5 → 6 | 6 | 4,5 | dibuja dos mundos: en gama media, usar fundido simple |
+
+En este servidor todo lo pesado lo hace el procesador, así que 5 y 6 caen fuerte (sombras, PBR y
+brillo son trabajo típico de GPU). En una tablet/celular con GPU decente se espera bastante más,
+pero **hay que medirlo en el equipo real** antes de la presentación: si la 6 no llega a 30 fps,
+bajar la resolución a 1,5x, el mapa de sombras a 1024 y apagar las partículas.
+
 **Riesgos (pedidos por la MAESTRA)**
 - **Alumnos que repiten de curso**: el mundo **nunca retrocede** de estilo; si repite, se queda
   en su tramo sin mensaje negativo (la transición solo existe para celebrar, nunca se "quita").
@@ -136,7 +176,10 @@ mantenerse (Bloques/C < A < Piezas ≈ Mundo real < transición).
   caras tipo Playmobil ni texturas tipo Minecraft. Revisar con un abogado antes de publicar.
 
 **Pendiente**
-- Que el dueño elija/ajuste la escalera (y si C queda como modo liviano).
+- Medir 4–6 en el celular/tablet que se use en la presentación (y el 1–3 en la tablet del programa).
+- Producción de la evolución 6 (y luego las 12): **Blender (EDU.07)** para personajes con esqueleto y
+  animaciones, modelos glTF con texturas pintadas y luz horneada; artista 3D para el acabado comercial.
+- Definir las 12 evoluciones (una por año) a partir de estos 6 escalones.
 - Medir fps en la **tablet real de gama baja** (meta ≥ 30) para cada tramo y la transición.
 - Co-diseñar los patrones con Artecampo/CIDAC si se usan acentos de B.
 - Nombres finales de los profes (Taji y Jochi son provisionales) y su ropa/aspecto por tramo.

@@ -21,6 +21,7 @@
   .seg button { min-height: 42px; padding: 0 14px; border: 0; border-radius: 11px; background: transparent; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
   .seg button.on { background: var(--verde); color: #00140D; }
   .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  #exploracion { grid-template-columns: repeat(2, 1fr); }
   .carta { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
   .carta a.img { display: block; background: #0a0a0a; }
   .carta img { width: 100%; display: block; aspect-ratio: var(--ar); object-fit: cover; }
@@ -80,14 +81,15 @@
 <body>
   <h1>Estilo visual del mundo ÑANDÉ</h1>
   <div class="lema">"Acá no vale lo que tenés, sino lo que sabés."</div>
-  <p class="sec"><b>Tu mundo crece con vos.</b> Cada tramo de grados tiene su propia gráfica y, al pasar de curso, el mundo se transforma. Las tres muestran <b>la misma escena</b>: tu colegio cruceño creciendo, la ciudad de Santa Cruz que empieza vacía (solo con sus hitos) y que los cursos construyen, una obra pública en marcha (el zoológico), un portal para visitar otro colegio, los profes Taji y Jochi y un alumno de ese tramo.</p>
+  <p class="sec"><b>Tu mundo crece con vos.</b> La visión final son <b>12 evoluciones, una por año</b>, de 1.º de primaria a la promoción. Para la presentación hay <b>6 escalones</b> en la línea del estilo B que elegiste: cada uno se ve mejor que el anterior y, al pasar de curso, el mundo se transforma. Todos muestran <b>la misma escena</b>: tu colegio cruceño creciendo, la ciudad de Santa Cruz que empieza vacía (solo con sus hitos) y que los cursos construyen, una obra pública en marcha (el zoológico), un portal para visitar otro colegio, los profes Taji y Jochi y un alumno de ese tramo.</p>
 
-  <h2>La escalera: elegí un tramo</h2>
+  <h2>La escalera: 6 escalones (elegí uno)</h2>
   <div class="escalera" id="escalera"></div>
-  <div class="botones" style="margin-top:12px"><a class="btn verde grande" href="transicion.html?de=BLOQUES&a=PIEZAS">▶ Ver transición de curso 1 → 2</a><a class="btn verde grande" href="transicion.html?de=PIEZAS&a=REAL">▶ 2 → 3</a></div>
+  <h2>▶ Pasaste de curso: ver la transformación</h2>
+  <div class="botones" id="pares"></div>
   <p class="nota">📱 Las escenas en 3D se ven y se juegan mejor con el celular <b>en horizontal</b>.</p>
 
-  <h2>Comparar los 3 tramos lado a lado</h2>
+  <h2>Comparar los 6 escalones</h2>
   <div class="controles">
     <div class="seg" id="segVista"><button data-v="colegio" class="on">Colegio</button><button data-v="obra">Obra</button><button data-v="portal">Portal</button></div>
     <div class="seg" id="segFormato"><button data-f="celular">Celular</button><button data-f="horizontal">Horizontal</button></div>
@@ -100,34 +102,25 @@
     <img id="imgTrans" src="capturas/transicion-1a2-horizontal.jpg" alt="Transición de Bloques a Piezas: una ola de luz transforma el mundo" loading="lazy">
     <div class="txt">
       <p>Al terminar el año, una <b>ola de luz esmeralda</b> cruza la ciudad y la vuelve a dibujar en el estilo del tramo siguiente. El colegio, las obras y los amigos <b>siguen ahí</b>: cambia la forma de verlo, no lo que construiste.</p>
-      <div class="botones"><a class="btn verde" href="transicion.html?de=BLOQUES&a=PIEZAS">Ver 1 → 2</a><a class="btn verde" href="transicion.html?de=PIEZAS&a=REAL">Ver 2 → 3</a></div>
+      <div class="botones"><a class="btn verde" href="transicion.html?de=BLOQUES&a=PIEZAS">Ver 1 → 2</a><a class="btn verde" href="transicion.html?de=VIVO&a=PROMO">Ver 5 → 6</a></div>
     </div>
   </div>
 
-  <h2>Qué tiene cada tramo</h2>
-  <div class="fichas">
-    <div class="ficha"><h3><span class="letra" style="background:#F2C230">1</span>Bloques · 1.º a 3.º</h3>
-      <ul><li>Todo se arma con bloques: techos en escalón, árboles cúbicos.</li><li>Colores vivos y simples, cielo claro.</li><li>Personajes chiquitos y cabezones (~3 cabezas).</li><li>Diseño propio: colores lisos, sin texturas de otros juegos.</li></ul>
-      <span class="costo">Costo técnico: bajo</span></div>
-    <div class="ficha"><h3><span class="letra" style="background:#10B981">2</span>Piezas · 4.º a 6.º</h3>
-      <ul><li>Piezas redondeadas que encastran: paredes con ranuras y suelo de placas.</li><li>Brillo de plástico de juguete, colores limpios.</li><li>Personajes de ~4 cabezas. Base: estilo A "Maqueta Viva".</li><li>Sin pernos ni caras de juguetes conocidos: el encastre es por ranuras.</li></ul>
-      <span class="costo">Costo técnico: bajo</span></div>
-    <div class="ficha"><h3><span class="letra" style="background:#5FB7C9">3</span>Mundo real · secundaria</h3>
-      <ul><li>Más maduro: sombras en tres tonos y contorno fino.</li><li>Colores naturales, un poco apagados.</li><li>Proporciones reales (~6,5–7 cabezas). Base: estilo B.</li><li>El más pesado: cuidado en tablets de gama baja.</li></ul>
-      <span class="costo">Costo técnico: medio</span></div>
-  </div>
+  <h2>Qué tiene cada escalón (y en qué equipo anda)</h2>
+  <div class="fichas" id="fichas"></div>
+  <p class="nota">"Anda en" es una estimación: en el servidor de pruebas no hay tarjeta gráfica (ver la tabla de fps). Hay que confirmarlo en las tablets reales.</p>
 
   <h2>Prueba de construcción</h2>
   <div class="bloque">
     <img src="capturas/construir-horizontal.jpg" alt="Prueba de construcción: casona con patio, aljibe y mirador" loading="lazy">
     <div class="txt">
       <p>Tocás una celda y el sistema <b>elige la pieza solo</b>, según lo que hay alrededor: si una celda queda rodeada se vuelve <b>patio</b> (con <b>aljibe</b>); hacia el patio y hacia la calle aparecen <b>galerías con horcones</b>; las casas chicas llevan <b>techo de palma</b> y las grandes de <b>teja</b>; tocás de nuevo y sube un piso; al tercero es <b>mirador</b>. Arriba a la derecha se ven los fps.</p>
-      <div class="botones"><a class="btn verde" href="construir.html?estilo=PIEZAS">Construir (Piezas)</a><a class="btn" href="construir.html?estilo=BLOQUES">Bloques</a><a class="btn" href="construir.html?estilo=REAL">Mundo real</a><a class="btn" href="construir.html">A</a></div>
+      <div class="botones"><a class="btn verde" href="construir.html?estilo=PIEZAS">Construir (Piezas)</a><a class="btn" href="construir.html?estilo=BLOQUES">Bloques</a><a class="btn" href="construir.html?estilo=REAL">Mundo real</a></div>
     </div>
   </div>
 
-  <h2>Exploración anterior: A, B y C</h2>
-  <p class="sec" style="margin:-4px 0 12px">Las tres direcciones de arte de la investigación, con la misma escena. "Piezas" sale de A y "Mundo real" de B. <b>C queda como modo liviano opcional</b> para tablets débiles.</p>
+  <h2>Exploración anterior: A y B</h2>
+  <p class="sec" style="margin:-4px 0 12px">Las direcciones de arte de la investigación. Elegiste <b>B</b>: los escalones 3 a 6 siguen su línea. "Piezas" sale de A. C (pixel) quedó fuera por decisión tuya.</p>
   <div class="tres" id="exploracion"></div>
   <div class="aviso">B: los patrones que se ven son <b>genéricos, de muestra</b>. El diseño final se <b>co-diseña y acredita con Artecampo / las comunidades</b>; nunca se copian diseños indígenas reales.</div>
 
@@ -144,25 +137,31 @@
   <div id="fps"><p class="nota">Cargando…</p></div>
   <p class="nota">Medido en el navegador del servidor de pruebas, <b>sin tarjeta gráfica</b> (todo por procesador): es un piso pesimista. La meta es ≥ 30 fps en la tablet real de gama baja; hay que medirlo ahí. Cada escena abierta muestra sus fps arriba a la derecha.</p>
 
-  <h2>Para elegir</h2>
+  <h2>Para mirar</h2>
   <div class="preg">
-    <div>¿La escalera Bloques → Piezas → Mundo real se siente como "subir de nivel"? ¿Algún tramo se ve muy infantil o muy serio para su edad?</div>
-    <div>¿La transición de curso emociona? ¿Qué debería pasar si un alumno repite (proponemos: su mundo no retrocede nunca)?</div>
-    <div>¿El zoológico como obra de la ciudad funciona? ¿Qué otras obras elegirían los cursos (parque, puente, museo…)?</div>
-    <div>¿C (pixel) lo dejamos como modo liviano para tablets viejas, o lo descartamos?</div>
+    <div>¿Cada escalón se ve claramente mejor que el anterior? Mirá sobre todo 3 → 4 → 5 → 6.</div>
+    <div>¿El 6 (Promo) está a la altura de la presentación? ¿Qué le falta para "juego comercial"?</div>
+    <div>Personajes: ¿se ven bien de grandes (secundaria)? ¿Los profes Taji y Jochi, igual de cálidos?</div>
+    <div>Transición de curso: ¿emociona igual en 1 → 2 que en 5 → 6?</div>
   </div>
 
 <script>
 const TRAMOS = [
-  { k: 'BLOQUES', l: '1', n: 'Bloques', g: '1.º a 3.º', c: '#F2C230' },
-  { k: 'PIEZAS', l: '2', n: 'Piezas', g: '4.º a 6.º', c: '#10B981' },
-  { k: 'REAL', l: '3', n: 'Mundo real', g: 'Secundaria', c: '#5FB7C9' }
+  { k: 'BLOQUES', l: '1', n: 'Bloques', g: 'P1–P2', c: '#F2C230', d: ['Todo con cubos: techos en escalón, árboles cúbicos.', 'Colores vivos y simples; personajes de ~3 cabezas.'], eq: 'cualquier tablet' },
+  { k: 'PIEZAS', l: '2', n: 'Piezas', g: 'P3–P4', c: '#10B981', d: ['Piezas redondeadas que encastran por ranuras (sin pernos).', 'Brillo de plástico; ~4 cabezas. Sale de A.'], eq: 'tablet de gama baja' },
+  { k: 'REAL', l: '3', n: 'Mundo real', g: 'P5–P6', c: '#5FB7C9', d: ['La línea de B: tres tonos y contorno fino.', 'Proporciones reales (~6,5–7 cabezas).'], eq: 'tablet de gama baja/media' },
+  { k: 'HORIZONTE', l: '4', n: 'Horizonte', g: 'S1–S2', c: '#A78BFA', d: ['Luz calculada en tiempo real (dibujo en tonos) y más detalle.', 'Personajes con cuerpo y animación: saludan, respiran, caminan.'], eq: 'tablet media' },
+  { k: 'VIVO', l: '5', n: 'Mundo vivo', g: 'S3–S5', c: '#F472B6', d: ['Sombras reales, cielo con sol, nubes que pasan.', 'Viento en los árboles, agua que se mueve, tejas y revoque.'], eq: 'tablet/celular medio-alto' },
+  { k: 'PROMO', l: '6', n: 'Promo', g: 'S6 · promoción', c: '#F59E0B', d: ['Materiales de juego comercial, luz de cielo y sombras suaves.', 'Brillo en portal y conocimiento, pétalos de tajibo, luciérnagas, chamarra de promo.'], eq: 'celular/tablet buena (con GPU)' }
 ];
 const EXPLORA = [
   { k: 'A', l: 'A', n: 'Maqueta Viva', g: 'base de Piezas', c: '#10B981' },
-  { k: 'B', l: 'B', n: 'Tierra Pintada', g: 'base de Mundo real', c: '#D9A441' },
-  { k: 'C', l: 'C', n: 'Pixel Camba', g: 'modo liviano', c: '#5FB7C9' }
+  { k: 'B', l: 'B', n: 'Tierra Pintada', g: 'la elegida', c: '#D9A441' }
 ];
+document.getElementById('pares').innerHTML = TRAMOS.slice(0, -1).map((e, i) =>
+  `<a class="btn verde grande" href="transicion.html?de=${e.k}&a=${TRAMOS[i + 1].k}">${e.l} → ${TRAMOS[i + 1].l}</a>`).join('');
+document.getElementById('fichas').innerHTML = TRAMOS.map(e => `<div class="ficha"><h3><span class="letra" style="background:${e.c}">${e.l}</span>${e.n} · ${e.g}</h3>
+  <ul>${e.d.map(x => `<li>${x}</li>`).join('')}</ul><span class="costo">Anda en: <b>${e.eq}</b></span></div>`).join('');
 let vista = 'colegio', formato = innerWidth < 700 ? 'celular' : 'horizontal';
 function tarjetas(lista) {
   const ar = formato === 'celular' ? '390 / 844' : '1280 / 800';
@@ -177,7 +176,7 @@ function tarjetas(lista) {
 }
 const VISTAS = [['colegio', 'Colegio'], ['ciudad', 'Ciudad'], ['obra', 'Obra (zoo)'], ['portal', 'Portal'], ['profes', 'Profes y alumnos']];
 document.getElementById('escalera').innerHTML = TRAMOS.map(e => `<div class="tramo" style="--c:${e.c}">
-  <div class="cab"><span class="num">${e.l}</span><div><h3>${e.n}</h3><div class="gr">${e.g === 'Secundaria' ? 'Secundaria' : e.g + ' de primaria'}</div></div></div>
+  <div class="cab"><span class="num">${e.l}</span><div><h3>${e.n}</h3><div class="gr">${e.g}</div></div></div>
   <a href="escena.html?estilo=${e.k}&vista=colegio"><img src="capturas/${e.k}-colegio-horizontal.jpg" alt="${e.n}: colegio" loading="lazy"></a>
   <div class="accesos">${VISTAS.map(([v, t]) => `<a class="btn" href="escena.html?estilo=${e.k}&vista=${v}">${t}</a>`).join('')}
     <a class="btn verde" href="construir.html?estilo=${e.k}">Construir</a></div></div>`).join('');

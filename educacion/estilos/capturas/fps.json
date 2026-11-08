@@ -6,60 +6,78 @@
       "estilo": "BLOQUES",
       "pagina": "1 · Bloques (vista Todo)",
       "formato": "celular",
-      "fps": 60,
+      "fps": 55.2,
       "llamadasDeDibujo": 10,
       "triangulos": 20842,
-      "armadoMs": 100
+      "armadoMs": 87
     },
     {
       "estilo": "PIEZAS",
       "pagina": "2 · Piezas (vista Todo)",
       "formato": "celular",
-      "fps": 35,
+      "fps": 37.1,
       "llamadasDeDibujo": 10,
       "triangulos": 81280,
-      "armadoMs": 201
+      "armadoMs": 160
     },
     {
       "estilo": "REAL",
       "pagina": "3 · Mundo real (vista Todo)",
       "formato": "celular",
-      "fps": 34,
+      "fps": 36.3,
       "llamadasDeDibujo": 12,
-      "triangulos": 79078,
+      "triangulos": 79190,
       "armadoMs": 190
+    },
+    {
+      "estilo": "HORIZONTE",
+      "pagina": "4 · Horizonte (vista Todo)",
+      "formato": "celular",
+      "fps": 28.9,
+      "llamadasDeDibujo": 34,
+      "triangulos": 125178,
+      "armadoMs": 219
+    },
+    {
+      "estilo": "VIVO",
+      "pagina": "5 · Mundo vivo (vista Todo)",
+      "formato": "celular",
+      "fps": 8.9,
+      "llamadasDeDibujo": 60,
+      "triangulos": 256684,
+      "armadoMs": 275
+    },
+    {
+      "estilo": "PROMO",
+      "pagina": "6 · Promo (vista Todo)",
+      "formato": "celular",
+      "fps": 6.3,
+      "llamadasDeDibujo": 68,
+      "triangulos": 244526,
+      "armadoMs": 214
     },
     {
       "estilo": "A",
       "pagina": "A · Maqueta Viva (vista Todo)",
       "formato": "celular",
-      "fps": 50,
+      "fps": 54.3,
       "llamadasDeDibujo": 10,
       "triangulos": 30545,
-      "armadoMs": 98
+      "armadoMs": 92
     },
     {
       "estilo": "B",
       "pagina": "B · Tierra Pintada (vista Todo)",
       "formato": "celular",
-      "fps": 31,
+      "fps": 37.9,
       "llamadasDeDibujo": 16,
       "triangulos": 75978,
-      "armadoMs": 237
+      "armadoMs": 147
     },
     {
-      "estilo": "C",
-      "pagina": "C · Pixel Camba (modo liviano) (vista Todo)",
+      "pagina": "transición 5 → 6 (dos mundos a la vez)",
       "formato": "celular",
-      "fps": 60,
-      "llamadasDeDibujo": 10,
-      "triangulos": 30545,
-      "armadoMs": 516
-    },
-    {
-      "pagina": "transición 2 → 3 (dos mundos a la vez)",
-      "formato": "celular",
-      "fps": 18
+      "fps": 6.3
     },
     {
       "pagina": "construir (A, tocando celdas)",
@@ -70,65 +88,83 @@
       "estilo": "BLOQUES",
       "pagina": "1 · Bloques (vista Todo)",
       "formato": "horizontal",
-      "fps": 22,
+      "fps": 34.4,
       "llamadasDeDibujo": 10,
       "triangulos": 20842,
-      "armadoMs": 89
+      "armadoMs": 71
     },
     {
       "estilo": "PIEZAS",
       "pagina": "2 · Piezas (vista Todo)",
       "formato": "horizontal",
-      "fps": 19,
+      "fps": 24.1,
       "llamadasDeDibujo": 10,
       "triangulos": 81280,
-      "armadoMs": 239
+      "armadoMs": 203
     },
     {
       "estilo": "REAL",
       "pagina": "3 · Mundo real (vista Todo)",
       "formato": "horizontal",
-      "fps": 15,
+      "fps": 22.4,
       "llamadasDeDibujo": 12,
-      "triangulos": 79078,
-      "armadoMs": 194
+      "triangulos": 79190,
+      "armadoMs": 149
+    },
+    {
+      "estilo": "HORIZONTE",
+      "pagina": "4 · Horizonte (vista Todo)",
+      "formato": "horizontal",
+      "fps": 16.6,
+      "llamadasDeDibujo": 34,
+      "triangulos": 125178,
+      "armadoMs": 220
+    },
+    {
+      "estilo": "VIVO",
+      "pagina": "5 · Mundo vivo (vista Todo)",
+      "formato": "horizontal",
+      "fps": 6.7,
+      "llamadasDeDibujo": 60,
+      "triangulos": 256684,
+      "armadoMs": 244
+    },
+    {
+      "estilo": "PROMO",
+      "pagina": "6 · Promo (vista Todo)",
+      "formato": "horizontal",
+      "fps": 4.1,
+      "llamadasDeDibujo": 68,
+      "triangulos": 244526,
+      "armadoMs": 222
     },
     {
       "estilo": "A",
       "pagina": "A · Maqueta Viva (vista Todo)",
       "formato": "horizontal",
-      "fps": 21,
+      "fps": 31.6,
       "llamadasDeDibujo": 10,
       "triangulos": 30545,
-      "armadoMs": 147
+      "armadoMs": 83
     },
     {
       "estilo": "B",
       "pagina": "B · Tierra Pintada (vista Todo)",
       "formato": "horizontal",
-      "fps": 17,
+      "fps": 23,
       "llamadasDeDibujo": 16,
       "triangulos": 75978,
-      "armadoMs": 236
+      "armadoMs": 159
     },
     {
-      "estilo": "C",
-      "pagina": "C · Pixel Camba (modo liviano) (vista Todo)",
+      "pagina": "transición 5 → 6 (dos mundos a la vez)",
       "formato": "horizontal",
-      "fps": 35,
-      "llamadasDeDibujo": 10,
-      "triangulos": 30545,
-      "armadoMs": 566
-    },
-    {
-      "pagina": "transición 2 → 3 (dos mundos a la vez)",
-      "formato": "horizontal",
-      "fps": 6
+      "fps": 4.5
     },
     {
       "pagina": "construir (A, tocando celdas)",
       "formato": "horizontal",
-      "fps": 50
+      "fps": 60
     }
   ]
 }

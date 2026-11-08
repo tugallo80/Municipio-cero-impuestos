@@ -19,18 +19,31 @@
 // Uso:  const mundo = crearMundo(THREE, 'PIEZAS')        // escena completa
 //       const mapa  = crearMundo(THREE, 'A', 'mapa')     // lámina E: Santa Cruz por anillos
 
+// Escalera de la presentación: 6 escalones (la visión final son 12 evoluciones, una por año).
 export const TRAMOS = {
   BLOQUES: {
-    letra: '1', nombre: 'Bloques', grados: '1.º a 3.º de primaria', color: '#F2C230',
-    corto: 'Cúbico, simple y colorido: todo se arma con bloques.', costo: 'bajo'
+    letra: '1', nombre: 'Bloques', grados: '1.º y 2.º de primaria', color: '#F2C230', evolucion: 1,
+    corto: 'Cúbico, simple y colorido: todo se arma con bloques.', costo: 'bajo', equipo: 'cualquier tablet'
   },
   PIEZAS: {
-    letra: '2', nombre: 'Piezas', grados: '4.º a 6.º de primaria', color: '#10B981',
-    corto: 'Piezas redondeadas que encastran, como un juguete de construcción propio.', costo: 'bajo'
+    letra: '2', nombre: 'Piezas', grados: '3.º y 4.º de primaria', color: '#10B981', evolucion: 2,
+    corto: 'Piezas redondeadas que encastran, como un juguete de construcción propio.', costo: 'bajo', equipo: 'tablet de gama baja'
   },
   REAL: {
-    letra: '3', nombre: 'Mundo real', grados: 'Secundaria', color: '#5FB7C9',
-    corto: 'Estilizado y maduro: sombras en tres tonos, contorno fino, proporciones reales.', costo: 'medio'
+    letra: '3', nombre: 'Mundo real', grados: '5.º y 6.º de primaria', color: '#5FB7C9', evolucion: 3,
+    corto: 'La línea de B: tres tonos, contorno fino, proporciones reales.', costo: 'medio', equipo: 'tablet de gama baja/media'
+  },
+  HORIZONTE: {
+    letra: '4', nombre: 'Horizonte', grados: '1.º y 2.º de secundaria', color: '#A78BFA', evolucion: 4,
+    corto: 'Luz en tiempo real (dibujo en tonos), personajes animados, más detalle.', costo: 'medio', equipo: 'tablet media'
+  },
+  VIVO: {
+    letra: '5', nombre: 'Mundo vivo', grados: '3.º a 5.º de secundaria', color: '#F472B6', evolucion: 5,
+    corto: 'Sombras reales, viento en los árboles, agua que se mueve, nubes.', costo: 'medio-alto', equipo: 'tablet/celular medio-alto'
+  },
+  PROMO: {
+    letra: '6', nombre: 'Promo', grados: 'Promoción (6.º de secundaria)', color: '#F59E0B', evolucion: 6,
+    corto: 'El tope: materiales de juego comercial, luz de cielo, brillo, pétalos y luciérnagas.', costo: 'alto', equipo: 'celular/tablet buena (con GPU)'
   }
 };
 
@@ -47,6 +60,8 @@ export const ESTILOS = {
     costo: 'medio'
   },
   C: {
+    // fuera de la vitrina por decisión del dueño (se ve mal); el código queda
+    oculto: true,
     letra: 'C', nombre: 'Pixel Camba', color: '#5FB7C9',
     corto: 'La maqueta dibujada con pocos píxeles y 32 colores (modo liviano).',
     costo: 'el más bajo'
@@ -118,19 +133,14 @@ const PAL_PIEZAS = {
   tajiboAm: '#FFC93C', tajiboRo: '#FF87BE', toboTronco: '#9CC27A', toboFlor: '#FF9CC9', motacu: '#46B058',
   rio: '#48BEDF', rioOsc: '#2D9CC0', calle: '#7E8794', cantero: '#71C268'
 };
-// Tramo 3 "Mundo real": tonos naturales y algo apagados, tinta marrón oscura
-const PAL_REAL = {
-  ...PAL_A,
-  cielo: '#BCD2DD', niebla: '#C7D5DA',
-  pasto: '#7FA65A', pasto2: '#6A9150', tierra: '#A98458', tierraClara: '#BC9668', arena: '#D9C29A',
-  baseLado: '#5A4330', baseLado2: '#3F2F22',
-  pared: '#EDE3D0', pared2: '#E2CFAE', pared3: '#E9DBC3', pared4: '#DCCBB8', zocalo: '#9C4A35',
-  teja: '#A9503A', teja2: '#8C3F2D', palma: '#B7955A', horcon: '#5A3B26', madera: '#6D4A31', maderaOsc: '#3E2A1C',
-  piso: '#A86448', patio: '#CDB38A', techoVerde: '#5E8F4E',
-  bosque: '#2C5B3E', bosque2: '#3A6E49', bosque3: '#4C8252', bosque4: '#6C9A5C',
-  tajiboAm: '#E6B32E', tajiboRo: '#D97AA6', toboTronco: '#8E9C6A', toboFlor: '#DE97B9', motacu: '#577F3D',
-  rio: '#5D9DB0', rioOsc: '#3F7E92', calle: '#5F5C59', cantero: '#7FA65A', ladrillo: '#9E5640',
-  edificio: '#DDD6C9', tinta: '#1C1712'
+// Escalones 3–6: la línea de B (el estilo que eligió el dueño), cada vez más rica
+const PAL_REAL = { ...PAL_B, cielo: '#EFE3C8', niebla: '#EADCC0', tinta: '#1C1712' };
+const PAL_EVO = {
+  ...PAL_B,
+  cielo: '#9FCBE8', niebla: '#BFD8E2', cieloArriba: '#4D8FD1', suelo: '#6F8F4A',
+  pasto: '#78A856', pasto2: '#64954A', tierra: '#C9954A', arena: '#F0D7A1', cantero: '#78A856',
+  pared: '#F4EAD6', pared2: '#EBD5AE', pared3: '#F2E0C0', zocalo: '#B8492F', tinta: '#1C1712',
+  ropaPromo: '#0E7A55'
 };
 
 // C: 32 colores. La luz horneada de A se "encaja" en la paleta más cercana.
@@ -153,19 +163,25 @@ function azar(semilla) {
 
 export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   const E = String(estilo).toUpperCase();
-  const P = { B: PAL_B, BLOQUES: PAL_BLOQUES, PIEZAS: PAL_PIEZAS, REAL: PAL_REAL }[E] || PAL_A;
+  const P = { B: PAL_B, BLOQUES: PAL_BLOQUES, PIEZAS: PAL_PIEZAS, REAL: PAL_REAL, HORIZONTE: PAL_EVO, VIVO: PAL_EVO, PROMO: PAL_EVO }[E] || PAL_A;
+  // evoluciones 4–6: luz calculada en tiempo real (4), + sombras, viento y agua (5), + PBR, brillo y partículas (6)
+  const nivel = { HORIZONTE: 4, VIVO: 5, PROMO: 6 }[E] || 0;
+  const luzReal = nivel >= 4;
   const esC = E === 'C';
   const voxel = E === 'BLOQUES', redondo = E === 'PIEZAS', real = E === 'REAL';
-  const esB = E === 'B' || real;           // familia "dibujo con contorno"
+  const esB = E === 'B' || real || nivel === 4 || nivel === 5; // familia "dibujo con contorno"
   const patrones = E === 'B';              // guardas genéricas (solo B)
-  const grosorContorno = real ? 0.028 : 0.045;
+  const grosorContorno = { 4: 0.026, 5: 0.02 }[nivel] || (real ? 0.03 : 0.045);
   // proporción en "cabezas" según edad del personaje
   const CABEZAS = {
     A: { nino: 3.4, teen: 4.2, adulto: 4.5 }, C: { nino: 3.4, teen: 4.2, adulto: 4.5 },
     B: { nino: 4.6, teen: 5.8, adulto: 6.3 },
     BLOQUES: { nino: 2.7, teen: 3.1, adulto: 3.3 },
     PIEZAS: { nino: 3.5, teen: 4.0, adulto: 4.4 },
-    REAL: { nino: 5.2, teen: 6.6, adulto: 7.0 }
+    REAL: { nino: 5.0, teen: 6.4, adulto: 6.8 },
+    HORIZONTE: { nino: 5.3, teen: 6.8, adulto: 7.1 },
+    VIVO: { nino: 5.5, teen: 7.0, adulto: 7.4 },
+    PROMO: { nino: 5.7, teen: 7.3, adulto: 7.6 }
   }[E] || { nino: 3.4, teen: 4.2, adulto: 4.5 };
   const rnd = azar(tipo === 'mapa' ? 77 : 2026);
   const R = (a, b) => a + (b - a) * rnd();
@@ -181,7 +197,8 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   // Luz horneada por cara. y01 = altura relativa dentro de la pieza (oclusión falsa).
   function hornear(base, n, y01, op, salida) {
     salida.copy(base);
-    if (op.brillo) return salida;
+    if (op.brillo) return nivel === 6 ? salida.multiplyScalar(2.0) : salida; // en la 6, lo que brilla es "HDR" (bloom)
+    if (luzReal) return salida.multiplyScalar(op.ao === false ? 1 : 0.74 + 0.26 * y01);
     if (voxel) {
       // caras de cubo: arriba clara, laterales en dos tonos, abajo oscura
       const k = n.y > 0.6 ? 1.0 : n.y < -0.6 ? 0.55 : (n.x * L.x + n.z * L.z > 0 ? 0.86 : 0.7);
@@ -236,12 +253,12 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
 
   // Lote: junta muchas piezas en UNA malla (una llamada de dibujo).
   class Lote {
-    constructor() { this.p = []; this.c = []; }
+    constructor() { this.p = []; this.c = []; this.n = []; }
     add(geo, color, m, op = {}) {
-      if (geo === G.caja && G.cajaRedonda && m.getMaxScaleOnAxis() < 3.2) geo = G.cajaRedonda;
+      if (geo === G.caja && G.cajaRedonda && m.getMaxScaleOnAxis() < (redondo ? 3.2 : 1.2)) geo = G.cajaRedonda;
       const g = geo.index ? geo.toNonIndexed() : geo.clone();
       g.applyMatrix4(m);
-      if (!(redondo && g.attributes.normal && geo.userData.suave)) g.computeVertexNormals();
+      if (!((redondo || luzReal) && g.attributes.normal && geo.userData.suave)) g.computeVertexNormals();
       const pos = g.attributes.position.array, nor = g.attributes.normal.array;
       let y0 = Infinity, y1 = -Infinity;
       for (let i = 1; i < pos.length; i += 3) { y0 = Math.min(y0, pos[i]); y1 = Math.max(y1, pos[i]); }
@@ -253,6 +270,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
         hornear(base, tmpN, y01, op, tmpC);
         this.p.push(pos[i], pos[i + 1], pos[i + 2]);
         this.c.push(tmpC.r, tmpC.g, tmpC.b);
+        if (luzReal) this.n.push(nor[i], nor[i + 1], nor[i + 2]);
       }
       g.dispose();
     }
@@ -260,6 +278,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       const g = new THREE.BufferGeometry();
       g.setAttribute('position', new THREE.Float32BufferAttribute(this.p, 3));
       g.setAttribute('color', new THREE.Float32BufferAttribute(this.c, 3));
+      if (this.n.length) g.setAttribute('normal', new THREE.Float32BufferAttribute(this.n, 3));
       g.computeBoundingSphere();
       return g;
     }
@@ -302,7 +321,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   }
 
   // --- geometrías base (facetadas en A y C; redondas en B, PIEZAS y REAL; cubos en BLOQUES)
-  const seg = redondo ? 12 : esB ? 10 : 7;
+  const seg = nivel >= 5 ? 16 : nivel === 4 ? 12 : redondo ? 12 : esB ? 10 : 7;
   const suave = g => { g.userData.suave = true; return g; };
   const G = {
     caja: new THREE.BoxGeometry(1, 1, 1),
@@ -310,8 +329,8 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     cil4: new THREE.CylinderGeometry(0.5, 0.5, 1, 6),
     cono: suave(new THREE.ConeGeometry(0.5, 1, seg)),
     piramide: new THREE.ConeGeometry(0.7071, 1, 4).rotateY(Math.PI / 4),
-    bola: redondo ? suave(new THREE.SphereGeometry(0.5, 12, 8)) : esB ? new THREE.SphereGeometry(0.5, 10, 7) : new THREE.IcosahedronGeometry(0.5, 1),
-    bolita: redondo ? suave(new THREE.SphereGeometry(0.5, 8, 6)) : esB ? new THREE.SphereGeometry(0.5, 7, 5) : new THREE.IcosahedronGeometry(0.5, 0),
+    bola: luzReal ? suave(new THREE.SphereGeometry(0.5, nivel >= 5 ? 18 : 14, nivel >= 5 ? 12 : 10)) : redondo ? suave(new THREE.SphereGeometry(0.5, 12, 8)) : esB ? new THREE.SphereGeometry(0.5, 10, 7) : new THREE.IcosahedronGeometry(0.5, 1),
+    bolita: luzReal ? suave(new THREE.SphereGeometry(0.5, 10, 8)) : redondo ? suave(new THREE.SphereGeometry(0.5, 8, 6)) : esB ? new THREE.SphereGeometry(0.5, 7, 5) : new THREE.IcosahedronGeometry(0.5, 0),
     disco: suave(new THREE.CylinderGeometry(0.5, 0.5, 1, redondo ? 32 : esB ? 28 : 20)),
     prisma: prisma(),
     toborochi: suave(new THREE.LatheGeometry([
@@ -319,6 +338,12 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     ].map(([x, y]) => new THREE.Vector2(x, y)), seg))
   };
   if (redondo) G.cajaRedonda = cajaRedonda(0.14);
+  if (nivel >= 5) G.cajaRedonda = cajaRedonda(0.08);
+  // cuerpos redondeados para los personajes de 4–6 (alto total 2 con escala 1)
+  G.capsula = luzReal ? suave(new THREE.CapsuleGeometry(0.5, 1, 6, nivel >= 5 ? 14 : 10)) : G.caja;
+  // torso con forma (hombros, cintura, cadera) para 4–6; alto 1 centrado
+  G.torso = luzReal ? suave(new THREE.LatheGeometry([[0, 0], [0.42, 0], [0.47, 0.12], [0.42, 0.42], [0.47, 0.74], [0.5, 0.88], [0.36, 1], [0, 1]]
+    .map(([x, y]) => new THREE.Vector2(x, y)), nivel >= 5 ? 18 : 12).translate(0, -0.5, 0)) : G.caja;
   if (voxel) {
     // todo se arma con cubos: bolas, cilindros y conos se vuelven bloques o escalones
     G.cil = G.caja; G.bola = G.caja; G.bolita = G.caja; G.disco = new THREE.CylinderGeometry(0.5, 0.5, 1, 8).rotateY(Math.PI / 8);
@@ -409,6 +434,10 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   const solido = new Lote();   // con contorno en B
   const plano = new Lote();    // suelo, calles, agua: sin contorno
   const brillo = new Lote();   // esmeralda que "brilla" (conocimiento): sin luz
+  const follaje = nivel >= 5 ? new Lote() : null; // copas que se mueven con el viento
+  const agua = nivel >= 5 ? new Lote() : null;    // río animado
+  const copa = follaje || solido;
+  const personajes = [];       // en 4–6: personajes por partes, animados
   const sombras = [];          // sombras falsas: [x, z, radio, fuerza]
   const fantasmas = [];        // piezas por construir (transparentes)
   const animados = [];         // cosas que se mueven
@@ -424,8 +453,8 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     const b = conBase(M(x, 0, z, s, s, s, R(0, 6)));
     b(solido, G.cil, P.tronco, 0, 0.9, 0, 0.32, 1.8, 0.32);
     const c = tono || [P.bosque, P.bosque2, P.bosque3][Math.floor(rnd() * 3)];
-    b(solido, G.bola, c, 0, 2.4, 0, 2.2, 1.9, 2.2);
-    b(solido, G.bola, c, R(-0.6, 0.6), 3.1, R(-0.5, 0.5), 1.5, 1.4, 1.5);
+    b(copa, G.bola, c, 0, 2.4, 0, 2.2, 1.9, 2.2);
+    b(copa, G.bola, c, R(-0.6, 0.6), 3.1, R(-0.5, 0.5), 1.5, 1.4, 1.5);
     sombra(x, z, 1.4 * s);
   }
   function tajibo(x, z, s = 1, color = P.tajiboAm) {
@@ -433,10 +462,10 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     b(solido, G.cil, P.tronco, 0, 1.5, 0, 0.3, 3, 0.3);
     b(solido, G.cil, P.tronco, 0.45, 3.0, 0, 0.16, 1.4, 0.16, 0, 0, -0.6);
     b(solido, G.cil, P.tronco, -0.4, 3.1, 0.2, 0.16, 1.4, 0.16, 0, 0.3, 0.6);
-    b(solido, G.bola, color, 0, 3.7, 0, 2.6, 1.6, 2.6);
-    b(solido, G.bola, color, 0.9, 3.4, 0.3, 1.5, 1.1, 1.5);
-    b(solido, G.bola, color, -0.8, 3.5, -0.4, 1.6, 1.1, 1.6);
-    b(solido, G.bolita, P.bosque3, 0.2, 3.1, 0.9, 0.8, 0.5, 0.8);
+    b(copa, G.bola, color, 0, 3.7, 0, 2.6, 1.6, 2.6);
+    b(copa, G.bola, color, 0.9, 3.4, 0.3, 1.5, 1.1, 1.5);
+    b(copa, G.bola, color, -0.8, 3.5, -0.4, 1.6, 1.1, 1.6);
+    b(copa, G.bolita, P.bosque3, 0.2, 3.1, 0.9, 0.8, 0.5, 0.8);
     sombra(x, z, 1.6 * s);
   }
   function toborochi(x, z, s = 1) {
@@ -445,9 +474,9 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     for (let i = 0; i < 4; i++) {
       const a = i * Math.PI / 2 + 0.4;
       b(solido, G.cil, P.toboTronco, Math.cos(a) * 0.5, 3.6, Math.sin(a) * 0.5, 0.14, 1.4, 0.14, -a, 0, 0.7);
-      b(solido, G.bola, i % 2 ? P.toboFlor : P.bosque3, Math.cos(a) * 1.1, 4.3, Math.sin(a) * 1.1, 1.3, 0.8, 1.3);
+      b(copa, G.bola, i % 2 ? P.toboFlor : P.bosque3, Math.cos(a) * 1.1, 4.3, Math.sin(a) * 1.1, 1.3, 0.8, 1.3);
     }
-    b(solido, G.bola, P.toboFlor, 0, 4.5, 0, 1.4, 0.8, 1.4);
+    b(copa, G.bola, P.toboFlor, 0, 4.5, 0, 1.4, 0.8, 1.4);
     sombra(x, z, 1.5 * s);
   }
   function motacu(x, z, s = 1) {
@@ -458,8 +487,8 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     for (let i = 0; i < n; i++) {
       const a = (i / n) * Math.PI * 2;
       // pencas largas que se arquean hacia arriba y afuera
-      b(solido, G.caja, P.motacu, Math.cos(a) * 1.0, 3.0, Math.sin(a) * 1.0, 0.5, 0.08, 2.6, -a + Math.PI / 2, -0.75, 0);
-      b(solido, G.caja, P.motacu, Math.cos(a) * 2.1, 3.3, Math.sin(a) * 2.1, 0.45, 0.06, 1.2, -a + Math.PI / 2, 0.5, 0);
+      b(copa, G.caja, P.motacu, Math.cos(a) * 1.0, 3.0, Math.sin(a) * 1.0, 0.5, 0.08, 2.6, -a + Math.PI / 2, -0.75, 0);
+      b(copa, G.caja, P.motacu, Math.cos(a) * 2.1, 3.3, Math.sin(a) * 2.1, 0.45, 0.06, 1.2, -a + Math.PI / 2, 0.5, 0);
     }
     sombra(x, z, 1.8 * s);
   }
@@ -504,45 +533,75 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   function persona(x, z, ry, o) {
     const cab = CABEZAS[o.edad] || 4;
     const H = o.altura, h = H / cab;
-    const b = conBase(M(x, 0, z, 1, 1, 1, ry));
+    // en 4–6 cada parte es su propia malla para poder animarla (piernas, brazos, cuerpo)
+    const anim = luzReal && tipo !== 'mapa';
+    const b = conBase(anim ? new THREE.Matrix4() : M(x, 0, z, 1, 1, 1, ry));
+    const Lc = anim ? new Lote() : solido, Lf = anim ? Lc : plano, Lb = anim ? new Lote() : brillo;
+    const Lp = anim ? [new Lote(), new Lote()] : [solido, solido], La = anim ? [new Lote(), new Lote()] : [solido, solido];
     const pierna = (H - h) * 0.46, torso = (H - h) * 0.54;
     const ancho = Math.max(h * 0.95, H * 0.2);
     for (const s of [-1, 1]) {
-      b(solido, G.caja, o.pantalon, s * ancho * 0.22, pierna / 2, 0, ancho * 0.36, pierna, ancho * 0.4);
-      b(solido, G.caja, P.oscuro, s * ancho * 0.22, 0.05, 0.03, ancho * 0.38, 0.1, ancho * 0.52);
+      const L = Lp[s > 0 ? 1 : 0];
+      b(L, luzReal ? G.capsula : G.caja, o.pantalon, s * ancho * 0.22, pierna / 2 + (luzReal ? 0.04 : 0), 0, ancho * 0.36, luzReal ? pierna * 0.55 : pierna, ancho * 0.4);
+      b(L, G.caja, P.oscuro, s * ancho * 0.22, 0.05, 0.03, ancho * 0.38, 0.1, ancho * 0.52);
     }
-    if (o.guardapolvo) b(solido, G.caja, P.blanco, 0, pierna + torso / 2 - pierna * 0.3, 0, ancho * 1.04, torso + pierna * 0.6, ancho * 0.62);
-    else b(solido, G.caja, o.ropa, 0, pierna + torso / 2, 0, ancho, torso, ancho * 0.58);
+    if (o.guardapolvo) b(Lc, G.torso, P.blanco, 0, pierna + torso / 2 - pierna * 0.3, 0, ancho * 1.04, torso + pierna * 0.6, ancho * 0.62);
+    else b(Lc, G.torso, o.ropa, 0, pierna + torso / 2, 0, ancho, torso, ancho * 0.58);
+    if (luzReal) b(Lc, G.cil, o.piel, 0, pierna + torso + h * 0.05, 0, h * 0.34, h * 0.3, h * 0.34); // cuello
     for (const s of [-1, 1]) {
-      b(solido, G.caja, o.guardapolvo ? P.blanco : o.ropa, s * ancho * 0.62, pierna + torso * 0.62, 0, ancho * 0.24, torso * 0.8, ancho * 0.28, 0, 0, s * 0.12);
-      b(solido, G.bolita, o.piel, s * ancho * 0.68, pierna + torso * 0.2, 0, ancho * 0.22, ancho * 0.22, ancho * 0.22);
+      const L = La[s > 0 ? 1 : 0];
+      b(L, luzReal ? G.capsula : G.caja, o.guardapolvo ? P.blanco : o.ropa, s * ancho * 0.62, pierna + torso * 0.6, 0, ancho * 0.24, luzReal ? torso * 0.46 : torso * 0.8, ancho * 0.28, 0, 0, s * 0.12);
+      b(L, G.bolita, o.piel, s * ancho * 0.68, pierna + torso * 0.2, 0, ancho * 0.22, ancho * 0.22, ancho * 0.22);
     }
-    if (o.chaleco) b(solido, G.caja, o.chaleco, 0, pierna + torso * 0.6, 0, ancho * 1.06, torso * 0.7, ancho * 0.62);
+    if (o.chaleco) b(Lc, G.torso, o.chaleco, 0, pierna + torso * 0.6, 0, ancho * 1.06, torso * 0.7, ancho * 0.64);
     const cy = pierna + torso + h * 0.5;
-    b(solido, G.bola, o.piel, 0, cy, 0, h * 0.92, h, h * 0.9);
+    b(Lc, G.bola, o.piel, 0, cy, 0, h * 0.92, h, h * 0.9);
     // pelo
-    b(solido, G.bola, o.pelo, 0, cy + h * 0.14, -h * 0.06, h * 0.98, h * 0.8, h * 0.95);
-    if (o.mono) b(solido, G.bola, o.pelo, 0, cy + h * 0.32, -h * 0.42, h * 0.42, h * 0.42, h * 0.42);
-    if (o.flor) b(brillo, G.bolita, P.tajiboAm, h * 0.36, cy + h * 0.36, -h * 0.2, h * 0.22, h * 0.22, h * 0.22, 0, 0, 0, { brillo: true });
-    if (o.colita) b(solido, G.bola, o.pelo, 0, cy - h * 0.05, -h * 0.5, h * 0.3, h * 0.5, h * 0.3);
+    b(Lc, G.bola, o.pelo, 0, cy + h * 0.14, -h * 0.06, h * 0.98, h * 0.8, h * 0.95);
+    if (o.mono) b(Lc, G.bola, o.pelo, 0, cy + h * 0.32, -h * 0.42, h * 0.42, h * 0.42, h * 0.42);
+    if (o.flor) b(Lb, G.bolita, P.tajiboAm, h * 0.36, cy + h * 0.36, -h * 0.2, h * 0.22, h * 0.22, h * 0.22, 0, 0, 0, { brillo: true });
+    if (o.colita) b(Lc, G.bola, o.pelo, 0, cy - h * 0.05, -h * 0.5, h * 0.3, h * 0.5, h * 0.3);
     // cara: ojos y boca (calcomanía simple)
-    for (const s of [-1, 1]) b(plano, G.caja, P.tinta, s * h * 0.2, cy + h * 0.02, h * 0.44, h * 0.11, h * (o.ojos || 0.16), 0.02, 0, 0, 0, { ao: false });
-    b(plano, G.caja, P.oscuro, 0, cy - h * 0.2, h * 0.44, h * 0.22, h * 0.05, 0.02, 0, 0, 0, { ao: false });
+    for (const s of [-1, 1]) b(Lf, G.caja, P.tinta, s * h * 0.2, cy + h * 0.02, h * 0.44, h * 0.11, h * (o.ojos || 0.16), 0.02, 0, 0, 0, { ao: false });
+    b(Lf, G.caja, P.oscuro, 0, cy - h * 0.2, h * 0.44, h * 0.22, h * 0.05, 0.02, 0, 0, 0, { ao: false });
     if (o.anteojos) {
-      for (const s of [-1, 1]) { b(plano, G.caja, P.oscuro, s * h * 0.2, cy + h * 0.02, h * 0.455, h * 0.32, h * 0.26, 0.012, 0, 0, 0, { ao: false }); b(plano, G.caja, P.vidrio, s * h * 0.2, cy + h * 0.02, h * 0.47, h * 0.24, h * 0.18, 0.012, 0, 0, 0, { ao: false, brillo: true }); b(plano, G.caja, P.tinta, s * h * 0.2, cy + h * 0.02, h * 0.48, h * 0.1, h * 0.14, 0.012, 0, 0, 0, { ao: false }); }
-      b(plano, G.caja, P.oscuro, 0, cy + h * 0.06, h * 0.46, h * 0.16, h * 0.04, 0.015, 0, 0, 0, { ao: false });
+      for (const s of [-1, 1]) { b(Lf, G.caja, P.oscuro, s * h * 0.2, cy + h * 0.02, h * 0.455, h * 0.32, h * 0.26, 0.012, 0, 0, 0, { ao: false }); b(Lf, G.caja, P.vidrio, s * h * 0.2, cy + h * 0.02, h * 0.47, h * 0.24, h * 0.18, 0.012, 0, 0, 0, { ao: false, brillo: true }); b(Lf, G.caja, P.tinta, s * h * 0.2, cy + h * 0.02, h * 0.48, h * 0.1, h * 0.14, 0.012, 0, 0, 0, { ao: false }); }
+      b(Lf, G.caja, P.oscuro, 0, cy + h * 0.06, h * 0.46, h * 0.16, h * 0.04, 0.015, 0, 0, 0, { ao: false });
     }
-    if (o.mochila) b(solido, G.caja, o.mochila, 0, pierna + torso * 0.55, -ancho * 0.45, ancho * 0.75, torso * 0.75, ancho * 0.35);
+    if (nivel >= 5) {
+      // más detalle de cara: nariz, cejas y orejas
+      b(Lc, G.bolita, o.piel, 0, cy - h * 0.06, h * 0.46, h * 0.14, h * 0.16, h * 0.14);
+      for (const s of [-1, 1]) {
+        b(Lf, G.caja, o.pelo, s * h * 0.2, cy + h * 0.16, h * 0.44, h * 0.2, h * 0.04, 0.02, 0, 0, s * -0.12, { ao: false });
+        b(Lc, G.bolita, o.piel, s * h * 0.47, cy, 0, h * 0.12, h * 0.22, h * 0.14);
+      }
+    }
+    if (o.mochila) b(Lc, G.caja, o.mochila, 0, pierna + torso * 0.55, -ancho * 0.45, ancho * 0.75, torso * 0.75, ancho * 0.35);
     if (o.auriculares) {
-      b(solido, G.caja, P.oscuro, 0, cy - h * 0.5, 0, h * 1.0, h * 0.1, h * 0.7);
-      for (const s of [-1, 1]) b(solido, G.cil, P.esmeralda, s * h * 0.45, cy - h * 0.48, 0.05, h * 0.3, h * 0.12, h * 0.3, 0, 0, Math.PI / 2);
+      b(Lc, G.caja, P.oscuro, 0, cy - h * 0.5, 0, h * 1.0, h * 0.1, h * 0.7);
+      for (const s of [-1, 1]) b(Lc, G.cil, P.esmeralda, s * h * 0.45, cy - h * 0.48, 0.05, h * 0.3, h * 0.12, h * 0.3, 0, 0, Math.PI / 2);
     }
     if (o.ia) {
       // aro esmeralda flotando: marca que es un profe IA (los dos iguales)
       const aro = new THREE.TorusGeometry(h * 0.55, h * 0.06, 4, 18);
-      b(brillo, aro, P.esmeralda, 0, H + h * 0.32, 0, 1, 1, 1, 0, Math.PI / 2, 0, { brillo: true });
+      b(Lb, aro, P.esmeralda, 0, H + h * 0.32, 0, 1, 1, 1, 0, Math.PI / 2, 0, { brillo: true });
     }
     sombra(x, z, ancho * 1.1, 0.4);
+    if (anim) {
+      // armar el muñeco: grupo en (x, z) con piernas y brazos que giran en cadera y hombro
+      const grupo = new THREE.Group(); grupo.position.set(x, 0, z); grupo.rotation.y = ry;
+      const malla = (L, px, py) => {
+        const g = L.geometria(); g.translate(-px, -py, 0);
+        const m = new THREE.Mesh(g, materialPersonaje()); m.position.set(px, py, 0);
+        m.castShadow = true; grupo.add(m); return m;
+      };
+      const cuerpo = malla(Lc, 0, 0);
+      const piernas = [-1, 1].map((s, i) => malla(Lp[i], s * ancho * 0.22, pierna));
+      const brazos = [-1, 1].map((s, i) => malla(La[i], s * ancho * 0.62, pierna + torso * 0.98));
+      if (Lb.p.length) { const mb = new THREE.Mesh(Lb.geometria(), materialBrillo()); grupo.add(mb); }
+      escena.add(grupo);
+      personajes.push({ grupo, cuerpo, piernas, brazos, o, x, z, ry, fase: rnd() * 6 });
+    }
     return pierna + torso + h;
   }
 
@@ -741,12 +800,12 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
       lote.add(G.caja, color, M(x, y, z, ancho, alto, 2 * Math.PI * r / n + 0.06, -a), { ao: false });
     }
   }
-  function recta(x0, z0, x1, z1, ancho, color, filtro, y = 0.05) {
+  function recta(x0, z0, x1, z1, ancho, color, filtro, y = 0.05, lote = plano) {
     const L2 = Math.hypot(x1 - x0, z1 - z0), n = Math.max(1, Math.round(L2 / 1.5));
     for (let i = 0; i < n; i++) {
       const t = (i + 0.5) / n, x = x0 + (x1 - x0) * t, z = z0 + (z1 - z0) * t;
       if (filtro && !filtro(x, z)) continue;
-      plano.add(G.caja, color, M(x, y, z, ancho, 0.06, L2 / n + 0.05, Math.atan2(x1 - x0, z1 - z0)), { ao: false });
+      lote.add(G.caja, color, M(x, y, z, ancho, 0.06, L2 / n + 0.05, Math.atan2(x1 - x0, z1 - z0)), { ao: false });
     }
   }
 
@@ -896,16 +955,22 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
 
   // personajes según el estilo: profes siempre; alumnos del tramo (o los dos en A/B/C)
   const PERSONAS = {
-    taji: { edad: 'adulto', altura: 1.75, piel: P.piel4, pelo: P.pelo, ropa: P.ropaTaji, pantalon: P.azulUniforme, mono: true, flor: true, ia: true },
+    taji: { saluda: true, edad: 'adulto', altura: 1.75, piel: P.piel4, pelo: P.pelo, ropa: P.ropaTaji, pantalon: P.azulUniforme, mono: true, flor: true, ia: true },
     jochi: { edad: 'adulto', altura: 1.82, piel: P.piel2, pelo: P.pelo2, ropa: P.blanco, chaleco: P.ropaJochi, pantalon: P.maderaOsc, anteojos: true, ia: true },
     chico: { edad: 'nino', altura: 1.05, piel: P.piel1, pelo: P.pelo, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, colita: true, mochila: P.tajiboRo, ojos: 0.2 },
     medio: { edad: 'nino', altura: 1.3, piel: P.piel3, pelo: P.pelo2, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, mochila: P.azul, ojos: 0.18 },
+    mayor: { edad: 'nino', altura: 1.42, piel: P.piel4, pelo: P.pelo, ropa: P.blanco, pantalon: P.azulUniforme, guardapolvo: true, colita: true, mochila: P.tajiboAm, ojos: 0.17 },
+    secu: { edad: 'teen', altura: 1.58, piel: P.piel2, pelo: P.pelo2, ropa: P.azul, pantalon: P.azulUniforme, mochila: P.rojo },
+    promo: { edad: 'teen', altura: 1.7, piel: P.piel1, pelo: P.pelo, ropa: P.ropaPromo || P.esmeralda, chaleco: P.tajiboAm, pantalon: P.oscuro, mochila: P.oscuro, auriculares: true },
     grande: { edad: 'teen', altura: 1.62, piel: P.piel1, pelo: P.pelo, ropa: P.esmeralda, pantalon: P.azulUniforme, mochila: P.oscuro, auriculares: true }
   };
   const ALUMNOS = {
     BLOQUES: [['chico', 'Alumna de 2.º', '#F2C230']],
     PIEZAS: [['medio', 'Alumno de 5.º', '#10B981']],
-    REAL: [['grande', 'Alumna de 3.º de secundaria', '#5FB7C9']]
+    REAL: [['mayor', 'Alumna de 6.º de primaria', '#5FB7C9']],
+    HORIZONTE: [['secu', 'Alumno de 2.º de secundaria', '#A78BFA']],
+    VIVO: [['grande', 'Alumna de 4.º de secundaria', '#F472B6']],
+    PROMO: [['promo', 'Promo (chamarra de promoción)', '#F59E0B']]
   }[E] || [['chico', 'Primaria', '#E68AB8'], ['grande', 'Secundaria', '#5FB7C9']];
 
   function armarEscena() {
@@ -926,7 +991,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     // --- río (como el Piraí) con playas de arena
     for (let i = 0; i < rioPts.length - 1; i++) {
       recta(...rioPts[i], ...rioPts[i + 1], 5.2, P.arena, (x, z) => dentro(x, z, 0.6), 0.02);
-      recta(...rioPts[i], ...rioPts[i + 1], 3.0, P.rio, (x, z) => dentro(x, z, 0.6), 0.05);
+      recta(...rioPts[i], ...rioPts[i + 1], 3.0, P.rio, (x, z) => dentro(x, z, 0.6), 0.05, agua || plano);
     }
 
     // --- la ciudad empieza VACÍA: anillos, avenidas y solo los hitos
@@ -974,7 +1039,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
 
     // --- portal de visita
     portal(-17.5, -1.8, Math.PI / 2 - 0.2, 1, 'Portal → Colegio Los Tajibos');
-    persona(-14.6, -0.4, -Math.PI / 2 - 0.35, PERSONAS[ALUMNOS[ALUMNOS.length - 1][0]]);
+    persona(-14.6, -0.4, -Math.PI / 2 - 0.35, { ...PERSONAS[ALUMNOS[ALUMNOS.length - 1][0]], camina: [[-9.6, -0.9], [-15.2, -1.3]] });
 
     // --- personajes en la plazuela: los dos profes (IA) y los alumnos del tramo
     const yT = persona(-1.7, 10.1, 0.12, PERSONAS.taji);
@@ -1085,15 +1150,73 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     };
   }
 
+  // ============================================================ materiales (4–6: luz en tiempo real)
+  const uTiempo = { value: 0 };
+  let _gradiente = null, _mPers = null, _mBrillo = null;
+  function gradiente() { // dibujo en 3 tonos para la luz "toon"
+    if (!_gradiente) {
+      _gradiente = new THREE.DataTexture(new Uint8Array([95, 175, 255]), 3, 1, THREE.RedFormat);
+      _gradiente.minFilter = _gradiente.magFilter = THREE.NearestFilter; _gradiente.needsUpdate = true;
+    }
+    return _gradiente;
+  }
+  function materialLuz(op = {}) {
+    let m;
+    if (nivel === 6) m = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: op.rough ?? 0.8, metalness: 0, envMapIntensity: op.env ?? 0.6 });
+    else if (luzReal) m = new THREE.MeshToonMaterial({ vertexColors: true, gradientMap: gradiente() });
+    else m = new THREE.MeshBasicMaterial({ vertexColors: true });
+    if (op.detalle && nivel >= 5) m.onBeforeCompile = sh => {
+      // detalle sin texturas: hileras de tejas en lo rojizo, revoque en paredes claras, manchas en el pasto
+      sh.vertexShader = 'varying vec3 vPosMundo;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vPosMundo = transformed;');
+      sh.fragmentShader = 'varying vec3 vPosMundo;\nfloat ruido(vec2 p) { return sin(p.x * 1.7 + sin(p.y * 1.3)) * sin(p.y * 1.9 + sin(p.x * 0.7)); }\n' +
+        sh.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        vec3 vc = diffuseColor.rgb;
+        float esTeja = step(vc.g * 1.7, vc.r) * step(vc.b * 1.8, vc.r) * step(0.08, vc.r);
+        float hilera = smoothstep(0.0, 0.18, fract(vPosMundo.y * 4.0)) * (0.82 + 0.18 * step(0.5, fract(vPosMundo.x * 2.0 + floor(vPosMundo.y * 4.0) * 0.5)));
+        diffuseColor.rgb *= mix(1.0, 0.8 + 0.2 * hilera, esTeja);
+        float esPasto = step(vc.r * 1.15, vc.g) * step(vc.b * 1.4, vc.g);
+        diffuseColor.rgb *= mix(1.0, 0.9 + 0.1 * ruido(vPosMundo.xz * 0.35) + 0.05 * ruido(vPosMundo.xz * 1.7), esPasto);
+        float esPared = step(0.55, min(vc.r, min(vc.g, vc.b)));
+        diffuseColor.rgb *= mix(1.0, 0.97 + 0.03 * ruido(vPosMundo.xy * 3.1 + vPosMundo.zz), esPared);`);
+    };
+    if (op.viento) m.onBeforeCompile = sh => {
+      // las copas se mecen con el viento (más arriba, más movimiento)
+      sh.uniforms.uTiempo = uTiempo;
+      sh.vertexShader = 'uniform float uTiempo;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+        float k = max(0.0, transformed.y - 1.6);
+        transformed.x += sin(uTiempo * 1.7 + transformed.x * 0.35 + transformed.z * 0.2) * 0.045 * k;
+        transformed.z += cos(uTiempo * 1.3 + transformed.x * 0.2) * 0.03 * k;`);
+    };
+    if (op.agua) m.onBeforeCompile = sh => {
+      // ondas que corren sobre el río
+      sh.uniforms.uTiempo = uTiempo;
+      sh.vertexShader = 'varying vec3 vPosMundo;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n vPosMundo = transformed;');
+      sh.fragmentShader = 'uniform float uTiempo;\nvarying vec3 vPosMundo;\n' + sh.fragmentShader.replace('#include <color_fragment>', `#include <color_fragment>
+        float o = sin(vPosMundo.x * 1.3 + uTiempo * 1.6) * sin(vPosMundo.z * 1.1 - uTiempo * 1.2);
+        diffuseColor.rgb *= 0.9 + 0.14 * o;
+        diffuseColor.rgb += vec3(0.25) * smoothstep(0.82, 1.0, o);`);
+    };
+    return m;
+  }
+  function materialPersonaje() { return _mPers || (_mPers = materialLuz({ rough: 0.62 })); }
+  function materialBrillo() { return _mBrillo || (_mBrillo = new THREE.MeshBasicMaterial({ vertexColors: true })); }
+
   const vistas = tipo === 'mapa' ? armarMapa() : armarEscena();
 
   // ============================================================ mallas
   const mBasic = () => new THREE.MeshBasicMaterial({ vertexColors: true, fog: true });
-  const gSolido = solido.geometria();
-  escena.add(new THREE.Mesh(gSolido, mBasic()));
-  if (esB) escena.add(contorno(gSolido, grosorContorno));
-  escena.add(new THREE.Mesh(plano.geometria(), mBasic()));
-  if (brillo.p.length) escena.add(new THREE.Mesh(brillo.geometria(), mBasic()));
+  const sombrasReales = nivel >= 5 && tipo !== 'mapa';
+  function malla(lote, mat, proyecta, recibe) {
+    const m = new THREE.Mesh(lote.geometria(), mat);
+    if (sombrasReales) { m.castShadow = proyecta; m.receiveShadow = recibe; }
+    escena.add(m); return m;
+  }
+  const mSolido = malla(solido, luzReal ? materialLuz({ detalle: true }) : mBasic(), true, true);
+  if (esB) escena.add(contorno(mSolido.geometry, grosorContorno));
+  malla(plano, luzReal ? materialLuz({ rough: 0.95, detalle: true }) : mBasic(), false, true);
+  if (brillo.p.length) malla(brillo, mBasic(), false, false);
+  if (follaje && follaje.p.length) malla(follaje, materialLuz({ viento: true, rough: 0.7 }), true, true);
+  if (agua && agua.p.length) malla(agua, materialLuz({ agua: true, rough: 0.12, env: 1.0 }), false, true);
   // sombras falsas (un disco con degradé por objeto, todo en una malla)
   {
     const geo = new THREE.CircleGeometry(1, 16).rotateX(-Math.PI / 2);
@@ -1114,7 +1237,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     x.fillStyle = gr; x.fillRect(0, 0, 64, 64);
     const t = new THREE.CanvasTexture(c);
     // el color por vértice se usa solo como "fuerza" de la sombra (no tiñe)
-    const mat = new THREE.MeshBasicMaterial({ color: esB ? '#3a2410' : '#1d2a22', alphaMap: t, transparent: true, depthWrite: false, opacity: esB ? 0.5 : 0.75, vertexColors: true, fog: true });
+    const mat = new THREE.MeshBasicMaterial({ color: esB ? '#3a2410' : '#1d2a22', alphaMap: t, transparent: true, depthWrite: false, opacity: sombrasReales ? 0.28 : esB ? 0.5 : 0.75, vertexColors: true, fog: true });
     mat.onBeforeCompile = sh => {
       sh.fragmentShader = sh.fragmentShader
         .replace('#include <color_fragment>', '')
@@ -1158,20 +1281,140 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
   }
   const fondo = new THREE.Color(P.cielo);
   escena.background = fondo;
-  escena.fog = new THREE.Fog(P.niebla, 40, 120);
+  escena.fog = new THREE.Fog(nivel >= 5 ? P.cielo : P.niebla, 40, 120);
+
+  // ---------------------------------------------------------- 4–6: luces, cielo, nubes, partículas
+  let cieloMalla = null, sol = null;
+  const nubes = [], particulas = [];
+  if (luzReal) {
+    const hemi = new THREE.HemisphereLight(P.cieloArriba, P.suelo, nivel === 6 ? 0.85 : 1.25);
+    sol = new THREE.DirectionalLight('#FFF0D2', nivel === 6 ? 2.7 : 1.9);
+    sol.position.copy(L).multiplyScalar(80);
+    escena.add(hemi, sol, sol.target, new THREE.AmbientLight('#FFFFFF', nivel === 6 ? 0.35 : 0.55));
+    if (sombrasReales) {
+      sol.castShadow = true;
+      const t = nivel === 6 ? 2048 : 1024;
+      sol.shadow.mapSize.set(t, t);
+      Object.assign(sol.shadow.camera, { left: -48, right: 48, top: 48, bottom: -48, near: 20, far: 180 });
+      sol.shadow.camera.updateProjectionMatrix();
+      sol.shadow.bias = -0.0004; sol.shadow.normalBias = 0.05;
+    }
+  }
+  if (nivel >= 5) {
+    // cielo con degradé y sol
+    cieloMalla = new THREE.Mesh(new THREE.SphereGeometry(330, 32, 16), new THREE.ShaderMaterial({
+      side: THREE.BackSide, depthWrite: false, fog: false,
+      uniforms: { arriba: { value: col(P.cieloArriba) }, abajo: { value: col(P.cielo) }, dirSol: { value: L } },
+      vertexShader: 'varying vec3 vD; void main() { vD = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `uniform vec3 arriba; uniform vec3 abajo; uniform vec3 dirSol; varying vec3 vD;
+        void main() {
+          vec3 c = mix(abajo, arriba, smoothstep(-0.02, 0.55, vD.y));
+          float s = max(dot(vD, dirSol), 0.0);
+          c += vec3(1.0, 0.85, 0.6) * (pow(s, 600.0) * ${nivel === 6 ? '6.0' : '1.5'} + pow(s, 12.0) * 0.18);
+          gl_FragColor = vec4(c, 1.0);
+          #include <tonemapping_fragment>
+          #include <colorspace_fragment>
+        }`
+    }));
+    cieloMalla.renderOrder = -1;
+    escena.add(cieloMalla);
+    // nubes que pasan (y en la 6 proyectan sombra)
+    const ln = new Lote();
+    for (let i = 0; i < 9; i++) {
+      const cx = R(-60, 60), cz = R(-70, 30), y = R(26, 34), k = R(0.8, 1.5);
+      for (let j = 0; j < 5; j++) ln.add(G.bola, P.blanco, M(cx + (j - 2) * 3.2 * k, y + (j % 2) * 1.2, cz + R(-1.5, 1.5), 5 * k, 3.2 * k, 4 * k), { ao: false });
+    }
+    const mn = new THREE.Mesh(ln.geometria(), materialLuz({ rough: 1 }));
+    mn.castShadow = nivel === 6;
+    escena.add(mn); nubes.push(mn);
+  }
+  if (nivel === 6 && tipo !== 'mapa') {
+    // pétalos de tajibo que vuelan y luciérnagas en el parque y el zoológico
+    const crear = (n, centro, radio, alto, colores, tam, mult) => {
+      const pos = new Float32Array(n * 3), cols = new Float32Array(n * 3), base = [];
+      for (let i = 0; i < n; i++) {
+        const a = rnd() * 6.283, r = Math.sqrt(rnd()) * radio;
+        base.push([centro[0] + Math.cos(a) * r, R(0.4, alto), centro[1] + Math.sin(a) * r, rnd() * 6.283]);
+        const c = col(colores[i % colores.length]).clone().multiplyScalar(mult);
+        cols.set([c.r, c.g, c.b], i * 3);
+      }
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      g.setAttribute('color', new THREE.BufferAttribute(cols, 3));
+      const pts = new THREE.Points(g, new THREE.PointsMaterial({ size: tam, vertexColors: true, sizeAttenuation: true, transparent: true, opacity: 0.95, depthWrite: false }));
+      escena.add(pts); particulas.push({ pts, base });
+    };
+    crear(320, [2, -4], 30, 9, [P.tajiboRo, P.tajiboAm, P.toboFlor], 0.16, 1);
+    crear(70, [-15, -25], 9, 3, [P.esmeraldaClaro, P.tajiboAm], 0.22, 3.2);
+    crear(50, [13, -15], 9, 3, [P.esmeraldaClaro], 0.2, 3.2);
+  }
 
   return {
     escena, vistas, etiquetas, estilo: E, paleta: P,
     // en C la imagen se dibuja a baja resolución y se amplía sin suavizar
-    escalaResolucion: esC ? 0.45 : 1, conContorno: esB,
+    escalaResolucion: esC ? 0.45 : 1, conContorno: esB, nivel,
+    antialias: nivel >= 5, maxPixelRatio: nivel === 6 ? 2 : 1.5,
+    // deja el renderer listo para esta escena (sombras, tono de color, luz de cielo)
+    prepararRender(renderer) {
+      renderer.shadowMap.enabled = sombrasReales;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = nivel === 6 ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
+      renderer.toneMappingExposure = 1.0;
+      if (nivel === 6 && cieloMalla && !escena.environment) {
+        const pm = new THREE.PMREMGenerator(renderer), sc = new THREE.Scene();
+        sc.add(cieloMalla.clone());
+        sc.add(new THREE.Mesh(new THREE.CircleGeometry(300, 24).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({ color: P.pasto })));
+        escena.environment = pm.fromScene(sc, 0.04).texture;
+        pm.dispose();
+      }
+    },
+    // dibuja: en la 6 con brillo (bloom) y corrección de color propia
+    render(renderer, camara) {
+      this.prepararRender(renderer);
+      if (nivel === 6) { if (!this._bloom) this._bloom = crearBloom(THREE, renderer); this._bloom.render(escena, camara); }
+      else renderer.render(escena, camara);
+    },
     animar(t, camara, objetivo) {
       for (const f of animados) f(t);
+      uTiempo.value = t;
+      for (const n of nubes) n.position.x = Math.sin(t * 0.02) * 12;
+      for (const { pts, base } of particulas) {
+        const a = pts.geometry.attributes.position;
+        for (let i = 0; i < base.length; i++) {
+          const [x, y, z, f] = base[i];
+          a.setXYZ(i, x + Math.sin(t * 0.6 + f) * 1.2, y + Math.sin(t * 0.9 + f * 2) * 0.5, z + Math.cos(t * 0.5 + f) * 1.2);
+        }
+        a.needsUpdate = true;
+      }
+      for (const p of personajes) {
+        const u = t + p.fase;
+        p.cuerpo.scale.y = 1 + 0.012 * Math.sin(u * 2.2);
+        if (p.o.camina) {
+          // camina hacia el portal y vuelve
+          const [x0, z0] = p.o.camina[0], [x1, z1] = p.o.camina[1];
+          const ciclo = (t * 0.12) % 2, k = ciclo < 1 ? ciclo : 2 - ciclo;
+          p.grupo.position.set(x0 + (x1 - x0) * k, 0, z0 + (z1 - z0) * k);
+          p.grupo.rotation.y = Math.atan2((x1 - x0) * (ciclo < 1 ? 1 : -1), (z1 - z0) * (ciclo < 1 ? 1 : -1));
+          const paso = Math.sin(t * 7);
+          p.piernas[0].rotation.x = paso * 0.55; p.piernas[1].rotation.x = -paso * 0.55;
+          p.brazos[0].rotation.x = -paso * 0.45; p.brazos[1].rotation.x = paso * 0.45;
+          p.cuerpo.position.y = Math.abs(paso) * 0.03;
+        } else {
+          p.brazos[0].rotation.x = 0.07 * Math.sin(u * 1.4);
+          p.brazos[1].rotation.x = -0.07 * Math.sin(u * 1.4);
+          if (p.o.saluda) { p.brazos[1].rotation.z = 2.55 + 0.3 * Math.sin(t * 6); p.brazos[1].rotation.x = 0; }
+          p.grupo.rotation.y = p.ry + 0.12 * Math.sin(u * 0.5);
+        }
+      }
       if (camara) for (const e of etiquetas.children) {
         e.visible = e.position.distanceTo(camara.position) < e.userData.maxDist &&
           (!objetivo || e.position.distanceTo(objetivo) < e.userData.radioObjetivo);
       }
     },
-    ajustarNiebla(dist) { escena.fog.near = dist * 0.85; escena.fog.far = dist * 2.6 + 20; }
+    ajustarNiebla(dist) {
+      if (nivel >= 5) { escena.fog.near = dist * 1.6 + 10; escena.fog.far = dist * 4.5 + 60; return; }
+      escena.fog.near = dist * 0.85; escena.fog.far = dist * 2.6 + 20;
+    }
   };
 }
 
@@ -1217,4 +1460,52 @@ function texturaGuarda(THREE, P) {
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace; t.wrapS = THREE.RepeatWrapping;
   return t;
+}
+
+// Brillo (bloom) y corrección de color de la evolución 6, sin librerías extra:
+// escena → textura HDR → partes muy claras → desenfoque en 2 tamaños → suma + ACES + sRGB.
+function crearBloom(THREE, renderer) {
+  const tam = new THREE.Vector2();
+  const op = { type: THREE.HalfFloatType };
+  const rt = new THREE.WebGLRenderTarget(1, 1, { ...op, samples: 4 });
+  const [a0, a1, b0, b1] = [0, 1, 2, 3].map(() => new THREE.WebGLRenderTarget(1, 1, op));
+  const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), quad = new THREE.Mesh(new THREE.PlaneGeometry(2, 2)), esc = new THREE.Scene();
+  quad.frustumCulled = false; esc.add(quad);
+  const vs = 'varying vec2 vUv; void main() { vUv = uv; gl_Position = vec4(position.xy, 0.0, 1.0); }';
+  const claro = new THREE.ShaderMaterial({ uniforms: { t: { value: null } }, vertexShader: vs,
+    fragmentShader: 'uniform sampler2D t; varying vec2 vUv; void main() { vec3 c = texture2D(t, vUv).rgb; float l = max(max(c.r, c.g), c.b); gl_FragColor = vec4(c * smoothstep(1.05, 1.9, l), 1.0); }' });
+  const blur = new THREE.ShaderMaterial({ uniforms: { t: { value: null }, d: { value: new THREE.Vector2() } }, vertexShader: vs,
+    fragmentShader: `uniform sampler2D t; uniform vec2 d; varying vec2 vUv; void main() {
+      vec3 c = texture2D(t, vUv).rgb * 0.227;
+      c += (texture2D(t, vUv + d * 1.385).rgb + texture2D(t, vUv - d * 1.385).rgb) * 0.316;
+      c += (texture2D(t, vUv + d * 3.231).rgb + texture2D(t, vUv - d * 3.231).rgb) * 0.070;
+      gl_FragColor = vec4(c, 1.0); }` });
+  const final = new THREE.ShaderMaterial({ uniforms: { t: { value: null }, b1: { value: null }, b2: { value: null } }, vertexShader: vs,
+    fragmentShader: `uniform sampler2D t; uniform sampler2D b1; uniform sampler2D b2; varying vec2 vUv;
+      vec3 aces(vec3 x) { x *= 0.85; return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0); }
+      vec3 srgb(vec3 c) { return mix(c * 12.92, 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055, step(0.0031308, c)); }
+      void main() {
+        vec3 c = texture2D(t, vUv).rgb + texture2D(b1, vUv).rgb * 0.8 + texture2D(b2, vUv).rgb * 0.7;
+        c *= mix(0.84, 1.0, smoothstep(0.95, 0.3, length(vUv - 0.5) * 1.45)); // viñeta suave
+        gl_FragColor = vec4(srgb(aces(c)), 1.0);
+      }` });
+  const pasar = (mat, destino) => { quad.material = mat; renderer.setRenderTarget(destino); renderer.render(esc, cam); };
+  return {
+    render(escena, camara) {
+      renderer.getDrawingBufferSize(tam);
+      if (rt.width !== tam.x || rt.height !== tam.y) {
+        rt.setSize(tam.x, tam.y);
+        a0.setSize(tam.x >> 1, tam.y >> 1); a1.setSize(tam.x >> 1, tam.y >> 1);
+        b0.setSize(tam.x >> 2, tam.y >> 2); b1.setSize(tam.x >> 2, tam.y >> 2);
+      }
+      renderer.setRenderTarget(rt); renderer.clear(); renderer.render(escena, camara);
+      claro.uniforms.t.value = rt.texture; pasar(claro, a0);
+      blur.uniforms.t.value = a0.texture; blur.uniforms.d.value.set(1 / a0.width, 0); pasar(blur, a1);
+      blur.uniforms.t.value = a1.texture; blur.uniforms.d.value.set(0, 1 / a0.height); pasar(blur, a0);
+      blur.uniforms.t.value = a0.texture; blur.uniforms.d.value.set(2 / b0.width, 0); pasar(blur, b0);
+      blur.uniforms.t.value = b0.texture; blur.uniforms.d.value.set(0, 2 / b0.height); pasar(blur, b1);
+      final.uniforms.t.value = rt.texture; final.uniforms.b1.value = a0.texture; final.uniforms.b2.value = b1.texture;
+      pasar(final, null);
+    }
+  };
 }

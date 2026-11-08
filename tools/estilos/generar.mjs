@@ -1,6 +1,6 @@
 // EDU.01c — Genera las láminas de comparación de estilos y la lámina E de los talleres.
-//   · educacion/estilos/capturas/{BLOQUES,PIEZAS,REAL,A,B,C}-{colegio,obra,portal}-{celular,horizontal}.jpg
-//   · educacion/estilos/capturas/transicion-{1a2,2a3}-{celular,horizontal}.jpg
+//   · educacion/estilos/capturas/{BLOQUES,PIEZAS,REAL,HORIZONTE,VIVO,PROMO,A,B}-{colegio,obra,portal}-{celular,horizontal}.jpg
+//   · educacion/estilos/capturas/transicion-{1a2,2a3,3a4,4a5,5a6}-{celular,horizontal}.jpg
 //   · educacion/estilos/capturas/construir-{celular,horizontal}.jpg
 //   · educacion/estilos/capturas/fps.json  (medido en el navegador del contenedor, sin GPU)
 //   · docs/educacion/talleres/laminas/E-mi-colegio-en-santa-cruz.{png,pdf} + vista/…jpg
@@ -51,23 +51,24 @@ async function abrir(p, url) {
 }
 
 const FORMATOS = { celular: [390, 844], horizontal: [1280, 800] };
-const ESTILOS = ['BLOQUES', 'PIEZAS', 'REAL', 'A', 'B', 'C'];
-const NOMBRE = { BLOQUES: '1 · Bloques', PIEZAS: '2 · Piezas', REAL: '3 · Mundo real', A: 'A · Maqueta Viva', B: 'B · Tierra Pintada', C: 'C · Pixel Camba (modo liviano)' };
+const ESTILOS = ['BLOQUES', 'PIEZAS', 'REAL', 'HORIZONTE', 'VIVO', 'PROMO', 'A', 'B']; // C quedó fuera de la vitrina
+const NOMBRE = { BLOQUES: '1 · Bloques', PIEZAS: '2 · Piezas', REAL: '3 · Mundo real', HORIZONTE: '4 · Horizonte', VIVO: '5 · Mundo vivo', PROMO: '6 · Promo', A: 'A · Maqueta Viva', B: 'B · Tierra Pintada', C: 'C · Pixel Camba (modo liviano)' };
 
 if (solo === 'todo' || solo === 'capturas') {
   for (const e of ESTILOS) for (const v of ['colegio', 'obra', 'portal']) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
     const p = await pagina(w, h, 2);
     await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=${v}&captura=1&calidad=alta`);
     const out = path.join(CAP, `${e}-${v}-${f}.jpg`);
-    await p.screenshot({ path: out, type: 'jpeg', quality: 84 });
+    await p.waitForTimeout(400);
+    await p.screenshot({ path: out, type: 'jpeg', quality: 84, timeout: 180000 });
     console.log('captura', path.relative(RAIZ, out));
     await p.close();
   }
-  for (const [de, a, n] of [['BLOQUES', 'PIEZAS', '1a2'], ['PIEZAS', 'REAL', '2a3']]) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
+  for (const [de, a, n] of [['BLOQUES', 'PIEZAS', '1a2'], ['PIEZAS', 'REAL', '2a3'], ['REAL', 'HORIZONTE', '3a4'], ['HORIZONTE', 'VIVO', '4a5'], ['VIVO', 'PROMO', '5a6']]) for (const [f, [w, h]] of Object.entries(FORMATOS)) {
     const p = await pagina(w, h, 2);
     await abrir(p, `/educacion/estilos/transicion.html?de=${de}&a=${a}&captura=1&calidad=alta&t=2.75`);
     await p.waitForTimeout(300);
-    await p.screenshot({ path: path.join(CAP, `transicion-${n}-${f}.jpg`), type: 'jpeg', quality: 84 });
+    await p.screenshot({ path: path.join(CAP, `transicion-${n}-${f}.jpg`), type: 'jpeg', quality: 84, timeout: 180000 });
     console.log('captura transición', n, f);
     await p.close();
   }
@@ -85,23 +86,30 @@ if (solo === 'todo' || solo === 'fps') {
   // fps en el navegador del contenedor (render por software, SIN GPU): es un piso, no la tablet real
   const res = { nota: 'Chromium headless con SwiftShader (CPU, sin GPU) en el contenedor de la sesión. Resolución normal (no la de captura). Mediana de 6 s.', fecha: new Date().toISOString().slice(0, 10), medidas: [] };
   const mediana = a => { const s = [...a].sort((x, y) => x - y); return s[Math.floor(s.length / 2)]; };
+  // cuadros por segundo reales durante 8 s (sirve también cuando hay menos de 1 fps)
+  const medir = p => p.evaluate(() => new Promise(r => {
+    let n = 0; const t0 = performance.now();
+    const f = () => { n++; if (performance.now() - t0 < 8000) requestAnimationFrame(f); else r(Math.round(n * 10000 / (performance.now() - t0)) / 10); };
+    requestAnimationFrame(f);
+  }));
   for (const [f, [w, h]] of Object.entries(FORMATOS)) {
     for (const e of ESTILOS) {
       const p = await pagina(w, h, 1);
       await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=general`);
-      await p.waitForTimeout(7000);
-      const d = await p.evaluate(() => ({ fps: window.__fps.slice(1), ...window.__info() }));
-      res.medidas.push({ estilo: e, pagina: `${NOMBRE[e]} (vista Todo)`, formato: f, fps: mediana(d.fps), llamadasDeDibujo: d.llamadas, triangulos: d.triangulos, armadoMs: d.armadoMs });
-      console.log('fps', e, f, mediana(d.fps));
+      await p.waitForTimeout(1500);
+      const fps = await medir(p);
+      const d = await p.evaluate(() => window.__info());
+      res.medidas.push({ estilo: e, pagina: `${NOMBRE[e]} (vista Todo)`, formato: f, fps, llamadasDeDibujo: d.llamadas, triangulos: d.triangulos, armadoMs: d.armadoMs });
+      console.log('fps', e, f, fps);
       await p.close();
     }
     {
       const p = await pagina(w, h, 1);
-      await abrir(p, '/educacion/estilos/transicion.html?de=PIEZAS&a=REAL');
-      await p.waitForTimeout(6000);
-      const fps = await p.evaluate(() => window.__fps.slice(1));
-      res.medidas.push({ pagina: 'transición 2 → 3 (dos mundos a la vez)', formato: f, fps: mediana(fps) });
-      console.log('fps transición', f, mediana(fps));
+      await abrir(p, '/educacion/estilos/transicion.html?de=VIVO&a=PROMO');
+      await p.waitForTimeout(1500);
+      const fps = await medir(p);
+      res.medidas.push({ pagina: 'transición 5 → 6 (dos mundos a la vez)', formato: f, fps });
+      console.log('fps transición', f, fps);
       await p.close();
     }
     const p = await pagina(w, h, 1);

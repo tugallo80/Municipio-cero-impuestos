@@ -33,8 +33,7 @@
 <canvas id="c"></canvas>
 <div class="barra">
   <a class="btn" href="./" aria-label="Volver">←</a>
-  <a class="btn" id="b12" href="?de=BLOQUES&a=PIEZAS">1 → 2</a>
-  <a class="btn" id="b23" href="?de=PIEZAS&a=REAL">2 → 3</a>
+  <div id="pares" style="display:flex;gap:6px;overflow-x:auto;scrollbar-width:none"></div>
   <div id="fps">— fps</div>
 </div>
 <div id="mensaje"><h1 id="titulo">¡Terminaste el curso!</h1><p id="texto">Preparando tu mundo…</p>
@@ -46,11 +45,13 @@ const q = new URLSearchParams(location.search);
 const DE = (q.get('de') || 'BLOQUES').toUpperCase(), A = (q.get('a') || 'PIEZAS').toUpperCase();
 const captura = q.has('captura'), tFijo = q.has('t') ? parseFloat(q.get('t')) : null;
 if (captura) document.body.classList.add('captura');
-document.getElementById(DE === 'PIEZAS' ? 'b23' : 'b12').classList.add('on');
-const CURSO = { PIEZAS: '4.º de primaria', REAL: '1.º de secundaria' };
+const ORDEN = ['BLOQUES', 'PIEZAS', 'REAL', 'HORIZONTE', 'VIVO', 'PROMO'];
+document.getElementById('pares').innerHTML = ORDEN.slice(0, -1).map((k, i) =>
+  `<a class="btn ${k === DE ? 'on' : ''}" style="padding:0 12px" href="?de=${k}&a=${ORDEN[i + 1]}">${i + 1}→${i + 2}</a>`).join('');
+const CURSO = { PIEZAS: '3.º de primaria', REAL: '5.º de primaria', HORIZONTE: '1.º de secundaria', VIVO: '3.º de secundaria', PROMO: 'la promoción' };
 
 // Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
-const VERSION = '20261108-4';
+const VERSION = '20261108-5';
 let ARR;
 try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
   document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
@@ -65,7 +66,7 @@ const cieloViejo = viejo.escena.background.clone(), cieloNuevo = nuevo.escena.ba
 viejo.escena.background = null; nuevo.escena.background = null;
 
 const canvas = document.getElementById('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, preserveDrawingBuffer: captura });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: viejo.antialias || nuevo.antialias, preserveDrawingBuffer: captura });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.autoClear = false;
 const camara = new THREE.PerspectiveCamera(45, 1, 0.3, 400);
@@ -124,7 +125,7 @@ document.getElementById('bOtra').onclick = () => { t0 = performance.now(); poner
 document.getElementById('bEntrar').href = `escena.html?estilo=${A}&vista=colegio`;
 
 const fpsEl = document.getElementById('fps');
-let cuadros = 0, tF = performance.now(); window.__fps = [];
+let cuadros = 0, tF = performance.now(); window.__fps = []; window.__cuadrosCaptura = 0;
 const cielo = new THREE.Color();
 function cuadro() {
   const ahora = performance.now();
@@ -142,8 +143,9 @@ function cuadro() {
   cielo.copy(cieloViejo).lerp(cieloNuevo, suave);
   renderer.setClearColor(cielo); renderer.clear();
   planoViejo.constant = -s; planoNuevo.constant = s;
-  if (k > 0) { renderer.clippingPlanes = [planoNuevo]; renderer.render(nuevo.escena, camara); }
-  if (k < 1) { renderer.clippingPlanes = [planoViejo]; renderer.render(viejo.escena, camara); }
+  if (k > 0) { renderer.clippingPlanes = [planoNuevo]; nuevo.prepararRender(renderer); renderer.render(nuevo.escena, camara); }
+  if (k < 1) { renderer.clippingPlanes = [planoViejo]; viejo.prepararRender(renderer); renderer.render(viejo.escena, camara); }
+  renderer.toneMapping = THREE.NoToneMapping;
   renderer.clippingPlanes = [];
   if (k > 0 && k < 1) { grupoOla.position.x = s; ola.visible = false; renderer.render(capaLuz, camara); }
   cuadros++;
@@ -152,7 +154,8 @@ function cuadro() {
     fpsEl.textContent = `${f} fps`; fpsEl.className = f >= 30 ? 'bien' : f >= 20 ? 'medio' : 'mal';
     cuadros = 0; tF = ahora;
   }
-  requestAnimationFrame(cuadro);
+  // en modo captura se dibujan pocos cuadros y se para (las escenas pesadas no traban la foto)
+  if (!(captura && ++window.__cuadrosCaptura > 6)) requestAnimationFrame(cuadro);
 }
 cuadro();
 requestAnimationFrame(() => requestAnimationFrame(() => { window.__listo = 'ok'; }));

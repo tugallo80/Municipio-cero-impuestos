@@ -67,7 +67,7 @@ if (q.has('limpia')) document.getElementById('marca').style.visibility = 'hidden
 const NOMBRES_VISTA = { colegio: 'Colegio', obra: 'Obra de la ciudad', portal: 'Portal', ciudad: 'Ciudad', profes: 'Profes y alumnos', general: 'Todo', lamina: 'Lámina E' };
 
 // Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
-const VERSION = '20261108-4';
+const VERSION = '20261108-5';
 let ARR;
 try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
   document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
@@ -84,7 +84,7 @@ document.getElementById('nTexto').textContent = info.corto;
 if (estilo === 'B') document.getElementById('nota').style.display = 'block';
 
 // --- selector de estilos y vistas
-document.getElementById('estilos').innerHTML = Object.entries(ESTILOS).map(([k, e]) =>
+document.getElementById('estilos').innerHTML = Object.entries(ESTILOS).filter(([k, e]) => !e.oculto || k === estilo).map(([k, e]) =>
   `<a class="chip estilo ${k === estilo ? 'on' : ''}" href="?estilo=${k}&vista=${vista}${tipo === 'mapa' ? '&tipo=mapa' : ''}" title="${e.nombre}">${e.letra}</a>`).join('');
 
 const t0 = performance.now();
@@ -98,12 +98,13 @@ document.getElementById('vistas').innerHTML = Object.keys(mundo.vistas).map(v =>
 
 const canvas = document.getElementById('c');
 if (mundo.escalaResolucion < 1) canvas.classList.add('pixel');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, powerPreference: 'high-performance', preserveDrawingBuffer: captura });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: !!mundo.antialias, powerPreference: 'high-performance', preserveDrawingBuffer: captura });
 renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.info.autoReset = false; // contar todas las pasadas del cuadro (sombras, brillo)
 function resolucion() {
   const dpr = window.devicePixelRatio || 1;
   if (mundo.escalaResolucion < 1) return mundo.escalaResolucion; // C: ~50% de los píxeles CSS, ampliado sin suavizar
-  return alta ? Math.min(dpr, 2) : Math.min(dpr, 1.5);
+  return alta ? Math.min(dpr, 2) : Math.min(dpr, mundo.maxPixelRatio || 1.5);
 }
 const camara = new THREE.PerspectiveCamera(45, 1, 0.3, 400);
 
@@ -173,7 +174,7 @@ if (q.get('etiquetas') === '0') mundo.etiquetas.visible = false;
 // --- fps visible
 const fpsEl = document.getElementById('fps');
 let cuadros = 0, tFps = performance.now();
-window.__fps = [];
+window.__fps = []; window.__cuadrosCaptura = 0;
 
 const reloj = new THREE.Clock();
 function cuadro() {
@@ -190,7 +191,8 @@ function cuadro() {
   camara.lookAt(objetivo);
   mundo.ajustarNiebla(esf.radius);
   mundo.animar(captura ? 1.2 : t, camara, objetivo);
-  renderer.render(mundo.escena, camara);
+  renderer.info.reset();
+  if (mundo.render) mundo.render(renderer, camara); else renderer.render(mundo.escena, camara);
   cuadros++;
   const ahora = performance.now();
   if (ahora - tFps >= 1000) {
@@ -200,7 +202,8 @@ function cuadro() {
     fpsEl.className = fps >= 30 ? 'bien' : fps >= 20 ? 'medio' : 'mal';
     cuadros = 0; tFps = ahora;
   }
-  requestAnimationFrame(cuadro);
+  // en modo captura se dibujan pocos cuadros y se para (las escenas pesadas no traban la foto)
+  if (!(captura && ++window.__cuadrosCaptura > 6)) requestAnimationFrame(cuadro);
 }
 document.getElementById('cargando').remove();
 cuadro();
