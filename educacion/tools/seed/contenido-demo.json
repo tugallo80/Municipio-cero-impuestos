@@ -1,0 +1,33 @@
+{
+  "_nota": "Contenido de demostración para 4to de primaria (lo que normalmente sube el profe). Inventado para la prueba.",
+  "4to_primaria": {
+    "pensum": {
+      "matematica": {
+        "fracciones": {
+          "titulo": "Fracciones: partes de un entero",
+          "texto": "Una fracción muestra partes iguales de un entero. El número de abajo (denominador) dice en cuántas partes iguales se partió; el de arriba (numerador), cuántas tomamos. Para sumar fracciones con el mismo denominador se suman los numeradores y se deja el mismo denominador. Ejemplo: una pizza en 8 pedazos; si como 3, comí tres octavos. Fracciones equivalentes: un medio es igual a dos cuartos."
+        }
+      },
+      "ciencias_naturales": {
+        "ciclo_agua": {
+          "titulo": "El ciclo del agua",
+          "texto": "El sol calienta el agua de ríos y lagunas y se evapora. El vapor sube, se enfría y forma nubes (condensación). Cuando las gotitas pesan, cae la lluvia (precipitación). El agua corre por ríos como el Piraí o se filtra en la tierra, y el ciclo vuelve a empezar."
+        }
+      }
+    },
+    "agenda": {
+      "tarea1": {
+        "tipo": "tarea",
+        "titulo": "Sumas de fracciones",
+        "fecha": "2026-12-04",
+        "descripcion": "Resolver 10 sumas de fracciones con el mismo denominador del cuaderno."
+      },
+      "examen1": {
+        "tipo": "examen",
+        "titulo": "Evaluación de fracciones",
+        "fecha": "2026-12-11",
+        "descripcion": "Fracciones, fracciones equivalentes y sumas."
+      }
+    }
+  }
+}

@@ -1,0 +1,110 @@
+name: Educación — deploy
+
+# Publica la app de Educación en su propio sitio (nande-educacion.web.app) y sus
+# Cloud Functions (codebase "educacion") en municipio-ia, y después prueba de punta
+# a punta al tutor de voz Kay. Entra a Google Cloud por Workload Identity (sin llaves).
+#
+# Se dispara solo con cambios en educacion/ (rama de EDU.02 y main), o a mano.
+
+on:
+  push:
+    branches: [main, sesion/edu-02, sesion/edu-02b]
+    paths:
+      - 'educacion/**'
+      - '.github/workflows/educacion.yml'
+  workflow_dispatch:
+    inputs:
+      probar:
+        description: 'Correr la prueba de punta a punta de Kay después del deploy'
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: educacion-deploy
+  cancel-in-progress: false
+
+env:
+  PROYECTO: municipio-ia
+  EDU_DATABASE_URL: https://municipio-ia-educacion.firebaseio.com
+  FIREBASE_CLI: npx --yes firebase-tools@15.34.1
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pruebas del motor (sin red)
+        working-directory: educacion/services/ai-gateway
+        run: npm ci --no-audit --no-fund && npm test
+
+      - name: Entrar a Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/359679900643/locations/global/workloadIdentityPools/github/providers/github-actions
+          service_account: github-deploy@municipio-ia.iam.gserviceaccount.com
+
+      - uses: google-github-actions/setup-gcloud@v2
+
+      - name: Preparar el proyecto (sitio, base, login)
+        run: bash educacion/tools/infra/preparar-proyecto.sh "$RUNNER_TEMP/firebase-web.json"
+
+      - name: Compilar el sitio de Educación
+        working-directory: educacion/apps/web
+        run: |
+          export FIREBASE_WEB_CONFIG="$(cat "$RUNNER_TEMP/firebase-web.json")"
+          npm ci --no-audit --no-fund && npm run build
+
+      - name: Publicar el sitio (Hosting)
+        working-directory: educacion
+        run: >
+          $FIREBASE_CLI deploy --only hosting
+          --project "$PROYECTO" --non-interactive
+          --message "educacion ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
+
+      - name: Reglas de la base, cuentas de prueba y contenido demo
+        working-directory: educacion/tools
+        run: npm ci --no-audit --no-fund && node seed/crear-cuentas-prueba.js
+
+      - name: Publicar las Functions
+        working-directory: educacion
+        run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
+
+      - name: Prueba de punta a punta (voz real contra Gemini)
+        if: github.event_name == 'push' || inputs.probar
+        working-directory: educacion/tools
+        env:
+          SALIDA: ${{ runner.temp }}/salida-e2e
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq espeak-ng ffmpeg >/dev/null
+          export FIREBASE_API_KEY="$(node -e 'console.log(require(process.argv[1]).apiKey)' "$RUNNER_TEMP/firebase-web.json")"
+          echo "::add-mask::$FIREBASE_API_KEY"
+          node e2e/probar-kay.mjs
+
+      - name: Guardar audios de las voces
+        if: always() && (github.event_name == 'push' || inputs.probar)
+        uses: actions/upload-artifact@v4
+        with:
+          name: voces-kay
+          path: ${{ runner.temp }}/salida-e2e/*.wav
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Links
+        if: success()
+        run: |
+          {
+            echo "### Publicado"
+            echo "- Sitio: https://nande-educacion.web.app/"
+            echo "- Probar la voz: https://nande-educacion.web.app/prueba-motor/"
+            echo "- Los profes en el mundo: https://nande-educacion.web.app/maqueta/alumno.html"
+          } >> "$GITHUB_STEP_SUMMARY"

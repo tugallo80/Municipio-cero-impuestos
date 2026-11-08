@@ -1,0 +1,71 @@
+name: Vista previa del PR
+
+# Cada PR publica el sitio en un canal de vista previa de Firebase Hosting
+# (municipio-ia--pr-N-....web.app) y deja la URL como comentario en el PR.
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+  id-token: write
+  pull-requests: write
+
+concurrency:
+  group: preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+env:
+  PROYECTO: municipio-ia
+
+jobs:
+  preview:
+    # Los PR desde forks no reciben token de Google: solo PR del mismo repo.
+    if: github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Armar el sitio
+        run: bash scripts/build-site.sh
+
+      - name: Entrar a Google Cloud
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: projects/359679900643/locations/global/workloadIdentityPools/github/providers/github-actions
+          service_account: github-deploy@municipio-ia.iam.gserviceaccount.com
+
+      - name: Publicar en canal de vista previa
+        id: canal
+        run: |
+          CANAL="pr-${{ github.event.pull_request.number }}"
+          npx --yes firebase-tools@13 hosting:channel:deploy "$CANAL" \
+            --project "$PROYECTO" --expires 14d --non-interactive --json > salida.json
+          cat salida.json
+          URL=$(node -e 'const r=require("./salida.json").result; const v=Object.values(r)[0]; console.log(v.url)')
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "Vista previa: $URL" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Comentar la URL en el PR
+        uses: actions/github-script@v7
+        env:
+          URL: ${{ steps.canal.outputs.url }}
+        with:
+          script: |
+            const marca = '<!-- vista-previa-nande -->';
+            const body = `${marca}\n🔎 **Vista previa lista**: ${process.env.URL}\n\n` +
+              `Commit \`${context.payload.pull_request.head.sha.slice(0, 7)}\` · vence en 14 días. Abrila desde el celular.`;
+            const { owner, repo } = context.repo;
+            const issue_number = context.payload.pull_request.number;
+            const comentarios = await github.paginate(github.rest.issues.listComments, { owner, repo, issue_number });
+            const viejo = comentarios.find(c => c.body && c.body.includes(marca));
+            if (viejo) {
+              await github.rest.issues.updateComment({ owner, repo, comment_id: viejo.id, body });
+            } else {
+              await github.rest.issues.createComment({ owner, repo, issue_number, body });
+            }

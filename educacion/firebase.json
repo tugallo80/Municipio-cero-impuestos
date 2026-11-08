@@ -1,0 +1,39 @@
+{
+  "functions": [
+    {
+      "source": "services/ai-gateway",
+      "codebase": "educacion",
+      "runtime": "nodejs22",
+      "ignore": ["node_modules", "test", ".git", "*.log"]
+    }
+  ],
+  "hosting": {
+    "site": "nande-educacion",
+    "public": "apps/web/dist",
+    "cleanUrls": true,
+    "trailingSlash": true,
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "headers": [
+      {
+        "source": "**",
+        "headers": [
+          { "key": "Permissions-Policy", "value": "microphone=(self), camera=(), geolocation=()" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        ]
+      },
+      {
+        "source": "**/*.html",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "/voz/**",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      },
+      {
+        "source": "/firebase-config.json",
+        "headers": [{ "key": "Cache-Control", "value": "no-cache" }]
+      }
+    ]
+  }
+}
