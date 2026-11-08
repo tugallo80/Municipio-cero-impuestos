@@ -43,4 +43,24 @@ Rama: `sesion/edu-01b` (parte de `sesion/edu-01`, PR #2, + rama de la maestra).
 
 ## Cierre
 
-_(se completa al terminar)_
+PR #4 (`sesion/edu-01b` → `main`), sin mergear. Vista previa: canal `pr-4` de Firebase Hosting.
+
+**Hecho**
+- Láminas A–D, cartas (8), viñetas (3 hojas) y fichas de votación en `docs/educacion/talleres/`
+  (PDF A3 + PNG + vistas JPG), con `README.md` e `index.html`. Generador en `tools/talleres/`.
+- Maqueta del alumno v2: misión → llave → lugar (Parque escondido, Cuarto de objetos perdidos)
+  con niebla, pista y sonido; puente colectivo; casa propia y visitas con reacciones de lista;
+  frases/emotes; apodos de lista; pedir ayuda / ayudar (llave de mentor) / avisar a la profe;
+  repaso + escalera de Kay + feedback concreto; cierre natural a las 2 misiones; 2 minijuegos
+  (Picnic de fracciones, ¿De quién es?). Sin puntos, nivel, ranking ni rachas.
+- Perfil psicopedagógico nuevo (tutor y padres), padres con "Cómo aprende" y sin "Pagos".
+- Probado con Playwright a 390 px: flujo completo sin errores de JS; ~18 fps sin GPU (software).
+
+**Pendiente**
+- Guion final de los lugares secretos y de los minijuegos (lo escribe el dueño).
+- Imprimir y correr los talleres; con los resultados, elegir el mundo (A–D o híbrido B + D).
+- Panel del docente para el mundo compartido (registro de interacciones, alertas, silenciar,
+  horarios) y opción de padres para apagar lo social → EDU.04 / EDU.09.
+- Qué pasa al completar el puente (la "otra orilla") → guion del dueño.
+- Las láminas son bocetos: el arte final se define después de los talleres (EDU.06/EDU.07).
+
