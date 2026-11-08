@@ -115,6 +115,21 @@ isla vieja se reemplazó por la ciudad del diseño (vista "Ciudad" de la vitrina
 - Probado con Playwright (915×412, táctil) en las 6 evoluciones: se camina, el cartel "Entrar ·
   Mate" abre el aula y la profe responde, sin errores.
 
+**Ajustes del colegio por dentro (pedido MAESTRA 2)**
+- Horcones solo en las esquinas y uno al medio de cada lado de la galería, con choque chico (el
+  alumno no se traba).
+- **Cámara de "zona interior"** (reutilizable para aulas y casas: `zonasInteriores`): al entrar al
+  colegio baja suave a la altura de los ojos, por detrás del hombro; al salir vuelve a la vista de
+  arriba. El pulgar derecho sigue mirando, el pellizco aleja un poco, y si hay una pared o un horcón
+  detrás la cámara se acerca en vez de atravesarlo. El toborochi del patio se aclara si queda en el
+  medio, y el cartel "Entrar" baja para no quedar bajo la barra de arriba.
+- Arreglado el **techo negro** del colegio (la forma no tenía normales y la luz no la iluminaba).
+- Pantalla "▶ Jugar": si la app no está instalada, botón grande "📲 Instalar ÑANDÉ"; si Chrome no
+  lo ofrece, dos pasos (⋮ → "Instalar app" / "Agregar a pantalla de inicio").
+- El manifest cumple lo que pide Chrome para instalar: íconos 192 y 512, service worker con
+  `fetch`, `start_url` dentro del `scope`, https. `display: fullscreen` es válido, con
+  `display_override` que cae a `standalone` donde no hay pantalla completa.
+
 **Pendiente**
 - **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
   `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los

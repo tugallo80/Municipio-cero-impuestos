@@ -209,6 +209,10 @@
   .inicio h1 { font-size: 30px; margin: 10px 0 4px; }
   .inicio p, .girar p { color: #cbd5e1; font-size: 15px; line-height: 1.4; max-width: 320px; margin: 0 auto; }
   .inicio .bj { min-height: 64px; padding: 0 40px; font-size: 22px; margin-top: 18px; }
+  .inicio .instalar-inicio { display: inline-flex; margin-top: 14px; min-height: 52px; padding: 0 20px; font-size: 16px; font-weight: 700; color: #04261B; background: #FDE047; border-color: #FEF9C3; border-radius: 16px; }
+  .inicio .instalar-inicio[hidden], .pasos-instalar[hidden] { display: none; }
+  .pasos-instalar { margin: 12px auto 0; max-width: 340px; text-align: left; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.2); border-radius: 14px; padding: 10px 14px; font-size: 14px; color: #e2e8f0; }
+  .pasos-instalar ol { margin: 6px 0 0 18px; } .pasos-instalar li { margin: 3px 0; }
   .inicio .sug, .girar .sug { margin-top: 14px; background: transparent; color: #cbd5e1; border-color: rgba(255,255,255,.2); }
   .girar { z-index: 95; display: none; }
   .nota-rot { font-size: 13px !important; margin-top: 10px !important; color: #FDE68A !important; }
@@ -298,6 +302,11 @@
     <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
     <p class="solo-vertical nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
     <button class="bj" id="jugar">▶ Jugar</button><br>
+    <button class="sug instalar-inicio" id="instalar-inicio" hidden>📲 Instalar ÑANDÉ (pantalla completa sin avisos)</button>
+    <div class="pasos-instalar" id="pasos-instalar" hidden>
+      <b>Instalar en 2 pasos</b>
+      <ol><li>Tocá los <b>⋮</b> de Chrome (arriba a la derecha).</li><li>Elegí <b>“Instalar app”</b> o <b>“Agregar a pantalla de inicio”</b>, y abrí ÑANDÉ desde el ícono.</li></ol>
+    </div>
     <button class="sug solo-vertical" id="seguir-vertical-1">Seguir en vertical</button>
   </div>
 </div>
@@ -802,6 +811,19 @@ async function instalarApp() {
     <p style="margin:8px 0;color:#cbd5e1">Después abrí <b>ÑANDÉ</b> desde el ícono.</p>
     <button class="bj ancho" onclick="cerrar()">Entendido</button>`);
 }
+// en la pantalla de "▶ Jugar": botón grande para instalar si todavía no está instalada
+{
+  const bInst = document.getElementById('instalar-inicio'), pasos = document.getElementById('pasos-instalar');
+  if (bInst && !yaInstalada()) {
+    bInst.hidden = false;
+    bInst.onclick = async e => {
+      e.stopPropagation();
+      if (pedidoInstalar) { pedidoInstalar.prompt(); const r = await pedidoInstalar.userChoice; pedidoInstalar = null; if (r.outcome === 'accepted') bInst.hidden = true; }
+      else pasos.hidden = !pasos.hidden;   // Chrome no lo ofreció: los 2 pasos a mano
+    };
+    addEventListener('appinstalled', () => { bInst.hidden = true; pasos.hidden = true; });
+  }
+}
 if ('serviceWorker' in navigator) addEventListener('load', () => { navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {}); });
 
 function pedirAyuda(id) {
@@ -972,7 +994,7 @@ let THREE = null;
 for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e) { /* probar la siguiente */ } }
 // ---- EDU.06a: la evolución del mundo según el curso del alumno ----
 // P1–P2 → 1 Bloques · P3–P4 → 2 Piezas · P5–P6 → 3 Mundo real · S1–S2 → 4 Horizonte · S3–S5 → 5 Mundo vivo · S6 → 6 Promo
-const VERSION_ESTILOS = 'edu06a-2';
+const VERSION_ESTILOS = 'edu06a-3';
 // parámetros por ?… o por #… (el # sobrevive a cualquier redirección del servidor)
 const QS = new URLSearchParams(location.search.slice(1) + '&' + location.hash.replace(/^#/, ''));
 // modo demo: ?demo=1 lo prende y queda guardado en este celular (así la app instalada también muestra
@@ -1071,7 +1093,8 @@ function iniciar(THREE) {
   function techo(padre, y, w, l, h, color, material) {
     const c = material || color;
     if (N === 1) { bloque(0, y + .25, 0, w, .5, l, c, padre); bloque(0, y + .75, 0, w * .75, .5, l * .72, c, padre); bloque(0, y + 1.15, 0, w * .46, .4, l * .44, c, padre); return; }
-    const m = new THREE.Mesh(EVO.techoHip(w, l, h), material || mat(color)); m.position.y = y; padre.add(m);
+    let g = EVO.techoHip(w, l, h); if (!g.attributes.normal) { if (g.index) g = g.toNonIndexed(); g.computeVertexNormals(); }   // sin normales la luz lo deja negro
+    const m = new THREE.Mesh(g, material || mat(color)); m.position.y = y; padre.add(m);
   }
   function bloque(x, y, z, sx, sy, sz, color, padre = escena) {
     const m = new THREE.Mesh(caja, typeof color === 'string' ? mat(color) : color);
@@ -1089,6 +1112,7 @@ function iniciar(THREE) {
     s.scale.set(ancho / 96 * .75, .75, 1); s.renderOrder = 6; return s;
   }
   const solidos = [];   // cajas de choque
+  const zonasInteriores = []; window.__solidos = solidos;   // { nombre, caja: Box3 }: adentro, cámara peatonal (EDU.06a)
   const tocables = [];  // mallas tocables con userData.toca = { tipo, id }
   const interes = [];   // puntos con botón contextual { pos, texto, accion }
   function hacerTocable(g, toca) { g.traverse(o => { if (o.isMesh || o.isSprite) { o.userData.toca = toca; tocables.push(o); } }); }
@@ -1157,12 +1181,12 @@ function iniciar(THREE) {
   };
 
   // --- Árboles de la flora cruceña (las áreas verdes que todavía están libres) ---
-  function arbol(x, z, k = 1, tipo = 0) {
-    bloque(x, 1.2 * k, z, .6 * k, 2.4 * k, .6 * k, N >= 2 ? EVO.P.tronco || '#6B4A33' : '#7c4a1e');
+  function arbol(x, z, k = 1, tipo = 0, padre = escena) {
+    bloque(x, 1.2 * k, z, .6 * k, 2.4 * k, .6 * k, N >= 2 ? EVO.P.tronco || '#6B4A33' : '#7c4a1e', padre);
     const flor = tipo === 1 ? (N >= 2 ? EVO.P.tajiboAm : '#FDE047') : tipo === 2 ? (N >= 2 ? EVO.P.tajiboRo : '#f472b6') : null;
     const verde = N >= 2 ? [EVO.P.bosque2, EVO.P.bosque3, EVO.P.bosque4][(Math.abs(x * 7 + z * 3) | 0) % 3] : ['#2f8f46', '#3fa356', '#4cb865'][(Math.abs(x * 7 + z * 3) | 0) % 3];
-    if (N === 1) { bloque(x, 3 * k, z, 2.6 * k, 1.8 * k, 2.6 * k, flor || verde); bloque(x, 4.1 * k, z, 1.5 * k, .8 * k, 1.5 * k, flor || '#4cb865'); }
-    else { bola(x, 3.2 * k, z, 3.2 * k, 2.4 * k, 3.2 * k, flor || verde); bola(x + .6 * k, 4.2 * k, z - .3 * k, 2 * k, 1.6 * k, 2 * k, flor || EVO.P.bosque4); }
+    if (N === 1) return [bloque(x, 3 * k, z, 2.6 * k, 1.8 * k, 2.6 * k, flor || verde, padre), bloque(x, 4.1 * k, z, 1.5 * k, .8 * k, 1.5 * k, flor || '#4cb865', padre)];
+    return [bola(x, 3.2 * k, z, 3.2 * k, 2.4 * k, 3.2 * k, flor || verde, padre), bola(x + .6 * k, 4.2 * k, z - .3 * k, 2 * k, 1.6 * k, 2 * k, flor || EVO.P.bosque4, padre)];
   }
 
   // --- El colegio: casona con galerías y horcones alrededor de un patio con aljibe ---
@@ -1184,18 +1208,28 @@ function iniciar(THREE) {
   techoAla(0, (CE + CK) / 2, 2 * CE + 1.2, CE - CK + 1, 2.4);
   techoAla(-(CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
   techoAla((CE + CK) / 2, 0, CE - CK + 1, 2 * CK, 2.2);
+  techosCol.traverse(o => { o.userData.sinContorno = true; }); window.__techos = techosCol;   // se aclaran adentro: sin contorno de tinta
   // galería: piso de baldosa y horcones en el borde del patio
   bloque(0, .04, 0, 2 * CI, .08, 2 * CI, N >= 2 ? EVO.P.piso : '#e08a5e', colegio);
   bloque(0, .07, 0, 2 * CK, .08, 2 * CK, C_PASTO, colegio);
   bloque(0, .1, 0, 1.4, .04, 2 * CK, C_PATIO, colegio); bloque(0, .1, 0, 2 * CK, .04, 1.4, C_PATIO, colegio);
-  for (let t = -CK; t <= CK + .01; t += CK / 2) for (const [x, z] of [[t, -CK], [t, CK], [-CK, t], [CK, t]]) bloque(x, HW / 2, z, .3, HW, .3, C_HORCON, colegio);
+  // horcones: solo en las esquinas y uno al centro de cada lado de la galería, con colisión (caja chica)
+  for (const [x, z] of [[-CK, -CK], [0, -CK], [CK, -CK], [CK, 0], [CK, CK], [0, CK], [-CK, CK], [-CK, 0]]) {
+    bloque(x, HW / 2, z, .34, HW, .34, C_HORCON, colegio); bloque(x, .12, z, .6, .24, .6, N >= 2 ? EVO.P.piedra : '#cbd5e1', colegio);
+    solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(x, 1.5, z), new THREE.Vector3(.36, 3, .36)));
+  }
+  // zona interior (genérica): adentro, la cámara baja a vista peatonal. Se usa igual para aulas y casas con interior.
+  zonasInteriores.push({ nombre: 'colegio', caja: new THREE.Box3(new THREE.Vector3(-CE + .2, 0, -CE + .2), new THREE.Vector3(CE - .2, 6, CE + .4)) });
   for (const [x, z, w, l] of [[0, -CK, 2 * CK + .4, .3], [0, CK, 2 * CK + .4, .3], [-CK, 0, .3, 2 * CK + .4], [CK, 0, .3, 2 * CK + .4]]) bloque(x, HW - .1, z, w, .2, l, N >= 2 ? EVO.P.madera : '#8a5a35', colegio);
   // aljibe en el centro y un toborochi en una esquina del patio
   bloque(0, .5, 0, 1.8, 1, 1.8, N >= 2 ? EVO.P.piedra : '#cbd5e1', colegio); bloque(0, 1.02, 0, 1.3, .04, 1.3, N >= 2 ? EVO.P.rioOsc : '#0ea5e9', colegio);
   for (const sx of [-.7, .7]) bloque(sx, 1.6, 0, .14, 2.2, .14, C_HORCON, colegio);
   techo((() => { const g = new THREE.Group(); g.position.set(0, 0, 0); colegio.add(g); return g; })(), 2.6, 2, 1.2, .6, C_TEJA);
   solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1.9, 2, 1.9)));
-  arbol(-3.2, -3.2, .75, 2);
+  // el toborochi del patio se aclara si queda entre la cámara y el alumno (con la cámara a la altura de los ojos)
+  const arbolPatio = dinamico(new THREE.Group()); colegio.add(arbolPatio);
+  const copasPatio = arbol(-3.2, -3.2, .75, 2, arbolPatio);
+  const matCopa = copasPatio[0].material.clone(); copasPatio.forEach(m => { m.material = matCopa; m.userData.sinContorno = true; });
   // bandera en la plazuela del frente
   bloque(-4.5, 3, CE + 4, .2, 6, .2, '#e5e7eb');
   const bandera = dinamico(bloque(-3.7, 5.4, CE + 4, 1.4, .8, .08, '#10B981'));
@@ -1616,6 +1650,8 @@ function iniciar(THREE) {
   // --- Bucle ---
   const reloj = new THREE.Clock();
   const objetivoCam = new THREE.Vector3();
+  const cabeza = new THREE.Vector3(), dirCam = new THREE.Vector3(), golpe = new THREE.Vector3(), rayoCam = new THREE.Ray();
+  let adentro = 0;
   const punto = new THREE.Vector3();
   const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || Math.abs(x) > LIM || Math.abs(z) > LIM; };
   function bucle() {
@@ -1672,10 +1708,11 @@ function iniciar(THREE) {
     const verCartel = cercano && !window.__pausa && !piloto;
     if (verCartel) {
       if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
-      proy.set(cercano.pos.x, cercano.alto || 3, cercano.pos.z).project(camara);
+      const ad = window.__adentro || 0;   // a la altura de los ojos el cartel va más bajo, para que no lo tape la barra de arriba
+      proy.set(cercano.pos.x, (cercano.alto || 3) * (1 - ad * .45), cercano.pos.z).project(camara);
       const W = innerWidth, H = innerHeight, cw = cartelPuerta.offsetWidth, ch = cartelPuerta.offsetHeight;
       let x = (proy.x + 1) / 2 * W - cw / 2, y = (1 - proy.y) / 2 * H - ch;
-      x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(60, Math.min(H - ch - 90, y));
+      x = Math.max(8, Math.min(W - cw - 8, x)); y = Math.max(60 + ad * 50, Math.min(H - ch - 90, y));
       cartelPuerta.style.transform = `translate3d(${x | 0}px, ${y | 0}px, 0)`;
     } else if (cartelDe) { cartelPuerta.classList.remove('ver'); cartelDe = null; }
     if (cercano && cercano.lugar && ultimoSonido !== cercano.lugar && !window.S.abiertos.has(cercano.lugar)) { window.sonar(cercano.lugar === 'parque' ? 'pajaros' : 'clic'); }
@@ -1703,8 +1740,8 @@ function iniciar(THREE) {
     bandera.scale.y = .8 + Math.sin(t * 3) * .05;
     // adentro del colegio, los techos se ven casi transparentes
     { const adentro = Math.abs(yo.position.x) < 14 && Math.abs(yo.position.z) < 14;
-      const op = matTechoCol.opacity + ((adentro ? .18 : 1) - matTechoCol.opacity) * Math.min(1, dt * 6);
-      if (Math.abs(op - matTechoCol.opacity) > .002) { matTechoCol.opacity = op; const tr = op < .99; if (tr !== matTechoCol.transparent) { matTechoCol.transparent = tr; matTechoCol.depthWrite = !tr; matTechoCol.needsUpdate = true; } } }
+      const meta = adentro ? .18 : 1; let op = matTechoCol.opacity + (meta - matTechoCol.opacity) * Math.min(1, dt * 6); if (Math.abs(meta - op) < .01) op = meta;
+      if (op !== matTechoCol.opacity) { matTechoCol.opacity = op; const tr = op < .99; if (tr !== matTechoCol.transparent) { matTechoCol.transparent = tr; matTechoCol.depthWrite = !tr; matTechoCol.needsUpdate = true; } } }
 
     // panel abierto a la derecha → el mundo se corre a la izquierda (suave)
     const quiere = window.__corrimiento || 0;
@@ -1718,10 +1755,36 @@ function iniciar(THREE) {
     let dY = CAM.yawObj - CAM.yaw; dY = Math.atan2(Math.sin(dY), Math.cos(dY)); CAM.yaw += dY * k; CAM.yawObj = CAM.yaw + (dY * (1 - k));
     CAM.pitch += (CAM.pitchObj - CAM.pitch) * k;
     CAM.zoom += (CAM.zoomObj - CAM.zoom) * k;
-    const dist = CAM.dist * CAM.zoom, horiz = Math.cos(CAM.pitch) * dist;
-    objetivoCam.set(yo.position.x + Math.sin(CAM.yaw) * horiz, yo.position.y + Math.sin(CAM.pitch) * dist, yo.position.z + Math.cos(CAM.yaw) * horiz);
-    camara.position.lerp(objetivoCam, Math.min(1, dt * 6));
-    camara.lookAt(yo.position.x - Math.sin(CAM.yaw) * 2, yo.position.y + 1, yo.position.z - Math.cos(CAM.yaw) * 2);
+    // vista normal (de arriba) o peatonal en una zona interior: se mezclan suave con "adentro" (0–1)
+    punto.set(yo.position.x, 1, yo.position.z);
+    const quiereAdentro = zonasInteriores.some(zn => zn.caja.containsPoint(punto)) ? 1 : 0;
+    adentro += (quiereAdentro - adentro) * Math.min(1, dt * 3);
+    window.__adentro = adentro;
+    const pitchAfuera = CAM.pitch, pitchAdentro = Math.min(.9, Math.max(.08, .26 + (CAM.pitch - CAM.pitch0) * .7));
+    const distAfuera = CAM.dist * CAM.zoom, distAdentro = 4.6 * Math.min(1.6, Math.max(.7, CAM.zoom));   // el pellizco aleja un poco
+    const pitch = pitchAfuera + (pitchAdentro - pitchAfuera) * adentro;
+    let dist = distAfuera + (distAdentro - distAfuera) * adentro;
+    const ojos = 1 + 1.1 * adentro, hombro = .7 * adentro;   // a la altura de los ojos, por detrás del hombro
+    cabeza.set(yo.position.x + Math.cos(CAM.yaw) * hombro, yo.position.y + ojos, yo.position.z - Math.sin(CAM.yaw) * hombro);
+    dirCam.set(Math.sin(CAM.yaw) * Math.cos(pitch), Math.sin(pitch), Math.cos(CAM.yaw) * Math.cos(pitch));
+    if (adentro > .02) {
+      // que la cámara no atraviese paredes ni horcones: si choca, se acerca
+      rayoCam.set(cabeza, dirCam);
+      for (const b of solidos) { if (b.containsPoint(cabeza)) continue; const hit = rayoCam.intersectBox(b, golpe); if (hit) { const d = hit.distanceTo(cabeza) - .35; if (d < dist) dist = Math.max(.6, d); } }
+    }
+    objetivoCam.copy(cabeza).addScaledVector(dirCam, dist);
+    if (adentro <= .02) objetivoCam.y = yo.position.y + Math.sin(pitch) * dist;
+    camara.position.lerp(objetivoCam, Math.min(1, dt * (adentro > .02 ? 9 : 6)));
+    { // copa del toborochi del patio: ¿queda entre la cámara y el alumno? → se aclara
+      const ax = camara.position.x, az = camara.position.z, bx = cabeza.x - ax, bz = cabeza.z - az, l2 = bx * bx + bz * bz || 1;
+      const u = Math.max(0, Math.min(1, ((-3.2 - ax) * bx + (-3.2 - az) * bz) / l2)), dx = ax + bx * u + 3.2, dz = az + bz * u + 3.2;
+      const meta = adentro > .3 && dx * dx + dz * dz < 2.6 ? .22 : 1;
+      let op = matCopa.opacity + (meta - matCopa.opacity) * Math.min(1, dt * 8); if (Math.abs(meta - op) < .01) op = meta;
+      if (op !== matCopa.opacity) { matCopa.opacity = op; const tr = op < .99; if (tr !== matCopa.transparent) { matCopa.transparent = tr; matCopa.depthWrite = !tr; matCopa.needsUpdate = true; } } }
+    const fovQuiere = (innerHeight > innerWidth ? 58 : 46) + 12 * adentro;
+    if (Math.abs(camara.fov - fovQuiere) > .05) { camara.fov = fovQuiere; camara.updateProjectionMatrix(); }
+    const adelante = 2 - 1.2 * adentro;
+    camara.lookAt(cabeza.x - Math.sin(CAM.yaw) * adelante, cabeza.y - (1 - adentro) * 0 + adentro * .1, cabeza.z - Math.cos(CAM.yaw) * adelante);
     if (EVO) EVO.render(renderer, escena, camara); else renderer.render(escena, camara);
     medirFps(t);
     requestAnimationFrame(bucle);

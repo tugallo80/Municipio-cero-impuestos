@@ -115,10 +115,12 @@ export async function crearEvolucion(THREE, n) {
 
   // ---- contorno de tinta para una malla suelta (personajes, piezas que se mueven)
   function contornear(malla) {
-    if (!grosor || !malla.isMesh || malla.userData.esContorno || malla.material.transparent) return;
+    if (!grosor || !malla.isMesh || malla.userData.esContorno || malla.userData.sinContorno || malla.material.transparent) return;
     const c = new THREE.Mesh(malla.geometry, tinta);
-    const s = malla.scale;
-    c.scale.set(1 + grosor * 2 / Math.max(0.05, s.x), 1 + grosor * 2 / Math.max(0.05, s.y), 1 + grosor * 2 / Math.max(0.05, s.z));
+    // el contorno crece "grosor" en cada lado según el tamaño real de la pieza (geometría × escala)
+    if (!malla.geometry.boundingBox) malla.geometry.computeBoundingBox();
+    const t = malla.geometry.boundingBox.getSize(new THREE.Vector3()).multiply(malla.scale);
+    c.scale.set(1 + grosor * 2 / Math.max(0.05, t.x), 1 + grosor * 2 / Math.max(0.05, t.y), 1 + grosor * 2 / Math.max(0.05, t.z));
     c.userData.esContorno = true;
     malla.add(c);
   }
