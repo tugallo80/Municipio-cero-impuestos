@@ -121,6 +121,7 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - `docs/investigacion/transporte-municipal.md` — parque, modelo financiero y ley del transporte.
 - `docs/investigacion/experiencia-del-alumno.md` — psicología infantil, juego y mundo compartido.
 - `docs/educacion/protocolo-focus-group.md` — talleres de co-diseño con niños.
+- `docs/investigacion/voz-del-tutor.md` — voz femenina, masculina o que elija el niño.
 
 ## Decisiones pendientes del dueño
 
