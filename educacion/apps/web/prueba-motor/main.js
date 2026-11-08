@@ -101,7 +101,7 @@ function ponerEstado(e) {
 // Cierre al despedirse: Kay debería llamar a terminar_conversacion, pero el modelo
 // a veces se despide sin llamarla. Respaldo: si el alumno se despidió, se corta
 // cuando termina de sonar la despedida de Kay (o a los 15 s, por las dudas).
-const DESPEDIDA = /\b(chau|chao|adi[oó]s|nos vemos|hasta (luego|mañana)|ya termin[eé])\b/i
+const DESPEDIDA = /\b(chau|chao|adi[oó]s|nos vemos|hasta (luego|mañana)|ya termin[eé])/i
 let textoAlumnoTurno = ''
 let cierrePendiente = null
 function programarCierre(motivo) {

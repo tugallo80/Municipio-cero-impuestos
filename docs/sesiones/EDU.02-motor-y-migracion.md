@@ -38,24 +38,39 @@ alcanza una página técnica mínima.
 - Las Functions aparecen desplegadas en `municipio-ia` y sus logs se ven con `claude-code`.
 - Ningún módulo de la raíz cambió de comportamiento.
 
-## Cierre (8-nov-2026, en curso)
+## Cierre (8-nov-2026)
 
-**Hecho**
-- Educación es app aparte: sitio de Hosting `nande-educacion` (https://nande-educacion.web.app),
-  con `/prueba-motor/` (página técnica) y `/maqueta/` (EDU.01). Workflow `.github/workflows/educacion.yml`.
+**Hecho** (PR #3, sin mergear; publicado desde la rama con permiso del dueño)
+- Educación es app aparte: sitio de Hosting `nande-educacion` → https://nande-educacion.web.app
+  con `/prueba-motor/` (página técnica) y `/maqueta/` (EDU.01). Workflow `.github/workflows/educacion.yml`
+  (se dispara con push a `educacion/**` en esta rama o en `main`).
 - Base propia `municipio-ia-educacion` (Realtime Database, cerrada al navegador), separada de la del municipio.
-- Functions `eduKayToken` y `eduKayUso` (codebase `educacion`) — ver `educacion/services/ai-gateway/README.md`.
+- Functions `eduKayToken` y `eduKayUso` (codebase `educacion`, Node 22, us-central1) — ACTIVE; sus logs
+  se leen con `claude-code` (`jsonPayload.evento="kay_uso"`). Ver `educacion/services/ai-gateway/README.md`.
 - Personalidad camba original: `educacion/services/ai-gateway/tutor/personalidad-kay.md`.
-- Voz por defecto **Sulafat** (Google la describe como "cálida"); la página deja elegir entre 6.
-- Privacidad: instrucción armada en el servidor y bloqueada en el token efímero; sin nombre del alumno.
+- Privacidad: instrucción armada en el servidor y bloqueada en el token efímero (probado: el navegador
+  no la puede cambiar); a Gemini solo llegan curso, estilo y contenido (prueba automática).
 - Cuota: 8 charlas/día, 10 min/charla, 600.000 tokens/día por alumno, tope global USD 5/día.
-- Cuenta de prueba `prueba` (sin nombre; clave solo como hash bcrypt en el repo, la tiene el dueño por chat).
-- Registro libre de cuentas desactivado.
+- Cuenta de prueba `prueba` (sin nombre; en el repo solo el hash bcrypt de la clave). Registro libre desactivado.
+- Clave pública del navegador limitada a login (ya no sirve para Gemini).
+- Prueba de punta a punta automática en cada deploy: voz real → Kay entiende → guía sin dar la
+  respuesta → registra costo; 6 voces; intento de inyección rechazado.
+
+**Medido** (8-nov, Gemini 3.1 Flash Live preview): **~USD 0,025–0,03 por minuto de charla**
+(~2.500 tokens por turno corto; el contexto de ~2.000 tokens de texto se vuelve a cobrar en cada turno).
+10 min/día × 180 días ≈ USD 45–55 por alumno/año: más que la estimación de la investigación (USD 20).
+Para bajarlo: acortar la instrucción, caché de contexto, o voz en el dispositivo (EDU.11).
+
+**Voz**: por defecto **Sulafat** (Google la describe como "cálida"). Las 6 voces funcionan; la elección
+final la hace el dueño escuchando en el celular (Claude no puede escuchar audio).
 
 **Pendiente**
-- El dueño corre en Cloud Shell `tools/cloudshell/configurar-nande.sh municipio-ia aplicar` (activa
-  `cloudbilling` y otras APIs que pide el deploy de Functions, deja compilar a la cuenta de
-  cómputo, y da `apiKeysAdmin` al deploy para limitar la clave pública del navegador).
-- WhatsApp fuera de alcance (falta firma de Twilio) → ficha nueva. Procesador de PDF → EDU.04.
-- Precios de la voz tomados de agregadores: confirmar en ai.google.dev/pricing.
-
+- Prueba del dueño en el celular y elegir voz.
+- El modelo a veces se despide sin llamar a `terminar_conversacion`: la página corta sola al detectar
+  la despedida del alumno (respaldo). Revisar con modelos nuevos.
+- WhatsApp fuera de alcance (falta firma de Twilio; el webhook viejo sigue en Vercel) → ficha nueva.
+  Procesador de PDF → EDU.04 (exigir rol de tutor).
+- Precios tomados de agregadores: confirmar en ai.google.dev/pricing (`src/costos.js`).
+- Sin moderación de contenido aparte (solo instrucciones de la personalidad) → antes de usar con
+  alumnos reales.
+- `workflow_dispatch` no se puede disparar desde la sesión (403 de la integración): se dispara con push.
