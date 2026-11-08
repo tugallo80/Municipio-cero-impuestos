@@ -95,7 +95,7 @@ if (solo === 'todo' || solo === 'fps') {
   for (const [f, [w, h]] of Object.entries(FORMATOS)) {
     for (const e of ESTILOS) {
       const p = await pagina(w, h, 1);
-      await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=general`);
+      await abrir(p, `/educacion/estilos/escena.html?estilo=${e}&vista=general&calidad=fija`);
       await p.waitForTimeout(1500);
       const fps = await medir(p);
       const d = await p.evaluate(() => window.__info());

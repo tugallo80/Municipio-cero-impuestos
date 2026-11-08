@@ -1355,8 +1355,26 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     escalaResolucion: esC ? 0.45 : 1, conContorno: esB, nivel,
     antialias: nivel >= 5, maxPixelRatio: nivel === 6 ? 2 : 1.5,
     // deja el renderer listo para esta escena (sombras, tono de color, luz de cielo)
+    // calidad automática (5 y 6): si los fps caen de 30, se baja por pasos para que la demo no se trabe
+    calidad: nivel >= 5 ? 3 : 0, sinBrillo: false, sinSombras: false,
+    bajarCalidad() {
+      if (this.calidad <= 0) {
+        if (nivel >= 5 && !this.minimo) { this.minimo = true; return { texto: 'resolución mínima', resolucion: 0.75 }; }
+        return null;
+      }
+      this.calidad--;
+      if (this.calidad === 2) { for (const p of particulas) p.pts.visible = false; return { texto: 'menos resolución', resolucion: 1 }; }
+      if (this.calidad === 1 && nivel === 6) { this.sinBrillo = true; return { texto: 'sin brillo' }; }
+      // último paso: sin sombras en tiempo real (vuelven las sombras falsas)
+      this.calidad = 0; this.sinSombras = true;
+      if (sol) sol.castShadow = false;
+      escena.traverse(o => {
+        if (o.material) { o.material.needsUpdate = true; if (o.renderOrder === 1 && o.material.opacity < 0.5) o.material.opacity = 0.6; }
+      });
+      return { texto: 'sin sombras' + (nivel === 6 ? ' ni brillo' : ''), sinBrillo: (this.sinBrillo = true) };
+    },
     prepararRender(renderer) {
-      renderer.shadowMap.enabled = sombrasReales;
+      renderer.shadowMap.enabled = sombrasReales && !this.sinSombras;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap;
       renderer.toneMapping = nivel === 6 ? THREE.ACESFilmicToneMapping : THREE.NoToneMapping;
       renderer.toneMappingExposure = 1.0;
@@ -1371,7 +1389,7 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     // dibuja: en la 6 con brillo (bloom) y corrección de color propia
     render(renderer, camara) {
       this.prepararRender(renderer);
-      if (nivel === 6) { if (!this._bloom) this._bloom = crearBloom(THREE, renderer); this._bloom.render(escena, camara); }
+      if (nivel === 6 && !this.sinBrillo) { if (!this._bloom) this._bloom = crearBloom(THREE, renderer); this._bloom.render(escena, camara); }
       else renderer.render(escena, camara);
     },
     animar(t, camara, objetivo) {

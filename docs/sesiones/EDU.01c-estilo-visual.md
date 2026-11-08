@@ -153,6 +153,13 @@ En este servidor todo lo pesado lo hace el procesador, así que 5 y 6 caen fuert
 brillo son trabajo típico de GPU). En una tablet/celular con GPU decente se espera bastante más,
 pero **hay que medirlo en el equipo real** antes de la presentación: si la 6 no llega a 30 fps,
 bajar la resolución a 1,5x, el mapa de sombras a 1024 y apagar las partículas.
+**Calidad automática (pedido de la MAESTRA 2):** en 5 y 6, si los fps quedan 2 segundos seguidos
+debajo de 30, la escena baja un paso sola y lo muestra junto a los fps ("auto: …"):
+1) resolución 1x y sin partículas → 2) sin brillo (solo 6) → 3) sin sombras en tiempo real (vuelven
+las sombras falsas) → 4) resolución 0,75x. Nunca vuelve a subir sola (para no parpadear); recargar
+la página la restablece. `?calidad=fija` la desactiva (se usa para medir). Probado con Playwright:
+baja por todos los pasos sin errores; en este servidor sin GPU igual queda en 5–6 fps (no hay
+tarjeta gráfica), en un equipo con GPU es la red de seguridad de la demo.
 
 **Riesgos (pedidos por la MAESTRA)**
 - **Alumnos que repiten de curso**: el mundo **nunca retrocede** de estilo; si repite, se queda
