@@ -58,6 +58,7 @@ const css = `
 @keyframes pv-respira{from{opacity:.15}to{opacity:.6}}
 #pv-pildora{position:fixed;left:50%;top:calc(108px + env(safe-area-inset-top));transform:translateX(-50%);z-index:56;display:none;align-items:center;gap:6px;background:rgba(15,26,23,.9);border:2px solid var(--pv-c,#10B981);border-radius:99px;padding:4px 4px 4px 12px;font:600 13px Inter,system-ui,sans-serif;color:#fff;white-space:nowrap;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 #pv-pildora.ver{display:flex}
+#pv-pildora [hidden]{display:none!important}
 #pv-pildora button{font:inherit;color:#fff;background:rgba(255,255,255,.1);border:0;border-radius:99px;min-height:34px;padding:0 10px;cursor:pointer}
 #pv-pildora .colgar{background:#DC2626}
 #pv-pildora #pv-sonido{background:#FDE047;color:#422006;font-weight:700;animation:pv-respira .8s ease-in-out infinite alternate}
@@ -417,7 +418,7 @@ function prepararSalida() {
   } catch { salidaPreparada = null }
 }
 // ── Modo diagnóstico (?diag=1): muestra en pantalla el estado del audio y deja probar el parlante ──
-if (new URLSearchParams(location.search).has('diag')) {
+if (new URLSearchParams(location.search).get('diag') === '1') {
   const caja = document.createElement('div')
   caja.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));z-index:80;background:rgba(0,0,0,.85);color:#fff;font:12px/1.35 monospace;padding:6px 10px;border-radius:10px;display:flex;gap:8px;align-items:center;max-width:96vw'
   caja.innerHTML = '<span id="pv-diag">audio: sin charla</span><button type="button" style="font:inherit;background:#FDE047;color:#000;border:0;border-radius:8px;padding:6px 8px">🔈 Probar parlante</button>'

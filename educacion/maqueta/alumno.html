@@ -65,6 +65,8 @@
   .pista-mirar .mano { display: inline-block; font-size: 22px; animation: deslizar 1.4s ease-in-out infinite; }
   @keyframes deslizar { 0%, 100% { transform: translateX(-14px); } 50% { transform: translateX(14px); } }
   body.con-panel .joy, body.con-panel .ayuda, body.con-panel .acciones { visibility: hidden; }
+  .boton-hud.pc[hidden] { display: none; }
+  .boton-hud.pc.resaltado { background: var(--oro); color: #422006; border-color: #fff; animation: latido 1.1s ease-in-out infinite; }
   .entrar { display: none; max-width: min(300px, 40vw); overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
   /* Botones de juego */
@@ -256,6 +258,7 @@
     <div><b id="apodo"></b><small>4to A · isla del curso</small></div>
     <span class="llaves" id="llaves" title="Tus llaves"></span>
   </div>
+  <button class="boton-hud pc" id="pantalla-completa" title="Pantalla completa" hidden>⛶</button>
   <a class="boton-hud salir" href="index.html" title="Salir">✕</a>
 </div>
 <div class="ayuda" id="ayuda">Mové el círculo para caminar · tocá un aula</div>
@@ -279,7 +282,7 @@
     <div class="tel solo-vertical" aria-hidden="true"></div>
     <h1>La isla de 4A</h1>
     <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
-    <p class="solo-vertical nota-rot">Si no gira, activá la <b>Rotación automática</b> en el panel rápido de tu celular (deslizá desde arriba).</p>
+    <p class="solo-vertical nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
     <button class="bj" id="jugar">▶ Jugar</button><br>
     <button class="sug solo-vertical" id="seguir-vertical-1">Seguir en vertical</button>
   </div>
@@ -289,7 +292,7 @@
     <div class="tel" aria-hidden="true"></div>
     <h2 class="t" style="font-size:24px;margin:10px 0 6px">Girá tu pantalla</h2>
     <p>La isla se ve mejor con el celular acostado 🙂</p>
-    <p class="nota-rot">Si no gira, activá la <b>Rotación automática</b> en el panel rápido de tu celular (deslizá desde arriba).</p>
+    <p class="nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
     <button class="bj" id="girar-jugar" style="margin-top:14px">🔄 Probar de nuevo</button><br>
     <button class="sug" id="seguir-vertical-2">Seguir en vertical</button>
   </div>
@@ -297,8 +300,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02c-6"></script>
-<script src="misiones-demo.js?v=edu02c-6"></script>
+<script src="datos-demo.js?v=edu02c-7"></script>
+<script src="misiones-demo.js?v=edu02c-7"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -359,6 +362,7 @@ addEventListener('pointerdown', () => audio(), { once: true });
 const leerSS = k => { try { return sessionStorage.getItem(k); } catch (e) { return null; } };
 const guardarSS = (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) {} };
 async function pantallaJuego() {
+  // Se intenta SIEMPRE: con la Rotación automática apagada, pantalla completa + lock('landscape') igual acuesta la pantalla en Android.
   const el = document.documentElement;
   try {
     if (!document.fullscreenElement && el.requestFullscreen) await el.requestFullscreen({ navigationUI: 'hide' });
@@ -368,11 +372,13 @@ async function pantallaJuego() {
 }
 function empezar() {
   audio();
+  const yaJugaba = document.body.classList.contains('jugando');
   $('#inicio').hidden = true;
+  quierePC = hayPC;
   document.body.classList.add('jugando');
   guardarSS('alumno-jugando', '1');
-  pantallaJuego();
-  setTimeout(() => toast('🎙️ Tocá la cara de un profe para hablarle', 3200), 2500);
+  pantallaJuego().then(pintarPC);
+  if (!yaJugaba) setTimeout(() => toast('🎙️ Tocá la cara de un profe para hablarle', 3200), 2500);
 }
 function seguirVertical() { document.body.classList.add('vertical-ok'); guardarSS('alumno-vertical', '1'); if (!document.body.classList.contains('jugando')) empezar(); }
 $('#jugar').onclick = empezar;
@@ -380,8 +386,24 @@ $('#seguir-vertical-1').onclick = seguirVertical;
 $('#seguir-vertical-2').onclick = seguirVertical;
 $('#girar-jugar').onclick = pantallaJuego;
 if (leerSS('alumno-vertical')) document.body.classList.add('vertical-ok');
-// Al volver a la página en la misma visita (p. ej. desde una pestaña), no pedir "Jugar" de nuevo.
-if (leerSS('alumno-jugando')) { $('#inicio').hidden = true; document.body.classList.add('jugando'); }
+// "Jugar" aparece SIEMPRE al cargar: pantalla completa y trabar horizontal solo se pueden pedir con un toque.
+// Botón ⛶ arriba para volver a pantalla completa en cualquier momento (resaltado si se salió).
+const btnPC = $('#pantalla-completa');
+const hayPC = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+let quierePC = false;
+const enPC = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+function pintarPC() {
+  btnPC.hidden = !hayPC || enPC();
+  btnPC.classList.toggle('resaltado', quierePC && !enPC());
+}
+btnPC.onclick = () => { pantallaJuego(); };
+addEventListener('fullscreenchange', pintarPC);
+addEventListener('webkitfullscreenchange', pintarPC);
+// Si vuelve del fondo (otra app, pantalla apagada) y ya no está en pantalla completa: otra vez "Jugar".
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && quierePC && hayPC && !enPC() && document.body.classList.contains('jugando')) $('#inicio').hidden = false;
+});
+pintarPC();
 
 // ---------------- Paneles ----------------
 const velo = $('#velo'), panel = $('#panel');
@@ -856,7 +878,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02c-6').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-7').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)

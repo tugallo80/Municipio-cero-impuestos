@@ -124,8 +124,18 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
   ~9 a ~30 unidades), con suavizado. No gira la cámara mientras se pellizca y se puede seguir caminando con
   el círculo (probado con 3 dedos a la vez). En compu: rueda del mouse o + / −. Capturas `e1-*`, `e2-*`.
 
+**Ajuste 6 — el dueño confirma que los profes hablan (Chrome, horizontal)**
+- Nada de diagnóstico encima del juego: la barrita y "Probar parlante" solo con `?diag=1` exacto.
+  "🔊 Tocá para activar el sonido" solo aparece si el audio queda suspendido y se va solo al reanudarse.
+- **"▶ Jugar" en cada carga** (ya no se salta con la memoria de la visita): pantalla completa y trabar
+  horizontal solo se pueden pedir con un toque. Si vuelve del fondo sin pantalla completa, aparece de nuevo.
+- Botón chico **⛶** arriba a la derecha para volver a pantalla completa; se esconde en pantalla completa y,
+  al salir, aparece **resaltado** (amarillo, latiendo). Captura `f1-boton-pantalla-completa.jpg`.
+- "Jugar" intenta siempre pantalla completa + `lock('landscape')` (en Android acuesta la pantalla aunque la
+  Rotación automática esté apagada). Si no gira, el aviso dice que toque el **botón de girar** de Android
+  en la esquina o active la Rotación automática.
+
 **Pendiente**
-- Que el dueño abra `?diag=1` en su celular y cuente qué dice la barrita y si suenan los pitidos.
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
 - iPhone no permite trabar la orientación desde la web: ahí queda el aviso "Girá tu pantalla".
