@@ -21,7 +21,7 @@ abierto: acercarse y tocar "Entrar", o tocar el aula y que el personaje vaya sol
 
 ## Cómo quedó (técnico)
 - **Cartel flotante** (`#cartel`): se proyecta cada cuadro desde la puerta (`interes[].pos` + `alto`) a la
-  pantalla, con un pico que rebota hacia la puerta. Radio 3 unidades; con 0,5 de margen al alejarse para que no
+  pantalla, con un pico que rebota hacia la puerta. Radio 1,5 unidades (casi pegado); con 0,4 de margen al alejarse para que no
   parpadee. Si hay varias puertas cerca, gana la más cercana. Se oculta con un panel abierto o mientras camina solo.
   Reemplaza al botón fijo "Entrar a …" de abajo a la derecha.
 - Vale para todos los puntos del mundo: aulas ("🔢 Entrar · Mate"), lugares con niebla, tu casa, casas de
@@ -39,9 +39,12 @@ al lado de la puerta → su botón abre "Aula de Artes"; tocar el aula de Mate e
 "Aula de Mate" (<1 s desde la plaza); tocar durante la caminata la cancela; el círculo la cancela. Giro de cámara,
 pellizco, dos pulgares y toque corto siguen igual. Sin errores de JS. Capturas en `capturas/EDU.02d/`.
 
+**Ajuste (pedido del dueño)** — el cartel aparece solo casi pegado a la puerta: `RADIO_PUERTA` = 1,5
+(antes 3), con margen de salida +0,4 para que no parpadee. Verificado: no aparece en el punto de salida ni en la
+plaza ni a 2 pasos; aparece a 1 paso y pegado; sigue a 1,7 (margen) y se va a 2,2. De lejos se toca el aula y va
+solo. `?v=edu02d-2`. Captura `h3-cartel-pegado-844x390.jpg`.
+
 **Pendiente**
-- Las aulas rodean la plaza: desde casi cualquier punto del centro hay una puerta a menos de 3 pasos, así que el
-  cartel aparece seguido. Si molesta, bajar `RADIO_PUERTA` o mostrarlo solo mirando hacia la puerta.
 - La caminata sola va en línea recta con un esquive simple (no hay mapa de caminos); en el mundo 3D final
   (EDU.06) conviene un camino de verdad.
 - Prueba del dueño en el celular.

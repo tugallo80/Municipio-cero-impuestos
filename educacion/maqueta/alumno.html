@@ -310,8 +310,8 @@
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js?v=edu02d-1"></script>
-<script src="misiones-demo.js?v=edu02d-1"></script>
+<script src="datos-demo.js?v=edu02d-2"></script>
+<script src="misiones-demo.js?v=edu02d-2"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -888,7 +888,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js?v=edu02d-1').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02d-2').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
@@ -1286,7 +1286,7 @@ function iniciar(THREE) {
   // 2) Tocar el aula/lugar en el mundo: el personaje camina solo hasta la puerta y entra.
   const btnEntrar = document.getElementById('entrar'), cartelPuerta = document.getElementById('cartel');
   const rumbo = document.getElementById('rumbo'), rumboTxt = document.getElementById('rumbo-txt');
-  const RADIO_PUERTA = 3;
+  const RADIO_PUERTA = 1.5;   // casi pegado a la puerta (de lejos se toca el aula y va solo)
   let cercano = null, ultimoSonido = null, cartelDe = null, piloto = null;
   const entrarEn = p => { pararPiloto(); window.sonar('pop'); p.accion(); };
   btnEntrar.onclick = () => cercano && entrarEn(cercano);
@@ -1390,7 +1390,7 @@ function iniciar(THREE) {
     // punto de interés cercano → botón contextual (y sonido de los lugares con niebla)
     // (con un poco de margen al alejarse para que el cartel no parpadee en el borde)
     cercano = null; let mejor = RADIO_PUERTA;
-    for (const p of interes) { const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .5 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
+    for (const p of interes) { const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .4 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
     const verCartel = cercano && !window.__pausa && !piloto;
     if (verCartel) {
       if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
