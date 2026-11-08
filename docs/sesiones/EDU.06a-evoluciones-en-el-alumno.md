@@ -130,6 +130,15 @@ isla vieja se reemplazó por la ciudad del diseño (vista "Ciudad" de la vitrina
   `fetch`, `start_url` dentro del `scope`, https. `display: fullscreen` es válido, con
   `display_override` que cae a `standalone` donde no hay pantalla completa.
 
+**Arreglo: pantalla negra al pasar de curso (P1 → P6)**
+- Causa: Firebase sirve `/estilos/transicion.html` como `/estilos/transicion/`, y desde ahí la
+  página buscaba sus archivos del 3D en `/estilos/transicion/…` (no existen) → "No se pudo cargar".
+- Arreglo: las páginas de `estilos/` (transición, escena, construir) tienen `<base href="/estilos/">`,
+  leen los datos también del `#`, y el juego y la vitrina enlazan directo a `/estilos/transicion/`
+  (sin `.html`, sin redirección). Con `?diag=1` el error muestra el motivo.
+- Probado contra la config real de Firebase (cleanUrls + trailingSlash): P1→S6, S6→P1, P3→P5,
+  P4→P1, P1→P3, S1→S3, P5→S1, los enlaces viejos con `.html` y la vitrina.
+
 **Pendiente**
 - **Un solo kit para vitrina y juego** (pedido de la MAESTRA 2): hoy las dos usan la misma base de
   `mundo.js` (paletas, geometrías, techos, contorno, brillo/bloom), pero la luz, el cielo y los

@@ -2,6 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
+<base href="/estilos/"><!-- Firebase sirve esta página como /estilos/<nombre>/: que lo relativo apunte a /estilos/ -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>Pasaste de curso</title>
@@ -41,20 +42,20 @@
 
 <script type="module">
 
-const q = new URLSearchParams(location.search);
+const q = new URLSearchParams(location.search.slice(1) + '&' + location.hash.slice(1));
 const DE = (q.get('de') || 'BLOQUES').toUpperCase(), A = (q.get('a') || 'PIEZAS').toUpperCase();
 const captura = q.has('captura'), tFijo = q.has('t') ? parseFloat(q.get('t')) : null;
 if (captura) document.body.classList.add('captura');
 const ORDEN = ['BLOQUES', 'PIEZAS', 'REAL', 'HORIZONTE', 'VIVO', 'PROMO'];
 document.getElementById('pares').innerHTML = ORDEN.slice(0, -1).map((k, i) =>
-  `<a class="btn ${k === DE ? 'on' : ''}" style="padding:0 12px" href="?de=${k}&a=${ORDEN[i + 1]}">${i + 1}→${i + 2}</a>`).join('');
+  `<a class="btn ${k === DE ? 'on' : ''}" style="padding:0 12px" href="transicion/?de=${k}&a=${ORDEN[i + 1]}">${i + 1}→${i + 2}</a>`).join('');
 const CURSO = { PIEZAS: '3.º de primaria', REAL: '5.º de primaria', HORIZONTE: '1.º de secundaria', VIVO: '3.º de secundaria', PROMO: 'la promoción' };
 
 // Rompecachés: subir VERSION cuando cambien mundo.js o arranque.js
-const VERSION = '20261108-8';
+const VERSION = '20261108-9';
 let ARR;
 try { ARR = await import(`./arranque.js?v=${VERSION}`); } catch (e) {
-  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
+  document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;display:grid;place-items:center;background:#000;color:#fff;text-align:center;padding:24px;font:16px Inter,sans-serif"><div>No se pudo cargar.' + (/[?&#]diag=1/.test(location.href) ? '<br><small style="color:#fca5a5">' + String(e && e.message || e).replace(/</g, '&lt;') + '</small>' : '') + '<br><br><a style="color:#10B981;font-weight:600" href="javascript:location.reload()">Tocá para reintentar</a></div></div>');
   window.__listo = 'error'; throw e;
 }
 ARR.avisoGiro();
@@ -127,7 +128,7 @@ document.getElementById('bOtra').onclick = () => { t0 = performance.now(); poner
 // ?volver=/ruta → al terminar se vuelve ahí (lo usa el juego del alumno, EDU.06a)
 const volver = q.get('volver');
 const volverOk = volver && volver.startsWith('/') && !volver.startsWith('//') ? volver : null;
-document.getElementById('bEntrar').href = volverOk || `escena.html?estilo=${A}&vista=colegio`;
+document.getElementById('bEntrar').href = volverOk || `escena/?estilo=${A}&vista=colegio`;
 if (volverOk) { document.getElementById('pares').style.display = 'none'; const atras = document.querySelector('.barra a.btn'); if (atras) atras.href = volverOk; }
 
 const fpsEl = document.getElementById('fps');

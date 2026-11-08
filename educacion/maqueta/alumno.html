@@ -1034,7 +1034,9 @@ if (EVM) {
   window.__elegirCurso = c => {
     const nuevo = EVM.evolucionDeCurso(c), viejo = EVO ? EVO.n : 1;
     const destino = `/maqueta/alumno/?demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '') + `#demo=1&curso=${c}` + (QS.get('diag') === '1' ? '&diag=1' : '');
-    if (nuevo > viejo) location.href = `/estilos/transicion.html?de=${EVM.EVOLUCIONES[viejo - 1]}&a=${EVM.EVOLUCIONES[nuevo - 1]}&volver=${encodeURIComponent(destino)}`;
+    // directo a /estilos/transicion/ (sin .html: Firebase redirige y puede perder los datos) y repetidos en el # por las dudas
+    const par = `de=${EVM.EVOLUCIONES[viejo - 1]}&a=${EVM.EVOLUCIONES[nuevo - 1]}&volver=${encodeURIComponent(destino)}` + (QS.get('diag') === '1' ? '&diag=1' : '');
+    if (nuevo > viejo) location.href = `/estilos/transicion/?${par}#${par}`;
     else location.href = destino;
   };
   if (DEMO_CURSOS) {
