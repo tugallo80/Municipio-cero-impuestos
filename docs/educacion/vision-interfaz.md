@@ -130,3 +130,16 @@ Criterios para diseñarlos (de `docs/investigacion/voz-del-tutor.md` y `experien
 - **Siempre dicen que son una IA** (UNESCO); importante sobre todo cuando haya personajes físicos
   en colegios, para que los niños no los confundan con personas.
 - Medir en el piloto: con quién habla cada niño, por materia y edad, y si cambiar de profe ayuda o distrae.
+
+## Ajuste del habla camba (dueño escuchó las voces, 8-nov-2026)
+
+Las voces están bien, pero **mezclan camba con neutro**. Para afinar la personalidad:
+- **Terminaciones**: el camba aspira la "s" final y antes de consonante, suena como una "j" suave
+  ("loj chicoj", "ejtá", "ej") — no la "s" neutra.
+- **Vocabulario camba** que debe aparecer con naturalidad:
+  - "**belleza**" en vez de "lindo" ("¡belleza, lo lograste!").
+  - "**la tuti**" cuando algo está muy bueno.
+  - "**mucha dosis**" cuando algo es de buen nivel.
+  - "**otro level**" como elogio.
+- Se sigue ajustando con el dueño. Limitación técnica a probar: las voces de Gemini se guían por
+  instrucciones; la aspiración de la "s" puede lograrse solo en parte.
