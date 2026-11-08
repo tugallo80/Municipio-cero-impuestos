@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Talleres con niños · Láminas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --verde: #10B981; --sup: #111111; --borde: #222; --t2: #A3A3A3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; color: #fff; font-family: Inter, system-ui, sans-serif; line-height: 1.45; padding: 20px 16px 60px; max-width: 980px; margin: 0 auto; }
+  h1, h2 { font-family: 'Space Grotesk', sans-serif; }
+  h1 { font-size: 26px; } h2 { font-size: 18px; margin: 30px 0 12px; color: var(--t2); text-transform: uppercase; letter-spacing: .06em; font-size: 13px; }
+  p.sec { color: var(--t2); margin-top: 6px; font-size: 15px; }
+  .grilla { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .item { background: var(--sup); border: 1px solid var(--borde); border-radius: 18px; overflow: hidden; }
+  .item img { width: 100%; display: block; aspect-ratio: 1240 / 877; background: #0a0a0a; }
+  .item .pie { padding: 12px 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .item b { font-family: 'Space Grotesk'; font-size: 17px; flex: 1; min-width: 120px; }
+  a.btn { display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; border-radius: 12px; background: #1a1a1a; border: 1px solid var(--borde); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; }
+  a.btn.verde { background: var(--verde); color: #00140D; border: 0; }
+  .todo { margin-top: 18px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .nota { margin-top: 30px; padding: 14px; border-radius: 14px; background: var(--sup); border: 1px solid var(--borde); color: var(--t2); font-size: 14px; }
+</style>
+</head>
+<body>
+  <h1>Talleres con niños</h1>
+  <p class="sec">Material para elegir el mundo del alumno (protocolo de 2 sesiones). Todo en A3 apaisado.</p>
+  <div class="todo"><a class="btn verde" href="todo-para-imprimir.pdf">⬇ Todo en un PDF (A3)</a></div>
+  <div id="contenido"></div>
+  <div class="nota">Cómo imprimir: PDF en <b>A3 apaisado</b>, "tamaño real" / 100%. Si solo hay A4, elegir "ajustar a la página". Las cartas y fichas se recortan por la línea punteada. Bocetos de diseño propio: no son el arte final.</div>
+<script>
+const GRUPOS = [
+  ['Sesión 1 · Láminas de los 4 mundos', [
+    ['A · Colegio mágico', 'laminas/A-colegio-magico'], ['B · Selva Ñandé', 'laminas/B-selva-nande'],
+    ['C · Mi barrio', 'laminas/C-mi-barrio'], ['D · Mundo que creamos', 'laminas/D-mundo-que-creamos'],
+    ['Fichas para votar', 'fichas']]],
+  ['Sesión 2 · Cartas y viñetas', [
+    ['Cartas de "me encanta / no me gusta"', 'cartas'],
+    ['Viñetas 1 · Terminás la misión', 'vinetas-1', 'vinetas'], ['Viñetas 2 · Detrás de la puerta', 'vinetas-2', 'vinetas'],
+    ['Viñetas 3 · Pedir ayuda', 'vinetas-3', 'vinetas']]]
+];
+document.getElementById('contenido').innerHTML = GRUPOS.map(([t, items]) => `<h2>${t}</h2><div class="grilla">${items.map(([n, f, pdf]) => {
+  const base = f.split('/').pop();
+  return `<div class="item"><a href="${f}.png"><img loading="lazy" src="vista/${base}.jpg" alt="${n}"></a>
+    <div class="pie"><b>${n}</b><a class="btn" href="${(pdf || f)}.pdf">PDF</a><a class="btn" href="${f}.png">PNG</a></div></div>`; }).join('')}</div>`).join('');
+</script>
+</body>
+</html>
