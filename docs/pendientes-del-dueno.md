@@ -7,7 +7,7 @@
 
 | # | Pendiente | Qué hace falta | Para qué |
 |---|---|---|---|
-| 1 | **Maqueta base para Blender** | Exportar la maqueta en **FBX** (u OBJ) y subirla a Google Drive (pasar el link) o adjuntarla en el chat de la MAESTRA | Prueba EDU.07: Claude toma la maqueta, deja **un edificio terminado y un personaje**, y medimos tiempo y calidad antes de decidir si conviene el plan de USD 200 |
+| 1 | **Maqueta base para Blender** | Seguir `docs/educacion/guia-maqueta-3d.md`; exportar en **GLB** (o FBX/OBJ) y subirla a Google Drive (pasar el link) o adjuntarla en el chat de la MAESTRA | Prueba EDU.07: Claude toma la maqueta, deja **un edificio terminado y un personaje**, y medimos tiempo y calidad antes de decidir si conviene el plan de USD 200 |
 | 2 | **Guion de los 2 minijuegos** (y lugares secretos) | Cómo te los imaginás: qué hace el chico, qué aprende, cómo gana | EDU.08 Minijuegos |
 | 3 | **Nombres de los profes** | Elegir Taji / Jochi u otros | Los dos profes de voz |
 | 4 | **Marco o franja de la voz** | Elegir cómo se ve el profe cuando habla | App del alumno |
