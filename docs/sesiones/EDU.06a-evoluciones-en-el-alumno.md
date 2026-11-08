@@ -89,6 +89,10 @@ internet; no toca la CDN ni la voz) y en Ayuda "📲 Instalar en el celular" (be
 instrucciones si Chrome no lo ofrece). Probado: el SW se registra y controla la página, y con el SW
 activo la evolución, el 🎓 y el HUD siguen bien.
 
+**Demo recordado**: `?demo=1` queda guardado en el celular (localStorage), junto con el último curso
+elegido, para que la app instalada (que abre sin parámetros) también muestre el 🎓; `?demo=0` lo
+apaga. Probado: demo=1 + S1 → abrir sin parámetros sigue en S1 con 🎓 → demo=0 vuelve a P4 sin 🎓.
+
 **Aviso**: en el deploy de las 18:55 UTC falló "Publicar las Functions" porque la facturación de
 `municipio-ia` aparece desactivada (Secret Manager 403). El sitio (Hosting) sí se publicó.
 

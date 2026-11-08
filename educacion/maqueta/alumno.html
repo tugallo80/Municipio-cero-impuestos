@@ -968,7 +968,13 @@ for (const url of FUENTES) { try { THREE = await import(url); break; } catch (e)
 const VERSION_ESTILOS = 'edu06a-2';
 // parámetros por ?… o por #… (el # sobrevive a cualquier redirección del servidor)
 const QS = new URLSearchParams(location.search.slice(1) + '&' + location.hash.replace(/^#/, ''));
-const DEMO_CURSOS = QS.get('demo') === '1';
+// modo demo: ?demo=1 lo prende y queda guardado en este celular (así la app instalada también muestra
+// el 🎓); ?demo=0 lo apaga. El curso elegido en la demo también se recuerda.
+const leerLS = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
+const guardarLS = (k, v) => { try { v === null ? localStorage.removeItem(k) : localStorage.setItem(k, v); } catch (e) {} };
+if (QS.get('demo') === '1') guardarLS('alumno-demo', '1');
+if (QS.get('demo') === '0') { guardarLS('alumno-demo', null); guardarLS('alumno-demo-curso', null); }
+const DEMO_CURSOS = QS.get('demo') !== '0' && (QS.get('demo') === '1' || leerLS('alumno-demo') === '1');
 let EVO = null, EVM = null, CURSO = 'P4';
 if (THREE && !window.__sin3D) {
   try {
@@ -976,7 +982,8 @@ if (THREE && !window.__sin3D) {
     const D0 = window.DEMO, al = (D0.alumnos || []).find(a => a.id === D0.alumnoDemo.id);
     const cur = (D0.cursos || []).find(c => c.id === (al ? al.curso : '4A'));
     CURSO = (cur && EVM.cursoDeNombre(cur.nombre)) || 'P4';
-    if (DEMO_CURSOS && EVM.CURSOS.includes((QS.get('curso') || '').toUpperCase())) CURSO = QS.get('curso').toUpperCase();
+    const pedido = (QS.get('curso') || (DEMO_CURSOS ? leerLS('alumno-demo-curso') : '') || '').toUpperCase();
+    if (DEMO_CURSOS && EVM.CURSOS.includes(pedido)) { CURSO = pedido; guardarLS('alumno-demo-curso', pedido); }
     EVO = await EVM.crearEvolucion(THREE, EVM.evolucionDeCurso(CURSO));
   } catch (e) {
     console.warn('[evolución] se usa el mundo de bloques de siempre', e); EVO = null;
