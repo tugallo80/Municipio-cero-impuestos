@@ -34,7 +34,7 @@
     <a href="#agenda" data-ruta="agenda"><span class="ico">🗓️</span>Agenda</a>
     <a href="#notas" data-ruta="notas"><span class="ico">📒</span>Libreta</a>
     <a href="#permisos" data-ruta="permisos"><span class="ico">✍️</span>Permisos</a>
-    <a href="#pagos" data-ruta="pagos"><span class="ico">💳</span>Pagos</a>
+    <a href="#perfil" data-ruta="perfil"><span class="ico">🌱</span>Cómo aprende</a>
   </nav>
 </div>
 <script src="datos-demo.js"></script>
@@ -59,7 +59,7 @@ const extras = [
   'Respondió bien 3 preguntas seguidas',
   'Terminó la lectura del día',
   'Pidió una pista al tutor IA',
-  'Ganó ⭐ 10 en una misión'
+  'Ganó una llave en una misión'
 ];
 
 const rutas = {
@@ -114,14 +114,10 @@ const rutas = {
     <button class="btn ancho" style="margin-top:16px" onclick="pedirPermiso()">+ Pedir un permiso</button>`;
   },
 
-  pagos() {
-    const pend = F.pagos.filter(p => p.estado === 'pendiente').reduce((s, p) => s + p.monto, 0);
-    return `<div class="tarjeta" style="background:linear-gradient(135deg,#0b2a20,#111);border-color:rgba(16,185,129,.4)">
-      <span class="sec chica">Saldo pendiente</span><div class="titulo" style="font-size:34px">${U.bs(pend)}</div>
-      <button class="btn ancho" style="margin-top:12px" onclick="U.toast('💳 Simulado: pago con QR / créditos ÑANDÉ')">Pagar ahora</button></div>
-    <div class="seccion"><h3>Movimientos</h3><div class="tarjeta lista">${F.pagos.map(p => `
-      <div class="fila"><div class="crece"><b class="chica">${p.concepto}</b><div class="ter">vence ${p.vence}</div></div><span class="chica">${U.bs(p.monto)}</span>${U.estado(p.estado)}</div>`).join('')}</div></div>
-    <p class="ter" style="margin-top:12px">Idea a futuro: pagar con créditos verdes de la cuenta ÑANDÉ.</p>`;
+  perfil() {
+    const a = U.alumno(hijoId);
+    return selectorHijos() + `<h2 style="margin-bottom:4px">Cómo aprende ${a.nombre.split(' ')[0]}</h2>
+    <p class="sec chica" style="margin-bottom:14px">Perfil que arma su tutor para personalizar las misiones.</p>` + U.perfilPadres(a);
   },
 
   _despues(ruta) {

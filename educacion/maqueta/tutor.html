@@ -97,15 +97,15 @@ const rutas = {
       ${['todos', '4A', '5A'].map(c => `<a class="chip ${curso === c ? 'activo' : ''}" href="#alumnos/${c}">${c === 'todos' ? 'Todos' : c}</a>`).join('')}
     </div>
     <div class="tabla-caja"><table>
-      <thead><tr><th>Alumno</th><th>Curso</th><th class="num">Promedio</th><th>Tendencia</th><th class="num">Misiones</th><th>Estilo</th></tr></thead>
+      <thead><tr><th>Alumno</th><th>Curso</th><th class="num">Promedio</th><th>Tendencia</th><th class="num">Misiones</th><th>Ritmo</th></tr></thead>
       <tbody>${lista.map(a => `
         <tr onclick="location.hash='alumno/${a.id}'" style="cursor:pointer">
-          <td><span style="margin-right:8px">${a.avatar}</span><b>${a.nombre}</b></td>
+          <td><span style="margin-right:8px">${a.avatar}</span><b>${a.nombre}</b><div class="ter">en el juego: ${a.apodo}</div></td>
           <td>${a.curso}</td>
           <td class="num" style="color:${U.colorNota(a.promedio)};font-weight:600">${a.promedio}</td>
           <td>${U.tendencia(a.tendencia)}</td>
           <td class="num">${a.misiones}</td>
-          <td class="sec">${a.estilo}</td>
+          <td class="sec">${a.perfil.ritmo.min} min/misión</td>
         </tr>`).join('')}</tbody></table></div>`;
   },
 
@@ -118,13 +118,7 @@ const rutas = {
     <div class="grilla g2">
       <div class="tarjeta">
         <h3 style="margin-bottom:12px">🧠 Perfil psicopedagógico</h3>
-        <div class="lista chica">
-          <div><span class="ter">Estilo de aprendizaje</span><br>${p.estilo}</div>
-          <div><span class="ter">Fortalezas</span><br>${p.fortalezas}</div>
-          <div><span class="ter">Necesita apoyo en</span><br>${p.apoyo}</div>
-          <div><span class="ter">Contexto</span><br>${p.contexto}</div>
-          <div><span class="ter">Observación del tutor</span><br>${p.obs}</div>
-        </div>
+        ${U.perfilTutor(a)}
         <button class="btn chico sec2" style="margin-top:12px" onclick="U.toast('✏️ Simulado: nota guardada')">+ Agregar observación</button>
       </div>
       <div class="tarjeta">
@@ -150,7 +144,7 @@ const rutas = {
           <div class="crece"><b>${m.titulo}</b><div class="ter">${mat.nombre} · ${m.curso}</div></div>${U.estado(m.estado)}</div>
         <p class="chica sec" style="margin-bottom:10px">${m.desc}</p>
         <div class="fila entre ter"><span>Avance promedio del curso</span><span>${pct}%</span></div>${U.barra(pct)}
-        <div class="fila entre chica" style="margin-top:12px"><span class="ter">🎮 ${m.minijuego} · ⭐ ${m.puntos}</span>
+        <div class="fila entre chica" style="margin-top:12px"><span class="ter">🗝️ ${m.llave ? 'Llave: ' + (D.mundo.lugares.find(l => l.id === m.llave) || {}).nombre : 'Suma al puente del curso'}</span>
           <button class="btn chico sec2" onclick="asignar('${m.id}')">Asignar</button></div>
       </div>`; }).join('')}</div>`;
   },
@@ -172,8 +166,9 @@ const rutas = {
           <option>Todo 4A</option><option>Todo 5A</option><option>Solo alumnos con alerta</option></select></label>
         <label class="campo"><span>Vence</span><input type="date" value="2026-11-13"></label>
       </div>
-      <label class="campo"><span>Minijuego que desbloquea</span><select><option>Pizza de fracciones</option><option>Carrera de bloques</option><option>Memoria de palabras</option></select></label>
-      <label class="campo"><span>Cómo ayuda el tutor IA</span><select><option>Solo pistas y preguntas (recomendado)</option><option>Pistas + ejemplo parecido</option></select></label>
+      <label class="campo"><span>Llave que da (lugar que abre)</span><select><option>Parque escondido</option><option>Cuarto de objetos perdidos</option><option>Solo suma al puente del curso</option></select></label>
+      <label class="campo"><span>Repaso al empezar</span><select><option>2–3 preguntas de temas anteriores (recomendado)</option><option>Sin repaso</option></select></label>
+      <label class="campo"><span>Cómo ayuda el tutor IA</span><select><option>Escalera: pregunta → pista → ejemplo resuelto (recomendado)</option><option>Solo preguntas y pistas</option></select></label>
       <button class="btn ancho" type="submit">Crear y asignar</button>
     </form>`;
   }

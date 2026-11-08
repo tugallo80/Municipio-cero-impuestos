@@ -43,12 +43,49 @@
       const fn = rutas[ruta] || rutas[porDefecto];
       document.querySelectorAll('[data-ruta]').forEach(a => a.classList.toggle('activo', a.dataset.ruta === ruta));
       const main = U.$('#principal');
-      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta EDU.01 · datos inventados de un colegio ficticio</p>';
+      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta EDU.01b · datos inventados de un colegio ficticio</p>';
       window.scrollTo(0, 0);
       if (rutas._despues) rutas._despues(ruta, param);
     };
     window.addEventListener('hashchange', pintar);
     pintar();
+  };
+
+
+  // Perfil psicopedagógico v2 (EDU.01b). Sin "estilo de aprendizaje".
+  const NIVEL = { 'logrado': '', 'en camino': 'ambar', 'inicio': 'gris' };
+  U.perfilTutor = a => {
+    const p = a.perfil;
+    return `<div class="lista chica">
+      <div><span class="ter">Fortalezas</span><br>${p.fortalezas}</div>
+      <div><span class="ter">Nivel por tema</span><div class="chips" style="margin-top:6px">${p.temas.map(([t, n]) => `<span class="pildora ${NIVEL[n]}">${t} · ${n}</span>`).join('')}</div></div>
+      <div><span class="ter">Errores frecuentes</span><br>${p.errores.map(e => '• ' + e).join('<br>')}</div>
+      <div><span class="ter">Ritmo</span><br>${p.ritmo.min} min por misión · ${p.ritmo.pistas} pistas por misión · ${p.ritmo.abandonos} abandonos este mes<br><span class="sec">${p.ritmo.texto}</span></div>
+      <div><span class="ter">Plan de repaso</span><br>${p.repaso}</div>
+      <div><span class="ter">Intereses (para las historias de sus misiones)</span><br>${p.intereses.join(' · ')}</div>
+      <div><span class="ter">Ajustes de accesibilidad</span><br>${p.accesibilidad.length ? p.accesibilidad.map(([x, quien]) => `• ${x} <span class="pildora gris">indicado por ${quien}</span>`).join('<br>') : '<span class="sec">Ninguno indicado</span>'}
+        <div class="ter" style="margin-top:4px">Solo los indica un docente o profesional. La app no diagnostica y esto no se envía a la IA.</div></div>
+      <div><span class="ter">Lengua y lectura</span><br>${p.lengua}</div>
+      <div><span class="ter">Acceso</span><br>${p.acceso}</div>
+      <div><span class="ter">Observación del tutor</span><br>${p.obs}</div>
+    </div>`;
+  };
+  // Para padres: lenguaje positivo, sin etiquetas, con "cómo ayudarlo en casa"
+  const NIVEL_PADRES = { 'logrado': 'ya lo domina', 'en camino': 'lo está aprendiendo', 'inicio': 'recién empieza' };
+  U.perfilPadres = a => {
+    const p = a.perfil, n = a.nombre.split(' ')[0];
+    return `<div class="pila">
+      <div class="tarjeta"><h3>🌟 Lo que mejor le sale</h3><p class="chica" style="margin-top:6px">${p.fortalezas}</p></div>
+      <div class="tarjeta"><h3>📚 Cómo va en cada tema</h3><div class="lista chica" style="margin-top:6px">${p.temas.map(([t, x]) => `<div class="fila entre"><span>${t}</span><span class="pildora ${NIVEL[x]}">${NIVEL_PADRES[x]}</span></div>`).join('')}</div></div>
+      <div class="tarjeta"><h3>🧩 Lo que está practicando</h3><p class="chica sec" style="margin-top:6px">${p.errores.map(e => '• ' + e).join('<br>')}</p>
+        <p class="ter" style="margin-top:6px">Equivocarse es parte de aprender: Kay le da pistas paso a paso.</p></div>
+      <div class="tarjeta"><h3>⏱️ Su ritmo</h3><p class="chica" style="margin-top:6px">${p.ritmo.texto}. Suele tardar unos ${p.ritmo.min} minutos por misión.</p></div>
+      <div class="tarjeta"><h3>💚 Le interesa</h3><p class="chica" style="margin-top:6px">${p.intereses.join(' · ')}</p></div>
+      ${p.accesibilidad.length ? `<div class="tarjeta"><h3>🛠️ Ajustes que usa</h3><p class="chica" style="margin-top:6px">${p.accesibilidad.map(([x, quien]) => `• ${x} <span class="ter">(indicado por ${quien})</span>`).join('<br>')}</p></div>` : ''}
+      <div class="tarjeta" style="border-color:var(--verde);background:linear-gradient(135deg,#0b2a20,#111)"><h3>🏠 Cómo ayudar a ${n} en casa</h3>
+        <div class="lista chica" style="margin-top:6px">${p.casa.map(c => `<div>✅ ${c}</div>`).join('')}</div></div>
+      <p class="ter">Este perfil lo arma su tutor con lo que observa. Cada niño aprende distinto: sirve para acompañarlo, no para ponerle etiquetas. Lo ven solo ustedes, su tutor y quien autorice la dirección.</p>
+    </div>`;
   };
 
   window.U = U;

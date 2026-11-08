@@ -80,47 +80,136 @@ window.DEMO = {
     ]
   },
 
+  // Perfil psicopedagógico v2 (EDU.01b): sin "estilo de aprendizaje" (no tiene evidencia).
+  // nivel por tema · errores frecuentes · ritmo · intereses · accesibilidad (solo si lo indica
+  // docente o profesional, nunca diagnóstico de la app ni dato para la IA) · cómo ayudar en casa.
   alumnos: [
-    { id: 'A01', nombre: 'Mateo Rojas', curso: '4A', promedio: 78, tendencia: 'sube', misiones: 12, estilo: 'Visual', avatar: '🦊',
-      perfil: { estilo: 'Aprende mejor con dibujos y esquemas', fortalezas: 'Cálculo mental, creatividad', apoyo: 'Se distrae en lecturas largas', contexto: 'Usa la tablet en casa por la tarde', obs: 'Responde muy bien a las misiones con tiempo límite.' },
+    { id: 'A01', nombre: 'Mateo Rojas', apodo: 'Zorro Naranja 4', curso: '4A', promedio: 78, tendencia: 'sube', misiones: 12, avatar: '🦊',
+      perfil: { fortalezas: 'Cálculo mental, creatividad, ayuda a sus compañeros',
+        temas: [['Fracciones', 'en camino'], ['Multiplicación', 'logrado'], ['Texto descriptivo', 'en camino'], ['Ciclo del agua', 'logrado']],
+        errores: ['Suma numeradores y denominadores (1/2 + 1/4 = 2/6)', 'Olvida mayúscula al empezar una oración'],
+        ritmo: { min: 9, pistas: 1.2, abandonos: 0, texto: 'Constante; termina las misiones en el tiempo esperado' },
+        intereses: ['fútbol', 'animales', 'construir'], accesibilidad: [], lengua: 'Castellano · lectura acorde a 4to',
+        acceso: 'Tablet propia, conexión en casa por la tarde', repaso: 'Fracciones: repasar en 3 y 7 días',
+        casa: ['Repartir la merienda en partes iguales y nombrar la fracción', 'Pedirle que les cuente qué misión hizo hoy'],
+        obs: 'Cuando entiende algo, se lo explica a otro: buen candidato a mentor.' },
       notas: { mat: 84, len: 70, cnat: 80, csoc: 76, ing: 72, art: 88 } },
-    { id: 'A02', nombre: 'Valentina Suárez', curso: '4A', promedio: 85, tendencia: 'estable', misiones: 15, estilo: 'Lectora', avatar: '🦉',
-      perfil: { estilo: 'Aprende leyendo y escribiendo', fortalezas: 'Comprensión lectora, orden', apoyo: 'Le cuesta pedir ayuda', contexto: 'Comparte tablet con un hermano', obs: 'Buena candidata para monitora de lectura.' },
+    { id: 'A02', nombre: 'Valentina Suárez', apodo: 'Búho Azul 2', curso: '4A', promedio: 85, tendencia: 'estable', misiones: 15, avatar: '🦉',
+      perfil: { fortalezas: 'Comprensión lectora, orden, constancia',
+        temas: [['Fracciones', 'logrado'], ['Texto descriptivo', 'logrado'], ['Departamentos', 'logrado']],
+        errores: ['Se apura en problemas de varios pasos'],
+        ritmo: { min: 7, pistas: .4, abandonos: 0, texto: 'Rápida; casi no pide pistas' },
+        intereses: ['libros', 'dibujo'], accesibilidad: [], lengua: 'Castellano · lectura avanzada',
+        acceso: 'Comparte la tablet con un hermano', repaso: 'Problemas de 2 pasos: 1 por semana',
+        casa: ['Proponerle que lea en voz alta a la familia', 'Animarla a pedir ayuda cuando se traba'],
+        obs: 'Le cuesta pedir ayuda: el botón "pedir ayuda" puede servirle.' },
       notas: { mat: 80, len: 92, cnat: 85, csoc: 86, ing: 81, art: 84 } },
-    { id: 'A03', nombre: 'Thiago Vargas', curso: '4A', promedio: 58, tendencia: 'baja', misiones: 6, estilo: 'Kinestésico', avatar: '🐢',
-      perfil: { estilo: 'Aprende haciendo y moviéndose', fortalezas: 'Trabajo en equipo, deportes', apoyo: 'Fracciones y comprensión lectora', contexto: 'Conexión intermitente en casa', obs: 'Bajó en las últimas 3 semanas: conviene hablar con la familia.' },
+    { id: 'A03', nombre: 'Thiago Vargas', apodo: 'Tortuga Verde 9', curso: '4A', promedio: 58, tendencia: 'baja', misiones: 6, avatar: '🐢',
+      perfil: { fortalezas: 'Trabajo en equipo, deportes, buena memoria visual',
+        temas: [['Fracciones', 'inicio'], ['Multiplicación', 'en camino'], ['Texto descriptivo', 'inicio']],
+        errores: ['Confunde numerador y denominador', 'Se salta palabras al leer consignas largas'],
+        ritmo: { min: 14, pistas: 2.8, abandonos: 2, texto: 'Necesita más tiempo; deja misiones a la mitad' },
+        intereses: ['fútbol', 'motos', 'música'], accesibilidad: [['Consignas leídas en voz alta', 'docente'], ['Misiones más cortas', 'docente']],
+        lengua: 'Castellano · lectura en proceso', acceso: 'Conexión intermitente en casa', repaso: 'Fracciones: repasar en 1, 3 y 7 días',
+        casa: ['Leer juntos la consigna antes de empezar', 'Celebrar cuando termina una misión, aunque tarde'],
+        obs: 'Bajó en las últimas 3 semanas: conviene hablar con la familia.' },
       notas: { mat: 52, len: 55, cnat: 63, csoc: 60, ing: 58, art: 70 } },
-    { id: 'A04', nombre: 'Camila Justiniano', curso: '4A', promedio: 72, tendencia: 'sube', misiones: 10, estilo: 'Auditiva', avatar: '🐬',
-      perfil: { estilo: 'Aprende escuchando y conversando', fortalezas: 'Expresión oral, inglés', apoyo: 'Escritura y ortografía', contexto: 'Usa la voz del tutor IA seguido', obs: 'Mejoró mucho con las misiones de voz.' },
+    { id: 'A04', nombre: 'Camila Justiniano', apodo: 'Delfín Rosa 5', curso: '4A', promedio: 72, tendencia: 'sube', misiones: 10, avatar: '🐬',
+      perfil: { fortalezas: 'Expresión oral, inglés, curiosidad',
+        temas: [['Fracciones', 'en camino'], ['Ortografía', 'inicio'], ['Daily routines', 'logrado']],
+        errores: ['Confunde b/v y s/c al escribir'],
+        ritmo: { min: 10, pistas: 1.5, abandonos: 0, texto: 'Avanza bien cuando usa la voz de Kay' },
+        intereses: ['música', 'animales del agua'], accesibilidad: [['Subtítulos en la voz de Kay', 'docente']],
+        lengua: 'Castellano y algo de guaraní en casa', acceso: 'Tablet propia', repaso: 'Ortografía: 3 palabras por día',
+        casa: ['Dictarle 3 palabras por día y revisarlas juntas', 'Cantar canciones en inglés'],
+        obs: 'Mejoró mucho con las misiones de voz.' },
       notas: { mat: 68, len: 66, cnat: 74, csoc: 72, ing: 86, art: 75 } },
-    { id: 'A05', nombre: 'Sofía Rojas', curso: '5A', promedio: 81, tendencia: 'estable', misiones: 14, estilo: 'Visual', avatar: '🦋',
-      perfil: { estilo: 'Mapas mentales y colores', fortalezas: 'Ciencias, dibujo', apoyo: 'Inglés oral', contexto: 'Hermana de Mateo (4A)', obs: 'Lidera bien los trabajos de grupo.' },
+    { id: 'A05', nombre: 'Sofía Rojas', apodo: 'Mariposa Lila 1', curso: '5A', promedio: 81, tendencia: 'estable', misiones: 14, avatar: '🦋',
+      perfil: { fortalezas: 'Ciencias, dibujo, liderazgo en grupo',
+        temas: [['Ciclo del agua', 'logrado'], ['Daily routines', 'en camino'], ['Departamentos', 'logrado']],
+        errores: ['Pronunciación de la "th" en inglés'],
+        ritmo: { min: 8, pistas: .8, abandonos: 0, texto: 'Constante' },
+        intereses: ['plantas', 'dibujo', 'ciencia'], accesibilidad: [], lengua: 'Castellano · lectura acorde a 5to',
+        acceso: 'Tablet propia', repaso: 'Inglés oral: 2 veces por semana',
+        casa: ['Ver juntos un video corto en inglés y repetir frases', 'Dejarla explicar un experimento en casa'],
+        obs: 'Lidera bien los trabajos de grupo.' },
       notas: { mat: 79, len: 80, cnat: 90, csoc: 82, ing: 66, art: 89 } },
-    { id: 'A06', nombre: 'Benjamín Céspedes', curso: '5A', promedio: 63, tendencia: 'baja', misiones: 7, estilo: 'Kinestésico', avatar: '🐻',
-      perfil: { estilo: 'Necesita práctica concreta', fortalezas: 'Construcción, maquetas', apoyo: 'Matemática y constancia', contexto: 'Llega tarde seguido', obs: 'Las misiones cortas le funcionan mejor.' },
+    { id: 'A06', nombre: 'Benjamín Céspedes', apodo: 'Oso Café 8', curso: '5A', promedio: 63, tendencia: 'baja', misiones: 7, avatar: '🐻',
+      perfil: { fortalezas: 'Construcción, maquetas, manos hábiles',
+        temas: [['Fracciones', 'inicio'], ['Ciclo del agua', 'en camino']],
+        errores: ['Cuenta con los dedos en multiplicaciones', 'Deja la misión cuando se equivoca 2 veces'],
+        ritmo: { min: 12, pistas: 2.1, abandonos: 3, texto: 'Las misiones cortas le funcionan mejor' },
+        intereses: ['construir', 'autos'], accesibilidad: [['Menos distractores en pantalla', 'profesional externo']],
+        lengua: 'Castellano', acceso: 'Llega tarde seguido; usa la tablet en el colegio', repaso: 'Tablas: 5 minutos por día',
+        casa: ['Jugar a las tablas en el camino al colegio', 'Recordarle que equivocarse no le quita nada'],
+        obs: 'Las misiones cortas le funcionan mejor.' },
       notas: { mat: 55, len: 64, cnat: 68, csoc: 62, ing: 60, art: 80 } },
-    { id: 'A07', nombre: 'Isabella Añez', curso: '5A', promedio: 74, tendencia: 'sube', misiones: 11, estilo: 'Lectora', avatar: '🐱',
-      perfil: { estilo: 'Lectura y resúmenes', fortalezas: 'Lenguaje, sociales', apoyo: 'Geometría', contexto: 'Sin observaciones', obs: 'Constante y prolija.' },
+    { id: 'A07', nombre: 'Isabella Añez', apodo: 'Gata Dorada 3', curso: '5A', promedio: 74, tendencia: 'sube', misiones: 11, avatar: '🐱',
+      perfil: { fortalezas: 'Lenguaje, sociales, prolijidad',
+        temas: [['Geometría', 'en camino'], ['Departamentos', 'logrado']],
+        errores: ['Confunde perímetro y área'],
+        ritmo: { min: 9, pistas: 1, abandonos: 0, texto: 'Constante y prolija' },
+        intereses: ['historias', 'mapas'], accesibilidad: [], lengua: 'Castellano · lectura avanzada',
+        acceso: 'Tablet propia', repaso: 'Geometría: 2 veces por semana',
+        casa: ['Medir juntos el contorno de una mesa (perímetro)'], obs: 'Constante y prolija.' },
       notas: { mat: 66, len: 84, cnat: 72, csoc: 80, ing: 74, art: 70 } },
-    { id: 'A08', nombre: 'Lucas Montaño', curso: '5A', promedio: 54, tendencia: 'baja', misiones: 4, estilo: 'Auditivo', avatar: '🐸',
-      perfil: { estilo: 'Explicaciones habladas', fortalezas: 'Memoria, música', apoyo: 'Lectura y escritura', contexto: 'Faltó 4 días este mes', obs: 'Alerta: 3 misiones vencidas y faltas.' },
+    { id: 'A08', nombre: 'Lucas Montaño', apodo: 'Sapo Verde 6', curso: '5A', promedio: 54, tendencia: 'baja', misiones: 4, avatar: '🐸',
+      perfil: { fortalezas: 'Memoria, música, oído',
+        temas: [['Lectura', 'inicio'], ['Fracciones', 'inicio']],
+        errores: ['Lee sílaba por sílaba y pierde el sentido', 'Omite letras al escribir'],
+        ritmo: { min: 15, pistas: 3, abandonos: 4, texto: 'Pocas misiones este mes (faltó 4 días)' },
+        intereses: ['música', 'ritmos', 'animales'], accesibilidad: [['Lectura en voz alta', 'docente'], ['Tipografía más grande', 'docente'], ['Tiempo extra', 'docente']],
+        lengua: 'Castellano · lectura en proceso', acceso: 'Tablet compartida, sin internet en casa (usa modo sin conexión)',
+        repaso: 'Lectura: 10 minutos por día', casa: ['Leer juntos 10 minutos por día, él elige el libro', 'Usar canciones para aprender palabras'],
+        obs: 'Alerta: 3 misiones vencidas y faltas.' },
       notas: { mat: 50, len: 48, cnat: 58, csoc: 56, ing: 55, art: 62 } }
   ],
 
   misiones: [
-    { id: 'M1', materia: 'mat', titulo: 'El mercado de las fracciones', desc: 'Ayudá a la casera a repartir frutas en partes iguales.', curso: '4A', vence: 'mié 11', estado: 'activa', hechos: 2, total: 4, puntos: 30, minijuego: 'Pizza de fracciones' },
-    { id: 'M2', materia: 'mat', titulo: 'Tablas en carrera', desc: 'Multiplicaciones rápidas para abrir la puerta del aula.', curso: '4A', vence: 'hecha', estado: 'hecha', hechos: 4, total: 4, puntos: 20, minijuego: 'Carrera de bloques' },
-    { id: 'M3', materia: 'len', titulo: 'Describí tu barrio', desc: 'Escribí 5 oraciones que describan un lugar de tu barrio.', curso: '4A', vence: 'jue 12', estado: 'activa', hechos: 1, total: 4, puntos: 25, minijuego: 'Sopa de adjetivos' },
-    { id: 'M4', materia: 'cnat', titulo: 'El viaje de la gota', desc: 'Seguí a la gota por el ciclo del agua.', curso: '5A', vence: 'vie 13', estado: 'activa', hechos: 0, total: 4, puntos: 30, minijuego: 'Ruta del agua' },
-    { id: 'M5', materia: 'csoc', titulo: 'Los 9 departamentos', desc: 'Ubicá cada departamento en el mapa de bloques.', curso: '5A', vence: 'lun 16', estado: 'activa', hechos: 3, total: 9, puntos: 35, minijuego: 'Mapa armable' },
-    { id: 'M6', materia: 'ing', titulo: 'My morning', desc: 'Ordená tu rutina de la mañana en inglés.', curso: '5A', vence: 'mar 17', estado: 'activa', hechos: 0, total: 3, puntos: 20, minijuego: 'Memoria de palabras' },
-    { id: 'M7', materia: 'art', titulo: 'Collage de colores cálidos', desc: 'Armá un collage con colores cálidos y sacale foto.', curso: '4A', vence: 'vie 13', estado: 'activa', hechos: 0, total: 1, puntos: 15, minijuego: 'Pintar bloques' },
-    { id: 'M8', materia: 'cnat', titulo: 'Plantas que beben', desc: 'Observá una planta 3 días y anotá qué pasa.', curso: '4A', vence: 'hecha', estado: 'hecha', hechos: 3, total: 3, puntos: 20, minijuego: 'Ruta del agua' }
+    { id: 'M1', materia: 'mat', titulo: 'El mercado de las fracciones', desc: 'Ayudá a la casera a repartir frutas en partes iguales.', curso: '4A', vence: 'mié 11', estado: 'activa', hechos: 2, total: 4, llave: 'parque' },
+    { id: 'M2', materia: 'mat', titulo: 'Tablas en carrera', desc: 'Multiplicaciones rápidas para abrir la puerta del aula.', curso: '4A', vence: 'hecha', estado: 'hecha', hechos: 4, total: 4 },
+    { id: 'M3', materia: 'len', titulo: 'Describí tu barrio', desc: 'Escribí 5 oraciones que describan un lugar de tu barrio.', curso: '4A', vence: 'jue 12', estado: 'activa', hechos: 1, total: 4, llave: 'perdidos' },
+    { id: 'M4', materia: 'cnat', titulo: 'El viaje de la gota', desc: 'Seguí a la gota por el ciclo del agua.', curso: '5A', vence: 'vie 13', estado: 'activa', hechos: 0, total: 4 },
+    { id: 'M5', materia: 'csoc', titulo: 'Los 9 departamentos', desc: 'Ubicá cada departamento en el mapa de bloques.', curso: '5A', vence: 'lun 16', estado: 'activa', hechos: 3, total: 9 },
+    { id: 'M6', materia: 'ing', titulo: 'My morning', desc: 'Ordená tu rutina de la mañana en inglés.', curso: '5A', vence: 'mar 17', estado: 'activa', hechos: 0, total: 3 },
+    { id: 'M7', materia: 'art', titulo: 'Collage de colores cálidos', desc: 'Armá un collage con colores cálidos y sacale foto.', curso: '4A', vence: 'vie 13', estado: 'activa', hechos: 0, total: 1 },
+    { id: 'M8', materia: 'cnat', titulo: 'Plantas que beben', desc: 'Observá una planta 3 días y anotá qué pasa.', curso: '4A', vence: 'hecha', estado: 'hecha', hechos: 3, total: 3 }
   ],
 
-  // Avance del alumno de demo (Mateo) por materia, para el mundo 3D
-  alumnoDemo: { id: 'A01', apodo: 'Mateo', avatar: '🦊', nivel: 7, puntos: 340,
+  // Avance del alumno de demo (Mateo) por materia, para el mundo 3D.
+  // Sin puntos ni nivel: las misiones dan llaves a lugares (EDU.01b).
+  alumnoDemo: { id: 'A01', apodo: 'Zorro Naranja 4', avatar: '🦊',
     avance: { mat: 72, len: 45, cnat: 80, csoc: 60, ing: 30, art: 88 } },
+
+
+  // Mundo compartido del curso 4A (EDU.01b). Cerrado por curso, apodos de lista, sin texto libre.
+  mundo: {
+    // El dueño escribe el guion final de los lugares; estos 2 son de ejemplo.
+    lugares: [
+      { id: 'parque', nombre: 'Parque escondido', icono: '🌳', color: '#22C55E', mision: 'M1', pos: [-13, -13],
+        pista: 'Detrás del cerco se escuchan pájaros… La llave verde está en la misión de fracciones del aula de Mate.',
+        dentro: 'Hamacas, un árbol gigante y un picnic con pizzas para repartir.', minijuego: 'pizza' },
+      { id: 'perdidos', nombre: 'Cuarto de objetos perdidos', icono: '🧸', color: '#F59E0B', mision: 'M3', pos: [13, -13],
+        pista: 'La puerta está entreabierta y algo hace “clic, clic”… La llave amarilla está en la misión de describir del aula de Lenguaje.',
+        dentro: 'Estantes llenos de cosas perdidas. Para devolverlas hay que describirlas bien.', minijuego: 'perdidos' }
+    ],
+    // Lugar que abre todo el curso con misiones sumadas
+    puente: { nombre: 'Puente del arroyo', icono: '🌉', meta: 30, hechas: 22, pos: [0, -14.5], mio: 3,
+      equipos: [{ nombre: 'Equipo Tajibo', aporte: 8 }, { nombre: 'Equipo Motacú', aporte: 7 }, { nombre: 'Equipo Ambaibo', aporte: 7 }] },
+    // Compañeros de 4A: apodos de lista + ID opaco. Nunca nombre real ni foto.
+    companeros: [
+      { id: 'A02', apodo: 'Búho Azul 2', color: '#38BDF8', casa: { color: '#bae6fd', techo: '#1d4ed8', adornos: ['🌻', '📚', '🪁'] } },
+      { id: 'A03', apodo: 'Tortuga Verde 9', color: '#22C55E', casa: { color: '#d9f99d', techo: '#15803d', adornos: ['⚽', '🌵'] } },
+      { id: 'A04', apodo: 'Delfín Rosa 5', color: '#F472B6', casa: { color: '#fbcfe8', techo: '#be185d', adornos: ['🎵', '🐠', '🌺'] } },
+      { id: 'X11', apodo: 'Tucán Rojo 2', color: '#EF4444', casa: { color: '#fecaca', techo: '#b91c1c', adornos: ['🎨', '🌈'] } }
+    ],
+    miCasa: { color: '#fed7aa', techo: '#c2410c', adornos: ['🪴', '⚽'],
+      visitas: [{ quien: 'Búho Azul 2', reaccion: '🌟' }, { quien: 'Delfín Rosa 5', reaccion: '👏' }, { quien: 'Tortuga Verde 9', reaccion: '😄' }] },
+    // Comunicación SOLO con esto (sin texto libre, voz, mensajes privados ni fotos)
+    frases: ['¡Hola!', '¿Vamos juntos?', '¡Bien hecho!', 'Gracias', 'Te ayudo', '¡Mirá esto!', 'Nos vemos mañana'],
+    emotes: ['👋', '👍', '🎉', '😄', '❤️', '🤔'],
+    reacciones: [['👏', '¡Qué linda!'], ['🌟', '¡Me inspira!'], ['😄', '¡Genial!'], ['🌱', '¡Qué verde!']]
+  },
 
   // Familia de demo: dos hijos (uno en cada curso)
   familia: {
@@ -131,7 +220,7 @@ window.DEMO = {
         { hora: '10:42', txt: 'Completó el paso 2 de "El mercado de las fracciones"', tipo: 'ok' },
         { hora: '10:15', txt: 'Pidió una pista al tutor IA en Matemática', tipo: 'info' },
         { hora: '09:30', txt: 'Entró a clase de Lenguaje', tipo: 'info' },
-        { hora: 'Ayer', txt: 'Desbloqueó el minijuego "Carrera de bloques"', tipo: 'ok' }
+        { hora: 'Ayer', txt: 'Ganó la llave del Parque escondido', tipo: 'ok' }
       ],
       A05: [
         { hora: '11:05', txt: 'Empezó "El viaje de la gota"', tipo: 'info' },
@@ -152,11 +241,6 @@ window.DEMO = {
       { titulo: 'Salida a la Feria de Ciencias', fecha: '18 nov', estado: 'pendiente' },
       { titulo: 'Uso de fotos en el mural del colegio', fecha: '—', estado: 'autorizado' },
       { titulo: 'Retiro anticipado (cita médica)', fecha: '3 nov', estado: 'autorizado' }
-    ],
-    pagos: [
-      { concepto: 'Mensualidad noviembre', monto: 350, estado: 'pendiente', vence: '15 nov' },
-      { concepto: 'Mensualidad octubre', monto: 350, estado: 'pagado', vence: '15 oct' },
-      { concepto: 'Material Feria de Ciencias', monto: 40, estado: 'pendiente', vence: '16 nov' }
     ]
   },
 
