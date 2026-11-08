@@ -59,6 +59,15 @@ profe (texto) → casa. Sin errores de JavaScript; controles sin encimarse. Flui
 celular y 6 en tablet **con render por software (sin GPU)**; no es comparable con un celular real
 (EDU.01b medía ~18 fps igual). Los cambios no agregan trabajo al 3D.
 
+**Ajuste (pedido de la MAESTRA: "al dueño le sigue vertical")**
+- Caché: con cleanUrls la página se sirve como `/maqueta/alumno/` y el `no-cache` de `**/*.html` no
+  aplicaba → nuevos headers `no-cache` para `/maqueta/**`, `/` y `/prueba-motor/**`, y `?v=edu02c-2`
+  en los `.js`/`.css` propios de la maqueta y en `/voz/profes.js`. Al cambiar algo de la maqueta, subir ese número.
+- Aviso "Girá tu pantalla": línea "Si no gira, activá la Rotación automática…" y botón "Probar de nuevo"
+  (vuelve a pedir pantalla completa + trabar horizontal, que en Android funciona aunque la rotación esté apagada).
+- Capturas de pantalla: la página no hace nada que las bloquee (no hay `FLAG_SECURE` en la web);
+  en pantalla completa se sacan igual con los botones del celular.
+
 **Pendiente**
 - Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?

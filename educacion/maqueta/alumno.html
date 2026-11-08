@@ -192,6 +192,7 @@
   .inicio .bj { min-height: 64px; padding: 0 40px; font-size: 22px; margin-top: 18px; }
   .inicio .sug, .girar .sug { margin-top: 14px; background: transparent; color: #cbd5e1; border-color: rgba(255,255,255,.2); }
   .girar { z-index: 95; display: none; }
+  .nota-rot { font-size: 13px !important; margin-top: 10px !important; color: #FDE68A !important; }
   .solo-vertical { display: none; }
   .tel { width: 54px; height: 92px; margin: 0 auto 6px; border: 4px solid #fff; border-radius: 12px; position: relative; animation: girar-tel 2.6s ease-in-out infinite; }
   .tel::before { content: ''; position: absolute; left: 50%; top: 5px; width: 14px; height: 3px; margin-left: -7px; border-radius: 3px; background: #fff; }
@@ -273,6 +274,7 @@
     <div class="tel solo-vertical" aria-hidden="true"></div>
     <h1>La isla de 4A</h1>
     <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
+    <p class="solo-vertical nota-rot">Si no gira, activá la <b>Rotación automática</b> en el panel rápido de tu celular (deslizá desde arriba).</p>
     <button class="bj" id="jugar">▶ Jugar</button><br>
     <button class="sug solo-vertical" id="seguir-vertical-1">Seguir en vertical</button>
   </div>
@@ -282,14 +284,16 @@
     <div class="tel" aria-hidden="true"></div>
     <h2 class="t" style="font-size:24px;margin:10px 0 6px">Girá tu pantalla</h2>
     <p>La isla se ve mejor con el celular acostado 🙂</p>
+    <p class="nota-rot">Si no gira, activá la <b>Rotación automática</b> en el panel rápido de tu celular (deslizá desde arriba).</p>
+    <button class="bj" id="girar-jugar" style="margin-top:14px">🔄 Probar de nuevo</button><br>
     <button class="sug" id="seguir-vertical-2">Seguir en vertical</button>
   </div>
 </div>
 
 <div class="panel-velo" id="velo"><div class="panel" id="panel"></div></div>
 
-<script src="datos-demo.js"></script>
-<script src="misiones-demo.js"></script>
+<script src="datos-demo.js?v=edu02c-2"></script>
+<script src="misiones-demo.js?v=edu02c-2"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -369,6 +373,7 @@ function seguirVertical() { document.body.classList.add('vertical-ok'); guardarS
 $('#jugar').onclick = empezar;
 $('#seguir-vertical-1').onclick = seguirVertical;
 $('#seguir-vertical-2').onclick = seguirVertical;
+$('#girar-jugar').onclick = pantallaJuego;
 if (leerSS('alumno-vertical')) document.body.classList.add('vertical-ok');
 // Al volver a la página en la misma visita (p. ej. desde una pestaña), no pedir "Jugar" de nuevo.
 if (leerSS('alumno-jugando')) { $('#inicio').hidden = true; document.body.classList.add('jugando'); }
@@ -846,7 +851,7 @@ function conectarVoz() {
 }
 addEventListener('load', () => setTimeout(() => {
   addEventListener('profes-voz-listo', conectarVoz, { once: true });
-  import('/voz/profes.js').catch(() => { /* sin servidor: queda la ayuda de texto */ });
+  import('/voz/profes.js?v=edu02c-2').catch(() => { /* sin servidor: queda la ayuda de texto */ });
 }, 1200));
 
 // Pedido de ayuda de un compañero (aparece una vez, sin insistir)
