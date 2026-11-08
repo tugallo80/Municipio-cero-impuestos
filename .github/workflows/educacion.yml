@@ -71,13 +71,13 @@ jobs:
           --project "$PROYECTO" --non-interactive
           --message "educacion ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
 
-      - name: Publicar las Functions
-        working-directory: educacion
-        run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
-
       - name: Reglas de la base, cuentas de prueba y contenido demo
         working-directory: educacion/tools
         run: npm ci --no-audit --no-fund && node seed/crear-cuentas-prueba.js
+
+      - name: Publicar las Functions
+        working-directory: educacion
+        run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
 
       - name: Prueba de punta a punta (voz real contra Gemini)
         if: github.event_name == 'push' || inputs.probar
