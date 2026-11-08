@@ -58,8 +58,10 @@ const css = `
 @keyframes pv-respira{from{opacity:.15}to{opacity:.6}}
 #pv-pildora{position:fixed;left:50%;top:calc(108px + env(safe-area-inset-top));transform:translateX(-50%);z-index:56;display:none;align-items:center;gap:6px;background:rgba(15,26,23,.9);border:2px solid var(--pv-c,#10B981);border-radius:99px;padding:4px 4px 4px 12px;font:600 13px Inter,system-ui,sans-serif;color:#fff;white-space:nowrap;box-shadow:0 4px 0 rgba(0,0,0,.25)}
 #pv-pildora.ver{display:flex}
+#pv-pildora [hidden]{display:none!important}
 #pv-pildora button{font:inherit;color:#fff;background:rgba(255,255,255,.1);border:0;border-radius:99px;min-height:34px;padding:0 10px;cursor:pointer}
 #pv-pildora .colgar{background:#DC2626}
+#pv-pildora #pv-sonido{background:#FDE047;color:#422006;font-weight:700;animation:pv-respira .8s ease-in-out infinite alternate}
 #pv-entrar{position:fixed;inset:0;z-index:70;background:rgba(4,12,10,.6);display:none;align-items:flex-end;justify-content:center;font-family:Inter,system-ui,sans-serif}
 #pv-entrar.ver{display:flex}
 #pv-entrar form{width:100%;max-width:420px;background:#0A0A0A;border:2px solid #1F3B33;border-radius:24px 24px 0 0;padding:20px 16px calc(22px + env(safe-area-inset-bottom));color:#fff;display:grid;gap:10px}
@@ -72,6 +74,26 @@ const css = `
 #pv-entrar .no{background:#262626;color:#fff}
 #pv-entrar .error{color:#FCA5A5;font-size:14px;min-height:18px}
 @media (prefers-reduced-motion: reduce){#pv-franja .caja b{animation:none}}
+/* EDU.02c — horizontal primero: la píldora va debajo de las caras (arriba a la izquierda),
+   la franja es más baja para no tapar el círculo de caminar ni los botones, y el login
+   aparece centrado y compacto. En vertical queda como antes. */
+@media (orientation:landscape){
+#pv-pildora{left:max(10px,env(safe-area-inset-left));top:calc(max(8px,env(safe-area-inset-top)) + 60px);transform:none}
+#pv-franja{height:70px}
+#pv-franja .caja b{width:45%;height:110px;bottom:-70px}
+#pv-franja .caja b:nth-child(1){left:-5%}#pv-franja .caja b:nth-child(2){left:28%}#pv-franja .caja b:nth-child(3){left:60%}
+#pv-franja .oye{left:25%;right:25%}
+#pv-marco i{border-radius:28px}
+#pv-entrar{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding:max(8px,env(safe-area-inset-top)) max(10px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(10px,env(safe-area-inset-left))}
+#pv-entrar form{max-width:560px;margin:auto 0;border-radius:20px;padding:12px 14px;gap:8px;grid-template-columns:1fr 1fr;align-items:center}
+#pv-entrar h2{font-size:17px;grid-column:1/-1}
+#pv-entrar p{font-size:12px;grid-column:1/-1;margin-top:-6px}
+#pv-entrar input{min-height:44px}
+#pv-entrar .error{grid-column:1/-1;min-height:0}
+#pv-entrar .error:empty{display:none}
+#pv-entrar .fila{grid-column:1/-1}
+#pv-entrar button{min-height:46px}
+}
 `
 const estilo = document.createElement('style')
 estilo.textContent = css
@@ -81,6 +103,7 @@ document.body.insertAdjacentHTML(
   `<div id="pv-marco" class="pv-capa" aria-hidden="true"><i class="luz"></i><i class="oye"></i></div>
    <div id="pv-franja" class="pv-capa" aria-hidden="true"><div class="caja"><b></b><b></b><b></b></div><i class="oye"></i></div>
    <div id="pv-pildora" role="status"><span id="pv-texto"></span>
+     <button type="button" id="pv-sonido" hidden>🔊 Tocá para activar el sonido</button>
      <button type="button" id="pv-efecto" title="Cambiar cómo se ve la voz"></button>
      <button type="button" class="colgar" id="pv-colgar" title="Colgar">✕</button></div>
    <div id="pv-entrar"><form>
@@ -94,6 +117,8 @@ document.body.insertAdjacentHTML(
 )
 const $ = (id) => document.getElementById(id)
 const marco = $('pv-marco')
+const sonido = $('pv-sonido')
+sonido.onclick = () => { charla?.sesion?.reanudarAudio?.(); window.__sonidoTocado = true }
 const franja = $('pv-franja')
 
 function pintarEfecto() {
@@ -128,6 +153,9 @@ let raf = 0
 function animar() {
   raf = 0
   if (!charla?.sesion) return
+  // Si el celular suspende el audio (llamada, otra app, ahorro de energía), avisar con un botón.
+  const bloqueado = !!charla.sesion.estadoAudio && charla.sesion.estadoAudio() !== 'running'
+  if (sonido.hidden === bloqueado) sonido.hidden = !bloqueado
   const habla = charla.sesion.nivelSalida()
   const oye = charla.sesion.nivelEntrada()
   suave += (habla - suave) * (habla > suave ? 0.5 : 0.12)
@@ -191,6 +219,10 @@ function pedirEntrada() {
     const error = velo.querySelector('.error')
     error.textContent = ''
     velo.classList.add('ver')
+    // Con el teclado abierto la pantalla acostada queda muy baja: llevar el campo a la vista.
+    for (const campo of form.querySelectorAll('input')) {
+      campo.onfocus = () => setTimeout(() => campo.scrollIntoView({ block: 'center', behavior: 'smooth' }), 300)
+    }
     const fin = (ok) => { velo.classList.remove('ver'); resolver(ok) }
     velo.querySelector('.no').onclick = () => fin(false)
     form.onsubmit = async (e) => {
@@ -247,6 +279,7 @@ async function empezar(profeId, relevoDe = null) {
   try {
     const sesion = await iniciarSesionKay({
       workletBasePath: '/audioWorklets',
+      ctxSalida: tomarSalida(),
       obtenerToken: async () => {
         try {
           const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe })
@@ -370,8 +403,49 @@ async function relevo(aId) {
 }
 
 // ── API para la maqueta ───────────────────────────
+// Contexto de reproducción creado DENTRO del toque en la cara del profe (antes de
+// cualquier await): en Android/iOS es lo que garantiza que el audio suene.
+let salidaPreparada = null
+function prepararSalida() {
+  try {
+    if (salidaPreparada && salidaPreparada.state !== 'closed') return
+    const AC = window.AudioContext || window.webkitAudioContext
+    salidaPreparada = new AC({ sampleRate: 24000 })
+    salidaPreparada.resume().catch(() => {})
+    // un instante de silencio "desbloquea" la salida en algunos celulares
+    const b = salidaPreparada.createBuffer(1, 240, 24000), f = salidaPreparada.createBufferSource()
+    f.buffer = b; f.connect(salidaPreparada.destination); f.start()
+  } catch { salidaPreparada = null }
+}
+// ── Modo diagnóstico (?diag=1): muestra en pantalla el estado del audio y deja probar el parlante ──
+if (new URLSearchParams(location.search).get('diag') === '1') {
+  const caja = document.createElement('div')
+  caja.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:max(8px,env(safe-area-inset-bottom));z-index:80;background:rgba(0,0,0,.85);color:#fff;font:12px/1.35 monospace;padding:6px 10px;border-radius:10px;display:flex;gap:8px;align-items:center;max-width:96vw'
+  caja.innerHTML = '<span id="pv-diag">audio: sin charla</span><button type="button" style="font:inherit;background:#FDE047;color:#000;border:0;border-radius:8px;padding:6px 8px">🔈 Probar parlante</button>'
+  document.body.appendChild(caja)
+  caja.querySelector('button').onclick = () => {
+    for (const [hz, f, t] of [[24000, 440, 0], [undefined, 660, 0.6]]) {
+      try {
+        const AC = window.AudioContext || window.webkitAudioContext
+        const c = hz ? new AC({ sampleRate: hz }) : new AC()
+        const o = c.createOscillator(), g = c.createGain()
+        o.frequency.value = f; g.gain.value = 0.2; o.connect(g).connect(c.destination)
+        c.resume(); o.start(c.currentTime + t); o.stop(c.currentTime + t + 0.4)
+        setTimeout(() => c.close(), 1500)
+      } catch (e) { $('pv-diag').textContent = 'error: ' + e.message }
+    }
+  }
+  setInterval(() => {
+    const d = charla?.sesion?.diagnostico?.()
+    $('pv-diag').textContent = d
+      ? `salida ${d.salida} ${d.hz}Hz · mic ${d.entrada} · llegaron ${d.bloques} bloques (${(d.muestras / 24000).toFixed(1)} s) · nivel ${charla.sesion.nivelSalida().toFixed(2)}`
+      : 'audio: sin charla (tocá la cara de un profe)'
+  }, 300)
+}
+function tomarSalida() { const c = salidaPreparada; salidaPreparada = null; return c }
 async function llamar(profeId) {
   if (ocupado || !profe(profeId)) return
+  if (charla?.profe !== profeId) prepararSalida()
   try {
     await listo
   } catch {

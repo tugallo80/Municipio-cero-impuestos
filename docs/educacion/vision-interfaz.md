@@ -186,8 +186,9 @@ en Bolivia (RUDE, carnet), factibilidad técnica en tablets.
   construcción con materiales de conocimiento, mundo cerrado y seguro.
 - **La magia está en los portales**: visitar otros colegios a través de portales.
 - **Construir** es el reto que más le gusta al público objetivo.
-- **El mapa**: la ciudad de Santa Cruz mezclada con un **bosque abierto** que los colegios van
-  ocupando y haciendo crecer.
+- **El mapa**: la ciudad de Santa Cruz **todavía vacía**, solo con los **hitos urbanos** (el Cristo,
+  la plaza 24 de Septiembre, etc.) y áreas verdes libres. Los colegios la van construyendo
+  (ver "Los alumnos construyen la ciudad", abajo). *Aclaración del dueño: no se trata de talar.*
 - **Evolución**: olimpiadas y retos entre colegios.
 - **Conectar clases sociales**: colegios públicos, de convenio y privados en el mismo mundo,
   donde lo que cuenta es el conocimiento.
@@ -203,6 +204,65 @@ Notas de la MAESTRA:
   son la herramienta principal para "conectar clases sociales".
 - **Estética propia**: definir una dirección de arte que escale por edad (mismo mundo, distinto
   nivel de detalle y tono de interfaz/avatares por nivel).
+
+## Estilo que evoluciona por tramo de grados (dueño, 8-nov-2026)
+
+- Cada tramo tiene su propia gráfica y **el mundo se transforma al pasar de curso** ("vencer el
+  curso para vivir la nueva interfaz") → motivación para subir de nivel.
+  - **1.º–3.º primaria**: cúbico / bloques (estilo propio).
+  - **4.º–6.º primaria**: piezas redondeadas y encastrables, tipo juguete de construcción.
+  - **Secundaria**: más realista / estilizado.
+- Nombres propios sin marcas (ej. "Bloques", "Piezas", "Mundo real"); no copiar Minecraft, Lego
+  ni Playmobil.
+
+Notas de la MAESTRA:
+- Encaja con la investigación: lo que los adolescentes rechazan es lo infantil, y aquí cada edad
+  tiene lo suyo; los mundos ya están separados por nivel.
+- **Repitentes**: que quedarse en un tramo no se sienta castigo (ej. el mundo igual mejora con lo
+  que construyen; la transformación es un premio, no una vergüenza).
+- **Costo**: tres líneas de arte. Mitigar con una base común (mismas piezas lógicas y mapa) y tres
+  "pieles" de render.
+- **Rendimiento**: el tramo "realista" es el más pesado; debe seguir andando en tablets baratas.
+- Se prueba en EDU.01c (pedido enviado a la sub-sesión).
+
+## Los alumnos construyen la ciudad (aclaración del dueño, 8-nov-2026)
+
+- La ciudad empieza **vacía**, solo con hitos (el Cristo, la plaza, etc.). No hay bosque que talar.
+- Cada curso **acumula capital** con sus misiones bien hechas. El docente propone, por ejemplo un
+  viernes: *"esta semana juntamos un buen capital porque todos hicieron sus misiones y las hicieron
+  bien, ¿qué les parece si construimos un zoológico?"*
+- Los alumnos **no solo mejoran su escuela: construyen la ciudad** (zoológico, parques, hospitales,
+  bibliotecas…).
+- **Reto entre colegios = "envidia buena"**: quién **aporta más a la ciudad**.
+
+Notas de la MAESTRA:
+- Es un **presupuesto participativo en miniatura**: el curso decide en qué invierte lo que ganó.
+  Conecta directo con la app del municipio (referéndums de obras) y forma ciudadanía desde chicos.
+- Para que "aportar más" sea justo: medir el aporte **por alumno** y la **mejora**, en ligas de
+  colegios comparables (ver `docs/investigacion/mundo-abierto-santa-cruz.md`).
+- La decisión del curso puede ser una **votación en clase** guiada por el docente, sin premios por votar.
+- Las obras de la ciudad son **de todos**: se pueden visitar por portales y llevan el nombre de los
+  colegios que aportaron.
+
+## Construir debe ser lúdico y propio (dueño, 8-nov-2026)
+
+- No solo "tocar y que aparezca una pieza predeterminada": los chicos **diseñan lo suyo**. Eso
+  es lo que diferencia a los juegos de construcción libre de los que entregan el diseño hecho.
+- También se **competirá en arte** (diseño de las obras). Después de tener la maqueta funcional.
+- Idea de mezcla: el alumno diseña → la obra se aprueba → **obreros la construyen durante un rato**
+  (expectativa de verla terminada).
+- Posible **mix**: diseño libre para lo propio + piezas/planos guía para empezar.
+
+Notas de la MAESTRA (para hacerlo sano):
+- **Diseño libre** = construccionismo (aprende quien diseña): respaldado.
+- **Obreros que tardan**: dar expectativa sí, ansiedad no. Ver la obra crecer en vivo mientras se
+  juega, o "los obreros trabajan mientras estás en clase/mañana está lista" está bien. **Evitar**
+  los relojes de los juegos gratuitos que empujan a volver o pagar: nada de notificaciones para
+  apurar, nada de "acelerar" con monedas o dinero, y la obra nunca se pierde.
+- **Concurso de arte**: jurado docente + votos de compañeros con reacciones predefinidas, por
+  categorías y ligas (no ranking único); moderación de lo construido (aprobación docente).
+- Herramientas simples en tablet: pintar bloques, simetría, copiar/pegar, deshacer, plantillas
+  opcionales para quien no sabe por dónde empezar.
 
 ## Estilo visual elegido: 12 evoluciones (dueño, 8-nov-2026)
 
