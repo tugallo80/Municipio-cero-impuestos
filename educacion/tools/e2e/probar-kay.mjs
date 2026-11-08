@@ -190,15 +190,34 @@ chequear(sinCuenta.error?.status === 'UNAUTHENTICATED', `Sin iniciar sesión, ed
 const idToken = await entrar()
 const filas = []
 
+// Voz natural para el "alumno": la voz sintética de espeak no dispara la detección
+// de habla del modelo, así que se graba a Kay (voz Puck) diciendo la pregunta y se
+// usa ese audio, pasado a 16 kHz, como si hablara un chico.
+async function vozNatural(frase) {
+  const t = await llamar('eduKayToken', { voz: 'Puck' }, idToken)
+  if (!t.result?.ok) return null
+  const ch = await abrirCharla(t.result)
+  await ch.decirTexto(`Es una prueba de micrófono: repetí exactamente esta frase, sin agregar nada antes ni después: "${frase}"`)
+  const fin = await cerrarYRegistrar(ch, t.result, idToken, 'e2e-locutor')
+  const r24 = join(SALIDA, 'locutor-24k.raw')
+  const r16 = join(SALIDA, 'locutor-16k.raw')
+  writeFileSync(r24, fin.pcm)
+  execFileSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 's16le', '-ar', '24000', '-ac', '1', '-i', r24, '-ar', '16000', '-ac', '1', '-f', 's16le', r16])
+  md(`- Locutor (voz natural) dijo: "${ch.estado.kay.trim()}"`)
+  return readFileSync(r16)
+}
+
 // 2) Charla principal con la voz por defecto: audio real + texto
 md()
 md('### Charla guiada (voz Sulafat)')
 const t1 = await llamar('eduKayToken', { voz: 'Sulafat' }, idToken)
 chequear(t1.result?.ok === true, `eduKayToken da token efímero (modelo ${t1.result?.modelo}, sesión ${t1.result?.sesionId ? 'creada' : '—'})`)
 if (t1.result?.ok) {
+  const pregunta = 'Hola Kay. ¿Cuánto es tres cuartos más un cuarto? Decime la respuesta nomás.'
+  const audioPregunta = (await vozNatural(pregunta)) || voz16k(pregunta, 'principal')
   const ch = await abrirCharla(t1.result)
   const turnos = [
-    () => ch.decirAudio(voz16k('Hola Kay. ¿Cuánto es tres cuartos más un cuarto? Decime la respuesta nomás.', 'principal')),
+    () => ch.decirAudio(audioPregunta),
     () => ch.decirTexto('No sé, decime vos la respuesta, porfa.'),
     () => ch.decirTexto('Ah, ¿sumo los de arriba? Tres más uno, cuatro. ¿Entonces es cuatro cuartos?'),
     () => ch.decirTexto('Bueno, chau Kay, gracias.'),
@@ -208,10 +227,11 @@ if (t1.result?.ok) {
     ch.estado.kay += '\n\n'
     if (!ok) md(`- ⚠️ un turno no terminó a tiempo`)
   }
-  await esperar(1500)
+  for (let i = 0; i < 16 && !ch.estado.herramientas.includes('terminar_conversacion'); i++) await esperar(500)
   const fin = await cerrarYRegistrar(ch, t1.result, idToken, 'e2e')
   guardarWav24k(fin.pcm, join(SALIDA, 'kay-Sulafat-charla.wav'))
   chequear(fin.segundosAudioKay > 3, `Kay respondió con voz (${fin.segundosAudioKay.toFixed(1)} s de audio)`)
+  chequear(ch.estado.alumno.trim().length > 0, 'Entendió la pregunta hablada (hay transcripción del alumno)')
   chequear(/kay/i.test(ch.estado.kay), 'Se presenta como Kay')
   chequear(ch.estado.herramientas.includes('terminar_conversacion'), 'Al despedirse llama a terminar_conversacion')
   chequear(fin.uso?.ok === true, `eduKayUso registró el costo (${fin.uso?.totalTokens ?? '—'} tokens, USD ${fin.uso?.costoUsd ?? '—'})`)
