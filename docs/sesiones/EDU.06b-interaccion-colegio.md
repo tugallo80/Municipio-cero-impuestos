@@ -55,6 +55,12 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
 | `obj_<cosa>_<materia>` | Objeto de la materia (ábaco, microscopio…) | Curiosidad y pregunta rápida del profe |
 | `obj_libros_biblioteca` | Estante destacado de la biblioteca | Elegir una lectura |
 | `zona_<lugar>` | Lugar con interacción | Abre el panel del lugar |
+| `deco_<x>` | Decoración (p. ej. `deco_mesa_mate_01`) | Nada; se registra y se ignora |
+| `obj_silla_<materia\|lugar>_NN` | Silla (+Z = de donde se sienta) | "Sentarse" |
+| `obj_hamaca_NN`, `obj_resbalin`, `obj_subeybaja` | Juegos del parque | Subirse; se baja moviendo el círculo |
+| `obj_kiosco` | Mostrador del kiosco | Menú de comida |
+| `obj_arco_futbol_NN`, `obj_aro_basquet_NN` | Arcos y aros (+Z = hacia la cancha) | Gol o canasta |
+| `obj_planta_huerto` | Planta del huerto | Crece con el avance del curso |
 | `colision_<x>` | Caja de choque | Se oculta y frena al personaje |
 | `interior_<x>` | Volumen interior | Se oculta; adentro, cámara a la altura de los ojos |
 
@@ -63,7 +69,7 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
   `obj_estante_mate`.
 - **Materias**: `mate`, `lenguaje`, `ciencias` (Ciencias Naturales), `sociales` (Ciencias
   Sociales), `artes`, `ingles`.
-- **Lugares**: `biblioteca`, `cancha`, `huerto`, `kiosco`, `direccion`.
+- **Lugares**: `biblioteca`, `futbol`, `basquet`, `parque`, `huerto`, `kiosco`, `direccion`.
 - **Cosas de cada aula** (hoy, dibujadas por código):
 
   | Aula | Cosa |
@@ -78,6 +84,61 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
   El cartel aparece ~1 m delante del frente; con `userData.frente` se cambia esa distancia.
 - **Al leer los nombres**: se pasan a minúsculas, los espacios y guiones a `_`, y se quita el sufijo
   de Blender `.001`. Si un nombre se repite, a partir del segundo se le agrega `@2`, `@3`…
+
+- **Sub-nodos opcionales de lo que se mueve**:
+  - `asiento` dentro de cada hamaca: el pivote va arriba, en la barra.
+  - `tabla` dentro del sube y baja: el pivote va al centro.
+  - Si no están, la lógica funciona igual.
+- **Datos opcionales del nodo** (en Blender, propiedades personalizadas; llegan a `userData`):
+
+  | Dato | Para qué | Si falta |
+  |---|---|---|
+  | `campo: [ancho, largo]` | Canchas | Se usa la caja del nodo |
+  | `aro: [x, y, z]` | Centro del aro | Arriba de la caja |
+  | `superficie: {w, h, y, z}` | Pizarra para dibujar | Se usa la cara de adelante de la caja |
+  | `frente` | Distancia del cartel | — |
+- **La lógica no usa números fijos de posición**. Todo sale del nodo con nombre: su matriz y su caja
+  se guardan antes de juntar las mallas.
+
+## Entrega 1 — "segunda vida" (pedido ampliado del dueño)
+- **Pizarra para dibujar** en todas las aulas:
+  - al tocarla, la cámara pasa a primer plano;
+  - 6 tizas de colores, borrador y "borrar todo";
+  - "📌 Misión" abre la misión del día y "← Volver" sale;
+  - lo dibujado queda mientras dura la sesión.
+- **Sentarse** en las sillas de las aulas y de la biblioteca: "🪑 Sentarse"; para pararse, mover el
+  círculo. Si la silla está ocupada por un compañero, avisa.
+- **Kiosco con menú cruceño, gratis**:
+  - lo saludable primero y destacado (⭐): fruta de estación, jugo de frutas y agua;
+  - después: cuñapé, sonso de yuca, empanada de queso y salteña;
+  - el personaje lo agarra con la mano, come o toma con animación y dice "¡Rico! 😋";
+  - las gorras siguen abajo.
+- **Fútbol**:
+  - la pelota tiene física simple: se empuja al caminar y frena sola;
+  - cerca de la pelota aparece "⚽ Patear";
+  - arcos con "¡GOOOL!" y papelitos de festejo;
+  - dos compañeros juegan: van a la pelota si está de su lado y la patean;
+  - el reto de los conos sigue acá.
+- **Básquet**:
+  - "🏀 Tirar al aro": hasta 5 m entra con festejo; desde más lejos, "¡Casi!";
+  - un compañero tira al aro solo.
+- **Parque infantil** (al oeste del colegio):
+  - 2 hamacas que se balancean;
+  - resbalín: sube la escalera, se tira y dice "¡Yujuuu!";
+  - sube y baja, con un chiquito en la otra punta.
+- **Rendimiento**: física simple (fricción y rebote en el campo), 7 compañeros en total y todo lo
+  fijo junto en pocas mallas.
+- **Probado** (Playwright, 915×412, táctil):
+  - P1 y P5, completo:
+    - dibujar con el dedo y misión desde la pizarra;
+    - sentarse, pararse y silla ocupada;
+    - pedir en el kiosco;
+    - gol;
+    - canasta;
+    - hamaca, sube y baja y resbalín.
+    - Sin errores.
+  - S6: lo mismo, salvo la canasta y el final del resbalín, que no llegan a terminar en la prueba
+    sin placa de video (1–2 cuadros por segundo).
 
 ## Cierre
 

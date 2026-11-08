@@ -52,6 +52,8 @@
   .ayuda { position: fixed; bottom: calc(var(--sb) + 6px); left: 50%; transform: translateX(-50%); background: rgba(15,26,23,.8); border-radius: 99px; padding: 8px 14px; font-size: 13px; z-index: 10; white-space: nowrap; pointer-events: none; transition: opacity .4s; }
   .aviso-ayuda { position: fixed; left: 50%; transform: translateX(-50%); width: min(460px, calc(100vw - 260px)); top: calc(var(--sa) + 56px); z-index: 12; display: none; align-items: center; gap: 10px; background: #FEF3C7; color: #422006; border-radius: 16px; padding: 8px 10px; box-shadow: 0 5px 0 #CA8A04; font-size: 14px; animation: aparece .3s ease; }
   .aviso-ayuda.ver { display: flex; }
+  /* EDU.06b: dibujando en la pizarra, solo la paleta */
+  body.dibujando .acciones, body.dibujando .ayuda, body.dibujando .aviso-ayuda, body.dibujando .cartel { display: none !important; }
   .aviso-ayuda b { font-family: 'Space Grotesk'; }
   .aviso-ayuda .bj { min-height: 40px; padding: 0 12px; font-size: 14px; }
   @keyframes aparece { from { opacity: 0; } }
@@ -553,12 +555,21 @@ function leer(i, elegida) {
     ${ya ? `<div class="caja-info" style="margin-top:12px">${elegida === l.ok ? '✅ ¡Eso! Lo dice el cuento.' : '🧩 Volvé a leer: la respuesta está en el cuento.'}</div>` : ''}`);
   if (ya) window.sonar(elegida === l.ok ? 'bien' : 'pop');
 }
-function panelCancha() {
+function panelFutbol() {
   const mejor = lsLeer('alumno-conos');
-  abrir(cab('⚽', 'rgba(16,185,129,.2)', 'Cancha', 'Moverse también cuenta') + `
+  abrir(cab('⚽', 'rgba(16,185,129,.2)', 'Cancha de fútbol', 'Moverse también cuenta') + `
+    <div class="caja-info" style="margin-bottom:6px">⚽ Caminá contra la pelota para llevarla. Cerca de la pelota aparece <b>Patear</b>. ¡Metela en un arco!</div>
     <button class="mision" onclick="cerrar();window.__retoConos && window.__retoConos()"><span style="font-size:26px">🏃</span>
       <span><b>Reto de los conos</b><small>Tocá los 5 conos lo más rápido que puedas${mejor ? ' · tu mejor tiempo: ' + mejor + ' s' : ''}</small></span></button>
-    <div class="mision" style="opacity:.6"><span style="font-size:26px">👥</span><span><b>Jugar con el curso</b><small>Pronto</small></span></div>`);
+    <div class="mision" style="opacity:.6"><span style="font-size:26px">👥</span><span><b>Partido con el curso</b><small>Pronto</small></span></div>`);
+}
+function panelBasquet() {
+  abrir(cab('🏀', 'rgba(234,88,12,.2)', 'Cancha de básquet', 'Tirá al aro') + `
+    <div class="caja-info">🏀 Acercate a la pelota naranja y tocá <b>Tirar al aro</b>. Desde cerca entra; desde muy lejos, ¡casi!</div>`);
+}
+function panelParque() {
+  abrir(cab('🛝', 'rgba(250,204,21,.2)', 'Parque infantil', 'Para jugar en el recreo') + `
+    <div class="caja-info">Acercate y tocá: <b>🪢 hamacas</b>, <b>🛝 resbalín</b> y <b>⚖️ sube y baja</b>. Para bajarte, mové el círculo.</div>`);
 }
 function panelHuerto() {
   const p = M.puente, pct = Math.round(Math.min(1, p.hechas / p.meta) * 100), hoy = new Date().toISOString().slice(0, 10), rego = lsLeer('alumno-huerto') === hoy;
@@ -570,14 +581,23 @@ function panelHuerto() {
 }
 function regar() { lsGuardar('alumno-huerto', new Date().toISOString().slice(0, 10)); cerrar(); window.__regar && window.__regar(); toast('💧 ¡Regaste la planta del curso!'); }
 const GORRAS = [['#1e3a8a', 'Azul', 0], ['#10B981', 'Esmeralda', 1], ['#F59E0B', 'Naranja', 2], ['#EC4899', 'Rosa toborochi', 3]];
+// Menú del kiosco: comida cruceña, gratis (sin plata). Lo saludable va primero y destacado.
+const MENU = [
+  ['fruta', '🍎', 'Fruta de estación', true], ['jugo', '🧃', 'Jugo de frutas', true], ['agua', '💧', 'Agua', true],
+  ['cunape', '🧀', 'Cuñapé', false], ['sonso', '🍢', 'Sonso de yuca', false], ['empanada', '🥟', 'Empanada de queso', false], ['saltena', '🥟', 'Salteña', false]
+];
 function panelKiosco() {
   const tengo = S.llaves.size + S.mentor, actual = lsLeer('alumno-gorra') || GORRAS[0][0];
-  abrir(cab('🧃', 'rgba(250,204,21,.2)', 'Kiosco', 'Sin plata: tus llaves desbloquean colores') + `
-    <div class="caja-info" style="margin-bottom:6px">Tenés 🗝️ ${tengo}. Las llaves <b>no se gastan</b>: con más llaves se desbloquean más colores de gorra.</div>
+  abrir(cab('🧃', 'rgba(250,204,21,.2)', 'Kiosco', 'Gratis: elegí qué comer o tomar') +
+    MENU.map(([k, ic, n, sano]) => `<button class="mision" onclick="pedir('${k}')" ${sano ? 'style="border-color:rgba(132,204,22,.6);background:rgba(132,204,22,.1)"' : ''}>
+      <span style="font-size:28px">${ic}</span><span><b>${n}</b><small>${sano ? '<span class="etq" style="background:rgba(132,204,22,.25);color:#bef264">⭐ Saludable</span>' : 'De vez en cuando'}</small></span></button>`).join('') + `
+    <div class="tit">Gorras</div>
+    <div class="caja-info" style="margin-bottom:6px">Tenés 🗝️ ${tengo}. Las llaves <b>no se gastan</b>: con más llaves se desbloquean más colores.</div>
     ${GORRAS.map(([c, n, k]) => `<button class="mision" ${tengo >= k ? `onclick="ponerGorra('${c}')"` : 'disabled style="opacity:.55"'}>
       <span style="width:30px;height:30px;border-radius:50%;background:${c};flex:none;border:3px solid ${c === actual ? '#fff' : 'transparent'}"></span>
       <span><b>Gorra ${n}</b><small>${tengo >= k ? (c === actual ? 'La tenés puesta' : 'Tocá para ponértela') : '🔒 Con ' + k + ' llave' + (k > 1 ? 's' : '')}</small></span></button>`).join('')}`);
 }
+function pedir(k) { const it = MENU.find(m => m[0] === k); cerrar(); toast(`${it[1]} ¡Acá tenés tu ${it[2].toLowerCase()}!`); window.__comer && window.__comer(k, it[2]); }
 function ponerGorra(c) { lsGuardar('alumno-gorra', c); window.__gorra && window.__gorra(c); window.sonar('pop'); panelKiosco(); }
 function panelDireccion() {
   const avisos = D.avisos || [];
@@ -1380,8 +1400,10 @@ function iniciar(THREE) {
   const MAT_NOM = { mat: 'mate', len: 'lenguaje', cnat: 'ciencias', csoc: 'sociales', art: 'artes', ing: 'ingles' };
   const NOM_MAT = Object.fromEntries(Object.entries(MAT_NOM).map(([a, b]) => [b, a]));
   const COSAS = { abaco: '🧮 Ábaco', libros: '📚 Libros del aula', microscopio: '🔬 Microscopio', globo: '🌎 Globo y mapa', caballete: '🎨 Caballete', radio: '📻 Radio' };
-  const ZONAS = { cancha: ['⚽ Cancha · Reto', 'panelCancha'], huerto: ['🌱 Huerto · Regar', 'panelHuerto'], kiosco: ['🧃 Kiosco · Gorras', 'panelKiosco'], direccion: ['🏛️ Dirección · Avisos', 'panelDireccion'], biblioteca: ['📚 Biblioteca', 'panelBiblioteca'] };
-  const PREF = /^(aula|puerta|obj|zona|colision|interior)_([a-z0-9_]+)$/;
+  const ZONAS = { futbol: ['⚽ Cancha de fútbol', 'panelFutbol'], basquet: ['🏀 Cancha de básquet', 'panelBasquet'], parque: ['🛝 Parque infantil', 'panelParque'], huerto: ['🌱 Huerto · Regar', 'panelHuerto'], kiosco: ['🧃 Kiosco · Menú', 'panelKiosco'], direccion: ['🏛️ Dirección · Avisos', 'panelDireccion'], biblioteca: ['📚 Biblioteca', 'panelBiblioteca'] };
+  const nodos = {};          // nombre → nodo (para la lógica: posiciones y tamaños salen de acá)
+  const USOS = {};           // comportamientos por cosa: silla, hamaca, resbalin, subeybaja, pizarra, kiosco… (más abajo)
+  const PREF = /^(aula|puerta|obj|zona|colision|interior|deco)_([a-z0-9_]+)$/;
   const alCuadro = [];        // funciones que corren en cada cuadro (animaciones de zonas y compañeros)
   const salas = {};           // nombre → sala por dentro (aulas y biblioteca)
   let salaActual = null, saltoCam = false;
@@ -1395,9 +1417,10 @@ function iniciar(THREE) {
       return o && dentroDe(o, s.g) ? { texto: '🚪 Salir al patio', accion: salirSala } : { texto: `${s.icono} Entrar · ${s.titulo}`, accion: () => entrarSala(resto) };
     }
     if (tipo === 'obj') {
-      const p = resto.split('_'), donde = p.length > 1 ? p[p.length - 1] : '', cosa = p.length > 1 ? p.slice(0, -1).join('_') : p[0], mid = NOM_MAT[donde];
+      const p = resto.replace(/_\d+$/, '').split('_'), donde = p.length > 1 ? p[p.length - 1] : '', cosa = p.length > 1 ? p.slice(0, -1).join('_') : p[0], mid = NOM_MAT[donde];
+      if (USOS[cosa]) return USOS[cosa](o, mid || donde, n);   // cosas que se usan (sentarse, hamaca, pizarra, kiosco…)
       if (mid) {
-        if (cosa === 'pizarra') return { texto: '🧑‍🏫 Pizarra · Misión del día', accion: () => window.panelPizarra(mid) };
+        if (cosa === 'libros') return { texto: '📚 Libros · Leer', accion: () => window.panelBiblioteca() };
         if (cosa === 'estante') return { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) };
         return { texto: (COSAS[cosa] || '✨ Mirar') + ' · Mirar', accion: () => window.panelObjeto(mid) };
       }
@@ -1408,12 +1431,19 @@ function iniciar(THREE) {
     return null;
   }
   const usados = {}, vE = new THREE.Vector3(), qE = new THREE.Quaternion();
+  // caja del nodo en sus propios ejes (ancho, alto, frente) aunque después las mallas se junten
+  function cajaLocal(o) {
+    const inv = new THREE.Matrix4().copy(o.matrixWorld).invert(), c = new THREE.Box3(), b = new THREE.Box3(), m4 = new THREE.Matrix4();
+    o.traverse(x => { if (x.isMesh && x.geometry) { if (!x.geometry.boundingBox) x.geometry.computeBoundingBox(); b.copy(x.geometry.boundingBox).applyMatrix4(m4.multiplyMatrices(inv, x.matrixWorld)); c.union(b); } });
+    return c;
+  }
   function enlazar(raiz) {
     raiz.updateMatrixWorld(true);
-    const nodos = []; raiz.traverse(o => { if (o.name && !o.userData.enlazado) nodos.push(o); });
-    for (const o of nodos) {
+    const lista = []; raiz.traverse(o => { if (o.name && !o.userData.enlazado) lista.push(o); });
+    for (const o of lista) {
       const n = normalNombre(o.name), m = PREF.exec(n); if (!m) continue;
-      o.userData.enlazado = true;
+      o.userData.enlazado = true; nodos[n] = o; o.userData.nombre = n; o.userData.mundo = o.matrixWorld.clone(); o.userData.cajaLocal = cajaLocal(o);
+      if (m[1] === 'deco') continue;
       if (m[1] === 'colision') { solidos.push(new THREE.Box3().setFromObject(o)); o.visible = false; continue; }
       if (m[1] === 'interior') { zonasInteriores.push({ nombre: n, caja: new THREE.Box3().setFromObject(o) }); o.visible = false; continue; }
       if (m[1] === 'aula') continue;
@@ -1426,7 +1456,7 @@ function iniciar(THREE) {
       hacerTocable(o, { tipo: 'obj', id: n, clave });
     }
   }
-  window.__enlazar = enlazar;   // cuando llegue la maqueta GLB: __enlazar(gltf.scene)
+  window.__enlazar = enlazar; window.__nodos = nodos;   // cuando llegue la maqueta GLB: __enlazar(gltf.scene)
 
   // piezas sueltas para armar muebles
   const cil = (x, y, z, sx, sy, sz, color, padre) => { const m = new THREE.Mesh(N >= 2 && EVO ? EVO.cil : caja, mat(color)); m.position.set(x, y, z); m.scale.set(sx, sy, sz); padre.add(m); return m; };
@@ -1445,7 +1475,11 @@ function iniciar(THREE) {
     bloque(x, alto, z, w, .05, l, C_MADERA, padre);
     for (const sx of [-1, 1]) bloque(x + sx * (w / 2 - .05), alto / 2, z, .05, alto, l - .06, C_MADERA_OSC, padre);
   }
-  function silla(x, z, padre) { bloque(x, .42, z, .4, .05, .4, C_MADERA, padre); bloque(x, .66, z + .2, .4, .45, .05, C_MADERA, padre); for (const sx of [-1, 1]) bloque(x + sx * .17, .21, z, .05, .42, .36, C_MADERA_OSC, padre); }
+  function silla(x, z, padre, nombre = '', ry = Math.PI) {   // frente (+Z) = de donde se sienta; ry = π mira hacia la pizarra
+    const g = grupo(nombre, x, z, ry, padre, { frente: 0, alto: 1.2 });
+    bloque(0, .42, 0, .4, .05, .4, C_MADERA, g); bloque(0, .66, -.2, .4, .45, .05, C_MADERA, g); for (const sx of [-1, 1]) bloque(sx * .17, .21, 0, .05, .42, .36, C_MADERA_OSC, g);
+    return g;
+  }
   function libros(x, y, z, ancho, padre, k = 0) {
     const cols = ['#ef4444', '#3b82f6', '#22c55e', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6'];
     for (let i = 0, px = -ancho / 2 + .05; px < ancho / 2 - .05; i++) { const w = .06 + ((i * 7 + k) % 3) * .02, h = .24 + ((i * 5 + k) % 4) * .04; bloque(x + px + w / 2, y + h / 2, z, w, h, .2, cols[(i + k) % cols.length], padre); px += w + .01; }
@@ -1493,7 +1527,8 @@ function iniciar(THREE) {
     const s = sala(nom, i, m.corto, m.icono, m.color, salidaDe(px, pz, ry));
     const g = s.g;
     // bancos de a dos filas, con pasillo al medio
-    for (const x of [-1.7, 1.7]) for (const z of [-.3, 1.1]) { mesa(x, z, g); silla(x, z + .5, g); solidoEn(s.ox + x, s.oz + z + .2, 1.0, .9, 1); s.asientos.push([x, z + .45]); }
+    let k = 0;
+    for (const x of [-1.7, 1.7]) for (const z of [-.3, 1.1]) { k++; mesa(x, z, grupo('deco_mesa_' + nom + '_0' + k, 0, 0, 0, g)); silla(x, z + .5, g, 'obj_silla_' + nom + '_0' + k); solidoEn(s.ox + x, s.oz + z + .1, 1.0, .7, 1); }
     // pizarra con la misión del día
     const piz = grupo('obj_pizarra_' + nom, 0, -SL / 2 + .07, 0, g, { frente: 1.3, alto: 2.4 });
     bloque(0, 1.55, 0, 3.2, 1.4, .05, C_MADERA_OSC, piz); bloque(0, 1.55, .03, 3, 1.2, .04, '#14532d', piz); bloque(0, .92, .1, 3, .05, .14, C_MADERA, piz);
@@ -1555,16 +1590,15 @@ function iniciar(THREE) {
     for (const x of [-2.2, -.7, .8]) { const e = grupo('', x, -SL / 2 + .3, 0, s.g); estante(e, 1.4, 2.0, Math.round(x * 3) + 9); }
     for (const z of [-1.4, .2, 1.6]) { const e = grupo('', -SW / 2 + .3, z, Math.PI / 2, s.g); estante(e, 1.4, 2.0, Math.round(z * 3) + 4); }
     solidoEn(s.ox - .7, s.oz - SL / 2 + .3, 4.6, .6); solidoEn(s.ox - SW / 2 + .3, s.oz, .6, 4.6);
-    mesa(1.3, .9, s.g, 1.6, .9); silla(1.3, 1.6, s.g); silla(.6, 1.6, s.g); solidoEn(s.ox + 1.3, s.oz + 1.1, 1.8, 1.3, 1);
+    mesa(1.3, .9, grupo('deco_mesa_biblioteca_01', 0, 0, 0, s.g), 1.6, .9); silla(1.7, 1.6, s.g, 'obj_silla_biblioteca_01'); silla(.8, 1.6, s.g, 'obj_silla_biblioteca_02'); solidoEn(s.ox + 1.3, s.oz + .9, 1.8, 1.0, 1);
     bloque(.9, .01, -1.3, 1.6, .02, 1.2, '#fb923c', s.g);
-    s.asientos.push([1.3, 1.55]);
     const lib = grupo('obj_libros_biblioteca', 2.3, -SL / 2 + .3, 0, s.g, { frente: 1.3 }); estante(lib, 1.2, 1.6, 2);
     letrero('⭐ Lecturas', 1.1, .26, '#0369a1', lib, 0, 1.85, .05);
   }
 
   // --- Kiosco (en el zaguán, del lado derecho) y Dirección (enfrente) ---
   {
-    const k = grupo('zona_kiosco', 2.2, 9.6, -Math.PI / 2, escena, { frente: 1.15, alto: 2.4 });
+    const k = grupo('obj_kiosco', 2.2, 9.6, -Math.PI / 2, escena, { frente: 1.15, alto: 2.4 });
     bloque(0, .5, 0, 1.7, 1.0, .5, '#f59e0b', k); bloque(0, 1.02, .02, 1.8, .05, .58, C_MADERA, k);
     for (let i = 0; i < 6; i++) bloque(-.6 + i * .24, 1.12, 0, .16, .16, .16, ['#ef4444', '#22c55e', '#3b82f6', '#eab308', '#ec4899', '#14b8a6'][i], k);
     for (let i = 0; i < 4; i++) bloque(-.68 + i * .45, 2.25, .15, .45, .06, .9, i % 2 ? '#fde047' : '#ef4444', k);
@@ -1583,7 +1617,7 @@ function iniciar(THREE) {
     bloque(0, .15, 0, 1.6, .3, 1.6, C_MADERA, h); bloque(0, .31, 0, 1.46, .04, 1.46, '#4a2c17', h);
     for (const [x, z] of [[-.45, -.45], [.45, -.45], [-.45, .45]]) bola(x, .4, z, .22, .16, .22, '#4ade80', h);
     bloque(.6, .45, .55, .22, .22, .16, '#38bdf8', h);
-    plantaHuerto.position.set(.1, .32, .05); h.add(plantaHuerto); dinamico(plantaHuerto);
+    plantaHuerto.name = 'obj_planta_huerto'; plantaHuerto.position.set(.1, .32, .05); h.add(plantaHuerto); dinamico(plantaHuerto);
     cil(0, .45, 0, .07, .9, .07, '#15803d', plantaHuerto);
     for (const [x, y, z] of [[-.18, .5, 0], [.2, .65, .05], [0, .85, -.15], [0, 1.0, .1]]) bola(x, y, z, .28, .16, .2, '#22c55e', plantaHuerto);
     bola(0, 1.12, 0, .2, .2, .2, '#f472b6', plantaHuerto);
@@ -1591,15 +1625,79 @@ function iniciar(THREE) {
     const p = M.puente; plantaHuerto.scale.setScalar(.45 + .9 * Math.min(1, p.hechas / p.meta));
   }
 
-  // --- Cancha (al este del colegio) ---
-  const CANCHA = new THREE.Vector3(19, 0, -9);
+  // --- Canchas de fútbol y de básquet (al este del colegio). userData.campo = [ancho, largo] ---
+  // (la lógica de la pelota lee el campo, los arcos y los aros por nombre: sirve igual con la maqueta GLB)
+  const solidoDe = (g, lx, lz, w, l, h = 2) => { g.updateMatrixWorld(true); const v = new THREE.Vector3(lx, 0, lz).applyMatrix4(g.matrixWorld); const giro = Math.abs(g.matrixWorld.elements[2]) > .5; solidoEn(v.x, v.z, giro ? l : w, giro ? w : l, h); };
   {
-    const c = grupo('zona_cancha', CANCHA.x, CANCHA.z, -Math.PI / 2, escena, { frente: 5.2, alto: 1.2 });
+    const c = grupo('zona_futbol', 19, -9, -Math.PI / 2, escena, { frente: 5.2, alto: 1.2, campo: [6, 9] });
     bloque(0, .03, 0, 6.4, .04, 9.4, '#15803d', c); bloque(0, .035, 0, 6, .04, 9, '#16a34a', c);
     for (const [x, z, w, l] of [[0, -4.45, 6, .08], [0, 4.45, 6, .08], [-2.95, 0, .08, 9], [2.95, 0, .08, 9], [0, 0, 6, .08]]) bloque(x, .06, z, w, .02, l, '#f8fafc', c);
-    for (const sz of [-1, 1]) { for (const sx of [-1, 1]) bloque(sx * .9, .6, sz * 4.4, .08, 1.2, .08, '#f8fafc', c); bloque(0, 1.2, sz * 4.4, 1.88, .08, .08, '#f8fafc', c); }
-    letrero('⚽ Cancha', 1.3, .32, '#15803d', c, 0, 1.6, 4.7, { ry: 0 });
+    for (const [k, z, ry] of [[1, -4.4, 0], [2, 4.4, Math.PI]]) {
+      const a = grupo('obj_arco_futbol_0' + k, 0, z, ry, c);
+      for (const sx of [-1, 1]) bloque(sx * .9, .6, 0, .08, 1.2, .08, '#f8fafc', a);
+      bloque(0, 1.2, 0, 1.88, .08, .08, '#f8fafc', a); bloque(0, .6, -.45, 1.8, 1.2, .02, '#e2e8f0', a);
+      solidoDe(a, -.9, 0, .15, .15); solidoDe(a, .9, 0, .15, .15);
+    }
+    letrero('⚽ Fútbol', 1.3, .32, '#15803d', c, 0, 1.6, 4.7);
   }
+  {
+    const c = grupo('zona_basquet', 18.5, -2, -Math.PI / 2, escena, { frente: 4.0, alto: 1.2, campo: [5, 7] });
+    bloque(0, .03, 0, 5.3, .04, 7.3, '#9a3412', c); bloque(0, .035, 0, 5, .04, 7, '#ea580c', c);
+    for (const [x, z, w, l] of [[0, -3.45, 5, .07], [0, 3.45, 5, .07], [-2.45, 0, .07, 7], [2.45, 0, .07, 7], [0, 0, 5, .07]]) bloque(x, .06, z, w, .02, l, '#fff7ed', c);
+    for (const [k, z, ry] of [[1, -3.4, 0], [2, 3.4, Math.PI]]) {   // el aro mira hacia el centro (+Z); userData.aro = centro del aro
+      const a = grupo('obj_aro_basquet_0' + k, 0, z, ry, c, { aro: [0, 2.6, .35] });
+      cil(0, 1.45, -.35, .12, 2.9, .12, '#475569', a); bloque(0, 2.85, -.05, 1.2, .8, .05, '#f8fafc', a); bloque(0, 2.75, -.02, .45, .35, .02, '#ef4444', a);
+      const aro = new THREE.Mesh(new THREE.TorusGeometry(.23, .025, 6, 16), mat('#f97316')); aro.rotation.x = Math.PI / 2; aro.position.set(0, 2.6, .3); a.add(aro);
+      solidoDe(a, 0, -.35, .25, .25);
+    }
+    letrero('🏀 Básquet', 1.3, .32, '#9a3412', c, 0, 1.6, 3.7);
+  }
+  // --- Parque infantil (al oeste del colegio): hamacas, resbalín y sube y baja ---
+  {
+    const pq = grupo('zona_parque', -17.5, 5, Math.PI / 2, escena, { frente: 4.2, alto: 1.4 });
+    bloque(0, .02, 0, 7, .04, 7, '#fcd34d', pq);
+    for (const [x, z, w, l] of [[0, -3.5, 7, .08], [-3.5, 0, .08, 7], [3.5, 0, .08, 7]]) bloque(x, .3, z, w, .6, l, '#22c55e', pq);
+    letrero('🛝 Parque', 1.2, .3, '#16a34a', pq, 0, 1.2, 3.55);
+    // hamacas (sub-nodo "asiento" con el pivote arriba: se balancea)
+    for (const [k, x] of [[1, -2.3], [2, -1.0]]) {
+      const hm = grupo('obj_hamaca_0' + k, x, -2.2, 0, pq, { frente: .9, alto: 2.2 });
+      for (const sx of [-1, 1]) { const p = bloque(sx * .6, 1.1, 0, .08, 2.25, .08, '#dc2626', hm); p.rotation.z = sx * -.08; }
+      bloque(0, 2.2, 0, 1.4, .08, .08, '#dc2626', hm);
+      const as = new THREE.Group(); as.name = 'asiento'; as.position.set(0, 2.15, 0); hm.add(as); dinamico(as);
+      for (const sx of [-1, 1]) bloque(sx * .2, -.85, 0, .02, 1.7, .02, '#94a3b8', as);
+      bloque(0, -1.72, 0, .5, .05, .26, '#1e3a8a', as);
+      solidoDe(hm, -.6, 0, .15, .15); solidoDe(hm, .6, 0, .15, .15);
+    }
+    // resbalín: escalera adelante (+Z), tobogán hacia atrás
+    {
+      const r = grupo('obj_resbalin', 1.9, 0, 0, pq, { frente: .8, alto: 2 });
+      for (const sx of [-1, 1]) bloque(sx * .25, .75, .6, .05, 1.5, .05, '#64748b', r);
+      for (let y = .25; y < 1.5; y += .3) bloque(0, y, .6, .5, .04, .06, '#64748b', r);
+      bloque(0, 1.45, .25, .7, .06, .7, '#0ea5e9', r);
+      for (const sx of [-1, 1]) bloque(sx * .32, 1.7, .25, .05, .5, .7, '#0ea5e9', r);
+      const t = bloque(0, .88, -1.25, .55, .05, 2.5, '#f59e0b', r); t.rotation.x = -.47;
+      for (const sx of [-1, 1]) { const b = bloque(sx * .3, .98, -1.25, .04, .15, 2.5, '#f59e0b', r); b.rotation.x = -.47; }
+      solidoDe(r, 0, .25, .8, .8, 1.6); solidoDe(r, 0, -1.2, .6, 1.6, 1);
+    }
+    // sube y baja (sub-nodo "tabla" con el pivote al centro: sube y baja)
+    {
+      const sb = grupo('obj_subeybaja', 0, 1.6, 0, pq, { frente: .9, alto: 1.2 });
+      bloque(0, .22, 0, .3, .44, .3, '#7c3aed', sb);
+      const tb = new THREE.Group(); tb.name = 'tabla'; tb.position.set(0, .48, 0); sb.add(tb); dinamico(tb);
+      bloque(0, 0, 0, 3.2, .06, .3, '#facc15', tb);
+      for (const sx of [-1, 1]) { bloque(sx * 1.45, .02, 0, .3, .04, .32, '#ef4444', tb); bloque(sx * 1.2, .22, 0, .05, .4, .05, '#64748b', tb); bloque(sx * 1.2, .42, 0, .05, .05, .3, '#64748b', tb); }
+      solidoDe(sb, 0, 0, .5, .5, 1);
+    }
+  }
+
+  // --- Comportamientos de las cosas que se usan (la lógica está más abajo y lee el nodo por nombre) ---
+  USOS.silla = o => ({ texto: '🪑 Sentarse', accion: () => usar('silla', o) });
+  USOS.hamaca = o => ({ texto: '🪢 Hamacarse', accion: () => usar('hamaca', o) });
+  USOS.resbalin = o => ({ texto: '🛝 Tirarse por el resbalín', accion: () => usar('resbalin', o) });
+  USOS.subeybaja = o => ({ texto: '⚖️ Subirse al sube y baja', accion: () => usar('subeybaja', o) });
+  USOS.pizarra = (o, mid) => NOM_MAT[MAT_NOM[mid]] ? { texto: '🖍️ Pizarra · Dibujar', accion: () => usar('pizarra', o, mid) } : null;
+  USOS.kiosco = () => ({ texto: '🧃 Kiosco · Menú', accion: () => window.panelKiosco() });
+  USOS.estante = (o, mid) => MAT_NOM[mid] ? { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) } : null;
 
   // todo lo dibujado por código pasa por el mismo enlace que pasará la maqueta GLB
   enlazar(escena);
@@ -1806,9 +1904,10 @@ function iniciar(THREE) {
     if (luz) parte(gCil, piel, 0, pierna + torso + h * .05, 0, h * .34, h * .3, h * .34);   // cuello
     const hombro = pierna + torso * .98;
     const bI = pivote(-ancho * .62, hombro), bD = pivote(ancho * .62, hombro);
+    let mano = null;
     for (const [s, b] of [[-1, bI], [1, bD]]) {
       parte(gCaps, ropa, 0, -torso * .38, 0, ancho * .24, luz ? torso * .46 : torso * .8, ancho * .28, b, s * .12);
-      parte(gBola, piel, s * ancho * .06, -torso * .78, 0, ancho * .22, ancho * .22, ancho * .22, b);
+      mano = parte(gBola, piel, s * ancho * .06, -torso * .78, 0, ancho * .22, ancho * .22, ancho * .22, b);
     }
     const cy = pierna + torso + h * .5;
     parte(gBola, piel, 0, cy, 0, h * .92, h, h * .9);                                   // cabeza
@@ -1825,7 +1924,7 @@ function iniciar(THREE) {
     if (op.mochila !== false) parte(gCaja, op.mochila || '#f59e0b', 0, pierna + torso * .55, -ancho * .45, ancho * .75, torso * .75, ancho * .35);
     cara.forEach(m => { m.userData.sinContorno = true; });
     if (EVO) { const partes = []; yo.traverse(o => { if (o.isMesh) partes.push(o); }); partes.forEach(o => EVO.contornear(o)); }
-    return { yo, cuerpo, pI, pD, bI, bD, paso: 0, H, pierna, gorras };
+    return { yo, cuerpo, pI, pD, bI, bD, paso: 0, H, pierna, gorras, mano };
   }
   function animar(P, moviendo, dt, t) {
     if (moviendo) {
@@ -1851,38 +1950,284 @@ function iniciar(THREE) {
   });
 
   // ============================================================
-  // EDU.06b — Compañeros en distintos lugares (sentados en el aula, jugando en la cancha, leyendo)
+  // EDU.06b — LÓGICA (separada de la forma): todo sale de los nodos con nombre (nodos[…]),
+  // así la geometría dibujada por código se reemplaza por la de la maqueta GLB sin tocar esto.
   // ============================================================
-  function sentar(P, x, z, ry, padre) {
-    P.yo.position.set(x, 0, z); P.yo.rotation.y = ry;
-    P.pI.rotation.x = P.pD.rotation.x = -Math.PI / 2;
-    P.cuerpo.position.y = .45 - P.pierna;
-    P.bI.rotation.x = P.bD.rotation.x = -.9;
-    P.sentado = true;
+  const vA = new THREE.Vector3(), vB = new THREE.Vector3(), qA = new THREE.Quaternion(), sA = new THREE.Vector3();
+  const aMundo = (o, x, y, z, out = new THREE.Vector3()) => out.set(x, y, z).applyMatrix4(o.userData.mundo);
+  const rumboDe = o => { o.userData.mundo.decompose(vA, qA, sA); const f = vB.set(0, 0, 1).applyQuaternion(qA); return Math.atan2(f.x, f.z); };
+  function pose(P, sentado, brazos = -.5) {
+    P.pI.rotation.x = P.pD.rotation.x = sentado ? -Math.PI / 2 : 0;
+    P.cuerpo.position.y = sentado ? .45 - P.pierna : 0; P.cuerpo.rotation.set(0, 0, 0);
+    P.bI.rotation.x = P.bD.rotation.x = sentado ? brazos : 0; P.sentado = sentado;
   }
-  const ropaNPC = [['#f97316', '#1f1410', '#d9a274'], ['#8b5cf6', '#3b2314', '#b57a4f'], ['#ef4444', '#7c2d12', '#e8b98c'], ['#0ea5e9', '#1f1410', '#c98e5f'], ['#eab308', '#3b2314', '#f2c79b']];
-  const npc = ropaNPC.map(([r, p, piel], i) => personaje(r, p, piel, { alto: ALTO_YO + [-.03, .02, .04, -.05, 0][i], colita: i % 2 === 1, mochila: false }));
-  // dos en los bancos del aula donde entra el alumno; uno leyendo en la biblioteca
+
+  // --- Compañeros (NPC) en distintos lugares ---
+  const ropaNPC = [['#f97316', '#1f1410', '#d9a274'], ['#8b5cf6', '#3b2314', '#b57a4f'], ['#ef4444', '#7c2d12', '#e8b98c'], ['#0ea5e9', '#1f1410', '#c98e5f'], ['#eab308', '#3b2314', '#f2c79b'], ['#14b8a6', '#1f1410', '#d9a274'], ['#f472b6', '#3b2314', '#e8b98c']];
+  const npc = ropaNPC.map(([r, p, piel], i) => personaje(r, p, piel, { alto: i === 6 ? 1.15 : ALTO_YO + [-.03, .02, .04, -.05, 0, .03][i], colita: i % 2 === 1, mochila: false }));
+  function sentarNPC(P, silla) {
+    if (!silla) return; if (P.silla) P.silla.userData.ocupada = false;
+    escena.add(P.yo); aMundo(silla, 0, 0, 0, P.yo.position); P.yo.position.y = 0; P.yo.rotation.y = rumboDe(silla);
+    pose(P, true, -.9); P.silla = silla; silla.userData.ocupada = true;
+  }
   const enAula = [npc[0], npc[1]];
-  function sentarEnSala(s) {
-    enAula.forEach((P, k) => { const [x, z] = s.asientos[k === 0 ? 0 : 3] || s.asientos[0]; s.g.add(P.yo); sentar(P, x, z, Math.PI, s.g); });
-  }
+  const sentarEnSala = s => { sentarNPC(enAula[0], nodos[`obj_silla_${s.nombre}_01`]); sentarNPC(enAula[1], nodos[`obj_silla_${s.nombre}_04`]); };
   Object.values(salas).forEach(s => { if (s.nombre !== 'biblioteca') s.alEntrar = () => sentarEnSala(s); });
   sentarEnSala(salas.mate);
-  { const b = salas.biblioteca; b.g.add(npc[2].yo); sentar(npc[2], 1.3, 1.55, Math.PI, b.g); bloque(1.3, .76, .9, .3, .04, .22, '#fde047', b.g); }
-  // dos en la cancha pasándose la pelota
-  const pelota = bola(CANCHA.x, .14, CANCHA.z, .26, .26, .26, '#f8fafc'); dinamico(pelota);
-  const jug = [npc[3], npc[4]];
-  jug[0].yo.position.set(CANCHA.x - 3, 0, CANCHA.z + .6); jug[0].yo.rotation.y = Math.PI / 2;
-  jug[1].yo.position.set(CANCHA.x + 3, 0, CANCHA.z - .6); jug[1].yo.rotation.y = -Math.PI / 2;
+  sentarNPC(npc[2], nodos.obj_silla_biblioteca_01);
+  alCuadro.push((dt, t) => [...enAula, npc[2]].forEach((P, k) => { P.bD.rotation.x = -.9 + Math.sin(t * 3 + k * 2) * .12; P.cuerpo.rotation.y = Math.sin(t * .7 + k) * .05; }));
+
+  // --- Festejo: papelitos de colores ---
+  const papelitos = [];
+  function festejo(pos, texto) {
+    for (let i = 0; i < 26; i++) { const m = bloque(pos.x, pos.y, pos.z, .1, .1, .02, ['#ef4444', '#facc15', '#22c55e', '#3b82f6', '#ec4899', '#f97316'][i % 6]); dinamico(m); m.userData.v = new THREE.Vector3((Math.random() - .5) * 4, 3 + Math.random() * 3, (Math.random() - .5) * 4); m.userData.vida = 1.6; papelitos.push(m); }
+    toast(texto, 2400); window.sonar('llave'); window.__festejos = (window.__festejos || []).concat(texto);
+  }
+  alCuadro.push(dt => { for (let i = papelitos.length - 1; i >= 0; i--) { const m = papelitos[i], v = m.userData.v; v.y -= 9 * dt; m.position.addScaledVector(v, dt); m.rotation.x += dt * 8; m.rotation.y += dt * 5; if ((m.userData.vida -= dt) < 0 || m.position.y < 0) { escena.remove(m); papelitos.splice(i, 1); } } });
+
+  // --- Pelotas con física simple (se empujan al caminar, Patear / Tirar). Todo en los ejes del campo ---
+  const velYo = new THREE.Vector3(), antesYo = yo.position.clone();
+  alCuadro.unshift(dt => { velYo.subVectors(yo.position, antesYo).divideScalar(Math.max(dt, 1e-3)); antesYo.copy(yo.position); });
+  const pelotas = [];
+  function crearPelota(zona, color, r, tipo) {
+    const z = nodos[zona]; if (!z) return null;
+    const [w, l] = z.userData.campo || (() => { const c = z.userData.cajaLocal; return [c.max.x - c.min.x, c.max.z - c.min.z]; })();
+    const m = bola(0, 0, 0, r * 2, r * 2, r * 2, color); dinamico(m);
+    const B = { z, inv: z.userData.mundo.clone().invert(), w, l, r, tipo, m, p: new THREE.Vector3(), v: new THREE.Vector3(), alto: 0, vuelo: null, pos: new THREE.Vector3(), metas: [] };
+    // arcos / aros: su posición en los ejes del campo
+    for (const [n, o] of Object.entries(nodos)) if (n.startsWith(tipo === 'futbol' ? 'obj_arco_futbol' : 'obj_aro_basquet')) {
+      const c = o.userData.cajaLocal, a = o.userData.aro || [0, c.max.y - .4, .3];
+      B.metas.push({ o, ancho: c.max.x - c.min.x, centro: aMundo(o, 0, 0, 0).applyMatrix4(B.inv), aro: aMundo(o, a[0], a[1], a[2]).applyMatrix4(B.inv) });
+    }
+    hacerTocable(m, { tipo: 'obj', id: 'pelota_' + tipo, clave: 'pelota_' + tipo });
+    interes.push({ clave: 'pelota_' + tipo, nombre: 'pelota_' + tipo, pos: B.pos, alto: .8, texto: tipo === 'futbol' ? '⚽ Patear' : '🏀 Tirar al aro', accion: () => tipo === 'futbol' ? patear(B) : tirar(B) });
+    pelotas.push(B); return B;
+  }
+  const local = (B, w, out) => out.copy(w).applyMatrix4(B.inv);
+  function patear(B) {
+    const d = vA.set(Math.sin(yo.rotation.y), 0, Math.cos(yo.rotation.y)).transformDirection(B.inv); d.y = 0; d.normalize();
+    B.v.copy(d).multiplyScalar(9); YOP.pD.rotation.x = -1; window.sonar('pop');
+  }
+  function tirar(B) {
+    if (B.vuelo) return;
+    local(B, yo.position, vB);
+    const meta = B.metas.reduce((a, m) => (!a || m.aro.distanceTo(vB) < a.aro.distanceTo(vB) ? m : a), null); if (!meta) return;
+    const dist = Math.hypot(meta.aro.x - vB.x, meta.aro.z - vB.z), entra = dist <= 5;
+    B.vuelo = { t: 0, dur: .9 + dist * .06, de: B.p.clone(), a: meta.aro.clone(), entra, meta };
+    if (!entra) B.vuelo.a.add(vA.set(meta.aro.x - vB.x, 0, meta.aro.z - vB.z).normalize().multiplyScalar(-.5));
+    window.sonar('pop');
+  }
+  function reiniciar(B) { B.p.set(0, 0, 0); B.v.set(0, 0, 0); B.alto = 0; }
+  function moverPelota(B, dt, empujan) {
+    if (B.vuelo) {   // tiro al aro: parábola
+      const V = B.vuelo; V.t += dt; const u = Math.min(1, V.t / V.dur);
+      B.p.lerpVectors(V.de, V.a, u); B.alto = V.de.y + (V.a.y - .2) * u + Math.sin(u * Math.PI) * 1.4;
+      if (u >= 1) {
+        B.vuelo = null;
+        if (V.entra) { festejo(aMundo(V.meta.o, 0, 2.6, .35), '🏀 ¡Canasta!'); B.p.set(V.a.x, 0, V.a.z * .85); B.v.set(0, 0, 0); }
+        else { toast('😅 ¡Casi! Acercate un poco más al aro.'); B.v.set(0, 0, -Math.sign(V.a.z) * 2); }
+        B.alto = 0;
+      }
+    } else {
+      B.v.multiplyScalar(Math.exp(-1.3 * dt)); B.p.addScaledVector(B.v, dt);
+      for (const pos of empujan) {   // el alumno y los compañeros la empujan al caminar
+        local(B, pos, vA); vA.y = 0; const dx = B.p.x - vA.x, dz = B.p.z - vA.z, d = Math.hypot(dx, dz);
+        if (d < .5 && d > 1e-3) { B.p.x = vA.x + dx / d * .5; B.p.z = vA.z + dz / d * .5; const vel = Math.max(2.5, velYo.length()); B.v.x = dx / d * vel; B.v.z = dz / d * vel; }
+      }
+      const mx = B.w / 2 - B.r, mz = B.l / 2 - B.r;
+      if (B.tipo === 'futbol') for (const m of B.metas) if (Math.abs(B.p.x - m.centro.x) < m.ancho / 2 - .1 && Math.abs(B.p.z - m.centro.z) < .35) { festejo(aMundo(m.o, 0, 1.2, 0), '⚽ ¡GOOOL!'); reiniciar(B); }
+      if (Math.abs(B.p.x) > mx) { B.p.x = Math.sign(B.p.x) * mx; B.v.x *= -.6; }
+      if (Math.abs(B.p.z) > mz) { B.p.z = Math.sign(B.p.z) * mz; B.v.z *= -.6; }
+      B.alto = B.tipo === 'basquet' ? Math.abs(Math.sin(performance.now() / 260)) * .25 * Math.min(1, B.v.length()) : 0;
+    }
+    aMundo(B.z, B.p.x, B.r + B.alto, B.p.z, B.m.position); B.pos.set(B.m.position.x, 0, B.m.position.z);
+    B.m.rotation.x += B.v.z * dt * 3; B.m.rotation.z -= B.v.x * dt * 3;
+  }
+  const PF = crearPelota('zona_futbol', '#f8fafc', .13, 'futbol'), PB = crearPelota('zona_basquet', '#ea580c', .14, 'basquet');
+  // dos compañeros juegan al fútbol: van a la pelota si está de su lado y la patean hacia el otro arco
+  const futbolistas = PF ? [npc[3], npc[4]].map((P, k) => ({ P, casa: new THREE.Vector3(k ? .8 : -.8, 0, k ? 2.2 : -2.2), lado: k ? 1 : -1, p: new THREE.Vector3(k ? .8 : -.8, 0, k ? 2.2 : -2.2), espera: 0 })) : [];
+  // y uno tira al aro solo (con su pelota "de mentira")
+  const basquetista = PB ? { P: npc[5], bola: (() => { const b = bola(0, 0, 0, .26, .26, .26, '#c2410c'); dinamico(b); return b; })(), t: 0 } : null;
   alCuadro.push((dt, t) => {
-    const u = (Math.sin(t * 1.1) + 1) / 2;   // la pelota va y viene
-    pelota.position.x = CANCHA.x - 2.5 + 5 * u; pelota.position.z = CANCHA.z + .6 - 1.2 * u; pelota.position.y = .14 + Math.abs(Math.sin(t * 2.2)) * .05;
-    pelota.rotation.z -= dt * 4 * Math.cos(t * 1.1);
-    jug.forEach((P, k) => { const cerca = k === 0 ? u < .12 : u > .88; P.pD.rotation.x = cerca ? -.9 : 0; P.pI.rotation.x = 0; P.cuerpo.position.y = Math.sin(t * 4 + k) * .01 * P.H; P.bI.rotation.x = -Math.sin(t * 2 + k) * .3; P.bD.rotation.x = Math.sin(t * 2 + k) * .3; });
-    // los que están sentados: escriben (un brazo) y mueven la cabeza
-    [...enAula, npc[2]].forEach((P, k) => { P.bD.rotation.x = -.9 + Math.sin(t * 3 + k * 2) * .12; P.cuerpo.rotation.y = Math.sin(t * .7 + k) * .05; });
+    const empujan = [yo.position, ...futbolistas.map(f => f.P.yo.position)];
+    if (PF) {
+      for (const f of futbolistas) {
+        const quiere = Math.sign(PF.p.z) === f.lado && Math.abs(PF.p.z) < PF.l / 2 && f.espera <= 0 ? PF.p : f.casa;
+        const dx = quiere.x - f.p.x, dz = quiere.z - f.p.z, d = Math.hypot(dx, dz), corre = d > .35;
+        if (corre) { f.p.x += dx / d * 2.4 * dt; f.p.z += dz / d * 2.4 * dt; }
+        if (quiere === PF.p && d < .45) { PF.v.set((Math.random() - .5) * 3, 0, -f.lado * (5 + Math.random() * 2)); f.espera = 1.2; f.P.pD.rotation.x = -1; }
+        f.espera -= dt;
+        aMundo(PF.z, f.p.x, 0, f.p.z, f.P.yo.position); f.P.yo.position.y = 0;
+        const rumbo = corre ? Math.atan2(dx, dz) : (f.lado > 0 ? Math.PI : 0);
+        f.P.yo.rotation.y = rumbo + rumboDe(PF.z);
+        animar(f.P, corre, dt, t);
+      }
+      moverPelota(PF, dt, empujan);
+    }
+    if (PB) moverPelota(PB, dt, [yo.position]);
+    if (basquetista) {
+      const Bq = basquetista, aro = PB.metas[1] || PB.metas[0]; Bq.t += dt;
+      const base = vA.set(aro.aro.x, 0, aro.aro.z + (aro.aro.z > 0 ? -2.2 : 2.2)); aMundo(PB.z, base.x, 0, base.z, Bq.P.yo.position); Bq.P.yo.position.y = 0;
+      aMundo(PB.z, aro.aro.x, 0, aro.aro.z, vB); Bq.P.yo.rotation.y = Math.atan2(vB.x - Bq.P.yo.position.x, vB.z - Bq.P.yo.position.z);
+      const ciclo = Bq.t % 4, u = Math.max(0, (ciclo - 2.6) / 1.0);
+      if (ciclo < 2.6) { aMundo(PB.z, base.x + .25, .2 + Math.abs(Math.sin(Bq.t * 6)) * .5, base.z + (aro.aro.z > 0 ? .3 : -.3), Bq.bola.position); Bq.P.bD.rotation.x = -.4 - Math.abs(Math.sin(Bq.t * 6)) * .3; }
+      else { const y = 1.2 + (aro.aro.y - 1.2) * u + Math.sin(u * Math.PI) * 1.2; aMundo(PB.z, base.x + (aro.aro.x - base.x) * u, y, base.z + (aro.aro.z - base.z) * u, Bq.bola.position); Bq.P.bD.rotation.x = Bq.P.bI.rotation.x = -2.6; }
+      animar(Bq.P, false, dt, t); if (ciclo >= 2.6) Bq.P.bD.rotation.x = Bq.P.bI.rotation.x = -2.6;
+    }
   });
+
+  // --- Reto de los conos (en el campo de fútbol) ---
+  const conos = [], POS_CONOS = [[-2, -3.5], [2, -1.5], [-2, .5], [2, 2.5], [-.5, 3.8]];
+  const hudReto = document.createElement('div');
+  hudReto.style.cssText = 'position:fixed;left:50%;top:calc(var(--sa, 0px) + 64px);transform:translateX(-50%);z-index:12;display:none;background:rgba(15,26,23,.92);color:#fff;border:3px solid #10B981;border-radius:16px;padding:8px 16px;font:700 18px "Space Grotesk",Inter,sans-serif';
+  document.body.appendChild(hudReto);
+  let reto = null;
+  window.__retoConos = () => {
+    if (!PF) return;
+    if (!conos.length) for (const [x, z] of POS_CONOS) { const c = new THREE.Mesh(new THREE.ConeGeometry(.28, .6, N === 1 ? 4 : 12), mat('#F97316')); aMundo(PF.z, x, .3, z, c.position); escena.add(c); dinamico(c); conos.push(c); }
+    conos.forEach(c => { c.visible = true; c.userData.ok = false; c.material = mat('#F97316'); });
+    reto = { t0: performance.now(), hechos: 0 }; hudReto.style.display = 'block';
+    window.sonar('abrir'); toast('🏃 ¡Tocá los 5 conos naranjas!');
+  };
+  window.__conos = () => conos.map(c => [c.position.x, c.position.z]);   // (para las pruebas)
+  alCuadro.push(() => {
+    if (!reto) return;
+    const seg = (performance.now() - reto.t0) / 1000;
+    for (const c of conos) if (!c.userData.ok && Math.hypot(yo.position.x - c.position.x, yo.position.z - c.position.z) < 1) { c.userData.ok = true; c.material = mat('#10B981'); reto.hechos++; window.sonar('bien'); }
+    hudReto.textContent = `🏃 Conos ${reto.hechos}/5 · ${seg.toFixed(1)} s`;
+    if (reto.hechos === conos.length) {
+      const antes = parseFloat(leerLS('alumno-conos')) || Infinity;
+      if (seg < antes) guardarLS('alumno-conos', seg.toFixed(1));
+      toast(seg < antes ? `🏅 ¡Lo lograste en ${seg.toFixed(1)} s! Tu mejor tiempo.` : `🎉 ¡Lo lograste en ${seg.toFixed(1)} s!`, 3200); window.sonar('llave');
+      reto = null; setTimeout(() => { hudReto.style.display = 'none'; conos.forEach(c => { c.visible = false; }); }, 1800);
+    } else if (seg > 90) { reto = null; hudReto.style.display = 'none'; conos.forEach(c => { c.visible = false; }); toast('⏱️ Se terminó el tiempo. ¡Probá de nuevo!'); }
+  });
+
+  // --- Usar cosas: sentarse, hamaca, resbalín, sube y baja (se baja moviendo el círculo) ---
+  let usando = null;
+  const nene = npc[6];   // un chiquito en la otra punta del sube y baja
+  if (nodos.obj_subeybaja) { escena.add(nene.yo); pose(nene, true, -1.2); }
+  function usar(tipo, o, extra) {
+    if (tipo === 'pizarra') return abrirPizarra(o, extra);
+    if (usando) bajarse();
+    if (o.userData.ocupada) { toast('Ese lugar está ocupado 🙂'); return; }
+    pararPiloto(); usando = { tipo, o, t: 0 }; o.userData.ocupada = true; window.sonar('pop');
+    if (tipo === 'silla') { aMundo(o, 0, 0, 0, yo.position); yo.position.y = 0; yo.rotation.y = rumboDe(o); pose(YOP, true); }
+    if (tipo === 'hamaca' || tipo === 'subeybaja') pose(YOP, true, tipo === 'hamaca' ? -2.6 : -1.2);
+    if (!leerLS('alumno-pista-bajar')) { toast('Mové el círculo para bajarte', 2600); guardarLS('alumno-pista-bajar', '1'); }
+  }
+  function bajarse() {
+    const u = usando; if (!u) return; usando = null; u.o.userData.ocupada = false;
+    pose(YOP, false); yo.position.y = 0; YOP.cuerpo.rotation.set(0, 0, 0);
+    const as = u.o.getObjectByName('asiento'); if (as) as.rotation.x = 0;
+    // pararse al costado libre de la cosa
+    for (const [x, z] of [[.75, 0], [-.75, 0], [0, .9], [0, -.9], [0, 1.6]]) { aMundo(u.o, x, 0, z, vA); if (!choca(vA.x, vA.z)) { yo.position.set(vA.x, 0, vA.z); break; } }
+  }
+  window.__usando = () => usando && usando.tipo; window.__pelotas = pelotas;   // (para las pruebas)
+  alCuadro.push((dt, t) => {
+    const sb = nodos.obj_subeybaja, tabla = sb && sb.getObjectByName('tabla');
+    const aSB = usando && usando.tipo === 'subeybaja' ? Math.sin(usando.t * 1.8) * .26 : 0;
+    if (tabla) tabla.rotation.z += (aSB - tabla.rotation.z) * Math.min(1, dt * 6);
+    if (sb) { const a = tabla ? tabla.rotation.z : 0; aMundo(sb, -1.4 * Math.cos(a), .5 - 1.4 * Math.sin(a) - .43, 0, nene.yo.position); nene.yo.rotation.y = rumboDe(sb) + Math.PI / 2; }
+    if (!usando) return;
+    const u = usando, o = u.o; u.t += dt;
+    if (u.tipo === 'silla') { YOP.cuerpo.rotation.y = Math.sin(t * .8) * .05; }
+    if (u.tipo === 'hamaca') {
+      const as = o.getObjectByName('asiento'), largo = as ? as.position.y - .45 : 1.7, piv = as ? as.position.y : 2.15, a = Math.sin(u.t * 2.2) * Math.min(.6, u.t * .25);
+      if (as) as.rotation.x = a;
+      aMundo(o, 0, piv - largo * Math.cos(a) - .45, largo * Math.sin(a), yo.position); yo.rotation.y = rumboDe(o); YOP.cuerpo.rotation.x = -a * .6;
+    }
+    if (u.tipo === 'subeybaja') {
+      const a = tabla ? tabla.rotation.z : 0; aMundo(o, 1.4 * Math.cos(a), .5 + 1.4 * Math.sin(a) - .43, 0, yo.position); yo.rotation.y = rumboDe(o) - Math.PI / 2;
+    }
+    if (u.tipo === 'resbalin') {   // sube la escalera, se sienta arriba y se tira
+      const c = o.userData.cajaLocal, P0 = [0, 0, c.max.z + .25], P1 = [0, 1.48, c.max.z - .45], P2 = [0, .3, c.min.z + .35], P3 = [0, 0, c.min.z - .3];
+      const tr = (A, Bb, k) => aMundo(o, A[0] + (Bb[0] - A[0]) * k, A[1] + (Bb[1] - A[1]) * k, A[2] + (Bb[2] - A[2]) * k, yo.position);
+      yo.rotation.y = rumboDe(o) + Math.PI;
+      if (u.t < 1.2) { tr(P0, P1, u.t / 1.2); animar(YOP, true, dt, t); }
+      else if (u.t < 1.5) { tr(P1, P1, 0); pose(YOP, true, -2.4); yo.position.y -= .45; }
+      else if (u.t < 2.5) { tr(P1, P2, (u.t - 1.5)); yo.position.y -= .45; YOP.bI.rotation.x = YOP.bD.rotation.x = -2.4; }
+      else if (u.t < 2.8) { pose(YOP, false); tr(P2, P3, (u.t - 2.5) / .3); yo.position.y = 0; }
+      else { if (u.t < 3) festejoChico(); bajarse(); }
+    }
+  });
+  let ultimoYuju = 0; function festejoChico() { if (performance.now() - ultimoYuju > 2000) { ultimoYuju = performance.now(); window.__burbuja && window.__burbuja('yo', '¡Yujuuu! 🛝'); } }
+
+  // --- Pizarra para dibujar: primer plano, tizas de colores, borrador; lo dibujado queda en la sesión ---
+  let enfoque = null; const pizarras = new Map();
+  const uiPiz = document.createElement('div');
+  uiPiz.style.cssText = 'position:fixed;right:calc(var(--sd, 0px) + 10px);top:50%;transform:translateY(-50%);z-index:13;display:none;flex-wrap:wrap;width:120px;justify-content:center;gap:8px;align-items:center;background:rgba(15,26,23,.88);padding:10px;border-radius:20px;border:2px solid rgba(255,255,255,.12)';
+  const TIZAS = ['#ffffff', '#fde047', '#f9a8d4', '#7dd3fc', '#86efac', '#fdba74'];
+  uiPiz.innerHTML = TIZAS.map(c => `<button data-tiza="${c}" style="width:38px;height:38px;border-radius:50%;background:${c};border:3px solid transparent" aria-label="Tiza"></button>`).join('') +
+    `<button data-tiza="borrar" style="width:44px;height:34px;border-radius:10px;background:#f1f5f9;font-size:18px" aria-label="Borrador">🧽</button>
+     <button data-acc="limpiar" style="width:44px;height:34px;border-radius:10px;background:#f1f5f9;font-size:16px" aria-label="Borrar todo">🗑️</button>
+     <button data-acc="mision" style="width:92px;padding:6px 8px;border-radius:12px;background:#FDE047;font:700 12px Inter,sans-serif;color:#422006">📌 Misión</button>
+     <button data-acc="volver" style="width:92px;padding:8px 10px;border-radius:12px;background:#10B981;font:700 14px 'Space Grotesk',Inter,sans-serif;color:#04261B">← Volver</button>`;
+  document.body.appendChild(uiPiz);
+  let tiza = '#ffffff';
+  const marcarTiza = () => uiPiz.querySelectorAll('[data-tiza]').forEach(b => { b.style.borderColor = b.dataset.tiza === tiza ? '#10B981' : 'transparent'; });
+  uiPiz.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b || !enfoque) return;
+    if (b.dataset.tiza) { tiza = b.dataset.tiza; marcarTiza(); return; }
+    if (b.dataset.acc === 'limpiar') { const P = enfoque.P; P.g.clearRect(0, 0, P.cv.width, P.cv.height); P.tex.needsUpdate = true; }
+    if (b.dataset.acc === 'mision') window.panelPizarra(enfoque.mid);
+    if (b.dataset.acc === 'volver') cerrarPizarra();
+  });
+  function abrirPizarra(o, mid) {
+    let P = pizarras.get(o);
+    if (!P) {
+      const c = o.userData.cajaLocal, sup = o.userData.superficie || { w: (c.max.x - c.min.x) * .9, h: (c.max.y - c.min.y) * .85, y: (c.min.y + c.max.y) / 2, z: c.max.z + .01 };
+      const cv = document.createElement('canvas'); cv.width = 1024; cv.height = Math.round(1024 * sup.h / sup.w);
+      const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+      const plano = new THREE.Mesh(new THREE.PlaneGeometry(sup.w, sup.h), new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false }));
+      plano.matrixAutoUpdate = false; plano.matrix.copy(o.userData.mundo).multiply(new THREE.Matrix4().makeTranslation(0, sup.y, sup.z)); escena.add(plano); plano.updateMatrixWorld(true);
+      P = { cv, g: cv.getContext('2d'), tex, plano, sup }; pizarras.set(o, P);
+    }
+    const sup = P.sup, vf = 40 * Math.PI / 180, asp = innerWidth / innerHeight, hf = 2 * Math.atan(Math.tan(vf / 2) * asp);
+    const d = Math.max((sup.h / 2) / Math.tan(vf / 2), (sup.w / 2) / Math.tan(hf / 2) * 1.25) * 1.08;
+    enfoque = { P, mid, o, cam: aMundo(o, sup.w * .06, sup.y, sup.z + d), mira: aMundo(o, sup.w * .06, sup.y, sup.z), trazo: null };
+    pararPiloto(); yo.visible = false; uiPiz.style.display = 'flex'; marcarTiza(); document.getElementById('aviso-ayuda').classList.remove('ver');
+    document.getElementById('joy').style.visibility = 'hidden'; document.body.classList.add('dibujando');
+    window.sonar('pop');
+  }
+  function cerrarPizarra() { enfoque = null; yo.visible = true; uiPiz.style.display = 'none'; document.getElementById('joy').style.visibility = ''; document.body.classList.remove('dibujando'); }
+  function pizarraPuntero(e, tipo) {
+    if (tipo === 'up') { enfoque.trazo = null; return; }
+    ptr.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight) * 2 + 1); ray.setFromCamera(ptr, camara);
+    const h = ray.intersectObject(enfoque.P.plano, false)[0];
+    if (!h) { enfoque.trazo = null; return; }
+    const P = enfoque.P, x = h.uv.x * P.cv.width, y = (1 - h.uv.y) * P.cv.height, g = P.g;
+    if (tipo === 'down' || !enfoque.trazo) { enfoque.trazo = [x, y]; }
+    g.globalCompositeOperation = tiza === 'borrar' ? 'destination-out' : 'source-over';
+    g.strokeStyle = tiza === 'borrar' ? '#000' : tiza; g.lineWidth = tiza === 'borrar' ? 56 : 9; g.lineCap = g.lineJoin = 'round';
+    g.globalAlpha = tiza === 'borrar' ? 1 : .9;
+    g.beginPath(); g.moveTo(enfoque.trazo[0], enfoque.trazo[1]); g.lineTo(x + .01, y); g.stroke();
+    enfoque.trazo = [x, y]; P.tex.needsUpdate = true;
+  }
+  window.__pizarra = () => enfoque ? { mid: enfoque.mid } : null;   // (para las pruebas)
+  window.__dibujar = (pts) => { if (!enfoque) return 0; pts.forEach(([x, y], i) => pizarraPuntero({ clientX: x, clientY: y }, i ? 'move' : 'down')); pizarraPuntero({}, 'up'); const d = enfoque.P.g.getImageData(0, 0, enfoque.P.cv.width, enfoque.P.cv.height).data; let n = 0; for (let i = 3; i < d.length; i += 40) if (d[i] > 0) n++; return n; };
+
+  // --- Comer o tomar lo pedido en el kiosco (animación con la mano a la boca) ---
+  let comiendo = null;
+  const FORMA_COMIDA = { fruta: ['bola', '#ef4444', [.11, .11, .11]], jugo: ['cil', '#fb923c', [.08, .14, .08]], agua: ['cil', '#7dd3fc', [.07, .16, .07]], cunape: ['bola', '#fcd34d', [.09, .08, .09]], sonso: ['caja', '#e7c48a', [.06, .16, .06]], empanada: ['bola', '#d97706', [.14, .06, .09]], saltena: ['bola', '#c2410c', [.13, .09, .1]] };
+  window.__comer = (tipo, nombre) => {
+    if (comiendo) { comiendo.m.parent && comiendo.m.parent.remove(comiendo.m); }
+    if (usando) bajarse();
+    const [f, color, [x, y, z]] = FORMA_COMIDA[tipo] || FORMA_COMIDA.fruta, k = YOP.H / 1.4;
+    const geo = f === 'bola' ? (N >= 2 && EVO ? EVO.bola : caja) : f === 'cil' ? (N >= 2 && EVO ? EVO.cil : caja) : caja;
+    const m = new THREE.Mesh(geo, mat(color)); m.scale.set(x * k, y * k, z * k);
+    m.position.copy(YOP.mano.position).add(vA.set(0, -.06 * k, .07 * k)); YOP.bD.add(m);
+    comiendo = { m, t: 0, nombre, toma: f === 'cil' }; window.sonar('pop');
+  };
+  alCuadro.push(dt => {
+    if (!comiendo) return;
+    const c = comiendo; c.t += dt;
+    const fase = c.t % 1.1, alBoca = fase < .6;
+    YOP.bD.rotation.x = alBoca ? -2.3 + Math.sin(fase * 10) * .08 : -1.0; YOP.bD.rotation.z = alBoca ? .35 : 0;
+    if (!c.toma && fase > .55 && fase < .6) c.m.scale.multiplyScalar(.82);
+    if (c.t > 3.3) { c.m.parent && c.m.parent.remove(c.m); YOP.bD.rotation.z = 0; comiendo = null; window.__burbuja && window.__burbuja('yo', c.toma ? '¡Qué fresquito! 😋' : '¡Rico! 😋'); }
+  });
+
   // la gorra elegida en el kiosco
   window.__gorra = c => { YOP.gorras.forEach(m => { m.material = mat(c); }); };
   { const g = (() => { try { return localStorage.getItem('alumno-gorra'); } catch (e) { return null; } })(); if (g) window.__gorra(g); }
@@ -1896,32 +2241,6 @@ function iniciar(THREE) {
     for (let i = gotas.length - 1; i >= 0; i--) { const g = gotas[i]; g.position.y -= dt * 2.4; if (g.position.y < .4) { escena.remove(g); gotas.splice(i, 1); } }
     plantaHuerto.rotation.z = Math.sin(t * 1.4) * (gotas.length ? .08 : .025);
   });
-  // reto de los conos en la cancha
-  const conos = [], POS_CONOS = [[-3.5, -2], [-1.5, 2], [.5, -2], [2.5, 2], [4, -.5]];
-  const hudReto = document.createElement('div');
-  hudReto.style.cssText = 'position:fixed;left:50%;top:calc(var(--sa, 0px) + 64px);transform:translateX(-50%);z-index:12;display:none;background:rgba(15,26,23,.92);color:#fff;border:3px solid #10B981;border-radius:16px;padding:8px 16px;font:700 18px "Space Grotesk",Inter,sans-serif';
-  document.body.appendChild(hudReto);
-  let reto = null;
-  window.__retoConos = () => {
-    if (!conos.length) for (const [x, z] of POS_CONOS) { const c = new THREE.Mesh(new THREE.ConeGeometry(.28, .6, N === 1 ? 4 : 12), mat('#F97316')); c.position.set(CANCHA.x + x, .3, CANCHA.z + z); escena.add(c); dinamico(c); conos.push(c); }
-    conos.forEach(c => { c.visible = true; c.userData.ok = false; c.material = mat('#F97316'); });
-    reto = { t0: performance.now(), hechos: 0 }; hudReto.style.display = 'block';
-    window.sonar('abrir'); toast('🏃 ¡Tocá los 5 conos naranjas!');
-  };
-  window.__conos = () => conos.map(c => [c.position.x, c.position.z]);   // (para las pruebas)
-  alCuadro.push(() => {
-    if (!reto) return;
-    const seg = (performance.now() - reto.t0) / 1000;
-    for (const c of conos) if (!c.userData.ok && Math.hypot(yo.position.x - c.position.x, yo.position.z - c.position.z) < 1) { c.userData.ok = true; c.material = mat('#10B981'); reto.hechos++; window.sonar('bien'); }
-    hudReto.textContent = `🏃 Conos ${reto.hechos}/5 · ${seg.toFixed(1)} s`;
-    if (reto.hechos === conos.length) {
-      const antes = parseFloat((() => { try { return localStorage.getItem('alumno-conos'); } catch (e) { return null; } })()) || Infinity;
-      if (seg < antes) try { localStorage.setItem('alumno-conos', seg.toFixed(1)); } catch (e) {}
-      toast(seg < antes ? `🏅 ¡Lo lograste en ${seg.toFixed(1)} s! Tu mejor tiempo.` : `🎉 ¡Lo lograste en ${seg.toFixed(1)} s!`, 3200); window.sonar('llave');
-      reto = null; setTimeout(() => { hudReto.style.display = 'none'; conos.forEach(c => { c.visible = false; }); }, 1800);
-    } else if (seg > 90) { reto = null; hudReto.style.display = 'none'; conos.forEach(c => { c.visible = false; }); toast('⏱️ Se terminó el tiempo. ¡Probá de nuevo!'); }
-  });
-
   // Burbujas de frases/emotes sobre las cabezas
   const burbujas = [];
   window.__burbuja = (quien, texto) => {
@@ -1984,12 +2303,14 @@ function iniciar(THREE) {
   function detrasDelPersonaje() { CAM.yawObj = yo.rotation.y + Math.PI; CAM.pitchObj = CAM.pitch0; }
   const distDedos = () => { const [a, b] = [...dedos.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
   canvas.addEventListener('pointerdown', e => {
+    if (enfoque) { pizarraPuntero(e, 'down'); return; }   // dibujando en la pizarra
     dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: e.clientX > innerWidth / 2 });
     try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
     // Dos dedos sobre el mundo (el círculo de caminar no cuenta: es otro elemento) = pellizco para zoom
     if (dedos.size === 2) { pellizco = { d0: distDedos(), z0: CAM.zoomObj }; dedos.forEach(d => { d.pellizco = true; }); ocultarPistaMirar(); }
   });
   canvas.addEventListener('pointermove', e => {
+    if (enfoque) { if (enfoque.trazo) pizarraPuntero(e, 'move'); return; }
     const d = dedos.get(e.pointerId); if (!d) return;
     const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
     if (pellizco && dedos.size >= 2) { if (!window.__pausa) zoomA(pellizco.z0 * pellizco.d0 / distDedos()); return; }
@@ -2000,6 +2321,7 @@ function iniciar(THREE) {
     ocultarPistaMirar();
   });
   const soltarDedo = e => {
+    if (enfoque) { pizarraPuntero(e, 'up'); return; }
     const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (dedos.size < 2) pellizco = null;
     if (!d || e.type === 'pointercancel' || d.pellizco) return;
     const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
@@ -2113,6 +2435,10 @@ function iniciar(THREE) {
       }
     }
     marca.visible = !!piloto; if (piloto) { const k2 = 1 + Math.sin(t * 6) * .12; marca.scale.set(k2, k2, k2); }
+    if (usando || enfoque) {   // sentado, en la hamaca o dibujando: el círculo sirve para bajarse
+      if (usando && Math.hypot(mx, mz) > .3 && usando.t > .5 && usando.tipo !== 'resbalin' && !window.__pausa) bajarse();
+      mx = mz = 0;
+    }
     const largo = Math.hypot(mx, mz), moviendo = largo > .1 && !window.__pausa;
     if (moviendo) {
       const v = 6 * Math.min(1, largo);
@@ -2122,7 +2448,7 @@ function iniciar(THREE) {
       let dA = Math.atan2(mx, mz) - yo.rotation.y; dA = Math.atan2(Math.sin(dA), Math.cos(dA));
       yo.rotation.y += dA * Math.min(1, dt * 12);
     }
-    animar(YOP, moviendo, dt, t);
+    if (!usando) animar(YOP, moviendo, dt, t);
     for (const f of alCuadro) f(dt, t);   // zonas y compañeros (EDU.06b)
 
     // compañeros caminando
@@ -2139,7 +2465,7 @@ function iniciar(THREE) {
     // (con un poco de margen al alejarse para que el cartel no parpadee en el borde)
     cercano = null; let mejor = RADIO_PUERTA;
     for (const p of interes) { const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .4 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
-    const verCartel = cercano && !window.__pausa && !piloto;
+    const verCartel = cercano && !window.__pausa && !piloto && !enfoque && !usando;
     if (verCartel) {
       if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
       const ad = window.__adentro || 0;   // a la altura de los ojos el cartel va más bajo, para que no lo tape la barra de arriba
@@ -2208,17 +2534,18 @@ function iniciar(THREE) {
     }
     objetivoCam.copy(cabeza).addScaledVector(dirCam, dist);
     if (adentro <= .02) objetivoCam.y = yo.position.y + Math.sin(pitch) * dist;
-    camara.position.lerp(objetivoCam, saltoCam ? 1 : Math.min(1, dt * (adentro > .02 ? 9 : 6))); saltoCam = false;
+    if (enfoque) camara.position.lerp(enfoque.cam, Math.min(1, dt * 6)); else camara.position.lerp(objetivoCam, saltoCam ? 1 : Math.min(1, dt * (adentro > .02 ? 9 : 6))); saltoCam = false;
     { // copa del toborochi del patio: ¿queda entre la cámara y el alumno? → se aclara
       const ax = camara.position.x, az = camara.position.z, bx = cabeza.x - ax, bz = cabeza.z - az, l2 = bx * bx + bz * bz || 1;
       const u = Math.max(0, Math.min(1, ((-3.2 - ax) * bx + (-3.2 - az) * bz) / l2)), dx = ax + bx * u + 3.2, dz = az + bz * u + 3.2;
       const meta = adentro > .3 && dx * dx + dz * dz < 2.6 ? .22 : 1;
       let op = matCopa.opacity + (meta - matCopa.opacity) * Math.min(1, dt * 8); if (Math.abs(meta - op) < .01) op = meta;
       if (op !== matCopa.opacity) { matCopa.opacity = op; const tr = op < .99; if (tr !== matCopa.transparent) { matCopa.transparent = tr; matCopa.depthWrite = !tr; matCopa.needsUpdate = true; } } }
-    const fovQuiere = (innerHeight > innerWidth ? 58 : 46) + 12 * adentro;
+    const fovQuiere = enfoque ? 40 : (innerHeight > innerWidth ? 58 : 46) + 12 * adentro;
     if (Math.abs(camara.fov - fovQuiere) > .05) { camara.fov = fovQuiere; camara.updateProjectionMatrix(); }
     const adelante = 2 - 1.2 * adentro;
     camara.lookAt(cabeza.x - Math.sin(CAM.yaw) * adelante, cabeza.y - (1 - adentro) * 0 + adentro * .1, cabeza.z - Math.cos(CAM.yaw) * adelante);
+    if (enfoque) camara.lookAt(enfoque.mira);   // primer plano de la pizarra
     if (EVO) EVO.render(renderer, escena, camara); else renderer.render(escena, camara);
     medirFps(t);
     requestAnimationFrame(bucle);
