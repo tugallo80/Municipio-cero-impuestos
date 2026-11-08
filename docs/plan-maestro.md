@@ -46,7 +46,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.01b | Láminas y maqueta v2 | Láminas de los 4 mundos + cartas para talleres con niños; maqueta del alumno v2 (misión→llave→lugar, sin ranking, perfil sin "estilo de aprendizaje") | EDU.01 | ✅ En `main` (8-nov) |
 | EDU.02 | Motor | Migrar tutor IA, voz Kay, Functions y datos de `rubikeduai-backend` (sin la interfaz vieja) + arreglos de seguridad | INF.01 | ✅ En `main` (8-nov). `nande-educacion.web.app/prueba-motor/` |
 | EDU.02b | Los profes dentro del mundo | Voz en vivo en la maqueta del alumno: la profe (Sulafat) y el profe (Achird), habla camba, marco/franja que sigue la voz, pistas en escalera con la misión | EDU.02, EDU.01b | ✅ En `main` (8-nov). `nande-educacion.web.app/maqueta/alumno.html` |
-| EDU.02c | Alumno en horizontal | App del alumno horizontal primero (layout de juego, "Girá tu pantalla", pantalla completa, paneles laterales) | EDU.02b | 🔍 PR abierto (8-nov), publicado desde la rama en `nande-educacion.web.app/maqueta/alumno.html` |
+| EDU.02c | Alumno en horizontal | App del alumno horizontal primero (layout de juego, "Girá tu pantalla", pantalla completa, paneles laterales) | EDU.02b | 🔍 PR #10 abierto (8-nov), publicado desde la rama en `nande-educacion.web.app/maqueta/alumno.html` |
 | EDU.03 | Datos, cuentas y roles | Colegio/cursos/materias/alumnos, 4 roles con reglas de seguridad, seed de demo | EDU.02 | ⏳ |
 | EDU.04 | Panel del tutor | Cronograma, pensum, avance del día, perfil psicopedagógico, rendimiento | EDU.03 | ⏳ |
 | EDU.05 | Retos / Misiones | Editor del tutor + motor de misiones + tutor IA dentro de la misión | EDU.03–04 | ⏳ |

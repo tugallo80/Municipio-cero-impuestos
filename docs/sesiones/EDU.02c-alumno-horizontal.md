@@ -46,7 +46,12 @@ El dueño vio que los chicos juegan con el celular **acostado**. La app del alum
 
 ## Cierre
 
-**8-nov-2026** — PR "EDU.02c — Alumno en horizontal" (`sesion/edu-02c` → `main`), sin mergear.
+**8-nov-2026** — PR #10 (`sesion/edu-02c` → `main`), sin mergear. Publicado desde la rama:
+Hosting `nande-educacion` versión `bb8dd24` (FINALIZED, verificado por la API de Hosting).
+
+**Deploy**: sitio y Functions OK. La prueba de voz marcó 1 chequeo en rojo ("al pedir el profe Jochi
+llama a `llamar_profe`"), pero la transcripción muestra que sí lo llamó (`llamar_profe(profe='el_profe')`):
+es la detección de la prueba, que a veces llega tarde. Esta sesión no tocó el servidor de voz.
 
 **Prueba automática (Playwright, deviceScaleFactor 2, isMobile, hasTouch)**: 844×390, 915×412,
 1280×800 y vertical 390×844. Inicio → Jugar → mundo 3D → misión con escalera → minijuego pizza →
@@ -55,6 +60,7 @@ celular y 6 en tablet **con render por software (sin GPU)**; no es comparable co
 (EDU.01b medía ~18 fps igual). Los cambios no agregan trabajo al 3D.
 
 **Pendiente**
+- Afinar la prueba de voz para que espere la llamada a `llamar_profe` antes de dar rojo (falso negativo).
 - Prueba del dueño con un chico, celular acostado: ¿el círculo y los botones quedan cómodos para los pulgares?
 - iPhone no permite trabar la orientación desde la web: ahí queda el aviso "Girá tu pantalla".
 - La zona del notch no se pudo simular en Playwright: mirar en un celular con notch.
