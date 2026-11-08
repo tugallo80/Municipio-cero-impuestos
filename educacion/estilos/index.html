@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000000">
+<title>Estilo visual ÑANDÉ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --verde: #10B981; --sup: #0A0A0A; --sup2: #111111; --borde: #222; --t2: #A3A3A3; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #000; color: #fff; font-family: Inter, system-ui, sans-serif; line-height: 1.45; padding: 20px 16px 64px; max-width: 1180px; margin: 0 auto; }
+  h1, h2, h3 { font-family: 'Space Grotesk', sans-serif; }
+  h1 { font-size: 27px; line-height: 1.15; }
+  .lema { margin-top: 10px; padding: 10px 14px; border-left: 4px solid var(--verde); background: var(--sup2); border-radius: 0 12px 12px 0; font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 600; font-size: 17px; }
+  p.sec { color: var(--t2); margin-top: 10px; font-size: 15px; max-width: 760px; }
+  h2 { font-size: 13px; margin: 34px 0 12px; color: var(--t2); text-transform: uppercase; letter-spacing: .07em; }
+  .controles { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 18px; position: sticky; top: 0; padding: 10px 0; background: rgba(0,0,0,.92); z-index: 5; }
+  .seg { display: inline-flex; background: var(--sup2); border: 1px solid var(--borde); border-radius: 14px; padding: 3px; }
+  .seg button { min-height: 42px; padding: 0 14px; border: 0; border-radius: 11px; background: transparent; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
+  .seg button.on { background: var(--verde); color: #00140D; }
+  .tres { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .carta { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; display: flex; flex-direction: column; }
+  .carta a.img { display: block; background: #0a0a0a; }
+  .carta img { width: 100%; display: block; aspect-ratio: var(--ar); object-fit: cover; }
+  .carta .pie { padding: 10px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+  .carta .nom { display: flex; align-items: center; gap: 8px; }
+  .letra { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font: 700 18px 'Space Grotesk', Inter, sans-serif; color: #000; }
+  .carta b { font-family: 'Space Grotesk', Inter, sans-serif; font-size: 16px; line-height: 1.1; }
+  .carta .corto { color: var(--t2); font-size: 13px; }
+  a.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 44px; padding: 0 14px; border-radius: 12px; background: #1a1a1a;
+    border: 1px solid var(--borde); color: #fff; text-decoration: none; font-weight: 600; font-size: 14px; text-align: center; }
+  a.btn.verde { background: var(--verde); color: #00140D; border: 0; }
+  .carta a.btn { margin-top: auto; }
+  @media (max-width: 640px) {
+    body { padding: 16px 16px 56px; }
+    .tres { gap: 6px; }
+    .carta { border-radius: 12px; }
+    .carta .pie { padding: 7px; gap: 6px; }
+    .carta .corto { display: none; }
+    .carta b { font-size: 13px; }
+    .letra { width: 26px; height: 26px; font-size: 15px; }
+    .carta a.btn { min-height: 44px; padding: 0 6px; font-size: 13px; }
+  }
+  .fichas { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .ficha { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 14px 16px; }
+  .ficha h3 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
+  .ficha ul { margin: 10px 0 0 18px; color: #D4D4D4; font-size: 14px; }
+  .ficha li { margin: 3px 0; }
+  .ficha .costo { display: inline-block; margin-top: 10px; font-size: 13px; color: var(--t2); }
+  .aviso { margin-top: 10px; padding: 10px 12px; border-radius: 12px; background: #1f1806; border: 1px solid #4d3b0d; color: #F2C230; font-size: 13px; }
+  .bloque { display: grid; gap: 14px; grid-template-columns: 1fr; background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; overflow: hidden; }
+  @media (min-width: 760px) { .bloque { grid-template-columns: 1.3fr 1fr; } }
+  .bloque img { width: 100%; display: block; }
+  .bloque .txt { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 10px; }
+  .bloque .txt p { color: #D4D4D4; font-size: 14px; }
+  .botones { display: flex; gap: 8px; flex-wrap: wrap; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; background: var(--sup2); border-radius: 14px; overflow: hidden; }
+  th, td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
+  th { color: var(--t2); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; }
+  td.n { font: 700 14px ui-monospace, monospace; }
+  .preg { counter-reset: p; display: grid; gap: 8px; }
+  .preg div { background: var(--sup2); border: 1px solid var(--borde); border-radius: 14px; padding: 12px 14px 12px 50px; position: relative; font-size: 15px; }
+  .preg div::before { counter-increment: p; content: counter(p); position: absolute; left: 14px; top: 11px; width: 26px; height: 26px; border-radius: 50%; background: var(--verde); color: #00140D; font: 700 14px 'Space Grotesk', Inter, sans-serif; display: grid; place-items: center; }
+  .nota { margin-top: 10px; color: var(--t2); font-size: 13px; }
+</style>
+</head>
+<body>
+  <h1>Estilo visual del mundo ÑANDÉ</h1>
+  <div class="lema">"Acá no vale lo que tenés, sino lo que sabés."</div>
+  <p class="sec">La <b>misma escena</b> dibujada de 3 maneras: un colegio cruceño que crece, el bosque que se restaura, un portal para visitar otro colegio, la ciudad por anillos, los dos profes (Taji y Jochi) y dos alumnos (primaria y secundaria). Tiene que servir de 6 a 17 años: ni infantil, ni copia de otros juegos.</p>
+
+  <div class="controles">
+    <div class="seg" id="segVista"><button data-v="colegio" class="on">Colegio</button><button data-v="bosque">Bosque</button><button data-v="portal">Portal</button></div>
+    <div class="seg" id="segFormato"><button data-f="celular">Celular</button><button data-f="horizontal">Horizontal</button></div>
+  </div>
+  <div class="tres" id="tres"></div>
+
+  <h2>Qué tiene cada estilo</h2>
+  <div class="fichas">
+    <div class="ficha"><h3><span class="letra" style="background:#10B981">A</span>Maqueta Viva</h3>
+      <ul><li>Low poly facetado, como maqueta tallada en madera y arcilla.</li><li>Luz de tarde cálida, niebla verde-azulada.</li><li>Personajes de ~4 cabezas: tiernos pero no "bebé".</li><li>El que se recomienda probar primero.</li></ul>
+      <span class="costo">Costo técnico: bajo</span></div>
+    <div class="ficha"><h3><span class="letra" style="background:#D9A441">B</span>Tierra Pintada</h3>
+      <ul><li>Dos tonos con contorno de tinta, colores más fuertes.</li><li>Personajes de ~6 cabezas, "cómic juvenil".</li><li>El portal es un aro con guarda que gira.</li><li>El más "propio" y fácil de llevar a afiches y campañas.</li></ul>
+      <span class="costo">Costo técnico: medio (dibuja el doble de triángulos)</span>
+      <div class="aviso">Los patrones que se ven son <b>genéricos, de muestra</b>. El diseño final se <b>co-diseña y acredita con Artecampo / las comunidades</b>; nunca se copian diseños indígenas reales.</div></div>
+    <div class="ficha"><h3><span class="letra" style="background:#5FB7C9">C</span>Pixel Camba</h3>
+      <ul><li>La maqueta de A dibujada con menos de la mitad de píxeles y 32 colores.</li><li>Aire "retro" que suele gustar a adolescentes.</li><li>Riesgo: a docentes y padres les puede parecer "juego viejo".</li><li>Sirve también como <b>modo de rendimiento</b> para tablets débiles.</li></ul>
+      <span class="costo">Costo técnico: el más bajo</span></div>
+  </div>
+
+  <h2>Prueba de construcción (estilo A)</h2>
+  <div class="bloque">
+    <img src="capturas/construir-horizontal.jpg" alt="Prueba de construcción: casona con patio, aljibe y mirador" loading="lazy">
+    <div class="txt">
+      <p>Tocás una celda de la grilla y el sistema <b>elige la pieza solo</b>, según lo que hay alrededor: si una celda queda rodeada se vuelve <b>patio</b> (con <b>aljibe</b>); hacia el patio y hacia la calle aparecen <b>galerías con horcones</b>; las casas chicas llevan <b>techo de palma</b> y las grandes de <b>teja</b>; tocás de nuevo y sube un piso; al tercero es <b>mirador</b>.</p>
+      <p>Arriba a la derecha se ve el <b>indicador de fps</b>.</p>
+      <div class="botones"><a class="btn verde" href="construir.html">Probar a construir</a></div>
+    </div>
+  </div>
+
+  <h2>Lámina E para los talleres con niños</h2>
+  <div class="bloque">
+    <img src="../talleres/vista/E-mi-colegio-en-santa-cruz.jpg" alt="Lámina E: Mi colegio en Santa Cruz" loading="lazy">
+    <div class="txt">
+      <p><b>"Mi colegio en Santa Cruz"</b>: la ciudad por anillos, los colegios (marcados en verde) unidos por portales, y el bosque alrededor que los colegios hacen crecer. Mismo formato A3 que las láminas A–D.</p>
+      <div class="botones"><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.pdf">PDF A3</a><a class="btn" href="../talleres/laminas/E-mi-colegio-en-santa-cruz.png">PNG</a><a class="btn" href="escena.html?estilo=A&tipo=mapa&vista=general">Ver en 3D</a></div>
+    </div>
+  </div>
+
+  <h2>Rendimiento medido</h2>
+  <div id="fps"><p class="nota">Cargando…</p></div>
+  <p class="nota">Medido en el navegador del servidor de pruebas, <b>sin tarjeta gráfica</b> (todo por procesador): es un piso pesimista. La meta es ≥ 30 fps en la tablet real de gama baja; hay que medirlo ahí. Cada escena abierta muestra sus fps arriba a la derecha.</p>
+
+  <h2>Para elegir</h2>
+  <div class="preg">
+    <div>¿Cuál de los tres te dan ganas de jugar? ¿Y cuál creés que elegiría un chico de 15?</div>
+    <div>¿B (con contorno y patrones) vale la pena aunque cueste más y haya que co-diseñar los patrones con Artecampo?</div>
+    <div>¿C te sirve como "modo liviano" para tablets viejas, o lo descartamos?</div>
+    <div>Los profes Taji y Jochi y los alumnos: ¿se ven bien para primaria <i>y</i> secundaria? ¿Más grandes, más chicos, otra ropa?</div>
+  </div>
+
+<script>
+const ESTILOS = [
+  { l: 'A', n: 'Maqueta Viva', c: '#10B981', d: 'Low poly facetado, como una maqueta.' },
+  { l: 'B', n: 'Tierra Pintada', c: '#D9A441', d: 'Dos tonos con contorno de tinta.' },
+  { l: 'C', n: 'Pixel Camba', c: '#5FB7C9', d: 'Pocos píxeles y 32 colores.' }
+];
+let vista = 'colegio', formato = innerWidth < 700 ? 'celular' : 'horizontal';
+function pintar() {
+  const ar = formato === 'celular' ? '390 / 844' : '1280 / 800';
+  document.getElementById('tres').innerHTML = ESTILOS.map(e => {
+    const img = `capturas/${e.l}-${vista}-${formato}.jpg`;
+    return `<div class="carta" style="--ar:${ar}">
+      <a class="img" href="${img}"><img src="${img}" alt="${e.l} · ${e.n} · ${vista}"></a>
+      <div class="pie"><div class="nom"><span class="letra" style="background:${e.c}">${e.l}</span><b>${e.n}</b></div>
+      <span class="corto">${e.d}</span>
+      <a class="btn verde" href="escena.html?estilo=${e.l}&vista=${vista}">Abrir en 3D</a></div></div>`;
+  }).join('');
+  document.querySelectorAll('#segVista button').forEach(b => b.classList.toggle('on', b.dataset.v === vista));
+  document.querySelectorAll('#segFormato button').forEach(b => b.classList.toggle('on', b.dataset.f === formato));
+}
+document.getElementById('segVista').onclick = e => { if (e.target.dataset.v) { vista = e.target.dataset.v; pintar(); } };
+document.getElementById('segFormato').onclick = e => { if (e.target.dataset.f) { formato = e.target.dataset.f; pintar(); } };
+pintar();
+fetch('capturas/fps.json').then(r => r.json()).then(d => {
+  document.getElementById('fps').innerHTML = `<table><tr><th>Qué</th><th>Pantalla</th><th>fps</th><th>Dibujos</th></tr>${d.medidas.map(m =>
+    `<tr><td>${m.pagina}</td><td>${m.formato}</td><td class="n" style="color:${m.fps >= 30 ? '#34D399' : m.fps >= 20 ? '#F2C230' : '#F87171'}">${m.fps}</td><td>${m.llamadasDeDibujo ? m.llamadasDeDibujo + ' llamadas · ' + Math.round(m.triangulos / 1000) + ' mil triáng.' : '—'}</td></tr>`).join('')}</table>`;
+}).catch(() => { document.getElementById('fps').innerHTML = '<p class="nota">No se pudo cargar la tabla.</p>'; });
+</script>
+</body>
+</html>

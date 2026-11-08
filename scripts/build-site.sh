@@ -20,6 +20,12 @@ if [ -d docs/educacion/talleres ]; then
   cp -r docs/educacion/talleres/. _site/educacion/talleres/
 fi
 
+# Educación: propuestas de estilo visual (EDU.01c) en /educacion/estilos.
+if [ -d educacion/estilos ]; then
+  mkdir -p _site/educacion/estilos
+  cp -r educacion/estilos/. _site/educacion/estilos/
+fi
+
 # Educación: si existe la app de la tablet, se compila y se publica en /educacion.
 APP=educacion/apps/tablet-client
 if [ -f "$APP/package.json" ]; then

@@ -1,0 +1,64 @@
+{
+  "nota": "Chromium headless con SwiftShader (CPU, sin GPU) en el contenedor de la sesión. Resolución normal (no la de captura). Mediana de 6 s.",
+  "fecha": "2026-11-08",
+  "medidas": [
+    {
+      "pagina": "escena A (vista Todo)",
+      "formato": "celular",
+      "fps": 35,
+      "llamadasDeDibujo": 9,
+      "triangulos": 94892,
+      "armadoMs": 209
+    },
+    {
+      "pagina": "escena B (vista Todo)",
+      "formato": "celular",
+      "fps": 17,
+      "llamadasDeDibujo": 15,
+      "triangulos": 241928,
+      "armadoMs": 422
+    },
+    {
+      "pagina": "escena C (vista Todo)",
+      "formato": "celular",
+      "fps": 44,
+      "llamadasDeDibujo": 9,
+      "triangulos": 94892,
+      "armadoMs": 920
+    },
+    {
+      "pagina": "construir (A, tocando celdas)",
+      "formato": "celular",
+      "fps": 60
+    },
+    {
+      "pagina": "escena A (vista Todo)",
+      "formato": "horizontal",
+      "fps": 21,
+      "llamadasDeDibujo": 9,
+      "triangulos": 94892,
+      "armadoMs": 198
+    },
+    {
+      "pagina": "escena B (vista Todo)",
+      "formato": "horizontal",
+      "fps": 9,
+      "llamadasDeDibujo": 15,
+      "triangulos": 241928,
+      "armadoMs": 429
+    },
+    {
+      "pagina": "escena C (vista Todo)",
+      "formato": "horizontal",
+      "fps": 28,
+      "llamadasDeDibujo": 9,
+      "triangulos": 94892,
+      "armadoMs": 963
+    },
+    {
+      "pagina": "construir (A, tocando celdas)",
+      "formato": "horizontal",
+      "fps": 60
+    }
+  ]
+}

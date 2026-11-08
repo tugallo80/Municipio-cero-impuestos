@@ -9,6 +9,7 @@ Para verlo desde el celular: abrir `index.html` (en la vista previa: `/educacion
 | `laminas/B-selva-nande` | Concepto B: isla-selva inspirada en Santa Cruz (montañas tipo Amboró, río, lomas de arena, jaguar, capibaras, parabas, tucán, toborochis) | 1 |
 | `laminas/C-mi-barrio` | Concepto C: barrio en bloques (casas genéricas, ninguna real) | 1 |
 | `laminas/D-mundo-que-creamos` | Concepto D: terreno vacío que el curso construye | 1 |
+| `laminas/E-mi-colegio-en-santa-cruz` | Concepto E: Santa Cruz por anillos, colegios unidos por portales y el bosque que hacen crecer (estilo A "Maqueta Viva", EDU.01c). Se genera con `tools/estilos/generar.mjs`; no está en `todo-para-imprimir.pdf` | 1 |
 | `fichas` | 54 fichas para votar en secreto: verde "quiero vivir acá", amarilla "más o menos", roja "aburrido" | 1 |
 | `cartas` | 8 cartas para ordenar de "me encanta" a "no me gusta": ver compañeros, visitar su casa, ranking, regalos, tutor que habla, lugar secreto, equipo del curso, y una en blanco ("Mi idea") | 2 |
 | `vinetas` (3 hojas) | Historietas para completar: "¿Qué pasa cuando terminás la misión?", "¿Qué hay detrás de la puerta?", "Un compañero necesita ayuda" | 2 |
