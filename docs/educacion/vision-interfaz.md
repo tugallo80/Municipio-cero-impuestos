@@ -186,8 +186,9 @@ en Bolivia (RUDE, carnet), factibilidad técnica en tablets.
   construcción con materiales de conocimiento, mundo cerrado y seguro.
 - **La magia está en los portales**: visitar otros colegios a través de portales.
 - **Construir** es el reto que más le gusta al público objetivo.
-- **El mapa**: la ciudad de Santa Cruz mezclada con un **bosque abierto** que los colegios van
-  ocupando y haciendo crecer.
+- **El mapa**: la ciudad de Santa Cruz **todavía vacía**, solo con los **hitos urbanos** (el Cristo,
+  la plaza 24 de Septiembre, etc.) y áreas verdes libres. Los colegios la van construyendo
+  (ver "Los alumnos construyen la ciudad", abajo). *Aclaración del dueño: no se trata de talar.*
 - **Evolución**: olimpiadas y retos entre colegios.
 - **Conectar clases sociales**: colegios públicos, de convenio y privados en el mismo mundo,
   donde lo que cuenta es el conocimiento.
@@ -223,3 +224,22 @@ Notas de la MAESTRA:
   "pieles" de render.
 - **Rendimiento**: el tramo "realista" es el más pesado; debe seguir andando en tablets baratas.
 - Se prueba en EDU.01c (pedido enviado a la sub-sesión).
+
+## Los alumnos construyen la ciudad (aclaración del dueño, 8-nov-2026)
+
+- La ciudad empieza **vacía**, solo con hitos (el Cristo, la plaza, etc.). No hay bosque que talar.
+- Cada curso **acumula capital** con sus misiones bien hechas. El docente propone, por ejemplo un
+  viernes: *"esta semana juntamos un buen capital porque todos hicieron sus misiones y las hicieron
+  bien, ¿qué les parece si construimos un zoológico?"*
+- Los alumnos **no solo mejoran su escuela: construyen la ciudad** (zoológico, parques, hospitales,
+  bibliotecas…).
+- **Reto entre colegios = "envidia buena"**: quién **aporta más a la ciudad**.
+
+Notas de la MAESTRA:
+- Es un **presupuesto participativo en miniatura**: el curso decide en qué invierte lo que ganó.
+  Conecta directo con la app del municipio (referéndums de obras) y forma ciudadanía desde chicos.
+- Para que "aportar más" sea justo: medir el aporte **por alumno** y la **mejora**, en ligas de
+  colegios comparables (ver `docs/investigacion/mundo-abierto-santa-cruz.md`).
+- La decisión del curso puede ser una **votación en clase** guiada por el docente, sin premios por votar.
+- Las obras de la ciudad son **de todos**: se pueden visitar por portales y llevan el nombre de los
+  colegios que aportaron.
