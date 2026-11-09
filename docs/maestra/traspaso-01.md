@@ -104,3 +104,16 @@ limpieza del Hub (PR #7), arreglo de rutas de la maqueta (PR #9).
 `docs/investigacion/` (una-app-o-varias, educacion-piloto-y-financiamiento, transporte-municipal,
 experiencia-del-alumno, voz-del-tutor, mundo-abierto-santa-cruz, estilo-visual) ·
 `docs/financiamiento/solicitud-google-cloud-start.md` · `docs/sesiones/` (fichas).
+
+
+---
+
+## Notas de la MAESTRA 2 (9-nov-2026)
+
+- Sesiones activas o disponibles: EDU.06a/06b `session_01Jdt98fThVDqrbaV4DW6Ah5` (mundo del alumno:
+  evoluciones, Santa Cruz, colegio con interacción) y EDU.04a–e `session_01Jdt98bSsn1vo2pkQFemAsC`
+  (panel del profe: clase grabada, cronograma, mentora, presupuestos).
+- Ramas de sesiones nuevas: `sesion/canal-<código>` (canal + Functions + pruebas) o
+  `sesion/pantalla-<código>` (solo canal). Nunca dos ramas publicando al live a la vez.
+- Presupuesto de IA: USD 5/día general + USD 1/día pruebas. La voz es lo caro: abaratarla antes del piloto.
+- Piloto: U.E. Nuevo Horizonte (rural), profe de 2.º de secundaria, varias materias. Cartas en `docs/piloto/`.
