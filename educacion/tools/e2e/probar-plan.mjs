@@ -7,7 +7,7 @@
 //  Usa la cuenta e2e-profe de probar-clase.mjs (clave al azar en cada corrida).
 // ══════════════════════════════════════════════════
 import { randomBytes } from 'node:crypto'
-import { appendFileSync } from 'node:fs'
+import { appendFileSync, readFileSync } from 'node:fs'
 import { initializeApp } from 'firebase-admin/app'
 import { getAuth } from 'firebase-admin/auth'
 import { getDatabase } from 'firebase-admin/database'
@@ -30,7 +30,7 @@ const fecha = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
 async function entrar() {
   const clave = randomBytes(24).toString('base64url')
   try { await getAuth().updateUser(PROFE.uid, { email: PROFE.email, password: clave }) } catch { await getAuth().createUser({ uid: PROFE.uid, email: PROFE.email, password: clave }) }
-  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true } })
+  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true, '2do_secundaria': true } })
   for (const t of ['plan', 'mentora']) await db.ref(`edu/uso_${t}/${fecha}/${PROFE.id}`).remove()
   await db.ref(`edu/planes/${PROFE.id}`).remove()
   const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
@@ -127,6 +127,15 @@ try {
     const g = await llamar('eduPlan', { accion: 'guardar', curso: CURSO, estado }, token)
     const l = await llamar('eduPlan', { accion: 'leer', curso: CURSO }, token)
     chequear(g.result?.ok && JSON.stringify(l.result?.estado?.plan) === JSON.stringify(g.result?.estado?.plan) && l.result?.estado?.hechos?.[mat.temas[0].id] === '2027-02-01', 'Guardar y leer el cronograma devuelve lo mismo')
+
+    // Texto de aprendizaje oficial (2.º de secundaria, Inglés): el navegador manda el texto del índice.
+    const txt = readFileSync(new URL('../../datos/textos-oficiales/2do-secundaria/lengua-extranjera-ingles.txt', import.meta.url), 'utf8')
+    const indice = txt.slice(txt.indexOf('ÍNDICE'), txt.indexOf('PRESENTACI', txt.indexOf('ÍNDICE') + 20) + 600)
+    const ri = await llamar('eduPlan', { accion: 'extraer', curso: '2do_secundaria', texto: indice }, token)
+    const ing = ri.result?.plan?.areas?.find((a) => a.id === 'ing')
+    const tri = ing ? [1, 2, 3].map((n) => ing.temas.filter((t) => t.trimestre === n).length) : []
+    chequear(ri.result?.ok && ing && ing.temas.length >= 8 && tri.every((n) => n >= 2), `Índice del texto oficial de Inglés → ${ing?.temas.length} unidades por trimestre ${tri.join('/')} (USD ${ri.result?.costoUsd})`)
+    chequear((ing?.temas || []).some((t) => (t.contenidos || []).length >= 2), `Subtemas como contenidos: "${ing?.temas[0]?.titulo}" → ${(ing?.temas[0]?.contenidos || []).join('; ')}`)
 
     const tema = mat.temas.find((t) => /fracci/i.test(t.titulo)) || mat.temas[0]
     const m1 = await llamar('eduMentora', { curso: CURSO, area: 'mat', tema: tema.titulo, multigrado: ['3ro_primaria'] }, token)
