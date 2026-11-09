@@ -90,5 +90,23 @@ devuelve un resumen con 3 usos:
   guarda `costoPorHoraUsd` de cada clase real para confirmarlo.
 - Si se quiere bajar: no pedir la transcripción (ahorra ~25 %), o resumir solo la voz del profe.
 
-## Cierre
-(se completa al cerrar la sesión)
+## Cierre (9-nov-2026)
+
+**Hecho** (PR #20, sin mergear)
+- Publicado en el canal de vista previa `https://nande-educacion--edu-04a-m9feaits.web.app/maqueta/tutor.html#clase`
+  (vence a los 14 días; esta rama ya no publica en el sitio en vivo para no pisar a EDU.06b).
+  Functions `eduClase` y `eduClases` en vivo; `eduKayToken`/`eduProfes` siguen andando (prueba de Kay ✅).
+- Prueba automática en cada deploy ✅: seguridad (sin cuenta / alumno / otro curso), resumen en ~3 s,
+  sin nombres, tarea encontrada, sin alertas inventadas, audio no guardado, vencimientos, formato de
+  iPhone, y **Taji contesta "¿qué tarea dejó el profe?" con la tarea de la clase real**.
+- Playwright local (micrófono falso, servidor simulado) en celular y laptop: aviso obligatorio, 🔴,
+  pausa, terminar, corte automático a los 2 min, informe.
+
+**Pendiente**
+- Prueba del dueño en su celular (hablar 1–2 min en la "Clase de prueba").
+- Parte de dirección: diseño fino con el dueño (arriba).
+- Login real de profes y nombres del curso desde la base → EDU.03.
+- Grabar en segundo plano con la pantalla apagada no está garantizado en todos los celulares
+  (se pide Wake Lock); probar en el teléfono del profe del piloto.
+- Precios de agregadores: confirmar en ai.google.dev/pricing.
+- Próximo trabajo propuesto por la MAESTRA: EDU.04b (cronograma y mentora del profe), esperando su OK.
