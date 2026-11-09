@@ -229,7 +229,7 @@
     semana ||= lunesDe(diaRef.fecha);
     const dias = DIAS.map((_, i) => C.sumarDias(semana, i));
     const totalTemas = Object.keys(temas).length, hechos = Object.keys(estado.hechos).filter((k) => temas[k]).length;
-    return `<div class="encab"><div><h1>Cronograma</h1><p>${esc(estado.plan.titulo)} · ${curso} · gestión ${estado.config.anio}${cal.provisional ? ' <span class="pildora ambar">provisional</span>' : ''}</p></div>
+    return `<div class="encab"><div><h1>Cronograma</h1><p>${esc(estado.plan.titulo)} · ${esc(CURSO_NOMBRE[curso])} · gestión ${estado.config.anio}${cal.provisional ? ' <span class="pildora ambar">provisional</span>' : ''}</p></div>
       <div class="fila envuelve" style="gap:8px">${avisoCuenta()}<a class="btn chico sec2" href="#cronograma/paso/1">⚙️ Ajustes</a><a class="btn chico sec2" href="#cronograma/plan">📄 Temas</a><a class="btn chico" href="#cronograma/pdc">🖨️ PDC</a></div></div>
     ${cal.provisional ? `<div class="cr-aviso ambar">El calendario ${estado.config.anio} todavía no es oficial (falta la resolución del Ministerio). Se usa una fecha provisional y se recalcula cuando salga.</div>` : ''}
     ${rep.avisos.slice(0, 3).map((a) => `<div class="cr-aviso ${a.nivel}">⚠️ ${esc(a.texto)}</div>`).join('')}
