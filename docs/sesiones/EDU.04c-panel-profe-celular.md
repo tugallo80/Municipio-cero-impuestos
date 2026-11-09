@@ -17,7 +17,7 @@ revisar todo el panel del profe en 360 y 390 px (celular) y 1280 px (PC).
   mentora, PDC), Alumnos, ficha de alumno, Misiones, Nueva misión y Pensum. Chequea desbordes
   horizontales y textos aplastados (bloques de menos de 110 px con varias líneas): **0 problemas**.
 - Capturas: `docs/sesiones/capturas/EDU.04c/` (360 y 1280 px).
-- Esta rama publica en un **canal de vista previa** (no en el sitio en vivo, que usa EDU.06b).
+- Esta rama publica en un **canal de vista previa** (no en el sitio en vivo, que usa EDU.06b), en su propia cola y sin tocar Functions: https://nande-educacion--edu-04c-isjznr7h.web.app/maqueta/tutor.html
 
 ## Pendiente
 - La revisión se hizo con Chromium; probar en el celular real del dueño (Android) y en un iPhone si hay.
