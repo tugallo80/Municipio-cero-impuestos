@@ -162,3 +162,12 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
   se diseña en detalle con el dueño más adelante. Estrategia del dueño: primero mostrar el valor a
   profes y alumnos; **todos los usos se presentan abiertos antes de grabar clases reales** (consentimiento
   del profe, padres y dirección distrital). Regla: el profe ve lo mismo que la dirección.
+
+## Costos de IA (9-nov-2026)
+
+- El 8-nov se agotó el tope de USD 5/día: USD 4,81 fueron pruebas automáticas de voz (~USD 0,20 por
+  deploy × 24). Arreglo: la prueba de voz corre solo en main (PR #24) y las pruebas tendrán su propio
+  tope de USD 1/día (EDU.04d).
+- **La voz en vivo es lo más caro**: ~USD 0,04–0,05/min. Un curso de 30 chicos × 10 min/día ≈ USD 13/día.
+  **Antes del piloto en aula: bajar el costo de la voz** (solo el paso actual de la misión, voz a pedido y
+  texto el resto, modelo más barato). Acordado con el dueño: después de su reunión con el profe.
