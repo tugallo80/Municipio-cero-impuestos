@@ -75,6 +75,7 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .fila.entre { justify-content: space-between; }
 .envuelve { flex-wrap: wrap; }
 .crece { flex: 1; min-width: 0; }
+.envuelve > .crece { min-width: min(190px, 100%); }   /* en celular, el texto no se aplasta: el botón baja */
 .encab { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .encab p { color: var(--texto2); font-size: 14px; margin-top: 2px; }
 .seccion { margin-top: 26px; }

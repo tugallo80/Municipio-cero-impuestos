@@ -1,7 +1,7 @@
 // Service worker mínimo de la app del alumno (EDU.06a): sirve para que Chrome ofrezca "Instalar".
 // RED PRIMERO: siempre se pide la versión nueva al servidor; la copia guardada solo se usa si
 // no hay internet. Así nunca queda pegada una versión vieja.
-const CACHE = 'nande-alumno-v1';
+const CACHE = 'nande-alumno-v2';   // v2: la app abre en el selector (EDU.06b)
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil((async () => {
   for (const k of await caches.keys()) if (k !== CACHE) await caches.delete(k);
