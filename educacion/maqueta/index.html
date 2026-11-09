@@ -6,6 +6,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#000000">
 <title>Educación · ÑANDÉ (maqueta)</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<meta name="theme-color" content="#000000">
+<link rel="apple-touch-icon" href="/maqueta/iconos/icono-192.png">
+<meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilos.css?v=edu02c-8">
@@ -70,6 +74,10 @@
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script>
   document.getElementById('colegio').textContent = DEMO.colegio.nombre + ' · ' + DEMO.colegio.nota.toLowerCase();
+</script>
+<script>
+// La app instalada (PWA) abre acá, en el selector de perfiles. El service worker es el mismo del juego.
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
 </script>
 </body>
 </html>

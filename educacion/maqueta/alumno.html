@@ -282,7 +282,7 @@
     <span class="llaves" id="llaves" title="Tus llaves"></span>
   </div>
   <button class="boton-hud pc" id="pantalla-completa" title="Pantalla completa" hidden>⛶</button>
-  <a class="boton-hud salir" href="index.html" title="Salir">✕</a>
+  <a class="boton-hud salir" href="index.html" title="Salir" onclick="soltarPantalla()">✕</a>
 </div>
 <div class="ayuda" id="ayuda">Mové el círculo para caminar · tocá un aula</div>
 <div class="aviso-ayuda" id="aviso-ayuda"></div>
@@ -401,6 +401,10 @@ async function pantallaJuego() {
   } catch (e) { /* sin pantalla completa: seguimos igual */ }
   try { if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape'); } catch (e) { /* no se puede trabar: queda el aviso */ }
 }
+// Al salir del juego, el resto de la app (selector, profe, familia, dirección) vuelve a girar libre
+function soltarPantalla() { try { screen.orientation && screen.orientation.unlock && screen.orientation.unlock(); } catch (e) {} try { document.fullscreenElement && document.exitFullscreen(); } catch (e) {} }
+// En la app instalada se puede trabar la horizontal sin tocar nada (solo el juego va acostado)
+if (matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches) { try { screen.orientation.lock('landscape').catch(() => {}); } catch (e) {} }
 function empezar() {
   audio();
   const yaJugaba = document.body.classList.contains('jugando');
@@ -878,7 +882,7 @@ function cierre() {
       <p style="color:var(--texto2)">Hiciste ${S.hoy} misiones. Tu cerebro aprende mejor si descansa: las próximas misiones te esperan mañana.</p></div>
     <div class="caja-info" style="margin:14px 0">🔁 Mañana empezás con un repaso cortito de lo de hoy.<br>🌉 El puente va ${M.puente.hechas}/${M.puente.meta}: tus compañeros también suman.</div>
     <button class="bj ancho" onclick="cerrar()">🌳 Pasear un rato por la isla</button>
-    <a class="bj gris ancho" style="margin-top:12px;text-decoration:none" href="index.html">👋 Salir</a>
+    <a class="bj gris ancho" style="margin-top:12px;text-decoration:none" href="index.html" onclick="soltarPantalla()">👋 Salir</a>
     <button class="sug" style="margin:16px auto 0;display:block" onclick="S.hoy=0;cerrar();toast('Maqueta: misiones habilitadas otra vez')">(maqueta) seguir probando misiones</button>`);
 }
 
