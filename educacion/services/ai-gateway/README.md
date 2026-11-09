@@ -63,3 +63,12 @@ gcloud logging read 'jsonPayload.evento="kay_uso"' --project=municipio-ia --limi
 - `eduClases`: `listar` (el mismo informe para profe y dirección) y `borrar` (borra también el contexto).
 - `eduKayToken` suma a la instrucción de Taji/Jochi/Kay las últimas 3 clases del curso.
 - Ficha: `docs/sesiones/EDU.04a-clase-grabada.md`.
+
+## Presupuesto aparte para las pruebas (EDU.04e)
+- Dos bolsas por día (hora de Bolivia): **general** `edu/uso_global/{fecha}` (chicos, profes, dueño; tope
+  `EDU_TOPE_COSTO_GLOBAL_DIA_USD`, USD 5) y **pruebas** `edu/uso_pruebas/{fecha}` (tope
+  `EDU_TOPE_COSTO_PRUEBAS_DIA_USD`, USD 1).
+- Una cuenta es de prueba si su perfil tiene `pruebaAuto: true` (`edu/alumnos/…` o `edu/personal/…`). Lo
+  ponen los scripts de `educacion/tools/e2e/` con la cuenta de deploy; el navegador no puede escribir la base.
+- Las pruebas nunca gastan de la bolsa general: si la suya se agota, responden `motivo: 'tope_pruebas'` y
+  el workflow las saltea con aviso. El resumen del workflow muestra lo gastado (`e2e/gasto-pruebas.mjs`).

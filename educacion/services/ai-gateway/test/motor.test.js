@@ -137,3 +137,16 @@ test('memoria compartida y relevo: solo datos pedagógicos', () => {
 test('herramientas de los profes', () => {
   assert.deepEqual(profes.HERRAMIENTAS_PROFES.map((h) => h.name), ['terminar_conversacion', 'llamar_profe', 'mostrar_pista']);
 });
+
+test('bolsas separadas: las pruebas automáticas no gastan de la bolsa de los chicos', () => {
+  const { evaluarCuota, bolsa } = require('../src/cuota');
+  const limites = { sesionesPorAlumnoDia: 8, tokensPorAlumnoDia: 1e6, costoGlobalDiaUsd: 5, costoPruebasDiaUsd: 1 };
+  assert.equal(bolsa(false, limites).ruta, 'edu/uso_global');
+  assert.equal(bolsa(true, limites).ruta, 'edu/uso_pruebas');
+  // Una prueba con la bolsa de pruebas agotada se frena aunque la general tenga plata.
+  assert.equal(evaluarCuota({}, { costoUsd: 1.0 }, limites, true).motivo, 'tope_pruebas');
+  assert.equal(evaluarCuota({}, { costoUsd: 0.5 }, limites, true).ok, true);
+  // Un chico se frena solo con la general (USD 5), no con USD 1.
+  assert.equal(evaluarCuota({}, { costoUsd: 1.5 }, limites, false).ok, true);
+  assert.equal(evaluarCuota({}, { costoUsd: 5 }, limites, false).motivo, 'tope_global');
+});

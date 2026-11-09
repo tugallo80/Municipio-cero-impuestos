@@ -122,3 +122,13 @@ devuelve un resumen con 3 usos:
     alcanzó, en vez de marcar error. El tope se reinicia a la medianoche de Bolivia (04:00 UTC).
 - **Pendiente para decidir con el dueño**: si las pruebas deberían tener un presupuesto propio aparte del
   de los chicos (requiere cambiar `cuota.js` y publicar Functions).
+
+## EDU.04e — Presupuesto aparte para las pruebas (9-nov-2026, pedido del dueño)
+- Bolsa de **USD 1/día** solo para las cuentas de prueba automática (`pruebaAuto: true`: `alu_e2e000`,
+  `alu_e2ec00`, `per_e2e000`), separada del tope de **USD 5/día** de chicos, profes y la demo del dueño.
+  Contadores separados (`edu/uso_pruebas` / `edu/uso_global`), mismo reinicio a la medianoche de Bolivia.
+- Si la bolsa de pruebas se agota, las pruebas se saltean con aviso; nunca gastan de la general.
+  La de Kay (~USD 0,20) se saltea antes de empezar si no le alcanza.
+- El resumen del workflow tiene una línea "💰 Gasto de IA hoy" con las dos bolsas.
+- Prueba e2e nueva: una cuenta común (como la del dueño) recibe su token de voz y cuenta en la bolsa
+  general, no en la de pruebas (sin gastar Gemini: no se abre la charla).
