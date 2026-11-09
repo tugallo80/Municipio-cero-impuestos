@@ -205,6 +205,72 @@ del profe".
   - la radio y los libros.
   - Las entregas 1 y 2 siguen andando. Sin errores.
 
+## Ajustes después de la prueba del dueño
+- **Salir de las salas sin trabarse**: el punto de salida quedó más cerca de la puerta (1,5 m). Si
+  cae dentro de una caja de choque (un horcón), se busca el lugar libre más cercano. Al salir hay
+  3 s de respiro antes de que el regente o el guardia puedan perseguir. Probado en las 8 puertas:
+  6 aulas, biblioteca y dirección.
+- **Menos texto en pantalla**:
+  - el cartel de acción es ~70 % del tamaño anterior y se muestra solo el más cercano; si hay otros
+    cerca, aparece un botón chico **⋯** para cambiar entre ellos;
+  - los nombres de los compañeros son más chicos y se ven solo hasta 8 m;
+  - los carteles de aulas lejanas (más de 9 m) se ven más chicos y semitransparentes;
+  - las burbujas de los adultos son más chicas.
+- **Misión primero**:
+  - al entrar a un aula aparece "Para cumplir tu misión del día y desbloquear los minijuegos,
+    sentate 🪑";
+  - al sentarse se abre la misión del día;
+  - los minijuegos de la materia (y el caballete) tienen candado: "🔒 Cumplí tu misión para
+    desbloquear", con un botón a la misión;
+  - al completar la misión se desbloquean los juegos de esa materia y la cancha;
+  - en 🎓 hay un interruptor "Desbloquear todo (demo)", que se guarda en el celular.
+- **Modo deporte**:
+  - al entrar a una cancha, los botones de la derecha cambian:
+    - fútbol: ▶ Partido, Pasar, Patear, Quitar y Regate;
+    - básquet: ▶ Partido, Pasar, Tirar, Robar y Finta;
+  - la cámara se acerca un poco;
+  - partidito 2 contra 2 de 90 s: vos y un compañero contra dos rivales NPC, con marcador y tiempo
+    abajo al centro;
+  - la IA es simple: el que tiene la pelota avanza, pasa o tira; los rivales marcan e intentan
+    quitar; la pelota suelta va al más cercano;
+  - el regate o la finta deja quietos a los rivales cercanos un segundo;
+  - se desbloquea con la misión;
+  - al salir de la cancha, el partido termina y vuelven los botones normales.
+- **Probado** (Playwright, 915×412, táctil) en P1, P5 y S6:
+  - las 8 salidas;
+  - el aviso al entrar;
+  - el cartel con candado y el ⋯;
+  - sentarse abre la misión;
+  - desbloquear;
+  - los botones de cada cancha;
+  - el partido bloqueado y después en juego, con marcador y tiempo;
+  - salir de la cancha;
+  - el regente sigue andando.
+  - Sin errores.
+
+## Multijugador real (para otra sesión, NO hecho)
+- **Ya está preparado**: el estado del partido (`partido`: jugadores, equipos, quién tiene la pelota,
+  vuelo, marcador, tiempo) está separado del dibujo y **solo cambia con eventos**
+  `evento({ quien, tipo })`, con `tipo` = pasar | tirar | quitar | regate. Para jugar con compañeros
+  reales hay que mandar esos eventos por la red y que un solo lugar (el "anfitrión") resuelva el
+  azar (tiros y quites).
+- **Opciones**:
+  - **Firebase Realtime Database** (ya estamos en Firebase): una sala por partido, con los eventos y
+    las posiciones unas 10 veces por segundo.
+    - Costo: bajo para un curso (se paga por GB descargado; un partido de 90 s con 4 chicos son
+      pocos cientos de KB).
+    - Hay que limitar las salas a los chicos del mismo curso con las reglas de seguridad.
+  - **WebRTC** (de celular a celular): tiene menos demora y casi no cuesta en servidor, pero necesita
+    un servidor para encontrarse (señalización, se puede hacer con la misma base) y a veces un
+    servidor TURN cuando las redes lo bloquean (ese sí cuesta).
+- **Seguridad de menores**:
+  - solo compañeros del mismo curso, con apodos y sin nombres reales;
+  - sin chat libre (solo frases y emotes de lista, como hoy);
+  - sin audio ni video;
+  - salas que se borran al terminar;
+  - el docente puede ver y apagar el modo partido;
+  - registro mínimo (quién jugó y cuándo), sin datos personales.
+
 ## Cierre
 
 **Qué quedó**

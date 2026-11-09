@@ -53,6 +53,7 @@
   .aviso-ayuda { position: fixed; left: 50%; transform: translateX(-50%); width: min(460px, calc(100vw - 260px)); top: calc(var(--sa) + 56px); z-index: 12; display: none; align-items: center; gap: 10px; background: #FEF3C7; color: #422006; border-radius: 16px; padding: 8px 10px; box-shadow: 0 5px 0 #CA8A04; font-size: 14px; animation: aparece .3s ease; }
   .aviso-ayuda.ver { display: flex; }
   /* EDU.06b: dibujando en la pizarra, solo la paleta */
+  body.deporte .acciones:not(.deporte-acc), body.deporte .ayuda { display: none !important; }
   body.dibujando .acciones, body.dibujando .ayuda, body.dibujando .aviso-ayuda, body.dibujando .cartel { display: none !important; }
   .aviso-ayuda b { font-family: 'Space Grotesk'; }
   .aviso-ayuda .bj { min-height: 40px; padding: 0 12px; font-size: 14px; }
@@ -76,7 +77,10 @@
   /* EDU.02d — Cartel flotante sobre la puerta más cercana ("Entrar · Mate"), diseño propio */
   .cartel { position: fixed; left: 0; top: 0; z-index: 11; display: none; flex-direction: column; align-items: center; pointer-events: none; will-change: transform; }
   .cartel.ver { display: flex; animation: aparece .2s ease; }
-  .cartel .bj { pointer-events: auto; min-height: 58px; padding: 0 22px; font-size: 18px; max-width: min(320px, 46vw); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 3px solid #D1FAE5; box-shadow: 0 5px 0 var(--verde-osc), 0 0 0 6px rgba(16,185,129,.25); }
+  .cartel .fila-cartel { display: flex; gap: 6px; align-items: center; }
+  .cartel .mas { pointer-events: auto; width: 34px; height: 34px; border-radius: 50%; background: #0F1A17; color: #fff; font-size: 18px; font-weight: 700; border: 2px solid #D1FAE5; display: none; }
+  .cartel .mas.ver { display: block; }
+  .cartel .bj { pointer-events: auto; min-height: 42px; padding: 0 15px; font-size: 14px; max-width: min(260px, 40vw); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border: 3px solid #D1FAE5; box-shadow: 0 5px 0 var(--verde-osc), 0 0 0 6px rgba(16,185,129,.25); }
   .cartel .bj small { font-family: 'Inter'; font-weight: 600; font-size: 12px; opacity: .8; }
   .cartel .pico { width: 0; height: 0; border-left: 11px solid transparent; border-right: 11px solid transparent; border-top: 13px solid #D1FAE5; margin-top: 4px; filter: drop-shadow(0 2px 0 rgba(0,0,0,.25)); animation: rebota 1s ease-in-out infinite; }
   @keyframes rebota { 50% { transform: translateY(4px); } }
@@ -291,7 +295,7 @@
   </div>
 </div>
 <div class="pista-mirar" id="pista-mirar" aria-hidden="true"><span class="mano">👆</span> Deslizá acá para mirar · pellizcá para acercar</div>
-<div class="cartel" id="cartel" aria-live="polite"><button class="bj" id="entrar"></button><span class="pico"></span></div>
+<div class="cartel" id="cartel" aria-live="polite"><div class="fila-cartel"><button class="bj" id="entrar"></button><button class="mas" id="cartel-mas" aria-label="Ver otra acción cerca">⋯</button></div><span class="pico"></span></div>
 <div class="rumbo" id="rumbo"><span id="rumbo-txt"></span><button type="button" id="rumbo-parar">✕ Parar</button></div>
 <div class="lista2d" id="lista2d"></div>
 
@@ -502,6 +506,21 @@ function abrirMision(id) {
 // EDU.06b — Interacciones del colegio (aulas por dentro y zonas). Paneles en 2D; el mundo 3D
 // llama a estas funciones por el nombre del objeto (obj_pizarra_mate, zona_cancha…).
 // ============================================================
+// EDU.06b: misión primero. Los juegos de una materia (y la cancha) se desbloquean al cumplir su misión.
+const DESBLOQ = new Set();
+function desbloqueoDemo() { try { return localStorage.getItem('alumno-desbloquear') === '1'; } catch (e) { return false; } }
+function desbloqueada(id) {
+  if (desbloqueoDemo()) return true;
+  if (id === 'deporte') return DESBLOQ.size > 0;
+  return DESBLOQ.has(id) || !D.misiones.some(x => x.materia === id && x.estado !== 'hecha');
+}
+function panelBloqueado(id, que) {
+  const m = id === 'deporte' ? null : materia(id);
+  abrir(cab('🔒', 'rgba(250,204,21,.18)', 'Cumplí tu misión para desbloquear', que.replace(/^\S+\s/, '')) + `
+    <div class="caja-info" style="font-size:16px">${m ? `Sentate 🪑 en el aula de <b>${m.corto}</b> y hacé la misión del día. ¡Después se abre este juego!` : 'Hacé la misión del día en cualquier aula y se abre la cancha para jugar partidos.'}</div>
+    ${m ? `<button class="bj ancho" style="margin-top:14px" onclick="panelPizarra('${id}')">📌 Ver la misión del día</button>` : ''}
+    <div style="margin-top:12px;color:var(--texto2);font-size:13px">Para la demo: 🎓 → “Desbloquear todo”.</div>`);
+}
 const lsLeer = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lsGuardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
 const CURIOSIDAD = {
@@ -828,6 +847,7 @@ function responder(btn, i) {
 function completar() {
   const x = E.mision;
   x.hechos = x.total; x.estado = 'hecha'; S.hoy++;
+  if (!DESBLOQ.has(x.materia)) { DESBLOQ.add(x.materia); setTimeout(() => toast('🔓 ¡Desbloqueaste los juegos de ' + materia(x.materia).corto + ' y la cancha!', 3200), 1200); }
   YO.avance[x.materia] = Math.min(100, YO.avance[x.materia] + 8);
   M.puente.hechas++; M.puente.mio++;
   if (x.llave) S.llaves.add(x.llave);
@@ -1331,7 +1351,8 @@ if (EVM) {
         const e = EVM.evolucionDeCurso(c);
         return `<button class="bj ${c === CURSO ? 'oro' : 'gris'}" style="min-height:48px;font-size:15px" onclick="__elegirCurso('${c}')">${c} · ${e}. ${EVM.NOMBRES[e - 1]}</button>`;
       }).join('')}</div>
-      <button class="bj ancho" style="margin-top:14px" onclick="cerrar()">Seguir jugando</button>`);
+      <button class="bj ${desbloqueoDemo() ? 'oro' : 'gris'} ancho" style="margin-top:14px" onclick="lsGuardar('alumno-desbloquear', desbloqueoDemo() ? '0' : '1');toast(desbloqueoDemo() ? '🔓 Todo desbloqueado (demo)' : '🔒 Bloqueo de juegos activado');cerrar()">${desbloqueoDemo() ? '🔓 Desbloquear todo (demo): SÍ' : '🔒 Desbloquear todo (demo): NO'}</button>
+      <button class="bj ancho" style="margin-top:10px" onclick="cerrar()">Seguir jugando</button>`);
   }
 }
 
@@ -1592,7 +1613,7 @@ function iniciar(THREE) {
       if (USOS[cosa]) return USOS[cosa](o, mid || donde, n);   // cosas que se usan (sentarse, hamaca, pizarra, kiosco…)
       if (mid) {
         if (cosa === 'libros') return { texto: '📚 Libros · Leer', accion: () => window.panelBiblioteca() };
-        const J = JUEGOS[cosa]; if (J) return { texto: J[0], accion: () => window[J[1]](mid) };
+        const J = JUEGOS[cosa]; if (J) return { texto: J[0], bloq: () => !window.desbloqueada(mid), accion: () => window.desbloqueada(mid) ? window[J[1]](mid) : window.panelBloqueado(mid, J[0]) };
         if (cosa === 'estante') return { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) };
         return { texto: (COSAS[cosa] || '✨ Mirar') + ' · Mirar', accion: () => window.panelObjeto(mid) };
       }
@@ -1624,7 +1645,7 @@ function iniciar(THREE) {
       const f = new THREE.Vector3(0, 0, 1).applyQuaternion(qE); f.y = 0; f.normalize();
       const pos = vE.clone().addScaledVector(f, o.userData.frente ?? 1); pos.y = 0;
       const k = usados[n] = (usados[n] || 0) + 1, clave = k > 1 ? n + '@' + k : n;
-      interes.push({ clave, nombre: n, pos, alto: o.userData.alto ?? 1.9, texto: a.texto, accion: a.accion });
+      interes.push({ clave, nombre: n, pos, alto: o.userData.alto ?? 1.9, texto: a.texto, accion: a.accion, bloq: a.bloq });
       hacerTocable(o, { tipo: 'obj', id: n, clave });
     }
   }
@@ -1689,7 +1710,7 @@ function iniciar(THREE) {
     zonasInteriores.push({ nombre: 'interior_' + nombre, caja: new THREE.Box3(new THREE.Vector3(ox - SW / 2, 0, oz - SL / 2), new THREE.Vector3(ox + SW / 2, 4, oz + SL / 2)) });
     return salas[nombre] = { nombre, g, ox, oz, titulo, icono, color, entrada: new THREE.Vector3(ox, 0, oz + .1), salida, asientos: [] };
   }
-  function salidaDe(px, pz, ry, d = 2.1) { return { pos: new THREE.Vector3(Math.sin(ry) * d + px, 0, Math.cos(ry) * d + pz), ry }; }
+  function salidaDe(px, pz, ry, d = 1.5) { return { pos: new THREE.Vector3(Math.sin(ry) * d + px, 0, Math.cos(ry) * d + pz), ry }; }
   // un aula: bancos, pizarra, estante, mural del avance y el objeto de la materia
   const murales = {};
   const OBJ_MATERIA = { mat: 'abaco', len: 'libros', cnat: 'microscopio', csoc: 'globo', art: 'caballete', ing: 'radio' };
@@ -1884,12 +1905,12 @@ function iniciar(THREE) {
   [[-5.8, -5.8], [5.8, -5.8], [5.8, 1.8], [-5.8, 1.8]].forEach(([x, z], k) => grupo('ruta_guardia_01_0' + (k + 1), x, z, 0, escena));
 
   // --- Comportamientos de las cosas que se usan (la lógica está más abajo y lee el nodo por nombre) ---
-  USOS.silla = o => ({ texto: '🪑 Sentarse', accion: () => usar('silla', o) });
+  USOS.silla = (o, mid) => ({ texto: NOM_MAT[MAT_NOM[mid]] ? '🪑 Sentarse · Misión del día' : '🪑 Sentarse', accion: () => usar('silla', o, mid) });
   USOS.hamaca = o => ({ texto: '🪢 Hamacarse', accion: () => usar('hamaca', o) });
   USOS.resbalin = o => ({ texto: '🛝 Tirarse por el resbalín', accion: () => usar('resbalin', o) });
   USOS.subeybaja = o => ({ texto: '⚖️ Subirse al sube y baja', accion: () => usar('subeybaja', o) });
   USOS.pizarra = (o, mid) => NOM_MAT[MAT_NOM[mid]] ? { texto: '🖍️ Pizarra · Dibujar', accion: () => usar('pizarra', o, mid) } : null;
-  USOS.caballete = (o, mid) => ({ texto: '🎨 Caballete · Pintar', accion: () => usar('pizarra', o, mid) });
+  USOS.caballete = (o, mid) => ({ texto: '🎨 Caballete · Pintar', bloq: () => !window.desbloqueada(mid), accion: () => window.desbloqueada(mid) ? usar('pizarra', o, mid) : window.panelBloqueado(mid, '🎨 Caballete') });
   USOS.kiosco = () => ({ texto: '🧃 Kiosco · Menú', accion: () => window.panelKiosco() });
   USOS.estante = (o, mid) => MAT_NOM[mid] ? { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) } : null;
 
@@ -1901,7 +1922,10 @@ function iniciar(THREE) {
   velo3d.style.cssText = 'position:fixed;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .22s;z-index:9';
   document.body.appendChild(velo3d);
   function fundido(cb) { velo3d.style.opacity = 1; setTimeout(() => { cb(); setTimeout(() => { velo3d.style.opacity = 0; }, 80); }, 240); }
-  function teletransportar(pos, ry) { pararPiloto(); yo.position.copy(pos); yo.rotation.y = ry; CAM.yaw = CAM.yawObj = ry + Math.PI; CAM.pitch = CAM.pitchObj = CAM.pitch0; saltoCam = true; }
+  // si el punto cae dentro de algo (un horcón), se busca el lugar libre más cercano
+  function libre(pos) { if (!choca(pos.x, pos.z)) return pos; for (let r = .25; r <= 3; r += .25) for (let a = 0; a < 16; a++) { const x = pos.x + Math.cos(a / 16 * 6.283) * r, z = pos.z + Math.sin(a / 16 * 6.283) * r; if (!choca(x, z)) return new THREE.Vector3(x, 0, z); } return pos; }
+  window.__libre = (x, z) => !choca(x, z);   // (para las pruebas)
+  function teletransportar(pos, ry) { pararPiloto(); pos = libre(pos); yo.position.copy(pos); yo.rotation.y = ry; CAM.yaw = CAM.yawObj = ry + Math.PI; CAM.pitch = CAM.pitchObj = CAM.pitch0; saltoCam = true; }
   function entrarSala(nombre) {
     const s = salas[nombre]; if (!s) return;
     window.sonar('abrir');
@@ -1909,7 +1933,7 @@ function iniciar(THREE) {
   }
   function salirSala() {
     const s = salaActual; if (!s) return;
-    fundido(() => { salaActual = null; teletransportar(s.salida.pos, s.salida.ry); });
+    fundido(() => { salaActual = null; teletransportar(s.salida.pos, s.salida.ry); window.__gracia && window.__gracia(); });   // al salir, unos segundos sin que te persigan
   }
   window.__sala = () => salaActual && salaActual.nombre;
   window.__pantalla = clave => { const o = tocables.find(m => m.userData.toca && m.userData.toca.clave === clave); if (!o) return null; vE.setFromMatrixPosition(o.matrixWorld); vE.y += .2; vE.project(camara); return [(vE.x + 1) / 2 * innerWidth, (1 - vE.y) / 2 * innerHeight, vE.z]; };   // (para las pruebas)
@@ -2137,7 +2161,7 @@ function iniciar(THREE) {
   const comp = M.companeros.slice(0, 3).map((c, i) => {
     // compañeros del mismo curso: estatura parecida (± unos centímetros)
     const P = personaje(c.color, ['#3b2314', '#1f1410', '#7c2d12'][i], ['#d9a274', '#b57a4f', '#e8b98c'][i], { alto: ALTO_YO + [-.04, .03, .05][i], colita: i === 2, mochila: ['#0ea5e9', '#f97316', '#a855f7'][i] });
-    const e = etiqueta(c.apodo, c.color, 420); e.position.y = P.H + .75; P.yo.add(e);
+    const e = etiqueta(c.apodo, c.color, 420); e.scale.multiplyScalar(.6); e.position.y = P.H + .55; P.yo.add(e); P.etq = e;
     P.ruta = rutas[i]; P.k = 0; P.c = c; P.yo.position.set(...[P.ruta[0][0], 0, P.ruta[0][1]]); P.espera = 0;
     hacerTocable(P.yo, { tipo: 'companero', id: c.id });
     return P;
@@ -2166,11 +2190,18 @@ function iniciar(THREE) {
   }
   const enAula = [npc[0], npc[1]];
   const sentarEnSala = s => { sentarNPC(enAula[0], nodos[`obj_silla_${s.nombre}_01`]); sentarNPC(enAula[1], nodos[`obj_silla_${s.nombre}_04`]); };
-  Object.values(salas).forEach(s => { if (NOM_MAT[s.nombre]) s.alEntrar = () => sentarEnSala(s); });
+  // al entrar a un aula: "misión primero"
+  const avisoMision = s => { const mid = NOM_MAT[s.nombre]; if (mid && !window.desbloqueada(mid)) setTimeout(() => toast('Para cumplir tu misión del día y desbloquear los minijuegos, sentate 🪑', 4200), 600); };
+  Object.values(salas).forEach(s => { if (NOM_MAT[s.nombre]) s.alEntrar = () => { sentarEnSala(s); avisoMision(s); }; });
   sentarEnSala(salas.mate);
   sentarNPC(npc[2], nodos.obj_silla_biblioteca_01);
   alCuadro.push((dt, t) => [...enAula, npc[2]].forEach((P, k) => { P.bD.rotation.x = -.9 + Math.sin(t * 3 + k * 2) * .12; P.cuerpo.rotation.y = Math.sin(t * .7 + k) * .05; }));
 
+  // --- Menos texto en pantalla: nombres solo cerca, carteles de aulas lejanas discretos ---
+  alCuadro.push(() => {
+    for (const P of comp) if (P.etq) P.etq.visible = P.yo.position.distanceTo(yo.position) < 8;
+    for (const a of aulas) { a.g.getWorldPosition(vA); const lejos = Math.hypot(vA.x - yo.position.x, vA.z - yo.position.z) > 9; a.sp.material.opacity = lejos ? .45 : 1; a.sp.scale.set(lejos ? 1.9 : 2.8, lejos ? .9 : 1.3, 1); }
+  });
   // --- Festejo: papelitos de colores ---
   const papelitos = [];
   function festejo(pos, texto) {
@@ -2194,7 +2225,7 @@ function iniciar(THREE) {
       B.metas.push({ o, ancho: c.max.x - c.min.x, centro: aMundo(o, 0, 0, 0).applyMatrix4(B.inv), aro: aMundo(o, a[0], a[1], a[2]).applyMatrix4(B.inv) });
     }
     hacerTocable(m, { tipo: 'obj', id: 'pelota_' + tipo, clave: 'pelota_' + tipo });
-    interes.push({ clave: 'pelota_' + tipo, nombre: 'pelota_' + tipo, pos: B.pos, alto: .8, texto: tipo === 'futbol' ? '⚽ Patear' : '🏀 Tirar al aro', accion: () => tipo === 'futbol' ? patear(B) : tirar(B) });
+    interes.push(B.int = { clave: 'pelota_' + tipo, nombre: 'pelota_' + tipo, pos: B.pos, alto: .8, texto: tipo === 'futbol' ? '⚽ Patear' : '🏀 Tirar al aro', accion: () => tipo === 'futbol' ? patear(B) : tirar(B) });
     pelotas.push(B); return B;
   }
   const local = (B, w, out) => out.copy(w).applyMatrix4(B.inv);
@@ -2245,7 +2276,7 @@ function iniciar(THREE) {
   alCuadro.push((dt, t) => {
     const empujan = [yo.position, ...futbolistas.map(f => f.P.yo.position)];
     if (PF) {
-      for (const f of futbolistas) {
+      if (!partido) for (const f of futbolistas) {
         const quiere = Math.sign(PF.p.z) === f.lado && Math.abs(PF.p.z) < PF.l / 2 && f.espera <= 0 ? PF.p : f.casa;
         const dx = quiere.x - f.p.x, dz = quiere.z - f.p.z, d = Math.hypot(dx, dz), corre = d > .35;
         if (corre) { f.p.x += dx / d * 2.4 * dt; f.p.z += dz / d * 2.4 * dt; }
@@ -2256,10 +2287,10 @@ function iniciar(THREE) {
         f.P.yo.rotation.y = rumbo + rumboDe(PF.z);
         animar(f.P, corre, dt, t);
       }
-      moverPelota(PF, dt, empujan);
+      if (!(partido && partido.B === PF)) moverPelota(PF, dt, empujan);
     }
-    if (PB) moverPelota(PB, dt, [yo.position]);
-    if (basquetista) {
+    if (PB && !(partido && partido.B === PB)) moverPelota(PB, dt, [yo.position]);
+    if (basquetista && !partido) {
       const Bq = basquetista, aro = PB.metas[1] || PB.metas[0]; Bq.t += dt;
       const base = vA.set(aro.aro.x, 0, aro.aro.z + (aro.aro.z > 0 ? -2.2 : 2.2)); aMundo(PB.z, base.x, 0, base.z, Bq.P.yo.position); Bq.P.yo.position.y = 0;
       aMundo(PB.z, aro.aro.x, 0, aro.aro.z, vB); Bq.P.yo.rotation.y = Math.atan2(vB.x - Bq.P.yo.position.x, vB.z - Bq.P.yo.position.z);
@@ -2297,6 +2328,150 @@ function iniciar(THREE) {
     } else if (seg > 90) { reto = null; hudReto.style.display = 'none'; conos.forEach(c => { c.visible = false; }); toast('⏱️ Se terminó el tiempo. ¡Probá de nuevo!'); }
   });
 
+  // ============================================================
+  // EDU.06b — MODO DEPORTE: al entrar a una cancha cambian los botones de la derecha.
+  // Partidito 2 contra 2 con compañeros NPC, marcador y tiempo. El ESTADO del partido está
+  // separado del dibujo y solo cambia con EVENTOS { quien, tipo } (listo para multijugador).
+  // ============================================================
+  const uiDep = document.createElement('div'); uiDep.className = 'acciones deporte-acc'; uiDep.style.display = 'none';
+  document.body.appendChild(uiDep);
+  const hudDep = document.createElement('div');
+  hudDep.style.cssText = 'position:fixed;left:50%;bottom:calc(var(--sb, 0px) + 18px);transform:translateX(-50%);z-index:12;display:none;background:rgba(15,26,23,.92);color:#fff;border:3px solid #FDE047;border-radius:16px;padding:6px 14px;font:700 17px "Space Grotesk",Inter,sans-serif;white-space:nowrap';
+  document.body.appendChild(hudDep);
+  const BOTONES = { futbol: [['pasar', '🤝', 'Pasar'], ['tirar', '⚽', 'Patear'], ['quitar', '🦶', 'Quitar'], ['regate', '💨', 'Regate']], basquet: [['pasar', '🤝', 'Pasar'], ['tirar', '🏀', 'Tirar'], ['quitar', '✋', 'Robar'], ['regate', '💨', 'Finta']] };
+  let enCancha = null, partido = null, zoomAntes = null;
+  function pintarBotones(dep) {
+    uiDep.innerHTML = `<div class="fila-acc" style="flex-wrap:wrap;justify-content:flex-end;max-width:240px">${partido ? '' : `<button class="redondo" data-dep="partido" style="background:#FDE047">▶<small>Partido</small></button>`}${BOTONES[dep].map(([k, ic, n]) => `<button class="redondo" data-dep="${k}">${ic}<small>${n}</small></button>`).join('')}</div>`;
+  }
+  uiDep.addEventListener('click', e => {
+    const b = e.target.closest('[data-dep]'); if (!b || !enCancha) return;
+    const k = b.dataset.dep;
+    if (k === 'partido') { if (!window.desbloqueada('deporte')) return window.panelBloqueado('deporte', '⚽ Partido'); return empezarPartido(enCancha); }
+    if (!partido) {   // sin partido: patear o tirar la pelota libre
+      if (k === 'tirar') { const B = enCancha; if (B.pos.distanceTo(yo.position) < 1.6) (B.tipo === 'futbol' ? patear : tirar)(B); else toast('Acercate a la pelota'); }
+      else toast('▶ Empezá un partido para ' + b.textContent.trim().replace(/^\S+/, '').toLowerCase());
+      return;
+    }
+    evento({ quien: 'yo', tipo: k });
+  });
+  // jugadores del partido: vos + un compañero contra dos rivales (los NPC de las canchas)
+  const posL = new THREE.Vector3();
+  function empezarPartido(B) {
+    if (usando) bajarse();
+    const meta = d => B.metas.reduce((a, m) => !a || (d > 0 ? m.centro.z > a.centro.z : m.centro.z < a.centro.z) ? m : a, null);
+    partido = {
+      dep: B.tipo, B, t: 90, marcador: [0, 0], fin: false,
+      metas: [meta(1), meta(-1)],   // el equipo 0 ataca hacia +Z, el 1 hacia −Z
+      jug: [{ id: 'yo', eq: 0 }, { id: 'c1', eq: 0, P: npc[3] }, { id: 'r1', eq: 1, P: npc[4] }, { id: 'r2', eq: 1, P: npc[5] }],
+      con: 'yo', vuelo: null, aturdido: {}, enfriar: {}
+    };
+    partido.jug.forEach(j => { j.p = new THREE.Vector3(); if (j.P) escena.add(j.P.yo); });
+    if (basquetista) basquetista.bola.visible = false;
+    saque(0); pintarBotones(B.tipo); hudDep.style.display = 'block';
+    toast(B.tipo === 'futbol' ? '⚽ ¡Partido! Tu equipo ataca hacia el arco del fondo' : '🏀 ¡Partido! Tirá al aro del fondo', 2600); window.sonar('abrir');
+  }
+  function saque(eq) {   // cada uno a su lugar; saca el equipo eq
+    const P = partido, l = P.B.l;
+    for (const j of P.jug) { const s = j.eq === 0 ? -1 : 1; j.p.set(j.id === 'c1' || j.id === 'r2' ? 1.2 : -1.2, 0, s * l * (j.id === 'yo' || j.id === 'r1' ? .12 : .3)); }
+    const y = P.jug[0]; aMundo(P.B.z, y.p.x, 0, y.p.z, yo.position); yo.position.y = 0;
+    P.con = eq === 0 ? 'yo' : 'r1'; P.vuelo = null;
+  }
+  const J = id => partido.jug.find(j => j.id === id);
+  function evento(ev) {   // la única forma de cambiar el estado del partido
+    const P = partido; if (!P || P.fin) return;
+    const j = J(ev.quien), tiene = P.con === ev.quien, comp = P.jug.find(x => x.eq === j.eq && x !== j);
+    const metaRival = P.metas[j.eq], destino = P.dep === 'futbol' ? metaRival.centro : metaRival.aro;
+    if (ev.tipo === 'pasar' && tiene) { P.vuelo = { de: j.p.clone(), a: comp.p.clone(), t: 0, dur: .45, para: comp.id }; P.con = null; if (ev.quien === 'yo') window.sonar('pop'); }
+    else if (ev.tipo === 'tirar' && tiene) {
+      const dist = Math.hypot(destino.x - j.p.x, destino.z - j.p.z), marca = P.jug.some(x => x.eq !== j.eq && x.p.distanceTo(j.p) < 1.2);
+      const prob = Math.max(.08, Math.min(.92, (P.dep === 'futbol' ? 1.25 - dist / 8 : 1.2 - dist / 5) - (marca ? .25 : 0)));
+      P.vuelo = { de: j.p.clone(), a: new THREE.Vector3(destino.x, 0, destino.z), t: 0, dur: .7 + dist * .05, tiro: true, entra: Math.random() < prob, eq: j.eq };
+      P.con = null; if (ev.quien === 'yo') window.sonar('pop');
+    }
+    else if (ev.tipo === 'quitar' && !tiene && P.con) {
+      const dueno = J(P.con); if (dueno.eq === j.eq) return;
+      if ((P.enfriar[ev.quien] || 0) > 0) return; P.enfriar[ev.quien] = 1;
+      if (dueno.p.distanceTo(j.p) < 1.4 && Math.random() < .55) { P.con = ev.quien; if (ev.quien === 'yo') { toast(P.dep === 'futbol' ? '🦶 ¡Se la quitaste!' : '✋ ¡Robo!'); window.sonar('bien'); } }
+      else if (ev.quien === 'yo') toast(dueno.p.distanceTo(j.p) < 1.4 ? '😅 ¡Casi!' : 'Acercate más al que tiene la pelota');
+    }
+    else if (ev.tipo === 'regate' && tiene) {
+      const dir = new THREE.Vector3(0, 0, j.eq === 0 ? 1 : -1); j.dash = { dir, t: .3 };
+      P.jug.forEach(x => { if (x.eq !== j.eq && x.p.distanceTo(j.p) < 1.8) P.aturdido[x.id] = 1.2; });
+      if (ev.quien === 'yo') { window.sonar('sorpresa'); window.__burbuja && window.__burbuja('yo', P.dep === 'futbol' ? '¡Olé! 💨' : '¡Finta! 💨'); }
+    }
+    else if (ev.quien === 'yo' && !tiene && (ev.tipo === 'pasar' || ev.tipo === 'tirar' || ev.tipo === 'regate')) toast('Primero agarrá la pelota');
+    else if (ev.quien === 'yo' && tiene && ev.tipo === 'quitar') toast('¡Ya tenés la pelota!');
+  }
+  function terminarPartido(motivo) {
+    const P = partido; if (!P) return; partido = null; hudDep.style.display = 'none';
+    const [a, b] = P.marcador;
+    if (motivo !== 'salio') { if (a > b) festejo(aMundo(P.B.z, 0, 1.5, 0), `🏆 ¡Ganó tu equipo ${a} a ${b}!`); else toast(a === b ? `🤝 ¡Empate ${a} a ${b}! Buen partido.` : `👏 Perdieron ${a} a ${b}. ¡La revancha!`, 3000); }
+    else toast('Saliste de la cancha: partido terminado');
+    if (basquetista) basquetista.bola.visible = true;
+    futbolistas.forEach(f => f.p.copy(f.casa)); reiniciar(P.B);
+    if (enCancha) pintarBotones(enCancha.tipo);
+  }
+  window.__partido = () => partido && { dep: partido.dep, marcador: [...partido.marcador], con: partido.con, t: Math.round(partido.t) };   // (para las pruebas)
+  window.__evento = ev => evento(ev);
+  alCuadro.push((dt, t) => {
+    // ¿estoy en una cancha? (en los ejes del campo)
+    let ahora = null;
+    for (const B of pelotas) { local(B, yo.position, posL); if (Math.abs(posL.x) < B.w / 2 + .6 && Math.abs(posL.z) < B.l / 2 + .6) ahora = B; }
+    if (partido && ahora !== partido.B) terminarPartido('salio');
+    for (const B of pelotas) B.int.activo = !partido;
+    if (ahora !== enCancha) {
+      if (ahora && !enCancha) { zoomAntes = CAM.zoomObj; CAM.zoomObj = Math.min(CAM.zoomObj, .72); } else if (!ahora && enCancha && zoomAntes) CAM.zoomObj = zoomAntes;   // en la cancha, la cámara un poco más cerca
+      enCancha = ahora; document.body.classList.toggle('deporte', !!ahora);
+      uiDep.style.display = ahora ? 'flex' : 'none'; if (ahora) pintarBotones(ahora.tipo);
+    }
+    const P = partido; if (!P) return;
+    const B = P.B, dep = P.dep;
+    P.t -= dt; for (const k in P.aturdido) P.aturdido[k] -= dt; for (const k in P.enfriar) P.enfriar[k] -= dt;
+    local(B, yo.position, P.jug[0].p); P.jug[0].p.y = 0;
+    const metaDe = eq => dep === 'futbol' ? P.metas[eq].centro : P.metas[eq].aro;
+    const lim = (v, a) => Math.max(-a, Math.min(a, v));
+    // la pelota: en vuelo (pase o tiro), en los pies de alguien o suelta
+    if (P.vuelo) {
+      const V = P.vuelo; V.t += dt; const u = Math.min(1, V.t / V.dur);
+      B.p.lerpVectors(V.de, V.a, u); B.alto = dep === 'basquet' && V.tiro ? Math.sin(u * Math.PI) * 1.6 + u * 2.2 : Math.sin(u * Math.PI) * (V.tiro ? .6 : .2);
+      if (u >= 1) {
+        P.vuelo = null; B.alto = 0;
+        if (V.tiro && V.entra) { P.marcador[V.eq]++; festejo(aMundo(B.z, V.a.x, dep === 'futbol' ? 1 : 2.6, V.a.z), dep === 'futbol' ? (V.eq === 0 ? '⚽ ¡GOOOL de tu equipo!' : '⚽ Gol de los rivales') : (V.eq === 0 ? '🏀 ¡Canasta de tu equipo!' : '🏀 Canasta de los rivales')); saque(1 - V.eq); }
+        else if (V.tiro) { B.p.set(lim(V.a.x + (Math.random() - .5) * 2, B.w / 2 - .3), 0, V.a.z * .78); P.con = null; if (V.eq === 0) toast('😅 ¡Casi!'); }
+        else P.con = V.para;
+      }
+    } else if (P.con) { const d = J(P.con); B.p.set(d.p.x + .25, 0, d.p.z + (d.eq === 0 ? .35 : -.35)); B.alto = dep === 'basquet' ? Math.abs(Math.sin(t * 7)) * .45 : 0; }
+    else { B.alto = 0; const cerca = P.jug.reduce((a, j) => !a || j.p.distanceTo(B.p) < a.p.distanceTo(B.p) ? j : a, null); if (cerca.p.distanceTo(B.p) < .55) P.con = cerca.id; }
+    aMundo(B.z, B.p.x, B.r + B.alto, B.p.z, B.m.position); B.pos.set(B.m.position.x, 0, B.m.position.z);
+    // compañeros: IA simple (atacar, acompañar, marcar, ir a la pelota suelta)
+    for (const j of P.jug) {
+      if (!j.P) continue;
+      let quiere = j.p, vel = 2.6;
+      const meta = metaDe(j.eq), conBola = P.con === j.id, rivalCon = P.con && J(P.con).eq !== j.eq;
+      if ((P.aturdido[j.id] || 0) > 0) quiere = j.p;
+      else if (j.dash) { j.p.addScaledVector(j.dash.dir, dt * 7); if ((j.dash.t -= dt) <= 0) j.dash = null; }
+      else if (conBola) {
+        quiere = new THREE.Vector3(meta.x, 0, meta.z); vel = 2.4;
+        const cerca = Math.hypot(meta.x - j.p.x, meta.z - j.p.z) < (dep === 'futbol' ? 3.4 : 2.6), marcado = P.jug.some(x => x.eq !== j.eq && x.p.distanceTo(j.p) < 1);
+        if (cerca && Math.random() < dt * 1.5) evento({ quien: j.id, tipo: 'tirar' });
+        else if (marcado && Math.random() < dt * .8) evento({ quien: j.id, tipo: Math.random() < .6 ? 'pasar' : 'regate' });
+      } else if (!P.con && !P.vuelo) quiere = B.p;
+      else if (rivalCon) { const dueno = J(P.con); quiere = dueno.p; vel = 2.9; if (dueno.p.distanceTo(j.p) < 1.1 && Math.random() < dt * .9) evento({ quien: j.id, tipo: 'quitar' }); }
+      else quiere = new THREE.Vector3(j.id === 'c1' || j.id === 'r2' ? 1.3 : -1.3, 0, lim((P.con ? J(P.con).p.z : B.p.z) + (j.eq === 0 ? 1.8 : -1.8), B.l / 2 - .5));
+      const dx = quiere.x - j.p.x, dz = quiere.z - j.p.z, d = Math.hypot(dx, dz), corre = d > .3 && !j.dash && !((P.aturdido[j.id] || 0) > 0);
+      if (corre) { j.p.x += dx / d * vel * dt; j.p.z += dz / d * vel * dt; }
+      j.p.x = lim(j.p.x, B.w / 2 - .2); j.p.z = lim(j.p.z, B.l / 2 - .2);
+      aMundo(B.z, j.p.x, 0, j.p.z, j.P.yo.position); j.P.yo.position.y = 0;
+      j.P.yo.rotation.y = (corre ? Math.atan2(dx, dz) : (j.eq === 0 ? 0 : Math.PI)) + rumboDe(B.z);
+      animar(j.P, corre, dt, t); if ((P.aturdido[j.id] || 0) > 0) j.P.cuerpo.rotation.z = Math.sin(t * 12) * .1; else j.P.cuerpo.rotation.z = 0;
+    }
+    if (P.jug[0].dash) { const D = P.jug[0].dash; aMundo(B.z, 0, 0, 0, vA); vB.copy(D.dir).applyQuaternion(qA.setFromRotationMatrix(B.z.userData.mundo)); const nx = yo.position.x + vB.x * dt * 7, nz = yo.position.z + vB.z * dt * 7; if (!choca(nx, nz)) yo.position.set(nx, 0, nz); if ((D.t -= dt) <= 0) P.jug[0].dash = null; }
+    const seg = Math.max(0, Math.ceil(P.t));
+    hudDep.textContent = `${dep === 'futbol' ? '⚽' : '🏀'} Tu equipo ${P.marcador[0]} – ${P.marcador[1]} Rivales · ${Math.floor(seg / 60)}:${String(seg % 60).padStart(2, '0')}`;
+    uiDep.querySelectorAll('[data-dep]').forEach(b => { const k = b.dataset.dep, tiene = P.con === 'yo'; b.style.opacity = (k === 'quitar' ? !tiene : tiene) ? 1 : .45; });
+    if (P.t <= 0) terminarPartido('tiempo');
+  });
+
   // --- Usar cosas: sentarse, hamaca, resbalín, sube y baja (se baja moviendo el círculo) ---
   let usando = null;
   const nene = npc[6];   // un chiquito en la otra punta del sube y baja
@@ -2306,7 +2481,7 @@ function iniciar(THREE) {
     if (usando) bajarse();
     if (o.userData.ocupada) { toast('Ese lugar está ocupado 🙂'); return; }
     pararPiloto(); usando = { tipo, o, t: 0 }; o.userData.ocupada = true; window.sonar('pop');
-    if (tipo === 'silla') { aMundo(o, 0, 0, 0, yo.position); yo.position.y = 0; yo.rotation.y = rumboDe(o); pose(YOP, true); }
+    if (tipo === 'silla') { aMundo(o, 0, 0, 0, yo.position); yo.position.y = 0; yo.rotation.y = rumboDe(o); pose(YOP, true); if (MAT_NOM[extra] && !window.desbloqueada(extra)) setTimeout(() => usando && usando.o === o && window.panelPizarra(extra), 800); }
     if (tipo === 'hamaca' || tipo === 'subeybaja') pose(YOP, true, tipo === 'hamaca' ? -2.6 : -1.2);
     if (!leerLS('alumno-pista-bajar')) { toast('Mové el círculo para bajarte', 2600); guardarLS('alumno-pista-bajar', '1'); }
   }
@@ -2436,7 +2611,7 @@ function iniciar(THREE) {
   const profeTaji = adulto('#FBBF24', '#3b2314', '#f2c79b', { alto: 1.64, colita: true }), profeJochi = adulto('#8B5CF6', '#1f1410', '#c98e5f', { alto: 1.72 });
   sentarNPC(directora, nodos.obj_silla_direccion_01);
   function hablar(P, texto, ms = 2800, color = '#FDE047') {
-    const ancho = Math.min(620, 120 + texto.length * 24), b = etiqueta(texto, color, ancho); b.position.y = P.H + .9; P.yo.add(b);
+    const ancho = Math.min(620, 120 + texto.length * 24), b = etiqueta(texto, color, ancho); b.scale.multiplyScalar(.62); b.position.y = P.H + .55; P.yo.add(b);
     burbujas.push({ b, P, hasta: performance.now() + ms });
   }
   window.__hablar = (quien, texto) => { const P = { directora, regente, guardia }[quien]; if (P) hablar(P, texto); };
@@ -2518,6 +2693,7 @@ function iniciar(THREE) {
   }
   window.__vigilantes = () => vigilantes.map(V => V.tipo + ':' + V.estado);   // (para las pruebas)
   window.__despertar = () => despertar(VR);
+  window.__gracia = () => vigilantes.forEach(V => { V.cool = Math.max(V.cool, 3); });
   alCuadro.push((dt, t) => {
     let alguno = false;
     for (const V of vigilantes) {
@@ -2683,7 +2859,9 @@ function iniciar(THREE) {
   const btnEntrar = document.getElementById('entrar'), cartelPuerta = document.getElementById('cartel');
   const rumbo = document.getElementById('rumbo'), rumboTxt = document.getElementById('rumbo-txt');
   const RADIO_PUERTA = 1.5;   // casi pegado a la puerta (de lejos se toca el aula y va solo)
-  let cercano = null, ultimoSonido = null, cartelDe = null, piloto = null;
+  let cercano = null, ultimoSonido = null, cartelDe = null, piloto = null, elegidoCartel = null;
+  const cerca = [], btnMas = document.getElementById('cartel-mas');
+  btnMas.onclick = () => { if (cerca.length < 2) return; const i = cerca.indexOf(cercano); elegidoCartel = cerca[(i + 1) % cerca.length]; window.sonar('clic'); };
   const entrarEn = p => { pararPiloto(); window.sonar('pop'); p.accion(); };
   btnEntrar.onclick = () => cercano && entrarEn(cercano);
   addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && cercano && !window.__pausa && !e.target.closest('input,button,textarea')) { e.preventDefault(); entrarEn(cercano); } });
@@ -2795,9 +2973,13 @@ function iniciar(THREE) {
     // (con un poco de margen al alejarse para que el cartel no parpadee en el borde)
     cercano = null; let mejor = RADIO_PUERTA;
     for (const p of interes) { if (p.activo === false) continue; const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .4 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
+    // EDU.06b: un solo cartel (el más cercano); si hay otros cerca, "⋯" cambia entre ellos
+    cerca.length = 0; for (const p of interes) if (p.activo !== false && p.pos.distanceTo(yo.position) < RADIO_PUERTA + .4) cerca.push(p);
+    if (elegidoCartel && cerca.includes(elegidoCartel)) cercano = elegidoCartel; else elegidoCartel = null;
+    btnMas.classList.toggle('ver', cerca.length > 1);
     const verCartel = cercano && !window.__pausa && !piloto && !enfoque && !usando;
     if (verCartel) {
-      if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
+      if (cartelDe !== cercano) { btnEntrar.textContent = (cercano.bloq && cercano.bloq() ? '🔒 ' : '') + cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
       const ad = window.__adentro || 0;   // a la altura de los ojos el cartel va más bajo, para que no lo tape la barra de arriba
       proy.set(cercano.pos.x, (cercano.alto || 3) * (1 - ad * .45), cercano.pos.z).project(camara);
       const W = innerWidth, H = innerHeight, cw = cartelPuerta.offsetWidth, ch = cartelPuerta.offsetHeight;
