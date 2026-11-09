@@ -236,6 +236,10 @@ del profe".
   - el regate o la finta deja quietos a los rivales cercanos un segundo;
   - se desbloquea con la misión;
   - al salir de la cancha, el partido termina y vuelven los botones normales.
+- **Botones de la cancha como control de consola**: círculos translúcidos (relleno ~20 %, borde
+  claro) en arco abajo a la derecha, con el botón grande de Patear o Tirar y alrededor Pasar,
+  Quitar o Robar, Regate o Finta y ▶ Partido. El nombre va chiquito abajo y se ve la cancha a
+  través. Probado en 915×412 y 844×390.
 - **Probado** (Playwright, 915×412, táctil) en P1, P5 y S6:
   - las 8 salidas;
   - el aviso al entrar;

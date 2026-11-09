@@ -54,6 +54,17 @@
   .aviso-ayuda.ver { display: flex; }
   /* EDU.06b: dibujando en la pizarra, solo la paleta */
   body.deporte .acciones:not(.deporte-acc), body.deporte .ayuda { display: none !important; }
+  /* EDU.06b: botones de la cancha como un control de consola (translúcidos, en arco, se ve la cancha) */
+  .deporte-acc { position: fixed; right: calc(var(--sd, 0px) + 10px); bottom: calc(var(--sb, 0px) + 10px); width: 190px; height: 170px; z-index: 10; pointer-events: none; }
+  .deporte-acc .bc { position: absolute; pointer-events: auto; border-radius: 50%; border: 2px solid rgba(255,255,255,.75); background: rgba(255,255,255,.18); color: #fff; display: grid; place-items: center; font-size: 22px; line-height: 1; padding: 0; -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); text-shadow: 0 1px 2px rgba(0,0,0,.6); transition: transform .08s, opacity .15s; }
+  .deporte-acc .bc small { position: absolute; bottom: -15px; left: 50%; transform: translateX(-50%); font: 700 10px Inter, sans-serif; white-space: nowrap; color: rgba(255,255,255,.9); }
+  .deporte-acc .bc:active { transform: scale(.92); background: rgba(255,255,255,.35); }
+  .deporte-acc .bc.grande { width: 76px; height: 76px; right: 6px; bottom: 14px; font-size: 32px; border-width: 3px; background: rgba(16,185,129,.28); border-color: rgba(167,243,208,.9); }
+  .deporte-acc .bc.b1 { width: 52px; height: 52px; right: 96px; bottom: 14px; }
+  .deporte-acc .bc.b2 { width: 52px; height: 52px; right: 82px; bottom: 82px; }
+  .deporte-acc .bc.b3 { width: 52px; height: 52px; right: 18px; bottom: 108px; }
+  .deporte-acc .bc.b4 { width: 44px; height: 44px; right: 138px; bottom: 112px; font-size: 18px; background: rgba(253,224,71,.25); border-color: rgba(253,224,71,.9); }
+  body.deporte .joy { opacity: .75; }
   body.dibujando .acciones, body.dibujando .ayuda, body.dibujando .aviso-ayuda, body.dibujando .cartel { display: none !important; }
   .aviso-ayuda b { font-family: 'Space Grotesk'; }
   .aviso-ayuda .bj { min-height: 40px; padding: 0 12px; font-size: 14px; }
@@ -2337,7 +2348,7 @@ function iniciar(THREE) {
   // Partidito 2 contra 2 con compañeros NPC, marcador y tiempo. El ESTADO del partido está
   // separado del dibujo y solo cambia con EVENTOS { quien, tipo } (listo para multijugador).
   // ============================================================
-  const uiDep = document.createElement('div'); uiDep.className = 'acciones deporte-acc'; uiDep.style.display = 'none';
+  const uiDep = document.createElement('div'); uiDep.className = 'deporte-acc'; uiDep.style.display = 'none';
   document.body.appendChild(uiDep);
   const hudDep = document.createElement('div');
   hudDep.style.cssText = 'position:fixed;left:50%;bottom:calc(var(--sb, 0px) + 18px);transform:translateX(-50%);z-index:12;display:none;background:rgba(15,26,23,.92);color:#fff;border:3px solid #FDE047;border-radius:16px;padding:6px 14px;font:700 17px "Space Grotesk",Inter,sans-serif;white-space:nowrap';
@@ -2345,7 +2356,9 @@ function iniciar(THREE) {
   const BOTONES = { futbol: [['pasar', '🤝', 'Pasar'], ['tirar', '⚽', 'Patear'], ['quitar', '🦶', 'Quitar'], ['regate', '💨', 'Regate']], basquet: [['pasar', '🤝', 'Pasar'], ['tirar', '🏀', 'Tirar'], ['quitar', '✋', 'Robar'], ['regate', '💨', 'Finta']] };
   let enCancha = null, partido = null, zoomAntes = null;
   function pintarBotones(dep) {
-    uiDep.innerHTML = `<div class="fila-acc" style="flex-wrap:wrap;justify-content:flex-end;max-width:240px">${partido ? '' : `<button class="redondo" data-dep="partido" style="background:#FDE047">▶<small>Partido</small></button>`}${BOTONES[dep].map(([k, ic, n]) => `<button class="redondo" data-dep="${k}">${ic}<small>${n}</small></button>`).join('')}</div>`;
+    const lugar = { tirar: 'grande', pasar: 'b1', quitar: 'b2', regate: 'b3' };   // en arco alrededor del botón grande
+    uiDep.innerHTML = (partido ? '' : `<button class="bc b4" data-dep="partido" aria-label="Empezar partido">▶<small>Partido</small></button>`) +
+      BOTONES[dep].map(([k, ic, n]) => `<button class="bc ${lugar[k]}" data-dep="${k}" aria-label="${n}">${ic}<small>${n}</small></button>`).join('');
   }
   uiDep.addEventListener('click', e => {
     const b = e.target.closest('[data-dep]'); if (!b || !enCancha) return;
@@ -2426,7 +2439,7 @@ function iniciar(THREE) {
     if (ahora !== enCancha) {
       if (ahora && !enCancha) { zoomAntes = CAM.zoomObj; CAM.zoomObj = Math.min(CAM.zoomObj, .72); } else if (!ahora && enCancha && zoomAntes) CAM.zoomObj = zoomAntes;   // en la cancha, la cámara un poco más cerca
       enCancha = ahora; document.body.classList.toggle('deporte', !!ahora);
-      uiDep.style.display = ahora ? 'flex' : 'none'; if (ahora) pintarBotones(ahora.tipo);
+      uiDep.style.display = ahora ? 'block' : 'none'; if (ahora) pintarBotones(ahora.tipo);
     }
     const P = partido; if (!P) return;
     const B = P.B, dep = P.dep;
@@ -2472,7 +2485,7 @@ function iniciar(THREE) {
     if (P.jug[0].dash) { const D = P.jug[0].dash; aMundo(B.z, 0, 0, 0, vA); vB.copy(D.dir).applyQuaternion(qA.setFromRotationMatrix(B.z.userData.mundo)); const nx = yo.position.x + vB.x * dt * 7, nz = yo.position.z + vB.z * dt * 7; if (!choca(nx, nz)) yo.position.set(nx, 0, nz); if ((D.t -= dt) <= 0) P.jug[0].dash = null; }
     const seg = Math.max(0, Math.ceil(P.t));
     hudDep.textContent = `${dep === 'futbol' ? '⚽' : '🏀'} Tu equipo ${P.marcador[0]} – ${P.marcador[1]} Rivales · ${Math.floor(seg / 60)}:${String(seg % 60).padStart(2, '0')}`;
-    uiDep.querySelectorAll('[data-dep]').forEach(b => { const k = b.dataset.dep, tiene = P.con === 'yo'; b.style.opacity = (k === 'quitar' ? !tiene : tiene) ? 1 : .45; });
+    uiDep.querySelectorAll('[data-dep]').forEach(b => { const k = b.dataset.dep, tiene = P.con === 'yo'; b.style.opacity = (k === 'quitar' ? !tiene : tiene) ? 1 : .5; });
     if (P.t <= 0) terminarPartido('tiempo');
   });
 
