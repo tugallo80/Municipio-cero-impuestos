@@ -9,3 +9,6 @@ exports.eduKayUso = eduKayUso;
 exports.eduProfes = eduProfes;
 exports.eduClase = eduClase;
 exports.eduClases = eduClases;
+const { eduPlan, eduMentora } = require('./src/plan');
+exports.eduPlan = eduPlan;
+exports.eduMentora = eduMentora;

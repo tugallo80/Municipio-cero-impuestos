@@ -21,6 +21,17 @@ const f = getFunctions(app, 'us-central1')
 // La IA tarda: hasta 9 minutos para una clase de una hora (lo normal es 1–2 min).
 const fnClase = httpsCallable(f, 'eduClase', { timeout: 540_000 })
 const fnClases = httpsCallable(f, 'eduClases')
+// EDU.04b: cronograma y mentora del profe
+const fnPlan = httpsCallable(f, 'eduPlan', { timeout: 300_000 })
+const fnMentora = httpsCallable(f, 'eduMentora', { timeout: 70_000 })
+const llamar = async (fn, datos) => {
+  try {
+    const r = await fn(datos)
+    return r.data.ok ? r.data : { ok: false, error: r.data.error || 'No se pudo.' }
+  } catch (e) {
+    return { ok: false, error: mensaje(e) }
+  }
+}
 
 let usuario = null
 await new Promise((res) => onAuthStateChanged(auth, (u) => { usuario = u; res() }))
@@ -57,6 +68,11 @@ window.NandeClase = {
   async listar() {
     try { return (await fnClases({ accion: 'listar' })).data } catch (e) { return { ok: false, error: mensaje(e) } }
   },
+  // Cronograma (EDU.04b)
+  leerPlan: (curso) => llamar(fnPlan, { accion: 'leer', curso }),
+  guardarPlan: (curso, estado) => llamar(fnPlan, { accion: 'guardar', curso, estado }),
+  extraerPlan: (curso, pdf) => llamar(fnPlan, { accion: 'extraer', curso, pdf }),
+  mentora: (datos) => llamar(fnMentora, datos),
   async borrar(curso, id) {
     try { return (await fnClases({ accion: 'borrar', curso, id })).data } catch (e) { return { ok: false, error: mensaje(e) } }
   },

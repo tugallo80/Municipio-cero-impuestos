@@ -203,7 +203,7 @@ async function obtenerPersonal(uid) {
 }
 
 /** Reserva una clase (cuenta 1) si el profe no pasó su límite y hay presupuesto global. */
-async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd) {
+async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd, tipo = 'clase') {
   const fecha = fechaBolivia();
   const usoGlobal = (await base().ref(`edu/uso_global/${fecha}`).once('value')).val() || {};
   if ((usoGlobal.costoUsd || 0) >= costoGlobalDiaUsd) {
@@ -211,11 +211,11 @@ async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd) {
   }
   let rechazo = null;
   const tx = await base()
-    .ref(`edu/uso_clase/${fecha}/${personalId}`)
+    .ref(`edu/uso_${tipo}/${fecha}/${personalId}`)
     .transaction((u) => {
       const x = u || {};
       if ((x.clases || 0) >= maxClasesDia) {
-        rechazo = { ok: false, motivo: 'clases_dia', mensaje: `Hoy ya se resumieron ${maxClasesDia} clases tuyas. Mañana hay más.` };
+        rechazo = { ok: false, motivo: `${tipo}_dia`, mensaje: tipo === 'clase' ? `Hoy ya se resumieron ${maxClasesDia} clases tuyas. Mañana hay más.` : `Hoy ya usaste ${maxClasesDia} veces esta ayuda. Mañana hay más.` };
         return undefined;
       }
       rechazo = null;
@@ -226,7 +226,7 @@ async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd) {
 }
 
 /** Suma el costo de una clase al día del profe y al global (el mismo tope que Kay). */
-async function registrarCostoClase(personalId, fecha, costoUsd, segundos) {
+async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo = 'clase') {
   const sumar = (ruta, extra) =>
     base()
       .ref(ruta)
@@ -235,8 +235,12 @@ async function registrarCostoClase(personalId, fecha, costoUsd, segundos) {
         return { ...x, ...extra(x), costoUsd: Math.round(((x.costoUsd || 0) + costoUsd) * 1e6) / 1e6 };
       });
   await Promise.all([
-    sumar(`edu/uso_clase/${fecha}/${personalId}`, () => ({})),
-    sumar(`edu/uso_global/${fecha}`, (x) => ({ clases: (x.clases || 0) + 1, segundosClase: (x.segundosClase || 0) + Math.round(segundos) })),
+    sumar(`edu/uso_${tipo}/${fecha}/${personalId}`, () => ({})),
+    sumar(`edu/uso_global/${fecha}`, (x) =>
+      tipo === 'clase'
+        ? { clases: (x.clases || 0) + 1, segundosClase: (x.segundosClase || 0) + Math.round(segundos) }
+        : { [`${tipo}s`]: (x[`${tipo}s`] || 0) + 1 }
+    ),
   ]);
 }
 
@@ -315,7 +319,31 @@ async function obtenerClasesRecientes(curso, max = 3) {
     .slice(0, max);
 }
 
+// ── Cronograma del profe (EDU.04b) ──────────────────
+//    edu/planes/{personalId}/{curso} → { config, plan, hechos, perdidos, actualizado }
+//    edu/planes/{personalId}/{curso}/ideas/{clave} → tarjeta de la mentora (caché)
+async function leerPlan(personalId, curso) {
+  const v = (await base().ref(`edu/planes/${personalId}/${curso}`).once('value')).val();
+  if (!v) return null;
+  const { ideas, ...resto } = v;
+  return resto;
+}
+async function guardarPlan(personalId, curso, estado) {
+  const ideas = (await base().ref(`edu/planes/${personalId}/${curso}/ideas`).once('value')).val() || null;
+  await base().ref(`edu/planes/${personalId}/${curso}`).set({ ...estado, actualizado: Date.now(), ...(ideas ? { ideas } : {}) });
+}
+async function leerIdea(personalId, curso, clave) {
+  return (await base().ref(`edu/planes/${personalId}/${curso}/ideas/${clave}`).once('value')).val();
+}
+async function guardarIdea(personalId, curso, clave, tarjeta) {
+  await base().ref(`edu/planes/${personalId}/${curso}/ideas/${clave}`).set({ ...tarjeta, creado: Date.now() });
+}
+
 module.exports = {
+  leerPlan,
+  guardarPlan,
+  leerIdea,
+  guardarIdea,
   obtenerPersonal,
   reservarClase,
   registrarCostoClase,

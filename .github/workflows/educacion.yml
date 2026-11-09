@@ -100,6 +100,14 @@ jobs:
           echo "::add-mask::$FIREBASE_API_KEY"
           node e2e/probar-clase.mjs
 
+      - name: Prueba del cronograma y la mentora (PDF → plan → tarjeta)
+        if: github.event_name == 'push' || inputs.probar
+        working-directory: educacion/tools
+        run: |
+          export FIREBASE_API_KEY="$(node -e 'console.log(require(process.argv[1]).apiKey)' "$RUNNER_TEMP/firebase-web.json")"
+          echo "::add-mask::$FIREBASE_API_KEY"
+          node e2e/probar-plan.mjs
+
       - name: Prueba de punta a punta (voz real contra Gemini)
         if: github.event_name == 'push' || inputs.probar
         working-directory: educacion/tools
@@ -129,4 +137,5 @@ jobs:
             echo "- Probar la voz: https://nande-educacion.web.app/prueba-motor/"
             echo "- Los profes en el mundo: https://nande-educacion.web.app/maqueta/alumno.html"
             echo "- Clase grabada (profe): https://nande-educacion.web.app/maqueta/tutor.html#clase"
+            echo "- Cronograma (profe): https://nande-educacion.web.app/maqueta/tutor.html#cronograma"
           } >> "$GITHUB_STEP_SUMMARY"

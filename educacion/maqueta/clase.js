@@ -412,6 +412,7 @@
       const r = await api().entrar(hoja.querySelector('#cg-u').value, hoja.querySelector('#cg-c').value);
       if (!r.ok) { hoja.querySelector('#cg-err').textContent = r.error; return; }
       hoja.remove(); listado = null; repintar();
+      window.dispatchEvent(new Event('nande-cuenta'));
     });
   }
 
@@ -449,7 +450,7 @@
 
   window.Clase = {
     empezar: pedirEmpezar, terminar: () => terminar('profe'), pausar, reintentar: enviar, descartar, borrar, login,
-    async salir() { await api()?.salir(); listado = null; repintar(); },
+    async salir() { await api()?.salir(); listado = null; repintar(); window.dispatchEvent(new Event('nande-cuenta')); },
     tarjetaHoy, vistaProfe, vistaDireccion, informeHtml, EJEMPLO,
     grabando: () => !!rec,
     alRepintar: null,

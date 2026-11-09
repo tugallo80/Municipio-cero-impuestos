@@ -30,8 +30,10 @@
   </div>
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
-<script src="comun.js?v=edu02d-2"></script>
-<script src="clase.js?v=edu04a-2"></script>
+<script src="comun.js?v=edu04b-1"></script>
+<script src="clase.js?v=edu04b-1"></script>
+<script src="calendario.js?v=edu04b-1"></script>
+<script src="cronograma.js?v=edu04b-1"></script>
 <script type="module">import('/voz/clase.js?v=edu04a-2').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
@@ -73,19 +75,8 @@ const rutas = {
     </div></div>`;
   },
 
-  cronograma(vista = 'semana') {
-    const tabs = `<div class="chips" style="margin-bottom:16px">
-      <a class="chip ${vista === 'semana' ? 'activo' : ''}" href="#cronograma/semana">Semana</a>
-      <a class="chip ${vista === 'mes' ? 'activo' : ''}" href="#cronograma/mes">Mes</a></div>`;
-    const cuerpo = vista === 'mes'
-      ? `<div class="tarjeta lista">${D.mes.map(e => `<div class="fila"><span class="pildora gris" style="min-width:64px;justify-content:center">${e.fecha}</span><span>${e.evento}</span></div>`).join('')}</div>`
-      : `<div class="grilla" style="grid-template-columns:repeat(auto-fill,minmax(180px,1fr))">${D.semana.map((d, i) => `
-          <div class="tarjeta" style="${i === 0 ? 'border-color:var(--verde)' : ''}">
-            <h3 style="margin-bottom:10px">${d.dia}${i === 0 ? ' <span class="pildora">hoy</span>' : ''}</h3>
-            <div class="pila">${d.items.map(t => `<div class="chica" style="padding:8px 10px;background:var(--sup3);border-radius:10px">${t}</div>`).join('')}</div>
-          </div>`).join('')}</div>`;
-    return `<div class="encab"><div><h1>Cronograma</h1><p>4A y 5A · 3er trimestre ${D.colegio.gestion}</p></div></div>${tabs}${cuerpo}`;
-  },
+  // EDU.04b: cronograma día a día con el calendario por capas y la mentora (maqueta/cronograma.js)
+  cronograma() { const p = location.hash.slice(1).split('/'); return Cronograma.vista(p[1], p[2]); },
 
   pensum() {
     return `<div class="encab"><div><h1>Pensum por materia</h1><p>Contenidos y avance. En la versión real: subís el PDF y la IA lo arma.</p></div>
@@ -196,7 +187,7 @@ U.router(rutas, 'hoy');
 // Clase grabada: vuelve a pintar la pantalla actual cuando cambia algo (grabando, IA, informes).
 Clase.alRepintar = () => {
   const ruta = (location.hash.slice(1) || 'hoy').split('/')[0];
-  if (ruta === 'hoy' || ruta === 'clase') window.dispatchEvent(new HashChangeEvent('hashchange'));
+  if (ruta === 'hoy' || ruta === 'clase' || ruta === 'cronograma') window.dispatchEvent(new HashChangeEvent('hashchange'));
 };
 </script>
 </body>
