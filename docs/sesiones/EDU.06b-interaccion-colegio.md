@@ -140,6 +140,44 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
   - S6: lo mismo, salvo la canasta y el final del resbalín, que no llegan a terminar en la prueba
     sin placa de video (1–2 cuadros por segundo).
 
+## Entrega 2 — personajes del colegio y escondidas
+- **Adultos** (1,70 m, armados con proporción de adulto, originales):
+  - **La directora** está sentada en la **dirección**, que ahora tiene sala por dentro: escritorio,
+    banderas de Santa Cruz y de Bolivia, y estantes.
+    - Saluda al entrar, en habla camba suave: "¡Buenas, buenas! ¿Cómo andás?", "Pasá nomás, pues".
+    - Comenta el avance del curso: "¡Qué macanudo!" o "vamos de a poquito, pues".
+    - Muestra los avisos (hoy *Pronto*).
+  - **Profes con cuerpo**: la profe Taji (Mate, Lenguaje y Artes) y el profe Jochi (Ciencias,
+    Sociales e Inglés) aparecen junto a la pizarra del aula donde entrás y saludan. Tocarlos abre
+    la charla de voz de siempre.
+- **Escondidas**:
+  - **El regente** duerme en una silla de la galería, con "💤 Zzz" sobre la cabeza.
+    - Se despierta si corrés cerca o si lo tocás: "¡Eh! ¿Qué hacen ahí? 👀".
+    - Te sigue mientras te ve, con "❗" sobre la cabeza y una música suave de persecución.
+    - Te ve en un cono de 110°, hasta 8 m, y no a través de paredes, horcones, el tronco del
+      toborochi ni el aljibe.
+    - Si te pierde 2 s: "Mmm… ¿a dónde se fue? 🤔" y vuelve a dormir.
+    - Si te alcanza: "¡Te agarré! Vamos a la dirección 😄", fundido, y la directora dice algo
+      gracioso y amable ("¡corrías más ligero que un jochi!", "la próxima escondete detrás del
+      toborochi, pues").
+    - No se pierde nada: ni avance, ni llaves, y no hay castigo. Después de un rato no te vuelve a
+      perseguir enseguida.
+  - **El guardia** patrulla la galería y juega igual.
+  - La IA es simple: dormido o patrulla → alerta → persigue → vuelve. Corre a 3,6 m/s y el alumno a
+    6, así que se puede escapar. Si se traba con un horcón, lo rodea.
+- **Nodos para la maqueta**:
+  - `obj_silla_galeria_01`: el puesto del regente.
+  - `obj_silla_direccion_01`: la silla de la directora.
+  - `ruta_guardia_01_NN`: puntos de la ronda del guardia.
+  - `zona_direccion`: el escritorio.
+  - `puerta_direccion`: la puerta.
+- **Probado** (Playwright, 915×412, táctil) en P1, P5 y S6:
+  - despertar al regente y quedarse quieto: te lleva a la dirección y la directora habla;
+  - esconderse detrás del ala este: lo pierde y vuelve a dormir;
+  - la directora en su escritorio;
+  - el profe en el aula.
+  - Sin errores.
+
 ## Cierre
 
 **Qué quedó**

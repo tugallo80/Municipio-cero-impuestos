@@ -377,6 +377,8 @@ window.sonar = tipo => {
   if (tipo === 'bien') [659, 880].forEach((f, i) => tono(f, i * .08, .15, 'sine', .06));
   if (tipo === 'casi') tono(330, 0, .18, 'sine', .05, 260);
   if (tipo === 'pop') tono(600, 0, .08, 'sine', .05, 900);
+  if (tipo === 'tension') [0, .28].forEach((t, i) => tono(i ? 247 : 220, t, .16, 'triangle', .025));   // persecución: suave, no da miedo
+  if (tipo === 'sorpresa') [523, 784].forEach((f, i) => tono(f, i * .1, .14, 'square', .03));
 };
 addEventListener('pointerdown', () => audio(), { once: true });
 
@@ -599,11 +601,23 @@ function panelKiosco() {
 }
 function pedir(k) { const it = MENU.find(m => m[0] === k); cerrar(); toast(`${it[1]} ¡Acá tenés tu ${it[2].toLowerCase()}!`); window.__comer && window.__comer(k, it[2]); }
 function ponerGorra(c) { lsGuardar('alumno-gorra', c); window.__gorra && window.__gorra(c); window.sonar('pop'); panelKiosco(); }
-function panelDireccion() {
-  const avisos = D.avisos || [];
-  abrir(cab('🏛️', 'rgba(148,163,184,.2)', 'Dirección', 'Avisos del colegio') + (avisos.length
-    ? avisos.map(a => `<div class="caja-info" style="margin-bottom:8px"><b>${a.titulo}</b><br>${a.texto}</div>`).join('')
-    : '<div class="caja-info">Pronto: acá van a aparecer los avisos del colegio (actos, feriados, reuniones).</div>'));
+// La directora (habla camba suave, siempre amable). motivo = 'atrapado' cuando el regente "te trajo".
+function panelDireccion(motivo) {
+  const p = M.puente, avisos = D.avisos || [], al = a => a[Math.floor(Math.random() * a.length)];
+  const saludo = motivo === 'atrapado'
+    ? al(['¡Ay, ay, ay! Dice el regente que corrías más ligero que un jochi 😄. Tranqui nomás, acá no pasa nada.',
+          '¿Otra vez jugando a las escondidas con el regente? ¡Qué cosa! Él también se divierte, ¿sabés?',
+          'Mirá vos, ¡te agarró! La próxima escondete detrás del toborochi, pues 😉'])
+    : al(['¡Buenas, buenas! ¿Cómo andás?', '¡Hola! Pasá nomás, pues.', '¡Qué lindo verte por la dirección!']);
+  const avance = p.hechas >= p.meta * .5
+    ? `El curso ya lleva ${p.hechas} de ${p.meta} piezas del zoológico. ¡Qué macanudo, sigan así!`
+    : `El curso lleva ${p.hechas} de ${p.meta} piezas del zoológico. Vamos de a poquito, pues.`;
+  abrir(cab('👩‍💼', 'rgba(190,24,93,.2)', 'La directora', 'Dirección del colegio') + `
+    <div class="caja-info" style="font-size:16px;margin-bottom:10px">💬 “${saludo}”</div>
+    <div class="caja-info" style="margin-bottom:10px">🦜 ${avance}</div>
+    <div class="tit">Avisos del colegio</div>
+    ${avisos.length ? avisos.map(a => `<div class="caja-info" style="margin-bottom:8px"><b>${a.titulo}</b><br>${a.texto}</div>`).join('')
+      : '<div class="caja-info" style="color:var(--texto2)">Pronto: acá van a aparecer los avisos (actos, feriados, reuniones).</div>'}`);
 }
 
 function preguntaActual() { const c = contenido(E.mision); return E.fase === 'repaso' ? c.repaso[E.i] : c.pasos[E.i]; }
@@ -1344,6 +1358,7 @@ function iniciar(THREE) {
   // el toborochi del patio se aclara si queda entre la cámara y el alumno (con la cámara a la altura de los ojos)
   const arbolPatio = dinamico(new THREE.Group()); colegio.add(arbolPatio);
   const copasPatio = arbol(-3.2, -3.2, .75, 2, arbolPatio);
+  solidos.push(new THREE.Box3().setFromCenterAndSize(new THREE.Vector3(-3.2, 1.2, -3.2), new THREE.Vector3(.55, 2.4, .55)));   // el tronco: choca y sirve para esconderse
   const matCopa = copasPatio[0].material.clone(); copasPatio.forEach(m => { m.material = matCopa; m.userData.sinContorno = true; });
   // bandera en la plazuela del frente
   bloque(-4.5, 3, CE + 4, .2, 6, .2, '#e5e7eb');
@@ -1605,9 +1620,20 @@ function iniciar(THREE) {
     for (const sx of [-1, 1]) bloque(sx * .86, 1.15, .2, .05, 2.3, .05, C_MADERA_OSC, k);
     letrero('🧃 Kiosco', .9, .26, '#b45309', k, 0, 1.75, -.22);
     solidoEn(2.2, 9.6, .6, 1.8);
-    const d = grupo('zona_direccion', -2.44, 10.6, Math.PI / 2, escena, { frente: 1.2, alto: 2.6 });
+    const d = grupo('puerta_direccion', -2.44, 10.6, Math.PI / 2, escena, { frente: 1.2, alto: 2.6 });
     bloque(0, 1.2, .02, 1.45, 2.4, .06, '#64748b', d); bloque(0, 1.1, .06, 1.1, 2.2, .06, C_MADERA_OSC, d);
     letrero('🏛️ Dirección', 1.4, .3, '#334155', d, 0, 2.6, .08);
+    // la dirección por dentro: la directora atiende en su escritorio
+    const sd = sala('direccion', 8, 'Dirección', '🏛️', '#64748b', salidaDe(-2.44, 10.6, Math.PI / 2, 1.3));
+    const esc = grupo('zona_direccion', 0, -1.3, 0, sd.g, { frente: 1.1, alto: 1.6 });
+    bloque(0, .75, 0, 1.8, .06, .8, C_MADERA, esc); bloque(0, .38, -.05, 1.7, .72, .65, C_MADERA_OSC, esc);
+    bloque(-.55, .82, .1, .3, .05, .22, '#f8fafc', esc); bloque(.6, .85, 0, .1, .12, .1, '#10B981', esc);
+    silla(0, -2.15, sd.g, 'obj_silla_direccion_01', 0);
+    solidoEn(sd.ox, sd.oz - 1.3, 2.0, 1.0, 1);
+    letrero('', .9, .6, '#16a34a', sd.g, -1.4, 2.1, -SL / 2 + .08, { dibujar: (c, w, h) => { c.fillStyle = '#fff'; c.fillRect(0, h / 3, w, h / 3); } });   // bandera cruceña
+    letrero('', .9, .6, '#dc2626', sd.g, 1.4, 2.1, -SL / 2 + .08, { dibujar: (c, w, h) => { c.fillStyle = '#facc15'; c.fillRect(0, h / 3, w, h / 3); c.fillStyle = '#16a34a'; c.fillRect(0, 2 * h / 3, w, h / 3); } });   // bandera de Bolivia
+    letrero('🏫 Mi colegio', 1.5, .4, '#0f766e', sd.g, 0, 2.15, -SL / 2 + .08);
+    for (const z of [-.6, 1.2]) { const e = grupo('', -SW / 2 + .3, z, Math.PI / 2, sd.g); estante(e, 1.4, 1.8, Math.round(z * 4) + 6); }
   }
 
   // --- Huerto del curso (esquina del patio): la planta crece con el avance de todos ---
@@ -1689,6 +1715,10 @@ function iniciar(THREE) {
       solidoDe(sb, 0, 0, .5, .5, 1);
     }
   }
+
+  // --- Puesto del regente (una silla en la galería) y ruta del guardia (nodos ruta_<quien>_NN_KK) ---
+  silla(5.8, 5.8, escena, 'obj_silla_galeria_01', -Math.PI * .75);
+  [[-5.8, -5.8], [5.8, -5.8], [5.8, 1.8], [-5.8, 1.8]].forEach(([x, z], k) => grupo('ruta_guardia_01_0' + (k + 1), x, z, 0, escena));
 
   // --- Comportamientos de las cosas que se usan (la lógica está más abajo y lee el nodo por nombre) ---
   USOS.silla = o => ({ texto: '🪑 Sentarse', accion: () => usar('silla', o) });
@@ -1972,7 +2002,7 @@ function iniciar(THREE) {
   }
   const enAula = [npc[0], npc[1]];
   const sentarEnSala = s => { sentarNPC(enAula[0], nodos[`obj_silla_${s.nombre}_01`]); sentarNPC(enAula[1], nodos[`obj_silla_${s.nombre}_04`]); };
-  Object.values(salas).forEach(s => { if (s.nombre !== 'biblioteca') s.alEntrar = () => sentarEnSala(s); });
+  Object.values(salas).forEach(s => { if (NOM_MAT[s.nombre]) s.alEntrar = () => sentarEnSala(s); });
   sentarEnSala(salas.mate);
   sentarNPC(npc[2], nodos.obj_silla_biblioteca_01);
   alCuadro.push((dt, t) => [...enAula, npc[2]].forEach((P, k) => { P.bD.rotation.x = -.9 + Math.sin(t * 3 + k * 2) * .12; P.cuerpo.rotation.y = Math.sin(t * .7 + k) * .05; }));
@@ -2228,6 +2258,139 @@ function iniciar(THREE) {
     if (c.t > 3.3) { c.m.parent && c.m.parent.remove(c.m); YOP.bD.rotation.z = 0; comiendo = null; window.__burbuja && window.__burbuja('yo', c.toma ? '¡Qué fresquito! 😋' : '¡Rico! 😋'); }
   });
 
+  // ============================================================
+  // EDU.06b entrega 2 — Adultos del colegio (1,70 m, armado de adulto) y escondidas con el regente
+  // IA simple: dormido / patrulla → alerta (!) → persigue (mientras te ve) → vuelve (Mmm…)
+  // ============================================================
+  const adulto = (ropa, pelo, piel, op = {}) => personaje(ropa, pelo, piel, Object.assign({ adulto: true, alto: 1.7, mochila: false }, op));
+  const directora = adulto('#be185d', '#3b2314', '#d9a274', { alto: 1.66, colita: true });
+  const regente = adulto('#475569', '#1f1410', '#c98e5f', { alto: 1.74, gorra: '#1e293b' });
+  const guardia = adulto('#1d4ed8', '#1f1410', '#b57a4f', { alto: 1.76, gorra: '#0f172a' });
+  const profeTaji = adulto('#FBBF24', '#3b2314', '#f2c79b', { alto: 1.64, colita: true }), profeJochi = adulto('#8B5CF6', '#1f1410', '#c98e5f', { alto: 1.72 });
+  sentarNPC(directora, nodos.obj_silla_direccion_01);
+  function hablar(P, texto, ms = 2800, color = '#FDE047') {
+    const ancho = Math.min(620, 120 + texto.length * 24), b = etiqueta(texto, color, ancho); b.position.y = P.H + .9; P.yo.add(b);
+    burbujas.push({ b, P, hasta: performance.now() + ms });
+  }
+  window.__hablar = (quien, texto) => { const P = { directora, regente, guardia }[quien]; if (P) hablar(P, texto); };
+  // la directora saluda cuando entrás
+  if (salas.direccion) salas.direccion.alEntrar = () => setTimeout(() => hablar(directora, ['¡Buenas, buenas! ¿Cómo andás?', '¡Hola! Pasá nomás, pues.', '¡Qué lindo verte por acá!'][Math.floor(Math.random() * 3)]), 500);
+  // un profe con cuerpo junto a la pizarra del aula donde entrás (la de voz sigue en los botones)
+  const profeDe = { mate: 'la_profe', lenguaje: 'la_profe', artes: 'la_profe', ciencias: 'el_profe', sociales: 'el_profe', ingles: 'el_profe' };
+  const pProfe = new THREE.Vector3();
+  const intProfe = { clave: 'profe', nombre: 'profe', pos: pProfe, alto: 2.1, texto: '🎙️ Hablar con el profe', accion: () => window.llamarProfe && window.llamarProfe(intProfe.id) };
+  interes.push(intProfe);
+  [profeTaji, profeJochi].forEach((P, k) => { P.yo.visible = false; hacerTocable(P.yo, { tipo: 'obj', id: 'profe', clave: 'profe' }); });
+  function profeEnSala(s) {
+    const id = profeDe[s.nombre], piz = nodos['obj_pizarra_' + s.nombre]; if (!id || !piz) return;
+    const P = id === 'la_profe' ? profeTaji : profeJochi, otro = P === profeTaji ? profeJochi : profeTaji;
+    otro.yo.visible = false; P.yo.visible = true;
+    const c = piz.userData.cajaLocal; aMundo(piz, c.max.x + .55, 0, .8, P.yo.position); P.yo.position.y = 0; P.yo.rotation.y = rumboDe(piz) - .5;
+    pProfe.copy(P.yo.position); intProfe.id = id; intProfe.texto = id === 'la_profe' ? '🎙️ Hablar con la profe Taji' : '🎙️ Hablar con el profe Jochi';
+    setTimeout(() => hablar(P, ['¡Hola! Pasá, sentate nomás.', '¿Vamos con la misión de hoy?', '¡Buenas! Mirá la pizarra.'][Math.floor(Math.random() * 3)], 2600, '#A7F3D0'), 700);
+  }
+  Object.values(salas).forEach(s => { if (profeDe[s.nombre]) { const antes = s.alEntrar; s.alEntrar = () => { antes && antes(); profeEnSala(s); }; } });
+  alCuadro.push((dt, t) => { for (const P of [profeTaji, profeJochi]) if (P.yo.visible) { animar(P, false, dt, t); P.bD.rotation.x = -.6 - Math.sin(t * 1.5) * .3; } });
+
+  // --- Escondidas: el regente (duerme en su silla) y el guardia (patrulla) ---
+  const icono = (texto, color) => { const s2 = etiqueta(texto, color, 200); s2.visible = false; return s2; };
+  function vigilante(P, tipo) {
+    const V = { P, tipo, estado: tipo === 'regente' ? 'dormido' : 'patrulla', t: 0, perdido: 0, atascado: 0, cool: 0, ruta: [], k: 0 };
+    V.zzz = icono('💤 Zzz', '#93C5FD'); V.ojo = icono('❗', '#F87171'); V.mmm = icono('❓ Mmm…', '#FDE68A');
+    for (const s2 of [V.zzz, V.ojo, V.mmm]) { s2.position.y = P.H + .55; P.yo.add(s2); }
+    if (tipo === 'guardia') V.ruta = Object.keys(nodos).length && (() => { const r = []; escena.traverse(o => { const m = /^ruta_guardia_01_(\d+)$/.exec(o.name || ''); if (m) r[+m[1] - 1] = o.getWorldPosition(new THREE.Vector3()); }); return r.filter(Boolean); })();
+    return V;
+  }
+  const sillaRegente = nodos.obj_silla_galeria_01;
+  const vigilantes = [vigilante(regente, 'regente'), vigilante(guardia, 'guardia')];
+  const VR = vigilantes[0], VG = vigilantes[1];
+  if (sillaRegente) { sentarNPC(regente, sillaRegente); VR.casa = aMundo(sillaRegente, 0, 0, .7); }
+  if (VG.ruta.length) guardia.yo.position.copy(VG.ruta[0]);
+  // tocar al regente dormido lo despierta (y empieza el juego)
+  const intRegente = { clave: 'regente', nombre: 'regente', pos: regente.yo.position, alto: 2.1, texto: '😴 Despertar al regente', accion: () => despertar(VR), activo: true };
+  interes.push(intRegente); hacerTocable(regente.yo, { tipo: 'obj', id: 'regente', clave: 'regente' });
+  const rayoV = new THREE.Ray(), ojoV = new THREE.Vector3(), aYo = new THREE.Vector3(), golpeV = new THREE.Vector3();
+  function meVe(V) {
+    if (salaActual || V.cool > 0 || !yo.visible) return false;
+    const pos = V.P.yo.position, dx = yo.position.x - pos.x, dz = yo.position.z - pos.z, d = Math.hypot(dx, dz);
+    if (d > 8) return false;
+    const ry = V.P.yo.rotation.y, cosA = (Math.sin(ry) * dx + Math.cos(ry) * dz) / (d || 1);
+    if (d > 1.6 && cosA < Math.cos(55 * Math.PI / 180)) return false;   // cono de visión de 110°
+    ojoV.set(pos.x, 1.5, pos.z); aYo.set(yo.position.x, 1, yo.position.z);
+    rayoV.set(ojoV, aYo.clone().sub(ojoV).normalize()); const lim = ojoV.distanceTo(aYo);
+    for (const b of solidos) { if (b.min.y > 1.6 || b.containsPoint(ojoV)) continue; const h = rayoV.intersectBox(b, golpeV); if (h && h.distanceTo(ojoV) < lim) return false; }   // paredes, horcones, árboles
+    return true;
+  }
+  function despertar(V) {
+    if (V.estado !== 'dormido' || V.cool > 0) return;
+    if (V.P.silla) { V.P.silla.userData.ocupada = false; aMundo(V.P.silla, 0, 0, .7, V.P.yo.position); V.P.yo.position.y = 0; V.P.silla = null; }
+    pose(V.P, false); V.estado = 'alerta'; V.t = 0; window.sonar('sorpresa');
+    hablar(V.P, '¡Eh! ¿Qué hacen ahí? 👀', 2200, '#FECACA');
+  }
+  function caminarA(V, x, z, vel, dt) {
+    const p = V.P.yo.position, dx = x - p.x, dz = z - p.z, d = Math.hypot(dx, dz);
+    if (d < .15) return true;
+    const nx = p.x + dx / d * vel * dt, nz = p.z + dz / d * vel * dt; let movio = false;
+    if (!choca(nx, p.z)) { p.x = nx; movio = true; } if (!choca(p.x, nz)) { p.z = nz; movio = true; }
+    if (!movio) for (const lado of [V.lado || 1, -(V.lado || 1)]) {   // trabado (un horcón): rodea por el costado
+      const sx = p.x - dz / d * lado * vel * dt, sz = p.z + dx / d * lado * vel * dt;
+      if (!choca(sx, sz)) { p.x = sx; p.z = sz; movio = true; V.lado = lado; break; }
+    }
+    V.atascado = movio ? 0 : V.atascado + dt;
+    V.P.yo.rotation.y = Math.atan2(dx, dz); animar(V.P, true, dt, performance.now() / 1000); return false;
+  }
+  let tensionT = 0;
+  function atrapado(V) {
+    V.estado = 'vuelve'; V.cool = 9; V.ojo.visible = false; window.sonar('sorpresa');
+    hablar(V.P, '¡Te agarré! Vamos a la dirección 😄', 2000, '#FECACA');
+    setTimeout(() => {
+      const s2 = salas.direccion; if (!s2) return;
+      fundido(() => { if (usando) bajarse(); salaActual = s2; teletransportar(s2.entrada, Math.PI); });
+      setTimeout(() => { hablar(directora, '¡Ay, ay! ¿Otra vez corriendo? 😄', 2600); setTimeout(() => window.panelDireccion && window.panelDireccion('atrapado'), 1600); }, 700);
+    }, 700);
+  }
+  window.__vigilantes = () => vigilantes.map(V => V.tipo + ':' + V.estado);   // (para las pruebas)
+  window.__despertar = () => despertar(VR);
+  alCuadro.push((dt, t) => {
+    let alguno = false;
+    for (const V of vigilantes) {
+      V.t += dt; V.cool -= dt;
+      const ve = V.estado !== 'dormido' && meVe(V);
+      const d = Math.hypot(yo.position.x - V.P.yo.position.x, yo.position.z - V.P.yo.position.z);
+      if (V.estado === 'dormido') {
+        V.P.cuerpo.rotation.x = .15 + Math.sin(t * 1.2) * .03; V.zzz.position.y = V.P.H + .2 + Math.sin(t * 2) * .08;
+        if (V.cool <= 0 && !salaActual && d < 2.4 && velYo.length() > 3.5) despertar(V);   // correr cerca lo despierta
+      } else if (V.estado === 'patrulla') {
+        const p = V.ruta[V.k]; if (p && caminarA(V, p.x, p.z, 1.3, dt)) V.k = (V.k + 1) % V.ruta.length;
+        if (ve) { V.estado = 'alerta'; V.t = 0; window.sonar('sorpresa'); hablar(V.P, '¡Ey, vos! 👀', 1800, '#FECACA'); }
+      } else if (V.estado === 'alerta') {
+        V.P.yo.rotation.y = Math.atan2(yo.position.x - V.P.yo.position.x, yo.position.z - V.P.yo.position.z); animar(V.P, false, dt, t);
+        if (V.t > .7) { V.estado = 'persigue'; V.perdido = 0; V.atascado = 0; }
+      } else if (V.estado === 'persigue') {
+        alguno = true;
+        caminarA(V, yo.position.x, yo.position.z, 3.6, dt);
+        V.perdido = ve ? 0 : V.perdido + dt;
+        if (d < .8 && !salaActual) atrapado(V);
+        else if (V.perdido > 2.2 || V.atascado > 1.5 || salaActual) { V.estado = 'vuelve'; V.atascado = 0; hablar(V.P, 'Mmm… ¿a dónde se fue? 🤔', 2200, '#FDE68A'); }
+      } else if (V.estado === 'vuelve') {
+        const casa = V.tipo === 'regente' ? VR.casa : V.ruta.reduce((a, p) => !a || p.distanceTo(V.P.yo.position) < a.distanceTo(V.P.yo.position) ? p : a, null);
+        if (!casa) { V.estado = 'patrulla'; continue; }
+        const llego = caminarA(V, casa.x, casa.z, 1.6, dt);
+        if (V.atascado > 1.5) { V.P.yo.position.set(casa.x, 0, casa.z); }   // si se traba, aparece en su lugar
+        if (ve && V.cool <= 0) { V.estado = 'alerta'; V.t = 0; }
+        else if (llego || V.atascado > 1.5) {
+          V.atascado = 0;
+          if (V.tipo === 'regente' && sillaRegente) { sentarNPC(V.P, sillaRegente); V.estado = 'dormido'; V.cool = Math.max(V.cool, 4); }
+          else { V.estado = 'patrulla'; V.k = V.ruta.indexOf(casa); }
+        }
+      }
+      V.zzz.visible = V.estado === 'dormido'; V.ojo.visible = V.estado === 'alerta' || V.estado === 'persigue'; V.mmm.visible = V.estado === 'vuelve';
+      V.ojo.position.y = V.P.H + .55 + Math.abs(Math.sin(t * 6)) * .1;
+    }
+    intRegente.activo = VR.estado === 'dormido' && VR.cool <= 0;
+    if (alguno && (tensionT -= dt) <= 0) { tensionT = .6; window.sonar('tension'); }
+  });
+
   // la gorra elegida en el kiosco
   window.__gorra = c => { YOP.gorras.forEach(m => { m.material = mat(c); }); };
   { const g = (() => { try { return localStorage.getItem('alumno-gorra'); } catch (e) { return null; } })(); if (g) window.__gorra(g); }
@@ -2464,7 +2627,7 @@ function iniciar(THREE) {
     // punto de interés cercano → botón contextual (y sonido de los lugares con niebla)
     // (con un poco de margen al alejarse para que el cartel no parpadee en el borde)
     cercano = null; let mejor = RADIO_PUERTA;
-    for (const p of interes) { const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .4 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
+    for (const p of interes) { if (p.activo === false) continue; const d = p.pos.distanceTo(yo.position); const r = p === cartelDe ? RADIO_PUERTA + .4 : RADIO_PUERTA; if (d < r && d < mejor + (p === cartelDe ? .3 : 0)) { mejor = d; cercano = p; } }
     const verCartel = cercano && !window.__pausa && !piloto && !enfoque && !usando;
     if (verCartel) {
       if (cartelDe !== cercano) { btnEntrar.textContent = cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
