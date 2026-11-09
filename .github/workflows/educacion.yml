@@ -11,7 +11,7 @@ on:
     # Ramas de sesión que no van al sitio en vivo (para no pisar a otra sesión):
     #   sesion/canal-*    → sitio en un canal de vista previa + Functions y pruebas (cola compartida)
     #   sesion/pantalla-* → solo el sitio en su canal (sin base, Functions ni pruebas; cola propia)
-    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, 'sesion/canal-*', 'sesion/pantalla-*']
+    branches: [main, 'sesion/canal-*', 'sesion/pantalla-*']
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'
