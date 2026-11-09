@@ -31,6 +31,9 @@ Repo: `tugallo80/Municipio-cero-impuestos`. Plan general: `docs/plan-maestro.md`
 | Texto | **Inter** (400–600) |
 
 - Pensado primero para celular (360 px), modo oscuro por defecto, botones grandes.
+- **Siempre las dos versiones: celular (360–390 px) y PC (1280 px).** Probar cada pantalla en ambas
+  antes de publicar (Playwright), sin texto apretado ni desbordes. En celular, tarjetas con botón: texto
+  arriba y botón abajo a todo el ancho.
 - Los prototipos actuales (`index.html`, `municipio0_*.html`) usan verde lima `#deff9a` sobre
   `#020617`. Se migran a ÑANDÉ módulo por módulo, no todos de golpe.
 
