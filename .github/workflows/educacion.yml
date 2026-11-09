@@ -23,12 +23,16 @@ permissions:
   contents: read
   id-token: write
 
+# Una sola cola para todo lo que toca las Functions o el sitio en vivo. Las ramas que solo
+# cambian pantallas (SOLO_CANAL) van en su propia cola: no tocan lo compartido.
 concurrency:
-  group: educacion-deploy
+  group: ${{ github.ref_name == 'sesion/edu-04c' && 'educacion-canal-edu-04c' || 'educacion-deploy' }}
   cancel-in-progress: false
 
 env:
   PROYECTO: municipio-ia
+  # true = solo publicar el sitio en su canal de vista previa (sin base, Functions ni pruebas con Gemini)
+  SOLO_CANAL: ${{ github.ref_name == 'sesion/edu-04c' }}
   EDU_DATABASE_URL: https://municipio-ia-educacion.firebaseio.com
   FIREBASE_CLI: npx --yes firebase-tools@15.34.1
 
@@ -82,15 +86,17 @@ jobs:
           esac
 
       - name: Reglas de la base, cuentas de prueba y contenido demo
+        if: env.SOLO_CANAL != 'true'
         working-directory: educacion/tools
         run: npm ci --no-audit --no-fund && node seed/crear-cuentas-prueba.js
 
       - name: Publicar las Functions
+        if: env.SOLO_CANAL != 'true'
         working-directory: educacion
         run: $FIREBASE_CLI deploy --only functions:educacion --project "$PROYECTO" --non-interactive --force
 
       - name: Prueba de la clase grabada (audio → informe → la profe Taji)
-        if: github.event_name == 'push' || inputs.probar
+        if: env.SOLO_CANAL != 'true' && (github.event_name == 'push' || inputs.probar)
         working-directory: educacion/tools
         env:
           SALIDA: ${{ runner.temp }}/salida-clase
@@ -101,7 +107,7 @@ jobs:
           node e2e/probar-clase.mjs
 
       - name: Prueba del cronograma y la mentora (PDF → plan → tarjeta)
-        if: github.event_name == 'push' || inputs.probar
+        if: env.SOLO_CANAL != 'true' && (github.event_name == 'push' || inputs.probar)
         working-directory: educacion/tools
         run: |
           export FIREBASE_API_KEY="$(node -e 'console.log(require(process.argv[1]).apiKey)' "$RUNNER_TEMP/firebase-web.json")"
@@ -109,7 +115,7 @@ jobs:
           node e2e/probar-plan.mjs
 
       - name: Prueba de punta a punta (voz real contra Gemini)
-        if: github.event_name == 'push' || inputs.probar
+        if: env.SOLO_CANAL != 'true' && (github.event_name == 'push' || inputs.probar)
         working-directory: educacion/tools
         env:
           SALIDA: ${{ runner.temp }}/salida-e2e
