@@ -1,0 +1,2500 @@
+                                                                     Artes
+                                                               Plásticas y
+                                                                  Visuales
+                                                                       EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA
+
+
+
+
+                                                      AR
+                                                   GUL - SISTEM
+                                                                A ED
+                                                RE                  UCA
+                                          Ó   N                         TIV
+                                     A CI                                  O PL
+                                                                               URIN
+                                   C                                                  ACIO
+                             E   DU                                                       N   AL
+                        DE
+                    A
+                M
+             TE
+        IS
+  UBS
+S
+
+
+
+
+   2
+ “2025 BICENTENARIO DE BOLIVIA”
+                                     DO
+                                      AÑO DE
+                                      ESCOLARIDAD
+© De la presente edición
+
+Texto de aprendizaje. 2do año de escolaridad. Educación Secundaria
+Comunitaria Productiva. Subsistema de Educación Regular.
+
+
+Texto oficial 2025
+Omar Veliz Ramos
+Ministro de Educación
+Manuel Eudal Tejerina del Castillo
+Viceministro de Educación Regular
+Delia Yucra Rodas
+Directora General de Educación Secundaria
+
+
+DIRECCIÓN EDITORIAL
+Delia Yucra Rodas
+Directora General de Educación Secundaria
+Waldo Luis Marca Barrientos
+Coordinador del Instituto de Investigaciones Pedagógicas Plurinacional
+
+COORDINACIÓN GENERAL
+Equipo Técnico de la Dirección General de Educación Secundaria
+Equipo Técnico del Instituto de Investigaciones Pedagógicas Plurinacional
+
+REDACTORES
+Equipo de maestras y maestros de Educación Secundaria
+
+REVISIÓN TÉCNICA
+Unidad de Educación Género Generacional
+Unidad de Políticas de lntraculturalidad, lnterculturalidad y Plurilingüismo
+Escuelas Superiores de Formación de Maestras y Maestros
+Instituto de Investigaciones Pedagógicas Plurinacional
+
+ILUSTRACIÓN:
+Jorge Joaquin Mollinedo Calle
+
+DIAGRAMACIÓN:
+Jorge Luis Calcina Guachalla
+
+Depósito legal:
+4-1-576-2024 P.O.
+
+Cómo citar este documento:
+Ministerio de Educación (2025). Texto de aprendizaje. 2do año de escolaridad. Educación
+Secundaria Comunitaria Productiva. Subsistema de Educación Regular. La Paz, Bolivia.
+
+Av. Arce, Nro. 2147 www.minedu.gob.bo
+
+             LA VENTA DE ESTE DOCUMENTO ESTÁ PROHIBIDA
+                                                                               ÍNDICE
+
+Presentación................................................................................................................................................................ 3
+
+Primer trimestre
+   Dibujo técnico, decorativo y productivo................................................................................................................... 6
+       Técnicas de estudio, glosario e investigación
+        Figuras planas: Paralelogramos
+
+    Elementos de la geometría y normas en el dibujo técnico ................................................................................... 10
+        La circunferencia y el círculo: Elementos y aplicación decorativa
+        Los polígonos: Elementos, clasificación y aplicación decorativa
+        Construcción de polígonos regulares
+        Nociones básicas de las normas ISO - International Organization for Standarization y normas DIN –
+        Deutsche Industrie Normen para su aplicación universal en el dibujo técnico
+
+    Elementos de las artes gráficas para las producciones dialógicas.......................................................................14
+        La tipografía en su aplicación para la publicidad y la producción de textos
+        Producciones creativas de tipografías manuales y digitales en proporcionalidad adecuada
+
+Segundo trimestre
+  Proceso de dibujo artístico e interpretación de la realidad ................................................................................... 18
+      El claroscuro: Luz, sombra, valoración tonal y las diferencias técnicas (difuminado, puntillismo, tramado,
+      garabato y otros)
+
+    Proceso de dibujo artístico....................................................................................................................................22
+        El bodegón o naturaleza muerta
+        Técnica de la cuadrícula: Sistema de ampliación y reducción gráfica
+
+    La pintura artística para la creación de obras significativas en la comunidad para la despatriarcalización y el
+    Vivir Bien...............................................................................................................................................................26
+          Propiedades del color: Tono, valor y saturación
+          Técnica con témperas
+
+Tercer trimestre
+   La historia del arte para la reinvindicación ancestral como manifestaciones del Vivir Bien ................................. 30
+        Arte colonial en Bolivia: Wancarani, Chiripa, Tiwanaku, Uru Chipaya y otros
+        Arte de las interpretaciones sociales y lucha de clases en el siglo XX a través de la pintura
+
+    Desarrollo de las artes aplicadas y modelo para las producciones decorativas y emprendedoras......................34
+        Hilorama
+        Diseño de estampados: Técnicas y procesos de elaboración (calado o tallado de soportes blandos,
+        plantillas o diferentes recursos)
+
+    La escultura: Bajo, medio y alto relieve en materiales blandos para tallado relacionado a las expresiones artísticas
+    y culturales de nuestros pueblos...........................................................................................................................38
+          La escultura: Bajo, medio y alto relieve
+          En materiales blandos para tallado relacionado a las expresiones artísticas y culturales de nuestros pueblos
+                                          PRESENTACIÓN
+
+Uno de los derechos fundamentales de las niñas, niños y adolescentes, en el Estado Plurinacional de
+Bolivia, es el derecho a la educación, el cual se garantiza con el acceso a los recursos educativos que
+coadyuven con el proceso de adquisición de conocimientos.
+
+El Ministerio de Educación, asegurando la calidad educativa, al iniciar la gestión 2025, pretende brindar
+un recurso educativo que apoye el desarrollo curricular, a través de la entrega gratuita de los “Textos de
+aprendizaje 2025”, para el nivel de Educación Secundaria Comunitaria Productiva.
+
+Durante varios meses, maestras y maestros de todas las regiones de Bolivia, desde sus experiencias
+y vivencias educativas, han aportado con la construcción de estos textos, plasmando en sus letras la
+diversidad de Bolivia y la investigación científica en las diferentes áreas de saberes y conocimientos.
+
+Los “Textos de aprendizaje 2025” tienen la misión de fortalecer los conocimientos de nuestros estudiantes,
+presentando contenidos actualizados y con bases científicas, planteando actividades que desarrollen su
+pensamiento crítico reflexivo, reforzando sus aprendizajes.
+
+Por lo expuesto anteriormente, teniendo como objetivo trabajar conjuntamente con los actores educativos
+hacia una educación humanística, técnica, tecnológica productiva, dentro de un desarrollo integral de
+nuestros estudiantes; el Ministerio de Educación proporciona este accesible instrumento educativo,
+esperando que despierte en las niñas, niños y jóvenes la sed de conocimientos y los motive a conocer el
+mundo a través de la ciencia y la investigación.
+
+
+
+
+                                                                                    Omar Veliz Ramos
+                                                                            MINISTRO DE EDUCACIÓN
+
+
+
+
+                                                                                                             3
+             ÁREA DE SABERES Y
+              CONOCIMIENTOS
+
+
+
+         Artes
+         Plásticas y
+         Visuales
+         SEGUNDO AÑO DE ESCOLARIDAD
+
+
+
+
+EDUCACIÓN SECUNDARIA
+COMUNITARIA PRODUCTIVA
+                SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                                         DIBUJO TÉCNICO, DECORATIVO Y PRODUCTIVO
+                    PRÁCTICA
+                                                                                           Figuras geométricas en nuestro entorno
+                                                                                 Las familias que viven en la ciudad o en el campo, utilizan
+                                                                                 diferentes tipos de viviendas, donde realizan diversas
+                                                                                 actividades.
+
+                                                                                 En las viviendas de la fotografía se observan variadas formas
+                                                                                 geométricas utilizadas por el albañil, el arquitecto, el ingeniero
+                                                                                 civil y otros profesionales quienes recurren a estas para diseñar
+                                                                                 la vivienda y proceder con su posterior construcción.
+
+                                                                                 Por eso es importante conocer las diferentes características de
+                                                                                 las formas geométricas planas e identificar las variadas formas
+        Fuente: https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQTOmEjn-   geométricas que se encuentran a nuestro alrededor.
+                            MdefmRLZ97D1wiekG7428SFCzVbA-3Jm3WpkbEbn0sL
+
+
+                      Observamos en la imagen las puertas, ventanas, techos y demás partes de las viviendas:
+    Actividad
+
+
+
+
+                      −   ¿Con qué figuras geométricas se relacionan?
+                      −   ¿Cuáles son las diferencias entre el triángulo y cuadrilátero?
+                      −   ¿Cuáles son sus características?
+                      −   Con la guía de la o el maestro elaboramos un cuadro para registrar los hallazgos identificados.
+
+
+                     TEORÍA
+
+                                                               1. Técnicas de estudio, glosario e investigación
+                    Mapa de conceptos
+                                                               Para organizar los conceptos aprendidos, registramos las características y
+                                                               diferencias de las figuras planas geométricas, triángulos y cuadriláteros en
+                              -                                el mapa de conceptos.
+
+                                                               1.1. Figuras planas triángulos
+                          -          -                                La figura geométrica es un plano bidimensional delimitado por líneas
+                                                                      que pueden ser rectas o curvas. Se define como una figura poligonal
+
+                -         -          -            -                   que consta de tres lados, tres vértices, tres ángulos interiores y tres
+                                                                      ángulos exteriores congruentes. Es el polígono más simple porque no
+                                                                      es posible crear un polígono con menos de tres lados.
+
+       Clasificación de triángulos                                    a) Clasificación
+                                                                      Según la medida de sus lados:
+
+                                                                            − Triángulo equilátero, todos sus lados son iguales.
+                                                                            − Triángulo isósceles, tiene dos lados iguales y uno diferente.
+                                                                            − Triángulo escaleno, todos sus lados son de diferente longitud.
+     Equilátero Isósceles                Escaleno
+                                                                      Según la medida de sus ángulos:
+
+                                                                            − Triángulo acutángulo, tiene los tres ángulos agudos (menores
+                                                                              de 90 grados).
+                                                                            − Triángulo obtusángulo, tiene un ángulo obtuso (mayor de 90
+                                                                              grados) y dos ángulos agudos.
+                                                                            − Triángulo rectángulo, tiene un ángulo recto (exactamente de 90
+                                                                              grados) y dos ángulos agudos (menores a 90 grados).
+    Rectángulo Acutángulo Obtusángulo
+                                                                      b) Elementos básicos del triángulo
+                                                                            − Vértice, es el punto donde se encuentran dos lados del
+                                                                              triángulo.
+
+6
+                                             EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA     ARTES PLÁSTICAS Y VISUALES
+
+  − Lado, los tres segmentos que                                                   Vértice
+    limitan el triángulo se denominan
+    lados.
+                                                                     Lado
+  − Ángulo, son dos líneas que parten                                                           Lado
+    de un mismo punto y cuya abertura
+    puede medirse en grados (°).                                               Ángulos
+
+c) Rectas notables del triángulo
+                                                           Vértice
+  − Mediatriz, es la recta perpendicular                                                             Vértice
+    trazada al punto medio de cada uno                                          Lado
+    de los lados del triángulo.
+                                                           Mediatrices                             Bisectriz
+  − Bisectriz, recta que divide uno de
+    los ángulos del triángulo en dos
+    partes iguales.
+
+  − Altura, es el segmento perpendicular
+    trazado desde un vértice al lado
+    opuesto.                                                    Circuncentro                              Incentro
+
+
+  − Mediana, rectas que pasan por el
+    vértice y el punto medio del lado
+    opuesto.
+                                                              Alturas                               Medianas
+d) Puntos notables del triángulo
+  − Circuncentro, se caracteriza por
+    el punto en que se cortan las 3
+    mediatrices, es el centro de la                                   Ortocentro
+    circunferencia circunscrita y la
+    circunferencia circunscrita pasa por                                                                   Baricentro
+    los 3 vértices del triángulo.
+
+  − Incentro, es cuando el punto en el
+    que se cortan las 3 bisectrices; es
+    el centro de circunferencia inscrita y
+    los lados del triángulo son tangentes                 Circuncentro                               Incentro
+    a la circunferencia inscrita, siempre
+    dentro del triángulo.
+
+  − Ortocentro, es el punto donde se
+    intersectan o se cortan las alturas
+    del triángulo.
+                                                                Circuncentro                              Incentro
+  − Baricentro, es el punto donde
+    se cortan las 3 medianas de un
+    triángulo.
+
+En la vida cotidiana, los diferentes tipos de
+triángulos se observan recurrentemente en el                 Ortocentro                           Baricentro
+entorno. Estas formas geométricas se apre-
+cian y utilizan en diversos ámbitos, como: La
+construcción de edificios (viviendas, departa-
+mentos y puentes), fabricación de aparatos                              Ortocentro
+tecnológicos, diseño de estructuras metáli-
+cas, elaboración de objetos de uso doméstico,                                                               Baricentro
+decoración de interiores y exteriores, diseño
+de publicidad, fabricación de muebles, etc.
+
+
+                                                                                                                          7
+    SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+            Cuadrado                                      Trapecio rectángulo                   2. Figuras planas, paralelógramos
+                                                                                                Son polígonos que están conformados
+                                                                                                por cuatro lados, cuatro vértices, cuatro
+                                                                                                ángulos interiores y se caracterizan porque
+                                                                                                sus lados opuestos son paralelos unos con
+                                                                                                otros.
+
+                                                                                                2.1 Clasificación
+                                                                                                    Paralelogramos:
+            Rectángulo                                           Trapecio isósceles
+                                                                                                    a) Cuadrado, los cuatro lados son
+                                                                                                       iguales y tiene cuatro ángulos
+                                                                                                       rectos.
+
+                                                                                                    b) Rectángulo, polígono de cuatro
+                                                                                                       lados, con lados opuestos iguales y
+                                                                                                       todos sus ángulos rectos.
+
+                                                                                                    c) Rombo, polígono de cuatro lados
+                                                                                                       iguales y ángulos opuestos iguales.
+              Rombo                                                    Trapezoide
+                                                                                                    d) Romboide, polígono de cuatro
+                                                                                                       lados con lados opuestos iguales y
+                                                                                                       paralelos, pero sin ángulos rectos.
+
+                                                                                                   No paralelogramos:
+
+                                                                                                    a) Trapecio rectángulo, con un
+                                                                                                       ángulo recto entre uno de los lados
+                                                                                                       no paralelos y una de las bases.
+
+                                                                                                    b) Trapecio isósceles, con las bases
+                                                            Elementos de un                            paralelas y los lados no paralelos
+                                                               cuadrilátero                            de igual longitud.
+                                                                           Lado
+                                                                                                    c) Trapezoide, ninguno de sus cuatro
+           Romboide
+                                                                                                       lados es paralelo a otro, aunque no
+                                                                                                       es un paralelógramo, pero cumple
+                                                                                                       con la propiedad básica por la suma
+                                                                                                       de sus ángulos internos (360°).
+
+                                                                                                2.2. Elementos
+                                                    Ángulo
+                                                                                      Vértice       a) Vértices, son los puntos donde se
+                                                                                                       unen los lados.
+
+         Ejemplo de una aplicación práctica de los cuadriláteros                                    b) Lados, son cada uno de los
+                                                                                                       segmentos que limitan el polígono.
+
+                                                                                                    c) Diagonales, segmento de recta que
+                                                                                                       une dos vértices no consecutivos.
+
+                                                                                                    d) Ángulos,    porción  de    plano
+                                                                                                       comprendida entre dos lados y un
+                                                                                                       vértice común.
+
+
+
+                   Mueble para depósito de enseres de cocina
+             Fuente: https://impulso.com.gt/wp-content/uploads/2021/12/Credenza-de-1-cuerpo-
+                                                                             de-melamina.jpg
+8
+                                                           EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA        ARTES PLÁSTICAS Y VISUALES
+
+
+                                                                                                                           VALORACIÓN
+
+Respondemos las preguntas y realizamos las actividades:
+
+− ¿Por qué es importante conocer los elementos de los
+  triángulos?
+
+− ¿Por qué es necesario saber diferenciar los elementos de
+  los cuadriláteros paralelógramos?
+
+− Observamos diferentes objetos en nuestra vivienda e
+  identificamos las diferentes clases de triángulos.
+
+− Analizamos las diferentes formas de triángulos y
+  cuadriláteros que se utilizan para la producción o diseño de
+  objetos utilitarios y no utilitarios.                                                                                        Fuente: https://lc.cx/f7czax
+
+
+
+
+                                                                                                                           PRODUCCIÓN
+
+
+Realizamos las siguientes actividades:
+
+− Observamos y dibujamos nuestras viviendas utilizando las figuras geométricas que aplicaron en la
+  fachada, techo, ventanas, puertas y otros elementos.
+
+− Dibujamos los diferentes muebles que están en nuestro dormitorio, cocina, sala, baño, etc., aplicando las
+  figuras geométricas: triángulos y cuadriláteros.
+
+− Con triángulos y cuadriláteros elaboramos figuras decorativas aplicables a objetos artesanales.
+
+− A partir de los ejemplos abajo, realizamos decoraciones con figuras planas: triángulos y cuadriláteros.
+  Como guía observamos:
+
+
+          Ejemplos de figuras decorativas                                               Ejemplos de figuras decorativas
+           con triángulos y cuadriláteros                                                     con cuadriláteros
+
+
+
+
+                  Fuente: https://electricquilt.com/online-shop/category/stars/               Fuente: https://es.pinterest.com/pin/582090320597868499/
+
+
+
+
+                                                                                                                                                              9
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                                    ELEMENTOS DE LA GEOMETRÍA Y NORMAS EN EL DIBUJO TÉCNICO
+
+                  PRÁCTICA
+
+                                                                                       Cálculo aproximado del valor de 𝜋
+                                                                   Utilizando un cordel, envolvemos en la boca del tazón. Luego desenrollamos
+                                                                   para medir la longitud, después medimos el diámetro de la boca del tazón.
+
+                                                                   A manera de ejemplo, asumimos que obtuvimos una longitud de 46,8 cm
+                                                                   para el cordel, dividimos con la medida del diámetro, en este caso de 14,9
+                                                                   cm. El resultado será aproximadamente 3,14, esto significa que la longitud
+                                                                   de las circunferencia de cualquier círculo es igual a pi (𝜋) multiplicado por el
+                  Taza y platillo de porcelana                     diámetro del círculo.
+                                        Fuente: OpenAI (2024)
+     Actividad
+
+
+
+
+                        Realizamos la misma práctica con otros objetos de forma circular y establecemos las comparaciones
+                        de los resultados obtenidos.
+
+
+
+                    TEORÍA
+                                                                   1. La circunferencia y el círculo: Elementos y aplicación
+        Los elementos del círculo son:                             decorativa
+                                                                   1.1. Circunferencia
+                                                                        Es una curva cerrada y plana, tiene un punto central llamado centro.
+                                                                        Los elementos de la circunferencia son:
+                                              r
+
+                                                                       − Centro, punto que se encuentra al interior y al centro de la
+                                                                         circunferencia, es equidistante a cualquier punto de la circunferencia.
+                                                                       − Radio, segmento que une cualquier punto de la circunferencia y el
+                                                                         centro.
+                                                                       − Cuerda, es el segmento que conecta dos puntos de la circunferencia.
+                                                                       − Arco, comprendido entre un par de puntos de la circunferencia que
+                                                                         forman una línea curva.
+                                                                       − Semicircunferencia, es la mitad de una circunferencia, limitada por
+                                                                         su diámetro.
+                                                                       − Diámetro, segmento que atraviesa el centro de la circunferencia.
+                                                                       − Secante, es una recta que corta la circunferencia en dos puntos.
+                                                                       − Tangente, es una recta que toca la circunferencia en un solo punto.
+
+                                                                   1.2. Círculo
+                                                                        Es la superficie plana limitada por una circunferencia.
+
+                                                                       − Semicírculo, es la región correspondiente a la mitad de un círculo.
+                                                                         El diámetro divide al círculo en dos semicírculos.
+                                                                       − Segmento circular, parte de un círculo limitado por una cuerda.
+                                                                       − Sector circular, parte del círculo limitado por dos radios.
+                                                                       − Trapecio circular, porción de la corona circular limitada por dos
+                                                                         radios y dos arcos.
+                  Carreta con ruedas circulares
+                                                                       − Corona circular, porción de círculo limitada por dos círculos
+                     Fuente: https://encrypted-tbn3.gstatic.com/
+                 images?q=tbn:ANd9GcSylp0XM1rCprhy5AZ-R_
+                                                                         concéntricos.
+                      X1CxNn1x3YR2LI6ROEuYQMX2_sxOE6                   − Zona circular, porción del círculo limitada por dos cuerdas.
+10
+                                              EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA          ARTES PLÁSTICAS Y VISUALES
+
+2. Los polígonos: Elementos,                 clasificación      y                                           Trapecio
+   aplicación decorativa                                                                                     circular
+
+
+Un polígono es una figura plana limitada por segmentos de
+rectas, llamados lados y que cortan en unos puntos denominados
+vértices.
+
+Es una línea quebrada cerrada creada por segmentos de recta.
+La palabra polígono proviene del griego, “poli” (varios) y “gono”                                      Corona circular
+(ángulos).
+
+2.1. Elementos
+                                                                                               Sector
+     − Vértices, son los puntos de unión de los segmentos.                                     circular
+     − Radio, punto que coincide con el centro de la                                                               Semicírculo
+       circunferencia.                                                                          Segmento
+                                                                                                 circular
+     − Apotema, es el segmento perpendicular que une el
+       lado con el punto del polígono.
+     − Centro, coincide con el radio de la circunferencia                              Fuente: https://tomi.digital/es/author/carlos-jojoa
+
+       circunscrita.
+                                                                                                                 Lado
+
+
+
+
+                                                                                                                                  Vé
+     − Lados, son los segmentos que limitan la superficie.
+
+
+
+
+                                                                                                                                     rti
+                                                                                                                                      ce
+     − Diagonales, son los segmentos que unen dos vértices
+                                                                                                                       Di
+       no consecutivos.                                                                                                   ag
+                                                                                                                             on
+     − Perímetro, es la suma de las longitudes de los lados.                                                                    al
+                                                                                                              Centro
+     − Ángulos, está formada por dos semirrectas que se                                               dio
+                                                                                                 Ra
+
+
+
+
+                                                                                                                ma
+       unen en un punto en común, cuya medida es la amplitud
+
+
+
+
+                                                                                                             ote
+       del arco.
+
+
+
+
+                                                                                                            Ap
+     − Ángulos exteriores, tiene su punto en el exterior de la                                                 Ángulo
+       circunferencia.
+                                                                                                 Elementos de un pentágono regular
+     − Ángulos interiores, tiene el ángulo en el punto interior
+                                                                           Polígono convexo
+       de la circunferencia.
+     − Ángulo central, es el ángulo formado por dos radios
+       consecutivos.
+
+2.2. Clasificación
+                                                                                                                     Polígono cóncavo
+     Según el ángulo se clasifican en:
+                                                                                                    Fuente: http://geometriacreativaeq2.blogspot.
+     − Un polígono es convexo cuando el ángulo interior mide                                     com/2017/04/figuras-geometricas-las-figuras.html
+
+        menos de 180 grados.
+     − Un polígono es cóncavo cuando el ángulo interior mide
+        más de 180 grados.
+                                                                             Triángulo        Cuadrado Pentágono                     Hexágono
+     Según el lado y ángulo se clasifican en:
+     − Un polígono es regular tienen lados y ángulos iguales.
+     − Un polígono es irregular si tiene un lado o ángulo
+        diferente.
+                                                                             Heptágono                Octógono                    Eneágono
+3. Construcción de polígonos regulares
+3.1. División de la circunferencia en 6, 3 y 12 partes
+     Si se tiene como dato el radio de la circunferencia
+     circunscrita, permite la construcción del hexágono, el
+     triángulo y el dodecágono.                                                Octógono              Undecágono                   Dodecágono
+                                                                            Fuente: https://www.unprofesor.com/matematicas/poligonos-regulares-
+                                                                                                               nombres-y-clasificacion-4857.html
+                                                                                                                                                    11
+          SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+         Construcción del polígono                     Polígono de 9 lados dada la                     Hexágono, una vez delineada la circunferencia,
+                                                        circunferencia R=40 mm                         con el compás del punto A con la distancia del
+                                                                                                       centro se marca el punto B, después el punto D con
+                                                                                                       el mismo radio.
+                                                                   A
+                                                   M
+                                                                                                       Triángulo, del hexágono construido, solamente se
+                                                                   C
+                                                                                                       debe unir los puntos AC, AE y CE.
+
+                                                                                           O           Dodecágono, es de diez lados con ángulos iguales.
+
+
+
+                                                                   B
+                                                                                                                                  Dibujar un rectángulo
+
+
+
+                                                                                                                                                    B
+                                                                                                       D                                   C
+
+
+             Pentágono dado el radio                           Hexágono dado el radio                  a                                   a                    d
+                  (r = 25 mm)                                       (r = 35 mm)                                                                 C                                    A
+
+                                                                                                                          b
+                                                                           A                           A                                   B
+                             A
+                                                                                                                                                                                 D
+
+                                                       S                                   F
+
+         B                                   E                                     r
+
+
+                                                                                                                              Dibujar un triángulo equilátero
+
+                                                                                           E
+                                                           C
+                                        D                                                                                                                           C
+                 C                                                                                                            C
+
+                                                                           O
+
+
+
+
+                                                                                                                                                        A                        B
+             Pentágono dado el lado                        Octógono de radio (R = 30mm)
+                 (AB = 30 mm)                                                                               A                              B
+
+
+                                                                               A
+                         D
+                                                                                           H                            Dibujar un triángulo isósceles y escaleno
+                                                                   B
+
+     E                                 C
+                                                           C                                       G                                                A
+
+
+
+
+                                                                                           F                        b         a                                 c
+                     L                                                                                                                          b
+                                                                       D
+             A                   B
+                                                                                   E
+                                                                                                                                                C                            B
+                                                                                                                A                 B                         a
+                                                                                                                          c
+                                     Dibujar un cuadrado
+                                                                                                                         Aplicación decorativa de los polígonos
+                                                                               C
+     D                                  C
+
+
+
+                                                                                       d
+                                                               D                               B
+
+
+
+
+     A                                  B
+                                                                               A
+                                                                                                            Fuente: https://es.pinterest.com/       Fuente: https://es.pinterest.com/
+                                                                                                                pin/102949541462552644/                 pin/614952524108261606/
+12
+                                             EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA          ARTES PLÁSTICAS Y VISUALES
+
+4. Nociones básicas de las normas ISO - International
+   Organization for Standarization y normas DIN - Deutsche                             Normas DIN e ISO y su relación
+   Industrie Normen para su aplicación universal en el dibujo                            con la proyección de vista
+   técnico
+4.1. La norma ISO                                                                                   Sistema europeo
+
+    Es el conjunto de patrones internacionales para la delineada
+    gráfica, la cual establece reglas y convenciones para el diseño
+    gráfico de piezas técnicas en planos de dibujo mecánico
+    e industrial,. Esto permite brindar una información clara y
+    precisa entre los diferentes profesionales involucrados en el
+    proceso de diseño y fabricación. Seguir la norma, se garantiza
+    y consistencia en la representación de las diferentes partes y
+    componentes de un objeto, lo que facilita su comprensión y
+    fabricación. Los principales elementos que se considera son:                                               Fuente: https://acortar.link/9touWs
+    la escala, las líneas, la simbología, el texto, la acotación, la      Fuente:https://www.dibujotecnico.
+                                                                          com/wp-content/uploads/2015/07/
+                                                                               vistas-de-un-objeto-sistema-
+    tolerancias y las vistas.                                                europeo-y-americano-001.png
+
+
+                                                                                                Sistema americano
+4.2. La norma DIN
+    Vinculada a patrones técnicos utilizados en la industria alemana
+    para la producción de piezas y productos de características
+    industriales, establece reglas y directrices para la creación
+    de dibujos técnicos precisos y uniformes. Esto facilita la
+    comunicación entre diferentes profesionales y empresas.
+    Además, ayuda a garantizar la calidad y la seguridad en
+    la producción de productos y maquinarias. En resumen,
+    conocer y aplicar la norma DIN en el ámbito del dibujo técnico                                             Fuente: https://acortar.link/LFc68h
+
+    es fundamental para asegurar la precisión, la eficiencia y la
+                                                                           Fuente:https://www.dibujotecnico.
+    calidad en los procesos de diseño y producción. Las principales        com/wp-content/uploads/2015/07/
+                                                                                vistas-de-un-objeto-sistema-
+    ventajas son; uniformidad, comunicación efectiva, ahorro de               europeo-y-americano-001.png
+
+    tiempo y mejorar de la calidad.
+                                                                                                                VALORACIÓN
+
+  Analizamos y reflexionamos respondiendo las preguntas y realizando las actividades:
+  − ¿Cuál es la importancia de conocer la diferencia entre el círculo y la circunferencia?
+  − ¿Cómo se debe utilizar los diferentes elementos del círculo y circunferencia?
+  − ¿Cuál es la utilidad de los polígonos regulares e irregulares en la    vida cotidiana?
+  − ¿Cuáles son las conclusiones de los catálogos o planos de maquinarias y/o piezas mecánicas que fueron
+    analizados?
+  − ¿Qué símbolos caracterizan la norma ISO y DIN?
+  − En nuestra vivienda identificamos objetos decorados en base a los polígonos regulares e irregulares.
+  − Analizamos los catálogos o planos de maquinarias y/o piezas mecánicas para identificar la aplicación de
+    las normas ISO y DIN.
+
+                                                                                                                PRODUCCIÓN
+
+
+   Realizamos las siguientes actividades:
+
+   − Investigamos, cómo encontrar el centro de la circunferencia sin utilizar el compás, además de trazar los
+     elementos de la circunferencia.
+   − Dibujamos un círculo de 6 centímetros de diámetro, en el mismo, trazamos una estrella de diez puntas y
+     convertimos en un elemento decorativo destinado a un objeto.
+   − Representamos gráficamente el polígono de 12 puntas y en el centro dibuja la imagen de tu mascota u
+     objeto preferido.
+   − Buscamos planos de una pieza mecánica, una maquinaria simple, un catálogo de aparatos tecnológicos
+     para luego compartir la información gráfica del uso de las normas ISO o DIN.
+
+                                                                                                                                                     13
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+     ELEMENTOS DE LAS ARTES GRÁFICAS PARA LAS PRODUCCIONES DIALÓGICAS
+
+
+                   PRÁCTICA
+                                                                                    La tipografía en nuestro contexto
+
+                                                                El uso y utilización de la tipografía está en todos los lugares de la vida
+                                                                cotidiana como plazas, mercados, avenidas, calles, parques, en textos
+                                                                escritos; libros, revistas, tarjetas, en los sitios web que visitas, publicidad
+                                                                de diversas empresas que ofertan sus productos, artículos promocionales,
+                                                                presentaciones digitalizadas y elaboradas en papelógrafos, en las señales
+                                                                de tránsito y otros.
+
+                                                                La aplicación de la tipografía es importante porque permite mejorar la
+                                                                legibilidad y la estética de un texto, lo que puede influir en la capacidad
+                                                                de comunicación y en la percepción del mensaje por parte del lector y
+                                                                consumidor.
+                                        Fuente:OpenAI, 2024
+
+
+
+
+                        Organizamos equipos de trabajo conformado por cuatro estudiantes:
+     Actividad
+
+
+
+
+                        − Cada equipo crea una marca para el bicentenario de Bolivia, donde la tipografía es importante
+                          para el reconocimiento de la marca.
+
+                        − El equipo analiza el mensaje, la imagen y principalmente las características de las letras:
+                          tamaño, forma y colores utilizados, después compartir la información.
+
+
+
+                    TEORÍA
+
+
+                                                                              1. La tipografía y su aplicación en la publicidad y la
+                                                                                 producción de textos
+                                                                              Si bien la escritura es el medio por el cual la mujer y el
+                                                                              hombre expresa su sentimiento, pensamiento y conocimiento,
+                                                                              la escritura permite la comunicación entre personas, la
+                                                                              preservación de la cultura y el resguardo de la historia de la
+                                                                              humanidad.
+
+                                                                              La tipografía tiene por objetivo la materialización visual de la
+                                                                              lengua oral, recurre a diferentes elementos gráficos, usando
+                                                                              espacios adecuados y diversidad de formas y tipos de letras
+                                                                              con el propósito de comunicar un mensaje visualmente. Hoy
+                                                                              se constituye en una especialidad para la comunicación visual
+                                                                              y la transmisión de mensajes específicos.
+
+                                                                              Entonces, la tipografía es la serie de técnicas para la creación
+                                                                              o diseño de letras y estilos de diseño gráfico recurriendo a
+                                                                              diversos elementos como el color y la utilización de diversos
+                                                                              soportes.
+
+                                                                              La influencia de la tipografía mediatizado por el diseño
+                                                                              gráfico es fundamental en la publicidad para persuadir en el
+                                                                              consumidor final de un determinado producto o propósito, va
+                           La Puerta del Sol - Tiwanaku
+                                                                              destinado a informar o dar conocer de modo eficaz.
+                                                   Nota. Elaboración propia
+14
+                                                EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA   ARTES PLÁSTICAS Y VISUALES
+
+1.1. Rotulación y tipografía
+                                                                                         Rotulación digital
+    La rotulación fue una práctica simbólica desde la época
+    primitiva. En la Edad Media adquiere mayor importancia para
+    crear letreros, títulos, etiquetas, etc. En la Edad Contemporánea
+    progresa con la invención de la imprenta por Johannes
+    Gutenberg y a finales del siglo XIX C. W. Reinhardt, establece
+    el alfabeto de letras mayúsculas y minúsculas, como referente
+    toma en cuenta las letras góticas. Posteriormente se crearon
+    dos estilos: Manual y digital, con el tiempo fue normalizada
+    con el objetivo de informar de manera correcta y garantizar a
+    los consumidores de los productos de manera clara y precisa.
+
+    La tipografía recurre al uso de fuentes preestablecidas                                                    Nota: Elaboración propia
+    con la finalidad de crear diseños con diferentes mensajes,
+    fundamentalmente en los proyectos de diseño gráfico. Las                          Rotulación manual
+    condiciones deben ser legibles, estéticas y causar impacto
+    visual en el observador o población.
+
+1.2. Características de la tipografía
+    a) Legibilidad, la tipografía debe ser fácil de leer, incluso en
+       tamaños pequeños o en condiciones de baja luminosidad.
+
+    b) Coherencia, debe haber una coherencia entre las
+       diferentes fuentes utilizadas en un diseño, para que el
+       texto se vea armonioso.
+
+    c) Escala, la tipografía debe ser escalable, es decir, debe
+       poder ser utilizada en diferentes tamaños sin perder
+       calidad o legibilidad.
+
+    d) Espaciado, el espaciado entre letras, palabras y líneas
+       debe ser equilibrado para que el texto sea fácil de leer y
+       estéticamente agradable.
+
+    e) Estilo, la tipografía debe ser apropiada para el propósito
+       del diseño y la audiencia a la que se dirige.
+
+    f)   Originalidad, una buena tipografía debe tener un estilo
+         único y distintivo que la haga destacar y ser reconocida.                                       Nota: Elaborado en Canva
+
+
+    g) Adaptabilidad, la tipografía debe ser capaz de adaptarse                          Tipos de Tipografía
+       a diferentes formatos y plataformas, como impresión, web
+       y dispositivos móviles.
+
+1.3. Tipos de tipografías
+    a) Serif, este tipo de letra se caracteriza por tener pequeñas
+       líneas o remates en los extremos de cada letra. Es muy
+       utilizado en textos largos como libros, revistas y periódicos.
+
+    b) Sans Serif, a diferencia de la tipografía serif, la sans serif
+       no tiene remates en las letras, lo que le da un aspecto
+       más moderno y limpio. Es muy utilizada en publicidad y
+       diseño gráfico.
+
+    c) Script, este tipo de letra imita la escritura a mano y se utiliza
+       principalmente en diseños más elegantes y sofisticados.
+
+    d) Display, este tipo de letra es muy llamativa y se utiliza
+       para títulos, encabezados en publicidad y diseño gráfico.                                      Fuente: https://acortar.link/LV1vvS
+                                                                                                                                            15
+         SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+     2. Producciones creativas de tipografía manuales y digitales en proporcionalidad adecuada
+
+                  Fuentes tipográfias digital                                              2.1. Seleccionar la fuente tipográfica adecuada
+                                                                                           para un proyecto de publicidad o producto a ser
+                                                                                           ofertado
+                                                                                               Conocer el público objetivo del proyecto para la
+                                                                                               elección de la fuente que sea clara y fácil de leer.
+                                                                                               Por ejemplo, si es para la venta de comida o bebida
+                                                                                               de la región.
+
+                                                                                               Considerar el propósito del proyecto. Por ejemplo,
+                                                                                               si el proyecto es un folleto publicitario, una fuente
+                                                                                               llamativa y moderna puede ser más apropiada.
+
+                                                                                               Tener en cuenta la legibilidad, es decisivo en
+                                                                                               cualquier proyecto de texto. Asegurar la fuente
+                                                                                               elegida sea fácil de leer y no canse la vista.
+
+                                                                                               No usar demasiadas fuentes, confunde y distrae al
+                                                                                               lector. Es recomendable usar no más de dos o tres
+                                                                                               fuentes diferentes en un solo proyecto.
+
+                                                                                               Se sugiere algunas fuentes para proyectos de
+                  Fuente tipografía manual
+                                                                                               publicidad o producción de texto son: Arial, Times
+                                                                                               New Roman, Helvetica y Verdana.
+
+                                                                                           2.2. Aplicación de la tipografía y su efectividad
+                                                                                               El diseño gráfico hoy está en estrecha relación con
+                                                                                               la tipografía y la imagen. El análisis adquiere un valor
+                                                                                               relevante, el tipo de fuente es clave para expresar
+                                                                                               ideas e información a la población.
+        Aplicación de tipos de tipografía e imagen
+                                                                                               También la relación coexistente entre marketing,
+                                                                                               diseño y arte, es importante en la publicidad para
+                                                                                               atraer la atención del público y causar el impacto
+                                                                                               visual. Por ejemplo, en un banner, tapa de un texto
+                                                                                               o logotipo, es sustancial la definición de la tipografía,
+                                                                                               es inevitable del cual dependerá el mensaje a ser
+                                                                                               comunicado.
+
+                                                                                               La incongruencia entre fuente tipográfica e imagen
+                                                                                               distorsiona el significado y objetivo del mensaje,
+                                                                                               los dos conceptos van interrelacionados para la
+                     Utilización de las fuentes tipográficas.                                  visualización de las personas que constituyen la
+                                                                Nota. Elaboración propia
+                                                                                               población objetivo.
+              Fuentes tipográficas más recurrentes
+                                                                                               Es importante tener presente las características
+                                                                                               morfológicas de la tipografía, la variabilidad de los
+                                                                                               tonos, el contraste de los colores y las fuentes,
+                                                                                               vigoriza el mensaje, lo contrario el efecto visual será
+                                                                                               negativo o positivo.
+
+                                                                                               El proyecto de diseño gráfico es el medio de
+                                                                                               comunicación por excelencia, tener cuidado que el
+                                                                                               mensaje escrito no sea extenso, el tipo de fuente
+                                                                                               (letra) viabiliza el producto que va enfocado a la
+                                                                                               población al cual va dirigido.
+16
+                                              EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA   ARTES PLÁSTICAS Y VISUALES
+
+2.3. Cómo combinar la tipografía con otros
+elementos visuales para lograr una comunicación
+más efectiva
+     La tipografía es una herramienta fundamental en
+     la publicidad y producción de textos, ya que puede
+     transmitir diferentes impresiones y emociones. Para
+     lograr una comunicación más efectiva, es importante
+     combinarla con otros elementos visuales como
+     imágenes, colores y formas.
+
+     Algunas recomendaciones:
+
+     a) Contraste, utilizar tipografías con características
+        diferentes al resto de los elementos visuales,
+        para que resalten y llamen la atención.
+
+     b) Armonía, buscar una combinación equilibrada
+        entre la tipografía y los demás elementos
+        visuales, para que se complementen y generen
+        una impresión de cohesión.
+
+     c) Espacio, dejar suficiente espacio entre los
+        elementos visuales para que la tipografía pueda
+        “respirar” y no se sienta sobrecargada.
+                                                                                       Pergamino en cuero
+     d) Jerarquía, utilizar diferentes tamaños y estilos                                                    Nota. Elaboración propia
+
+        de tipografía para destacar la información más
+        relevante y guiar la lectura.                                                                VALORACIÓN
+
+
+ Respondemos las preguntas, en equipos realizamos las actividades y
+ luego dialogamos sobre las reflexiones en común:
+
+ − ¿Por qué la tipografía es un elemento fundamental en el diseño gráfico?
+ − ¿Por qué es necesario tomar en cuenta las fuentes tipográficas
+   e imágenes en el momento de elaborar un proyecto publicitario o
+   productos a ser ofertado?
+ − Ubicamos un letrero, cartel, aviso publicitario u otro en la unidad
+   educativa o calles circundantes luego analizamos donde se pueda
+   identificar las características de la tipografía para posteriormente
+   analizar en los diferentes equipos de trabajo comunitario.
+ − Proponemos elementos a ser mejorados en el mismo letrero, cartel,
+   aviso publicitario u otro que es objeto de estudio
+                                                                                                            Fuente: OpenAI, 2024
+
+
+                                                                                                     PRODUCCIÓN
+
+ Para la aplicación de la tipografía de forma manual o digital, elegimos un determinado proyecto
+ publicitario o producto, para lo cual tenemos que tomar en cuenta los siguientes criterios básicos:
+
+ −   Establecemos el soporte y la medida más conveniente para elaborar el proyecto publicitario o producto.
+ −   Seleccionamos la tipografía adecuada para que sea legible y de fácil lectura.
+ −   Utilizamos solo hasta dos o tres tipos de tipografías (fuente).
+ −   Determinamos la fuente y el tamaño conveniente de las letras.
+ −   Seleccionamos los colores adecuados.
+ −   Seleccionamos las imágenes en coherencia con el mensaje escrito.
+ −   En todo el proceso de la elaboración del proyecto publicitario o producto, tener presente el contraste de
+     los tipos de tipografía, la armonización de los colores, la legibilidad escala o jerarquía para destacar la
+     información más relevante.
+
+
+                                                                                                                                       17
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                   PROCESO DE DIBUJO ARTÍSTICO E INTERPRETACIÓN DE LA REALIDAD
+
+                   PRÁCTICA
+
+     Observamos con atención las imágenes que muestran el proceso del dibujo, caracterizamos y describimos
+     cada una de ellas:
+
+
+
+
+                                                                                                   Fuente: http://www.028yisen.com/site_upload/images/1592881665.jpg
+
+
+                     Realizamos las siguiente actividad:
+     Actividad
+
+
+
+
+                     Dibujamos una esfera en una hoja de papel (formato A3 o A2) y explicamos cada paso: La identificación
+                     de la luz, la sombra, las gradaciones tonales y cómo aplicar las diferentes presiones con el lápiz para
+                     crear distintas tonalidades.
+
+
+                    TEORÍA
+
+     1. El claroscuro: Luz, sombra, valoración tonal y las diferentes técnicas (difuminado, puntillismo,
+        tramado, garabato y otros)
+
+                                                                              Es fundamental en dibujo artístico y la pintura. Se refiere a la
+                                    Luz                                       representación de la luz y la sombra en una obra de arte para
+                                                                              crear la ilusión de volumen, profundidad y forma en un objeto
+                     Penumbra                                                 tridimensional en una superficie bidimensional, como un lienzo o
+                                                                              papel. El claroscuro es esencial para dar realismo y expresividad
+                                                                              a una obra de arte.
+       Sombra propia                                                          Características del claroscuro en el dibujo artístico:
+                                                                              a) Luz y sombra
+                    Reflejo                                                      El claroscuro se basa en la idea de que un objeto iluminado
+                                                                                 por una fuente de luz tiene áreas que están iluminadas (claro)
+       Sombra
+                                                                                 y áreas que están en sombra (oscuro). Estas transiciones
+     proyectada
+                                                                                 tonales crean el efecto tridimensional.
+                                                                                 − Luz, incide sobre el objeto, proporcionando la máxima
+                                                                                   claridad en él.
+
+                                                                                 − Penumbra es la región que se encuentra entre la zona
+                                                                                   iluminada por la luz directa y la sombra completa, es una
+                                                                                   transición gradual de la luz a la oscuridad. La penumbra
+                                                                                   es donde se pueden observar sutiles gradaciones tonales
+                                                                                   y detalles en un objeto. En el claroscuro, la representación
+                                                                                   de la penumbra es crucial para crear la sensación de
+                                                                                   tridimensionalidad y suavidad en los objetos.
+      Fuente: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQrj7aG-
+                      MW3DVgys7BotTMX4CE95BWl_BrF33Vwdz1iqjXuTWngV
+18
+                                                EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA           ARTES PLÁSTICAS Y VISUALES
+
+  − Sombra propia, es la zona donde la luz no llega a iluminar                           Obras de Leonardo Da Vinci
+    el objeto, generando oscuridad. Esta se vuelve más intensa
+    y de manera gradual, el objeto comienza a aclararse. Existe
+    una zona algo más clara llamada reflejo, producida por la
+    luz que proviene de los objetos del entorno.
+
+  − Sombra proyectada, es la proyección de otros cuerpos en
+    el suelo o la pared, el cual refleja la silueta en la superficie.
+
+  − Técnica, los artistas emplean diversas formas para lograr
+    el claroscuro en sus obras, como el sombreado con
+    lápices, carbón, tinta, pinceles y otros medios. También
+    pueden utilizar la difuminación o el uso de líneas y trazos                                                       La Virgen y el Niño
+                                                                           La Virgen de las Rocas
+    controlados para crear gradaciones tonales.                              Fuente: https://lc.cx/_0Rb3o              Fuente: https://lc.cx/IG27_D
+
+                                                                          Escala continua de
+Varios artistas destacados a lo largo de la historia han sido                  valores
+conocidos por su dominio en el uso del claroscuro en sus obras,
+incluidos Leonardo Da Vinci, Caravaggio, Rembrandt y Francisco
+de Goya.
+
+b) Valoración tonal
+  Se refiere a la distribución y gradación de los tonos en una
+  obra de arte, sea en dibujo, pintura, fotografía u otras formas
+  de representación visual, los tonos se refieren a los diferentes
+  grados de luminosidad y oscuridad en una imagen son
+  fundamentales para crear la ilusión de profundidad, forma y
+  volumen, tiene las siguientes características de la valoración
+  tonal.
+
+  − Gradación tonal, implica la transición suave y continua
+    entre los tonos más claros y los tonos más oscuros en
+    una obra de arte. Esta transición se logra mediante
+    cambios sutiles en la intensidad de la luz y la sombra, lo
+    que crea la sensación de volumen y textura en los objetos
+    representados.                                                                                Contraste tonal
+
+  − Contraste tonal, es la diferencia entre los tonos claros y
+    oscuros en una imagen. Un alto contraste tonal se produce
+    cuando hay una marcada diferencia entre las áreas más
+                                                                                                  Alto contraste
+    claras y las más oscuras, creando un efecto dramático y
+    llamativo. Por otro lado, un bajo contraste tonal implica una
+    gradación más suave y tranquila.
+
+  − Puntos focales, se pueden utilizar para dirigir la atención                  Gradación tonal                           Contraste tonal
+    del espectador hacia áreas específicas de la obra de arte.
+    Al crear un mayor contraste tonal o un punto focal de mayor
+    luminosidad en una zona determinada, se puede destacar
+    un objeto o una parte de la imagen.
+
+  − Textura y superficie, son esenciales para representar
+    los objetos en una obra de arte. Los diferentes tonos y                                                               Fuente: https://lc.cx/J6k_kk
+    sombras pueden sugerir rugosidad, suavidad, dureza y
+    otras características de la superficie de los objetos.
+
+  − Profundidad y espacio, son las sensaciones de una
+    imagen al graduar los tonos de manera adecuada. Los
+    artistas pueden hacer que los objetos parezcan estar en
+    primer plano, segundo plano o en algún lugar intermedio,
+    lo que contribuye a la percepción de la distancia y la
+    perspectiva.
+                                                                                Fuente: https://acortar.link/oWLQlL
+                                                                                                                         Fuente: https://lc.cx/0UZYPO
+                                                                                                                                                         19
+                  SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+                            Glosario                                   − Estilo y expresión, la elección de cómo manejar la valoración tonal
+                                                                         también puede ser una cuestión de estilo y expresión artística.
+      Valoración, se refiere a la
+      diferencia de brillo entre las áreas                             Algunos artistas pueden optar por un enfoque realista, con una valoración
+      claras y oscuras de un dibujo.                                   tonal altamente precisa, mientras que otros pueden utilizar un estilo más
+                                                                       expresionista o abstracto, con una valoración tonal más libre y emocional.
+
+     En ese sentido la valoración tonal es una técnica esencial en el arte visual que implica la manipulación de los
+     tonos claros y oscuros para crear profundidad, forma, textura y expresión en una obra de arte. El control hábil de la
+     valoración tonal es fundamental para lograr efectos visuales efectivos y transmitir la intención del artista.
+
+                        Realizamos:
+      Actividad
+
+
+
+
+                        − La práctica de la escala de valores tonales (luminosos, intermedios y oscuros), proporcionando
+                          orientaciones específicas para identificar las áreas luminosas.
+                        − Diferenciamos la penumbra, sombra propia, reflejo y sombra proyectada. Es necesario evitar las
+                          líneas duras en las sombras para lograr transiciones.
+
+
+
+     c) Técnicas de valoración tonal
+         Son métodos utilizados para trabajar con los diferentes tonos sobre un dibujo y lograr la sensación tridimensional
+         o de realidad, estas técnicas son esenciales para comprender y controlar la relación entre luces y sombras, así
+         como para crear efectos visuales y transmitir emociones o mensajes específicos.
+         Algunas de las técnicas más comunes son: el difumino, la trama, el garabato, el puntillismo, entre otras técnicas
+         de valoración tonal que ayudan a lograr resultados visuales deseados y a expresar su creatividad de manera
+         efectiva.
+                                                                       − Difuminado, es una técnica de valoración tonal que se utiliza en el dibujo
+                                                                         artístico y diseño gráfico para suavizar las transiciones entre los tonos de
+                                                                         color o valor en un dibujo, esta técnica es especialmente útil para crear
+                                                                         gradaciones tonales suaves y realistas, así como para lograr efectos de
+                                                                         suavidad o transparencia.
+
+                                                                       − Suavidad de transiciones, es la capacidad para crear transiciones
+                                                                         suaves y graduales entre diferentes tonos. Es útil para representar de
+                                                                         manera más precisa la forma y la textura de los objetos en el dibujo, así
+                                                                         como para lograr efectos de luz y sombra sutiles.
+
+                                                                       − Herramientas de difuminado, se utilizan lápices con preferencia de la
+                                                                         gama B por la calidad de grafito, por otra parte, están los difuminadores,
+                  Valoración tonal con difumino                          esfuminos o pinceles suaves, así mismo entre las herramientas caseras
+                                Fuente: https://acortar.link/UYwZXt
+                                                                         podemos usar los cotonetes o rollitos de papel higiénico, permiten
+                                                                         mezclar los valores tonales en soportes diversos de manera controlada.
+
+                                                                       − Mezcla de colores, no se limita solo a la transición entre tonos de gris en
+                                                                         una escala de grises, también se aplica en la mezcla de colores en obras
+                                                                         de arte a color, la mezcla debe ser suave y natural.
+
+                                                                       − El control de la presión ejercida sobre el lápiz grafito es crucial para
+                                                                         controlar la intensidad y la suavidad de la transición tonal. Una más suave
+                                                                         dará como resultado una valoración del dibujo más sutil, mientras que
+                                                                         una presión firme puede mezclar los tonos de manera más pronunciada
+                                                                         y saturar el dibujo con tonos oscuros.
+
+                                                                       − Herramientas digitales para la técnica de valoración tonal del
+                                                                         difumino, utilizando software o aplicaciones (Sketchbook), permiten
+                                                                         trabajar los valores tonales sobre un dibujo de manera similar a las
+                  Valoración tonal con difumino
+                    Fuente: https://cdn.jumbula.com/clubs/cultivate/
+                                                                         herramientas físicas, los programas de diseño gráfico y pintura ofrecen
+                    CatalogItems/large-61455a6a-77f2-4278-ad85-          una amplia gama de pinceles y herramientas para esta técnica.
+                                                 59db66ddccb2.jpg
+
+20
+                                                   EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA      ARTES PLÁSTICAS Y VISUALES
+
+− Recomendaciones para la técnica de valoración, con preferencia
+  utilizamos lápices de la gama “B” y realizamos el sombreado del dibujo
+  haciendo girar suavemente el lápiz en forma circular. Debemos notar que
+  el grafito deje una textura sin ensuciar el papel.
+
+− Puntillismo, se desarrolló en las últimas décadas del siglo XIX
+  principalmente en Francia. Se caracteriza por la aplicación de
+  pequeños puntos sobre el dibujo, en lugar de utilizar trazos continuos
+  y mezclados. Esta técnica fue empleada principalmente por pintores
+  impresionistas y posimpresionistas como Georges Seurat y Paul Signac.
+  Las recomendaciones generales al usar la técnica del puntillismo son
+  la de mantener afilada la punta del lápiz; así mismo el lápiz debe estar                   Valoración tonal con puntillismo
+  en posición casi vertical con relación a la hoja. Para lograr tonos más                                       Fuente: https://lc.cx/0UyMqS
+  intensos usa lápices de la gama “B” tales como el 6B -8B.
+
+             Observamos detenidamente los
+             diferentes cortes
+             Observamos           en los billetes
+                           detenidamente      los diferentes cortes de billete de
+ Actividad
+
+
+
+
+             de circulación
+             Bolivia           oficial en
+                     e identificamos    queBolivia
+                                            técnica de valoración se aplicó para
+             e identificamos
+             valorar              la técnica
+                     a cada personaje    en losdebilletes.
+             valoración se aplicó para valorar
+             a cada personaje en los billetes.
+
+− Trama es una técnica de valoración tonal utilizada para crear sombras,
+  tonos y texturas mediante el uso de patrones repetitivos de líneas. Esta
+  técnica puede variar en complejidad, desde patrones simples y uniformes,
+  hasta las más elaboradas y detalladas. La densidad y el espacio de los
+  elementos de la trama se utilizan para crear una gradación tonal, cuanto
+  más densa sea la trama en una zona específica, más oscura parecerá
+  esa área en la imagen final, creando efectos visuales interesantes, como
+  la ilusión de profundidad, la sensación de movimiento o la variación de
+  texturas en una imagen.
+
+    También, se utiliza para representar texturas, como la piel, la madera, el                                     Fuente: https://lc.cx/Ytsujt
+    metal o cualquier superficie que tenga un patrón repetitivo, la elección de
+    los patrones y la dirección que se aplican pueden influir en la percepción
+    de la textura. Además, se puede adaptar al estilo artístico deseado. Puede
+    ser utilizado en arte realista para crear sombras y detalles precisos, así
+    como en arte abstracto para añadir complejidad visual, utilizando lápices,
+    plumas o pinceles, como de manera digital, mediante software de diseño
+    gráfico que permiten una mayor precisión y flexibilidad en la aplicación de
+    la trama.
+
+− El garabato es una técnica artística que a menudo se asocia con
+  trazos improvisados, espontáneos y libres en el papel o cualquier otra
+  superficie adecuada. Aunque a simple vista pueda no tener propósito,                                           Fuente: https://lc.cx/_v4qzx
+  el garabato puede ser una forma creativa de expresión y una técnica de
+                                                                                                 Valoración tonal con garabato
+  valoración tonal, especialmente cuando se emplea de manera deliberada
+  y controlada.
+                                                                                                             VALORACIÓN
+
+ Respondemos las siguientes preguntas:
+ − ¿Cómo se logra crear la ilusión de profundidad y volumen?
+ − ¿Cuáles son los puntos claves para comprender la valoración tonal en el dibujo artístico?
+ − ¿Cuál es el propósito de aplicar las diferentes técnicas para la valoración tonal?
+
+                                                                                                             PRODUCCIÓN
+Aplicando los procesos de dibujo artístico:
+− Realizamos ejercicios de gradación tonal en cuerpos geométricos como el cono, cilindro, esfera y cubo.
+− Dibujamos dos frutas o verduras de la región y aplicamos la técnica de valoración tonal del difumino.
+− Realizamos el dibujo de un objeto y aplicamos la técnica de valoración tonal de la trama.
+− Dibujamos un paisaje del contexto y realizamos la valoración tonal con la técnica del puntillismo.
+                                                                                                                                                  21
+                  SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                                                    PROCESO DE DIBUJO ARTÍSTICO
+                    PRÁCTICA
+
+     Observamos con atención cada una de las imágenes e identificamos los elementos que se utilizan para la
+     composición de bodegones o naturaleza muerta:
+                                                                    Bodegones
+
+
+
+
+                                                                                                                    Fuentes: OpenAI, 2024
+
+
+                      − Realizamos un collage de diversos tipos de bodegones que muestren diversos elementos en su
+      Actividad
+
+
+
+
+                        composición.
+                      − Dialogamos sobre los elementos que contiene cada tipo de bodegón y elaboramos una lista para analizar
+                        la variedad de objetos utilizados, iluminación, utilización de la escalara de grises, técnica del sombreado,
+                        textura, composición y equilibrio.
+
+
+                     TEORÍA
+
+     1. El bodegón o naturaleza muerta
+     Es un género de pintura, fotografía o representación artística que se centra
+     en la representación de objetos inanimados, comúnmente dispuestos en una
+     composición cuidadosamente elegida. Estas obras de arte suelen mostrar
+     una variedad de objetos cotidianos, como alimentos, flores, utensilios,
+     instrumentos musicales, libros, velas, vajilla y otros objetos dispuestos de
+     manera estilizada y atractiva.
+
+
+     1.1. Historia del bodegón
+            En la antigüedad los orígenes del bodegón se encuentran en la antigua
+            Roma y Grecia, donde se crearon mosaicos y frescos que representaban
+            alimentos, animales y objetos domésticos, estas representaciones
+            tenían una función decorativa y a menudo se utilizaban en contextos                      El bodegón en la antigüedad
+            arquitectónicos.                                                                                         Nota. Elaboración propia
+
+
+             Durante la Edad Media y el Renacimiento, el bodegón fue un género artístico menos prominente, ya que la
+             Iglesia tenía un papel predominante en la promoción del arte religioso, sin embargo, en el renacimiento italiano, el
+             bodegón comenzó a resurgir con artistas como Leonardo Da Vinci y Rafael, incluyeron elementos de naturaleza
+             muerta en sus obras, aunque generalmente como complementos de pinturas más grandes, fue en los Países
+             Bajos del siglo XVII donde el bodegón floreció como un género independiente.
+22
+                                                      EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA   ARTES PLÁSTICAS Y VISUALES
+
+1.2. Elementos del bodegón
+                                                                                            Elementos del bodegón
+Incluyen una variedad de elementos que son cuidadosamente
+seleccionados y dispuestos en una composición artística.
+
+            − Alimentos, siendo estos los más icónicos en los
+              bodegones pueden incluir frutas, verduras, pescados,
+              carnes, pan, queso y otros alimentos frescos o
+              cocidos. En general se eligen porque tienen colores y
+              texturas atractivas.
+
+            − Flores, que aportan belleza y fragancia a la composición
+              de los bodegones. Pueden ser flores cortadas en
+              un jarrón o incluso flores silvestres dispuestas en un
+              arreglo.
+
+            − Utensilios y vajillas, como platos, copas, jarrones,
+              cubiertos, candelabros y otros objetos relacionados
+              con la preparación o el servicio de alimentos y
+              bebidas.
+
+            − Objetos domésticos, los bodegones pueden
+              contener objetos domésticos comunes como libros,
+              relojes, cuadernos, vasijas, cestas, telas y otros
+              elementos que se encuentran en el entorno cotidiano.
+
+            − Instrumentos musicales, como guitarras, charangos,
+              violines, bombos, flautas, etc. Estos instrumentos
+              pueden aportar un elemento de elegancia y cultura a
+              la composición.
+
+            − Objetos de lujo, como joyas, relojes costosos,
+              tapices finos, vinos de alto añejamiento, etc. Estos
+              elementos pueden simbolizar la riqueza y el estatus.
+
+            − Objetos simbólicos que transmiten un mensaje más
+              profundo, por ejemplo, una calavera puede simbolizar
+              la fugacidad de la vida y la mortalidad.
+
+            − Animales, como peces, aves y pequeños mamíferos
+              son ejemplos que pueden aparecer en estas
+              composiciones.
+
+            − Fondos y entornos, agregan contexto o atmósfera a
+              la composición.
+
+            − Iluminación, es un elemento clave en la creación
+              de un bodegón. La forma en que se iluminan los
+              objetos puede resaltar sus formas, colores y texturas,
+              creando un efecto dramático en la composición.
+
+En general, los bodegones son una forma de arte que permite
+a explorar la belleza y el significado de los objetos cotidianos
+a través de una cuidadosa disposición y representación. Los
+elementos seleccionados y la forma en que se organizan
+contribuyen a la narrativa y la estética de la obra.
+Actividad
+
+
+
+
+               Realizamos las siguientes actividades:
+               − Tomando en cuenta los elementos que se utilizan para componer un bodegón, realizamos la búsqueda
+                 de diversos elementos del contexto para componer nuestro propio bodegón.
+               − Investigamos y respondemos a la siguiente pregunta ¿por qué se le llama “naturaleza muerta” al bodegón?
+                                                                                                                                 23
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                                                                                          1.3. Composición de un bodegón
+                                          Encuadre Vertical
+                                                                                               Se refiere al proceso de organizar, distribuir, ordenar
+                                                                                               los elementos visuales de manera intencionada con el
+                                                                                               fin de generar una atracción visual en el expectante. La
+                                                                                               composición es una parte esencial del lenguaje visual y
+                                                                                               desempeña un papel fundamental en cómo se percibe y
+                                                                                               se interpreta una obra de arte, también está relacionado
+                                                                                               con su etimología la de unir varias cosas u objetos para
+                                                                                               formar otro.
+                                                                                          1.4. El encuadre en el bodegón
+                                                                                               Al igual que en cualquier obra visual, es fundamental
+                                                                                               para la composición y la presentación de la escena que
+                                                                                               quieres representar, para tal efecto toma en cuenta los
+                                                                                               siguientes aspectos:
+                                        Encuadre horizontal
+                                                                                               − Selección de la zona de interés, antes de encuadrar,
+                                                                                                 decidimos qué elementos del bodegón son los más
+                                                                                                 importantes para nuestra composición, estos objetos
+                                                                                                 serán el punto focal de tu obra y deben ser el centro
+                                                                                                 de atención.
+                                                                                               − Tamaño del encuadre, muestra solo los objetos
+                                                                                                 principales. Un encuadre más amplio incluye más
+                                                                                                 elementos en el fondo, esto depende de nuestra
+                                                                                                 visión artística y del mensaje que se quiera transmitir.
+
+                                                                                               − Relación de aspecto o la proporción entre el ancho
+                                                                                                 y la altura de la imagen, en el formato cuadrado,
+                                                                                                 rectangular, horizontal o vertical. Esto depende de la
+                                                                                                 presentación del bodegón.
+
+                                                                                               − Encuadre creativo, puedes jugar con ángulos
+                                                                                                 inusuales, como una vista cenital o una vista lateral,
+                                                                                                 para dar a nuestro bodegón una perspectiva única.
+
+                                                                                               − Contexto y fondo, consideramos cómo queremos
+                                                                                                 mostrar el fondo en el encuadre, ¿deseamos que el
+                                                                                                 fondo sea un elemento importante de la composición
+                                                                                                 o prefieres que sea más neutro y desenfocado?
+
+                                                                                               − Revisión y ajuste, revisamos y ajustamos
+                                                                                                 reiteradamente     nuestro    encuadre       mientras
+                                                                                                 trabajamos en nuestro bodegón; a             menudo
+                                                                                                 pequeños cambios en el encuadre pueden tener un
+                                                                                                 gran impacto en la apariencia final de la obra.
+     Actividad
+
+
+
+
+                  Elaboramos el encuadre para limitar el espacio visual, resaltar elementos claves mantener las proporciones y
+                  controlar la perspectiva. Materiales: cartón, regla, tijera, lápiz, cinta adhesiva e hilo (opcional).
+                  Procedimiento: Decidir el tamaño (sugerencia: 20x25 cm.); marcar las líneas de corte; cortar y reforzar los bordes.
+
+                                                                                      2. Técnica de la cuadrícula: Sistema de ampliación y
+                                                                                         reducción gráfica
+                                                                                      La técnica más común que se practica para reducción o ampliación
+                                                                                      de imagenes se conoce como la técnica del cuadriculado, que
+                                                                                      sido empleado por grandes artistas, tal es el caso del artista Rafael
+                                                                                      Sanzio que uso la técnica del cuadriculado el año (1483-1520)
+                                                                                      para su obra “Traslado de Cristo”.
+                                                                                      Se utiliza en el arte y el dibujo para ayudar a transferir con
+          Estudio cuadriculado                      Obra “Deposizione                 precisión una imagen o un dibujo a una superficie, como un lienzo
+        para el Traslado de Cristo                 Borghese” de Rafael
+             Fuente: https://acortar.link/1zEzI1       Fuente: https://lc.cx/ibolqP   o un papel.
+24
+                                                EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA    ARTES PLÁSTICAS Y VISUALES
+
+2.1. Características de la técnica de la cuadrícula                                 Materiales para cuadricular
+
+    − División de la imagen en cuadrícula, la
+      característica fundamental de la técnica del
+      cuadriculado es dividir tanto la imagen original como
+      la superficie de dibujo en una cuadrícula de líneas
+      horizontales y verticales.
+
+    − Proporciones precisas, al utilizar la cuadrícula es
+      más fácil mantener las proporciones exactas entre                                                Dibujo original
+      los elementos de la imagen original, al dibujarlos en la
+      superficie de dibujo. Cada cuadrado de la cuadrícula
+      puede representar una unidad de medida específica,
+      lo que facilita la reproducción proporcional de la
+      imagen.
+
+    − Paso a paso, se utiliza sustancialmente en un
+      enfoque paso a paso, comienza a dibujar la
+      cuadrícula en la imagen original y en la superficie de
+      dibujo, luego, copian cada elemento o detalle de un
+      cuadro a otro siguiendo la cuadrícula, lo que facilita
+      la precisión en la reproducción.
+
+    − Versatilidad, es utilizada en una variedad de medios
+      artísticos, como lápiz, carboncillo, pintura y más, se
+                                                                                              Ampliación
+      adapta bien a diferentes estilos artísticos y niveles
+      de habilidad.
+
+    − Borrado de la cuadrícula, una vez que se ha
+      completado el dibujo en la superficie de dibujo, las
+      líneas de la cuadrícula originalmente trazadas deben
+      borrarse o eliminarse, dejando solo la imagen final.
+
+2.2. Consejos para mejorar la técnica de la cuadricula
+    − Observar las líneas que se cruzan en otros
+      cuadrados.
+    − Atender los detalles pequeños en el dibujo para su
+      buena representación.
+    − Se tiene que observar donde las líneas comienzan
+      y terminan.
+    − Hacer cuadrados más pequeños para que el dibujo
+      sea de mejor representación.
+    − El uso de la regla es importante y las líneas curvas
+      trazarlo a mano alzada.
+    − Observar la imagen después de hacer os trazos, los
+      detalles en cada cuadro para representar un mejor
+      dibujo según las características que tenga.
+                                                                                                        VALORACIÓN
+
+ Analizamos obras de artistas renombrados como Caravaggio (Bodegón con frutas), Paul Cézanne (bodegón
+ con manzanas y frutas) e identificamos los elementos fundamentales de la composición como la distribución de
+ elementos y si están distribuidos de manera equilibrada y armoniosa y determinamos el punto focal; canalizando
+ la comunicación y el impacto emocional.
+                                                                                                        PRODUCCIÓN
+
+ Aplicamos los procesos de dibujo para las siguientes actividades:
+ − Componemos un bodegón de tres elementos, lo dibujamos sobre hoja de papel y aplicamos la valoración
+   tonal con la técnica del difumino.
+ − Realizamos la ampliación y reducción del mapa político de nuestro departamento.
+ − Realizamos la ampliación de un bodegón de frutas y aplicamos la técnica de valoración tonal con la técnica de la trama.
+                                                                                                                             25
+                  SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+         LA PINTURA ARTÍSTICA PARA LA CREACIÓN DE OBRAS SIGNIFICATIVAS EN LA
+               COMUNIDAD PARA LA DESPATRIARCALIZACIÓN Y EL VIVIR BIEN
+                    PRÁCTICA
+
+     Observamos con atención cada una de las imágenes e identificamos las principales tonalidades que usa el artista
+     para pintar el interior de un chalet. En la imagen de la tetera ¿cuáles son los valores más predominantes? y en la
+     imagen del salar de Uyuni ¿qué colores se saturan?.
+
+                                                                   El tono, valor y saturación en
+                                                                          pintura artística
+
+
+
+
+                                            Fuente: OpenAI, 2024                 Fuente: OpenAI, 2024      Fuente: https://www.southamericaexploor.com/wp-content/
+                                                                                                              uploads/2020/11/SalarDeUyuni_turismo-1-363x304.jpg
+
+
+
+                       Realizamos las siguientes actividades:
+                       − En el entorno de la unidad educativa, comunidad o barrio observamos y capturamos colores en la
+      Actividad
+
+
+
+
+                         naturaleza y dialogamos acerca de la manera en que se combinan e interactúan entre sí. También
+                         observamos los carteles publicitarios, diversos envases, telas.
+                       − A partir de obras de arte de artistas bolivianos y extranjeros como Walter Solón Romero, Gil Imana,
+                         Cecilio Guzmán de Rojas, Roberto Mamani Mamani, Vincent van Gogh, Henri Matisse, Claude
+                         Monet y otros exploramos el tono, valor y saturación.
+
+                     TEORÍA
+
+                                                                           1. Propiedades del color: Tono, valor y saturación
+
+                                                                           Son elementos que determinan al color y sus propiedades. Tienen
+                                                                           la capacidad de hacer variar el aspecto del color y definir su
+                                                                           presentación final, actualmente se basa en los modelos de color.
+
+                                                                           Albert H. Munsell, científico y artista que desarrolló un sistema
+                                                                           de notación y organización del color llamado “Sistema de Color
+                                                                           Munsell”. Este sistema es ampliamente utilizado en campos como
+                                                                           la ilustración, el diseño gráfico, la cartografía, la arquitectura y la
+                                                                           ciencia del color.
+
+                                                                           El sistema de ordenación del color permite mostrar las cualidades
+                                                                           o atributos que son tono, croma o saturación y valor.
+                                                                           1.1. Tono
+                                                                                Es la cualidad que nos permite diferenciar un color de otro
+                                                                                y da nombre al color, es decir, a qué categoría de color
+                                                                                pertenece.
+                            Sistema de color Munsell                            El tono nos permite distinguir entre colores como el rojo, el
+                                            Fuente: https://lc.cx/FGRokp        azul, el verde, el amarillo, el violeta, etc., lo que percibimos
+                                                                                como la cualidad fundamental que define un color específico.
+26
+                                               EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA     ARTES PLÁSTICAS Y VISUALES
+
+En modelos de color como el sistema de notación de color Munsell o el                                  Tono
+modelo de color HSL (Hue, Saturation, Lightness), el tono se representa
+como un valor angular en una rueda de colores.
+
+El tono es una propiedad fundamental para la descripción y clasificación
+de colores y es esencial en campos como el diseño gráfico, la pintura, la
+impresión y otras disciplinas relacionadas con el color.
+1.2. Croma o saturación
+    En el contexto del color, se refiere a la propiedad que indica la intensidad
+    o pureza de un color en relación con el gris, en otras palabras, la
+    saturación se refiere a cuán vibrante o apagado es un color específico.
+    Una mayor saturación significa que un color es más puro, vibrante o
+    intenso, mientras que una menor saturación indica que el color está
+    más atenuado y se acerca al gris.
+
+    Para comprender mejor el concepto de saturación, consideramos los                                           Saturación
+    siguientes:                                                                                                 alta, baja y
+                                                                                        Saturación                  nula
+    a) Saturación alta, un color altamente saturado tiene una apariencia
+       vívida y se percibe como un color puro sin mezcla de gris; por
+       ejemplo, un rojo brillante y un verde intenso tienen una saturación
+       alta.
+    b) Saturación baja, un color con una baja saturación parece más
+       apagado y cercano al gris, puede parecer más suave o menos
+       vibrante. Por ejemplo, un tono de rosa pálido o un verde pastel
+       tienen una saturación baja.
+    c) Saturación nula, cuando la saturación llega a su mínimo (0%), el
+       color se convierte en un tono de gris completamente desaturado, en
+       este caso, no hay presencia de color y el resultado es una escala
+       de grises.
+
+    En modelos de color como el sistema de notación de color Munsell o el
+    modelo de color HSL, la saturación se mide en porcentaje, donde 0%
+    representa la ausencia total de saturación (gris) y 100% representa la
+    saturación máxima (color puro).                                                                 Valor en el Valor alto
+                                                                                       Valor          color       claro
+    El control de la saturación es una herramienta importante en el diseño
+    gráfico, la fotografía y otras disciplinas creativas, permite ajustar la
+    intensidad de los colores para lograr efectos visuales específicos y
+    armonías de color deseadas.
+
+1.3. Valor                                                                                                         Valor bajo
+                                                                                                                    oscuro
+    En el contexto del color, se refiere a la propiedad que determina la
+    claridad u oscuridad de un color, dicho de otra manera, el valor
+    representa cuán claro u oscuro es un color en comparación con el
+    blanco o el negro.
+
+    Munsell divide la escalada de valor en 10 pasos igualmente espaciados,
+    donde 0 es el valor más oscuro (negro) y 10 es el valor más claro                                               Igualdad
+    (blanco).                                                                                                       en valor
+                                                                                                                    lumínico
+    Relación con el color, el valor puede aplicarse a cualquier color, lo
+    que significa que puedes tener tonos de cualquier color con diferentes
+    valores. Por ejemplo, podemos tener un amarillo (alto valor), un verde
+    oscuro (bajo valor) o un rojo y azul que tienen igualdad en valor lumínico.
+                                    Glosario
+
+               Valoración, se refiere a la diferencia de brillo
+               entre las áreas claras y oscuras de un dibujo.
+                                                                                                                                27
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+
+                     − Observamos la naturaleza e identificamos las diversas tonalidades que hay en ella, registramos en una
+                       hoja y luego dialogamos sobre la experiencia realizada.
+     Actividad
+
+                     − Realizamos prácticas de saturación alta, baja y nula utilizando la paleta de colores en un dibujo natural
+                       o abstracto
+                     − En el dibujo de un bodegón realizamos prácticas de valores tonales.
+                     − Bajo las consignas de la maestra o maestro, realizamos una investigación complementaria sobre
+                       las propiedades del color y su incidencia en las expresiones pictóricas, diseño publicitario, envases,
+                       prendas de vestir, tapas de revistas, libros y otros.
+
+
+                          Témperas                              2. Técnica con témperas
+                                                                Es una técnica de pintura que utiliza pigmentos en polvo mezclados con un
+                                                                aglutinante acuoso para crear una pintura opaca y vibrante; además de ser
+                                                                de fácil y practico en su uso, se caracteriza por su versatilidad puesto que
+                                                                pueden usarlo infantes, jóvenes o personas mayores.
+
+                                                                La témpera se pueden usar sobre una gran variedad de soportes, como
+                                                                papel, cartón o lienzo, mediante pinceles u otras herramientas. En su
+                                                                aplicación, a medida que el agua se evapora y el aglutinante se seca, los
+                                                                pigmentos se adhieren al soporte, creando una imagen con colores sólidos
+                                                                y opacos.
+                             Fuente: https://lc.cx/qzV4u_
+                                                                La témpera es conocida por su capacidad para mezclar colores y crear
+                                                                capas, lo que permite una amplia gama de efectos y detalles en una obra
+                                                                de arte.
+
+                                                                Aunque se seca rápidamente, las capas posteriores de témpera se pueden
+                                                                aplicar sobre capas previas una vez que estas han secado por completo,
+                                                                esto brinda flexibilidad a la persona para ajustar y corregir su trabajo según
+                                                                sea necesario.
+
+                                                                La técnica con témperas permite colorear de manera uniforme la superficie
+                                                                a pintar, puede superponerse los colores permitiendo las correcciones
+                                                                cromáticas.
+
+                                                                Materiales:
+                                                                − Pigmentos en polvo
+                                                                − Un aglutinante acuoso
+                                                                − Pinceles
+                                                                − Paleta para mezclar colores
+                                                                − Soporte, (papel, cartón, lienzo entre otros)
+                                                                Propiedades de la témpera
+                                                                − Los colores son opacos.
+                                                                − Se pueden superponer colores claros sobre bases oscuras.
+                                                                − Los colores se pueden aplicar planos o difuminados.
+                                                                Procedimiento para pintar con témpera
+                                                                − Prepara materiales y accesorios adecuados.
+                                                                − Los colores a utilizar se colocan en una paleta.
+                                                                − Se debe calcular las cantidades al mezclar los colores.
+                                                                − Para lograr efectos pictóricos difuminados hay que trabajar con
+                                                                   espontaneidad.
+                                                                − Se aplica con pincel, esponja o con los dedos, como soporte se puede
+                                                                   utilizar papel, cartón, madera, entre otras. Siempre que sean soportes
+                                                                   duros resistentes a la humedad.
+
+                                                                Las témperas y su relación con otras técnicas de pintura
+
+                                                                Las témperas permiten una gran variedad de técnicas y se pueden usar
+                                                                sobre una gran variedad de soportes; por ejemplo, se siguiere algunas
+                                         Fuente: OpenAI, 2024   técnicas y medios con los que las témperas se pueden combinar:
+28
+                                               EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA        ARTES PLÁSTICAS Y VISUALES
+
+− Acrílicos, se pueden utilizar en combinación con pintura acrílica para                         Acrílico – témperas
+  agregar detalles finos o para crear capas translúcidas sobre una base
+  acrílica. Esto permite una mayor flexibilidad y efectos de mezcla.
+− Técnicas de raspado y esgrafiado, donde la técnica con témperas se
+  aplica en una superficie para luego raspar o rayar la misma revelando las
+  capas subyacentes de color. Esto crea efectos interesantes y texturas en
+  la obra.
+− Acuarela y lápices de acuarela, agregan detalles y efectos de color
+  opaco a una pintura. Esto puede ser útil para realizar áreas específicas o
+  corregir errores en una acuarela.
+− Técnicas de estampación, las témperas se pueden utilizar para crear
+  sellos personalizados, aplica la témpera en un sello tallado o en una                      Estampado – témperas
+  superficie texturizada y luego estampa sobre tu soporte; los trabajos
+  realizados quedaran espectaculares.
+− Collage, las témperas se pueden utilizar en obras de collage, aplicándolas
+  para unir y mezclar elementos o para crear una capa decorativa sobre
+  la composición.
+− Pintura mural, las témperas a menudo se utilizan en proyectos de pintura
+  mural, especialmente en contextos educativos o en obras temporales.
+  Son fáciles de manejar y limpiar, lo que las hace ideales para proyectos
+  grandes.                                                                                                           Fuente: https://lc.cx/rmi9hb
+
+− Técnica de veladuras, las témperas con agua se aplican en capas
+  translúcidas sobre una superficie para crear veladuras que permitan que               Collage - soplado – témperas
+  el color de fondo brille a través de ellas. Esto es común en retratos y
+  pintura al óleo.
+− La técnica del salpicado, se realiza con la ayuda de un cepillo de dientes
+  esparciendo gotas de témpera, alcanzando un efecto maravilloso.
+− La técnica del soplado, con témpera y agua, se aplica sobre el papel
+  unas gotas y se sopla con una bombilla (sorbete) o la funda de un
+  bolígrafo.
+− Técnicas mixtas, distingue la combinación de témperas con otros
+  medios como lápices de color, pastel o técnicas digitales para conseguir
+  efectos artísticos.                                                                 Fuente: https://lc.cx/rBdr7n          Fuente: OpenAI, 2024
+
+La versatilidad de las témperas permite una amplia variedad de aplicaciones artísticas y técnicas. Las combinaciones
+de témperas con otros medios artísticos amplían las posibilidades creativas y dan lugar a resultados interesantes
+y originales en las obras de arte.
+
+            − Componemos diseños creativos para aplicar la técnica de la témpera.
+Actividad
+
+
+
+
+            − Realizamos prácticas de pintura con la témpera sobre soportes diversos (cartulina, cartón, lienzo,
+              teja, madera entre otros).
+            − Realizamos prácticas de pintura con la témpera, combinado dos o más técnicas de pintura
+              adicionalmente.
+
+
+                                                                                                                VALORACIÓN
+
+    Analizamos y reflexionamos con base en las siguientes preguntas:
+
+    − El sistema de Munsell, ¿qué nos enseña y en qué campos se aplica?
+    − Organizados en equipos de trabajo dialogamos respondiendo a la siguiente cuestión: ¿qué efectos se producen
+      con la saturación alta, media y baja? Luego compartimos los resultados en plenaria.
+    − ¿Qué desafíos hemos enfrentado al trabajar con témpera y cómo los superamos?
+
+                                                                                                                PRODUCCIÓN
+    Aplicamos los procesos de dibujo artístico realizando los siguientes dibujos.
+
+    − Dibujamos un bodegón y pintamos con la técnica de la témpera y aplicamos la saturación de los colores (alta,
+      baja y media).
+    − Realizamos un dibujo natural o abstracto que promueva la despatriarcalización y pintamos aplicando la técnica
+      mixta y el valor tonal en los elementos que compone la obra de arte plástico visual.
+                                                                                                                                                    29
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                     LA HISTORIA DEL ARTE PARA LA REIVINDICACIÓN ANCESTRAL COMO
+                                    MANIFESTACIONES DEL VIVIR BIEN
+                   PRÁCTICA
+
+                                                                                                                                            Observamos las imágenes y
+                                                                                                                                            dialogamos     en   clase,   luego
+                                                                                                                                            escribimos el nombre de cada una
+                                                                                                                                            de ellas que son memoria objetiva
+                                                                                                                                            de la producción de nuestras
+                                                                                                                                            culturas ancestrales y entre todos
+                                                                                                                                            realizamos el debate en base a las
+                                                                                                                                            preguntas abajo.
+          Fuente:https://upload.wikimedia.org/wikipedia/               Fuente:https://acortar.    Fuente: https://pueblosoriginarios.
+            commons/thumb/f/f6/Tiwanaku0.jpg/800px-                             link/w9fXM0          com/sur/andina/tiwanaku/ima-
+                                         Tiwanaku0.jpg                                                               genes/kero.jpg
+
+                    Respondemos las siguientes preguntas:
+     Actividad
+
+
+
+
+                    −    ¿Qué técnicas artísticas observamos en las imágenes?
+                    −    ¿Qué simbolismos o significados están presentes en estas obras de arte?
+                    −    ¿Cómo se relacionan con las creencias y prácticas de la cultura ancestral?
+                    −    ¿Qué importancia tiene conservarlas para futuras generaciones?
+
+
+                     TEORÍA
+
+     1. Arte precolombino en Bolivia: Wancarani, Chiripa, Tiwanaku, Uru Chipaya y otros
+     1.1. Cultura Wancarani
+                 Es otra de las culturas milenarias de nuestro país, se asentaron en las regiones de La Paz y Oruro, al norte
+                 y noroeste del Lago Poopo, su antigüedad se remonta al año 1200 a.C. Esta cultura no llegó a un desarrollo
+                 pleno, manteniéndose en tipo aldeano, esto debido al territorio andino donde vivían que era muy inhóspito y
+                 frío, en su caída sufrieron la expansión de la cultura Tiwanacota.
+
+                 a) Arquitectura, edificaban sus viviendas de forma circular, utilizando adobe y paja, las situaban en cercanía
+                 unas de otras. Todas las casas compartían las mismas dimensiones y diseño, lo que sugiere que vivían en
+                 un entorno donde prevalecía la igualdad de condiciones. De forma estratégica construían sus casas cerca a
+                 fuentes de agua y a cerros para protegerse de los fuertes vientos.
+
+                 b) Pintura y cerámica son de tipo rupestre y muralista. En la pintura de las cerámicas se observa una
+                 carencia de colores y formas.
+
+                 c) Escultura, representaban a manera de cabezas clavas hechas de piedra, animales de su entorno como la
+                 llama, debido a todos los beneficios que podía aportarles su existencia. También se pueden encontrar algunas
+                 otras especies como los lagartos, la taruca, que era una especie de venado andino, ya extinto en la época
+                 actual y finalmente los pumas.
+
+
+
+
+                                                                                                                                                  Fuente:https://culturanazca.com/cultura-wankarani/
+                                                                                      Fuente: https://impresa.lapatria.bo/noticia/174069/una-
+                                        Fuente:https://culturanazca.com/cultura-                  retrospectiva-a-la-historia-de-oruro#articulo
+30
+                                                   EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA           ARTES PLÁSTICAS Y VISUALES
+
+1.2. Cultura Chiripa
+    Una de las primeras culturas y también de las más antiguas, se asento a lo largo del Lago Titicaca en el
+    departamento de La Paz, se extendio desde la península de Taraco por el sur y Santiago de Huata por el norte
+    abarcando también la península de Copacabana.
+
+    a) Arquitectura, las ruinas de la cultura Chiripa se encuentra en un montículo artificial que se extiende entre
+    una superficie de 50 metros por 60 metros. En ella se encuentran varias habitaciones de planta que tiene y
+    forma rectangular, estas habitaciones están situadas en semicírculos en torno a un templete semisubterráneo,
+    las paredes de habitaciones están construidas con adobe, tienen doble pared que usaban los espacios para
+    almacenar alimentos, usaban paja para techar y el piso estaba hecho de tierra apisonada.
+
+    b) Cerámica y pintura, hacían mezclas de arcilla y arena, fueron uno de los primeros en aplicar pintura a sus
+    cerámicas que consistía en líneas a partir de las cuales representaban algunos símbolos, entre los colores más
+    utilizados estaban los colores cálidos como rojo, naranja, marrones y ocres que conseguían a partir de plantas
+    y piedras molidas, también las decoraban a partir de incisiones de mica.
+
+    c) Escultura, existen lápidas que tienen forma de un rostro humano, algunas esculturas se hallan relacionadas
+    con monolitos decorados en sus cuatro caras. Esta cultura practicaba la fundición de cobre para hacer piedras
+    llamativas representando a sus dioses e ídolos a través de figuras antropomorfas y zoomorfas.
+
+
+
+
+              Fuente:https://www.educa.com.bo/
+                   periodo- prehispanico/chiripa          Fuente:https://www.boliviandando.com/export/    Fuente:https://www.museovirtualbo.com/wp-
+                                                           shared/coopculture/immagini/vasija-redonda-                      content/uploads/0398.jpg
+                                                                          ceramica-museo-tiwanaku.jpg
+1.3. Cultura Tiwanaku
+    Se ubicó en la región del altiplano andino, principalmente en lo que hoy es Bolivia, cerca del lago Titicaca y
+    extendiéndose hacia Perú, Chile y Argentina. Su epicentro fue la ciudad de Tiwanaku, que fue un importante
+    centro religioso, político y cultural en su apogeo.
+
+    a) Arquitectura, se caracteriza por su monumentalidad y precisión técnica. Utilizaron grandes bloques de
+    piedra para construir templos y plataformas, como la Puerta del Sol y el Templo de Kalasasaya donde se
+    ve incrustadas 175 cabezas de piedra en los muros. Estas estructuras destacan por su simetría, alineación
+    astronómica y la importancia de la iconografía religiosa en su diseño.
+
+
+    b) Cerámica, se caracteriza por su alta calidad y elaboración. Los ceramistas crearon vasijas decoradas con
+    motivos geométricos y zoomorfos. Sus cerámicas eran funcionales y utilizadas en rituales religiosos, además
+    de servir como expresiones artísticas y culturales de su sociedad.
+
+
+    c) Escultura, se caracteriza por representaciones de deidades y seres mitológicos, con rasgos estilizados,
+    ojos almendrados y cabezas alargadas. Los monolitos, como la Estela Ponce y la Puerta del Sol, son ejemplos
+    destacados de su escultura; crearon pequeñas figuras de cerámica, metal y madera con detalles elaborados.
+    Estas obras reflejaban su religiosidad y compleja iconografía espiritual.
+                                                                                                                                                       31
+             SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+
+
+         Fuente:https://upload.wikimedia.org/wikipedia/commons/                Fuente:https://pueblosoriginarios.com/sur/                      Fuente:https://pueblosoriginarios.com/sur/
+              thumb/9/9a/TIWANAKU.jpg/800px-TIWANAKU.jpg                        andina/tiwanaku/imagenes/xsahumador_                            andina/tiwanaku/imagenes/xobservador_
+                                                                               mini.jpg.pagespeed.ic.6Qn7AuuDwV.webp                            mini.jpg.pagespeed.ic.dfMAgchdYv.webp
+     1.4. Cultura Uru Chipaya
+             Habitan en la región altiplánica de Bolivia, específicamente en la comunidad de Chipaya, en el departamento
+             de Oruro, cerca del lago Coipasa. Esta área se encuentra en la parte suroeste de Bolivia, cerca de la frontera
+             con Chile, en una región conocida por su geografía desértica y su altitud elevada.
+
+             a) Arquitectura, destacan por sus chozas circulares de piedra y barro con techos de paja. Estas construcciones
+             son simples y se adaptan al clima extremo, tiene una forma de cono o circular.
+
+             b) Cerámica y artes menores, se basaba en el procesamiento de la arcilla para realizar objetos cerámicos
+             de uso cotidiano como platos, jarrones, vasos, se caracteriza por ser rústico y sin muchas decoraciones, con
+             motivos zoomorfos. Los chipayas realizan artesanías de lana, arcilla, paja y principalmente totora.
+
+
+
+
+                                             Fuente: https://acortar.link/raWTxe       Fuente: https://encrypted-tbn2.gstatic.com/                            Fuente: https://impresa.lapatria.bo/
+                                                                                       images?q=tbn:ANd9GcTiiU2KxqH7mEKM-                                       fotos/10_2016/271663_4_22.jpg
+                                                                                     96BlO08ahXLIAN3TeqEWhDruhKn1c7jCUtya
+
+     2. Arte de las interpretaciones sociales y lucha de clases en el siglo XX a través de la pintura
+     El arte en Bolivia durante el siglo XX reflejó de manera notable las interpretaciones sociales y la lucha de clases en
+     el país. A medida que Bolivia experimentaba cambios políticos y sociales, los artistas expresaban sus perspectivas
+     a través de la pintura. En las primeras décadas del siglo XX, artistas como Cecilio Guzmán de Rojas construyeron
+     la primera vanguardia nacional llamada “Indigenismo” donde retrataban la vida cotidiana de la población, resaltando
+     las desigualdades sociales y la opresión. Pinturas como “Cama 33 T.B. evacuable” de Cecilio Guzmán de Rojas
+     representaban eventos violentos y conflictos que surgían de la lucha de clases y la Guerra del Chaco.
+
+
+
+
+     “Cama 33 T.B. evacuable”, Cecilio Guzmán de Rojas, óleo sobre                                               “Conquista”1929. Jorge de la Reza, óleo sobre cartón.
+                                lienzo.                                                                                         Fuente: https://www.urgente.bo/sites/default/files/laconquista.jpg
+     Fuente: https://cdn.correodelsur.com/img/contents/images_980/2018/10/28/nota99903_imagen104194.jpg
+32
+                                                                       EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA    ARTES PLÁSTICAS Y VISUALES
+
+
+En la década de 1950, el movimiento muralista cobró importancia en Bolivia, con pintores como el cruceño Lorgio
+Vaca y Miguel Alandia Pantoja, sus murales a menudo enfocaban temas sociales y políticos, destacando la
+importancia de las culturas indígenas y campesinas.
+
+
+
+
+              “Educación y lucha de clases” 1957.                                                            “La nueva Santa Cruz”. Mural.
+                Mural. Miguel Alandia Pantoja.                                                                       Lorgio Vaca
+                       Fuente://www.facebook.com/Manzana1espaciodearte/photos                                        Fuente: https://artepinturacultura.blogspot.com/
+
+Durante las décadas de 1970 y 1980, la pintura en Bolivia continuó siendo un medio para expresar las luchas
+sociales, especialmente en el contexto de dictaduras y movimientos populares. Artistas como Roberto Mamani
+Mamani han mantenido la tradición de utilizar el arte para abordar cuestiones sociales y culturales.
+
+
+
+
+“Mañana habrá pan” 1974. Arguedas Villanueva, Magda                                   “Retrato de un pueblo” 1988. Walter Solón Romero. Mural
+    Fuente: https://elias-blanco.blogspot.com/2010/07/ magda-arguedas-                                                     Fuente: https://fundacionsolon.org/vida-2/
+                                                         villanueva.html
+                                                                                                                                    VALORACIÓN
+ Reflexionamos a partir de las siguientes preguntas:
+
+ − ¿Por qué es importante conocer las prácticas artísticas en escultura, arquitectura, cerámica y pintura de
+   nuestras culturas ancestrales de Bolivia?
+ − ¿Cómo interpretamos estas obras de arte?
+ − ¿Qué quería comunicar el artista a través de ellas?
+ − ¿Vemos alguna conexión entre estas obras de arte y su propia cultura o experiencia personal?
+ − ¿Qué papel desempeñaron los artistas en la representación de las desigualdades sociales y la lucha de clases
+   a través de la pintura?
+                                                                                                                                   PRODUCCIÓN
+
+  Organizados en grupos de trabajo:
+
+  − Realizamos una investigación en diferentes textos e internet sobre las culturas estudiadas y exponemos
+    acerca de sus principales manifestaciones artísticas (arquitectura, pintura, escultura y cerámica), con ayuda
+    de maquetas elaboradas con material del contexto.
+  − Elaboramos réplicas de las representaciones artísticas que más nos llamaron la atención (la Puerta del Sol,
+    los monolitos, los templos, vasos, vasijas, etc.), utilizando material del contexto o material de reciclaje.
+  − Realizamos una réplica y análisis de una de las pinturas de arte del siglo XX, tomando en cuenta la técnica y
+    su valor reflexivo que permita analizar la realidad boliviana desde nuestro punto de vista.
+                                                                                                                                                                        33
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+                         DESARROLLO DE LAS ARTES APLICADAS Y MODELADO PARA LAS
+                              PRODUCCIONES DECORATIVAS Y EMPRENDEDORAS
+                   PRÁCTICA
+
+     Presentamos objetos diversos como: alfombra, vasos decorados, agenda con diseño y otros del contexto. También
+     observamos la imagen con forma de estrella y otros donde se aplica la técnica del hilorama. Luego identificamos
+     las herramientas y materiales necesarios para proceder con esta técnica.
+
+
+
+
+                                      Nota. Elaboración propia
+
+
+
+
+                     Realizamos las siguientes actividades:
+     Actividad
+
+
+
+
+                     − Conversamos respecto a las artes aplicadas que mejoran nuestra vida, haciendo que los objetos que
+                       usamos no solo sean funcionales, sino también visualmente sean atractivos y agradables de utilizar.
+                     − Exploramos las características de las artes aplicadas.
+                     − Indagamos respecto a la técnica del hilorama y su utilidad.
+
+
+                     TEORÍA
+
+
+     1. Hilorama
+     También conocido como “hilograma”, es una técnica artística en la que se utilizan
+     hilos o cuerdas tensados entre puntos fijos, como clavos o tachuelas, en una
+     superficie para crear patrones y diseños. El hilorama permite crear una amplia
+     variedad de diseños, desde patrones geométricos simples hasta imágenes más
+     elaboradas y abstractas. Es una forma de arte versátil que se utiliza en proyectos
+     decorativos, educativos y artísticos.
+                                                                                                          Fuente:https://encrypted-tbn2.gstatic.com/
+                                                                                                        images?q=tbn:ANd9GcRGlTKP35cWScntG-
+
+     1.1. Historia                                                                                     pzNu0GzPJ2e00a0bwFwtGu_ZBuvr6kRqSJX
+
+
+                 El origen exacto del término “hilorama” no está claramente documentado en la historia. En esencia, la técnica de
+                 usar hilos o cuerdas para crear diseños puede rastrearse hasta hace siglos en diferentes formas y aplicaciones.
+                 Tiene su origen en las llamadas “cartas de Boole”, creada por Mary Everest Boole a finales del siglo XIX,
+                 el propósito era facilitar la teoría de la matemática que sea más comprensible para los niños y aprender la
+                 geometría del espacio y los ángulos.
+
+     1.2. Materiales y herramientas básicas del hilorama
+                 Los materiales y herramientas claves para realizar la técnica del hilorama son los siguientes:
+                 a) Superficie base, puede ser un tablero de madera, cartón o cualquier otro material en el que se puedan fijar
+                    clavos o puntas.
+                 b) Clavos, se insertan en la superficie base para actuar como anclajes para los hilos. Se colocan en patrones
+                    específicos, creando la estructura del diseño.
+                 c) Hilos o lanas, se tensan entre los clavos o puntas para formar patrones y diseños. Los hilos pueden ser de
+                    diferentes colores y grosores para crear efectos visuales interesantes.
+                 d) Diseño y creatividad, los patrones y diseños se crean al pasar los hilos de una punta a otra siguiendo una
+                    serie de instrucciones. La creatividad del artista se manifiesta en la elección de colores, la disposición de los
+                    hilos y la complejidad del diseño.
+34
+                                                                      EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA                             ARTES PLÁSTICAS Y VISUALES
+
+Entre las herramientas que también se utiliza esta el martillo, para clavar y
+el alicate para sacar o corregir la posición de los clavos.
+                                                                                                                                  En el hilorama es posible trabajar
+1.3. Procedimiento                                                                                                                con diferentes colores de hilos
+  a) Diseño del patrón, se planifica el diseño que se quiere crear con los                                                        o cuerdas para crear diseños
+     hilos. Este diseño puede ser geométrico, abstracto o representar una                                                         y patrones más coloridos y
+     figura específica.                                                                                                           llamativos. La elección de los
+                                                                                                                                  colores depende del objetivo
+                                                                                                                                  del proyecto y la preferencia del
+                                                                                                                                  artista.
+
+
+
+    Fuente:https://n9.cl/nfd1h     Fuente:https://n9.cl/8yznn   Fuente:https://n9.cl/lgdwz     Fuente:https://lc.cx/Ql1XQ5
+
+
+ b) Preparación de la madera, se comienza
+    eligiendo una superficie base, que puede ser
+    un tablero de madera, cartón o cualquier otro
+    material rígido. En esta superficie, se marcan
+    los puntos donde se insertarán los clavos o
+    tachuelas.                                                                               Fuente:https://n9.cl/7qday
+                                                                                                                                  Fuente:https://encrypted-tbn1.gstatic.com/images?q=tb-
+                                                                                                                                  n:ANd9GcSsJJtTQHpuMlhV6i6UI0-CoU-6mFI0jjNtB-
+                                                                                                                                                                    WYL6FA4eA6pKWgE
+
+
+c) Colocación de clavos, se debe pegar con cinta adhesiva la hoja con el diseño sobre la madera o cartón grueso,
+   sobre este, se insertan los clavos según determina el diseño final, pueden ser colocados de forma regular o
+   irregular según el patrón deseado.
+
+
+
+
+                                                                                    Fuente:https://lc.cx/KOQ1B-                                      Fuente:https://lc.cx/gtjfu-
+                       Fuente:https://lc.cx/CxuVt0
+
+b) Tensado de hilos, se seleccionan hilos o cuerdas de diferentes colores y se atan en uno de los clavos o
+   tachuelas. Luego, se lleva el hilo al siguiente clavo, se lo rodea y se continúa el proceso siguiendo el patrón
+   deseado. Esto se repite hasta que el diseño esté completo.
+
+
+
+
+                                 Fuente:https://lc.cx/G7LY-6              Fuente:https://lc.cx/-ZWCvd                Fuente:https://lc.cx/qHkcka          Fuente:https://lc.cx/xABXOp
+
+2. Diseño de estampados: Técnicas y procesos de elaboración (calado o tallado de soportes
+blandos, plantillas o diferentes recursos)
+2.1. El estampado
+     Es una forma de hacer diseños en tela o papel de una manera repetitiva. Para hacerlo, primero se crea un
+     dibujo o patrón en un objeto, como un sello o una plantilla, luego se aplica tinta o pintura en el objeto y se
+     presiona contra la superficie que se quiere decorar, Al hacerlo el diseño se transfiere a la tela o al papel y se
+     puede repetir una y otra vez para crear un patrón decorativo. Entre algunas técnicas de estampado tenemos:
+     a) La técnica de la xilografía, es una técnica de impresión artística que involucra la talla de una imagen en
+     una plancha de madera. La palabra “xilo” proviene del griego “xýlon”, que significa madera y “grafía” significa
+     escribir o grabar.
+
+                                                                                                                                                                                           35
+          SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+                                                      En la xilografía, el artista talla una imagen en relieve en la superficie de
+      La colografía es una técnica de                 un bloque de madera o trupan, generalmente utilizando herramientas
+      estampado artístico que implica                 especiales, como gubias y cinceles. La parte tallada se deja en relieve,
+      la creación de una matriz (una                  mientras que el resto de la superficie del bloque se elimina o se recorta, se
+      plancha) a partir de materiales y               aplica tinta a la superficie tallada y se coloca papel encima.
+      texturas variados, como cartón,                 La imagen se transfiere al papel presionando firmemente sobre el bloque
+      tela, papel, cuerda, y otros objetos            de madera.
+      tridimensionales.
+
+      La palabra “colografía” proviene
+      de las palabras griegas “kolos”,
+      que significa “pegamento”, y
+      “grapho”, que significa “escribir” o
+      “dibujar”.
+
+
+                                                                          Fuente:https://lc.cx/9aBg2f                                   Fuente:https://lc.cx/SVb4TU
+
+
+
+
+                             Fuente: Open AI, 2024
+                                                                                                                                        Fuente:https://lc.cx/WP1feS
+                                                                          Fuente:https://lc.cx/oNMS9w
+
+
+     b) Técnica de la plantilla, es un método de estampado, en el que se utiliza un trozo de papel o cartón con un
+     diseño recortado, llamado plantilla, para pintar o rociar una imagen en una superficie, como una pared o una tela.
+     Podemos elaborar tu propia plantilla calando la hoja con ayuda de un estilete.
+
+
+
+
+                                                                              Fuente:https://anagonzalez-art.com/como-pintar-sobre-tela-con-la-tecnica-del-estarcido/
+
+
+
+
+     		
+
+
+                                                                                                                          Fuente:https://lc.cx/eTLqp5
+                        Fuente:https://lc.cx/DqUies                     Fuente:https://lc.cx/zundys
+
+
+     c) Técnicas caseras de estampado, un ejemplo es la elaboración de sellos con goma eva. Para realizar estos
+     sellos, se puede usar también material de reciclado como cartón, plastoformo, goma eva, tapas de sodas, etc.
+     Esta técnica consiste en elaborar sellos con relieve para luego realizar estampados sobre hoja de papel, tela o
+     cualquier material, utilizando una diversidad de pinturas como acrilex, pigmentos, etc.
+
+
+36
+                                                    EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA              ARTES PLÁSTICAS Y VISUALES
+
+
+
+
+                                                                                                 También se puede hacer diseños
+                                                                                                 de estampados a partir del uso
+                                                                                                 de elementos naturales como
+                                                                                                 por ejemplo hojas frescas o
+                                                                                                 secas, utilizando pintura acrílica
+                                                                                                 u otro tipo de pigmentos se
+                                                                                                 consigue hermosos y creativos
+                                                                                                 estampados.
+
+ Dibuja un frutero sobre la goma eva          Recorta el frutero separando también
+                                              todas las frutas y demás elementos.
+                                                                      Nota. Elaboración propia
+
+
+
+
+   Pega los diseños recortados sobre plastoformo o cartón dejando un poco de
+                                                                                                 Fuente:https://pt.pinterest.com/pin/599823244139094332/
+                   separación entre cada elemento recortado.     Nota. Elaboración propia
+
+
+
+
+                          Aplicamos los sellos utilizando diferentes tintas de tampo, acrilex o pigmentos                     Nota. Elaboración propia
+
+
+
+                                                                                                                         VALORACIÓN
+
+Realizamos las actividades y respondemos las preguntas:
+− Organizados en equipos de trabajo, dialogamos sobre las características (funcionalidad, integración del diseño,
+  producción y uso) de las artes aplicadas y las características artes puras (propósito estético, valor intrínseco
+  de la utilidad, creatividad y expresión).
+− Recogemos testimonio de emprendedores que practican las artes aplicadas.
+− ¿Cuáles son los beneficios ambientales de utilizar técnicas del hilorama y el estampado para personalizar y
+  reutilizar artículos en lugar de comprar nuevos constantemente?
+− ¿De qué manera el aprendizaje y la práctica de técnicas de estampado pueden convertirse en una actividad
+  económica en nuestra vida cotidiana?
+                                                                                                                         PRODUCCIÓN
+
+− Elaboramos un cuadro utilizando la técnica del hilorama, de manera creativa utilizando figuras geométricas
+  tridimensionales, plantas, animales, etc.
+− Aplicamos tres técnicas de estampado sobre papel o prendas de vestir, creando nuestras propias plantillas,
+  ya sea con la técnica de xilografía, colografía o alguna técnica casera. Podemos usar cualquier pintura de
+  nuestra preferencia (pigmentos, tinta de tampo, etc.).
+                                                                                                                                                           37
+                 SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+                 LA ESCULTURA: BAJO, MEDIO Y ALTO RELIEVE EN MATERIALES BLANDOS
+                    PARA TALLADO RELACIONADO A LAS EXPRESIONES ARTÍSTICAS Y
+                                CULTURALES DE NUESTROS PUEBLOS
+                   PRÁCTICA
+     Observamos detenidamente las siguientes imágenes, para identificar las particularidades de cada una de ellas y
+     respondemos las preguntas:
+
+
+
+
+                                   Fuente:https://lc.cx/UJO221                            Fuente:https://lc.cx/ypLrSl                            Fuente:https://lc.cx/eaCrSW
+
+
+
+                    Respondemos las preguntas y realizamos la actividad:
+     Actividad
+
+
+
+
+                    − ¿Cuál es el objetivo de la representación de imágenes mediante la técnica de la escultura?
+                    − ¿Cuáles son las principales diferencias de las imágenes que se presentan?
+                    − Registramos las respuestas en un mapa mental.
+
+
+                    TEORÍA
+
+     1. La escultura: Bajo, medio y alto relieve
+     La escultura es una forma de arte en la que se crean objetos tridimensionales tallados, moldeados o ensamblados
+     a partir de materiales como madera, piedra, metal, arcilla o incluso plástico. Estas obras de arte pueden representar
+     personas, animales, cosas o simplemente ser formas abstractas. La escultura es una manera de dar vida a objetos
+     que podemos ver y tocar y es una de las formas más antiguas de expresión artística en el mundo.
+     1.1. Relieve
+                 El relieve en el modelado consiste en crear imágenes o diseños en una superficie
+                 tridimensional, haciendo que ciertas partes sobresalgan o se destaquen. En otras
+                 palabras, se trata de añadir textura a una superficie para que sea posible sentir
+                 y observar diferentes áreas elevadas. Podemos encontrar ejemplos de relieve
+                 en esculturas, monedas e incluso en algunos edificios, donde las decoraciones
+                 o diseños sobresalen de la superficie principal, brindándoles un aspecto
+                 tridimensional y visualmente atractivo.
+
+     1.2. Bajo relieve                                                                                                                         Fuente:https://lc.cx/Whv5we
+
+
+                 Es una técnica escultórica en la que las figuras o diseños tallados se encuentran ligeramente elevados o
+                 apenas sobresalen de la superficie base. A diferencia del alto relieve, donde las figuras están profundamente
+                 esculpidas y sobresalen significativamente, en el bajo relieve, las formas son más planas y se adhieren a la
+                 superficie de fondo. Esto crea una sensación de profundidad más sutil y menos pronunciada.
+
+
+
+
+                     Fuente:https://www.elconfidencial.com/alma-corazon-   Fuente:https://www.alamy.es/imagenes/bajo-relieve- tal-   Fuente:https://ar.pinterest.com/noraavar-
+                          vida/2022-11-19/secretos-tiahuanaco_3523825/                         lado-en-piedra.html?sortBy=releva.           gas/alto- y-bajo-relieve-ceramica/
+38
+                                                               EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA                        ARTES PLÁSTICAS Y VISUALES
+
+1.3. Medio relieve
+    Es una técnica escultórica en la que las figuras o diseños tallados se elevan aproximadamente hasta la mitad
+    de su profundidad en comparación con la superficie de fondo. Esto implica que las formas esculpidas destacan
+    más que en el bajo relieve, pero no llegan a sobresalir tanto como en el alto relieve. La técnica se emplea
+    en una variedad de obras de arte, monumentos y elementos decorativos arquitectónicos. La seleccionamos
+    con frecuencia cuando buscamos dar relieve y presencia a una escultura o decoración, sin que las figuras se
+    proyecten excesivamente desde la superficie base.
+
+
+
+
+    Madre indigena (fragmento del mural                   Relieve cerámico en el jardíon exterior de la Asociación                                Puerta del Sol
+      “La Gesta del oriente boliviano)                       de Radioaficionados en Santa Cruz, Bolivia. 1999                                       Fuente: https://tomi.digital/
+                Fuente: https://lc.cx/M0xS43                                                                                                es/72330/cultura- tiahuanaco?utm_
+                                                                  Fuente: https://www.lorgiovaca.com/obras/pub/imgs/radio_pan.jpg           source=google&utm_ medium=seo
+1.4. Alto relieve
+    Es una técnica de escultura en la que las figuras o diseños tallados sobresalen significativamente de la
+    superficie base. En otras palabras, las partes esculpidas se elevan mucho en relación con el fondo, lo que crea
+    un efecto tridimensional muy pronunciado. Esto da como resultado que las figuras sean muy visibles y notables,
+    arrojando sombras distintivas que resaltan aún más su apariencia.
+
+
+
+
+                     Fuente: https://theartandlife.blogspot.                        Fuente: http://apuntes.santanderlasalle.es/arte/    Fuente: https://info.caserita.com/Epoca-
+                    com/2013/02/ volvemos-empezar.html                                 siglo_ xix/escultura/carpeaux_la_danza.htm      prehispánica-o-precolombina-Intro--a301
+
+2. En materiales blandos para tallado relacionado a las expresiones artísticas y culturales de
+   nuestros pueblos
+2.1. Tallado en madera
+    Es una técnica artística y artesanal que implica la remoción de material de una pieza de madera con
+    herramientas especializadas para crear formas, patrones y detalles tridimensionales. Se ha utilizado a lo largo
+    de la historia para crear esculturas, decoración arquitectónica, muebles, objetos decorativos y una variedad de
+    artículos tallados a mano. Los talladores en madera utilizan herramientas como cinceles y gubias para esculpir
+    la madera, creando profundidad y relieve en la superficie, pueden trabajar en maderas blandas o duras y el tipo
+    de madera influye en el resultado final, ya que algunas son más fáciles de tallar que otras.
+    En las culturas de Bolivia, se utilizan diversas maderas para el tallado, y la elección de la madera puede
+    depender de la disponibilidad local, la tradición cultural y el tipo de proyecto; algunas maderas que se utilizan
+    comúnmente para el tallado en Bolivia son cedro, nogal, caoba, aliso, laurel, teka y quebracho.
+
+
+
+
+                 Gubias                                         Proceso de tallado en madera                                   Tallado en madera completado
+                                                                                                                                                   Fuente:https://lc.cx/8FbRp6
+                                                                                                                                                                                    39
+         SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+
+
+
+         En un primer paso para el tallado, dibujamos el                                    Con ayuda de las gubias empezamos el proceso de
+         diseño que quieres tallar.                                                         tallado.
+
+
+
+
+           Poco a poco conseguimos el relieve deseado.                                        Finalizamos dando detalles a nuestro trabajo.
+                                                                                                     Fuentes: https://carvingbynumbers.com/the-acanthus-panel/
+
+     2.2. Tallado en plastoformo
+         Es la técnica de esculpir o dar forma a objetos tridimensionales utilizando plastoformo, que es un tipo de
+         poliestireno expandido o espuma de poliestireno extruido. El plastoformo es un material ligero y fácil de tallar,
+         lo que lo hace popular en proyectos de modelado y manualidades; esta técnica es muy innovadora y amigable
+         con el medio ambiente porque fomenta el reciclado.
+         Para este proyecto de tallado se puede reunir en grupos comunitarios pedazos de plastormo en desuso de las
+         construcciones o basurales, entre los materiales a utilizar están: plastoformo, pegamento, estilete, lija, pinturas,
+         pinceles. En este caso se trabajará en alto relieve.
+
+
+
+
+                        Fuente: https://p.globalsources.com/IMAGES/PDT/B1196781610/                                     Fuente: http://dumepapeleria-prueba.blogspot.
+                         Exceso-EPS-de-desecho-de-bloques-EPS.jpg?ver=5680245924                                 com/2012/04/foam-pintura-y-yeso-para-maquetas.html
+
+         La lija nos sirve para una vez tallado con el estilete, podamos afinar las superficies y posterior a ello, podemos
+         pintar.
+
+
+
+
+             Fuente: https://miguelangelmont.blogspot.com/2013/02/arte-tallado-en-unicel-
+                                                                          telgopor-o.html                                                 Fuente: https://lc.cx/9MkGhu
+40
+                                                        EDUCACIÓN SECUNDARIA COMUNITARIA PRODUCTIVA                ARTES PLÁSTICAS Y VISUALES
+
+2.3. Tallado en jabón                                                                                      También se puede realizar el
+    Es una técnica artística en la que se esculpen o tallan figuras                                        tallado en bajo, medio a alto
+    tridimensionales a partir de una barra de jabón sólido; para tallar en                                 relieve en la pepa de palta; para
+    jabón, se utilizan herramientas que permiten esculpir la superficie del                                realizarlo se pueden utilizar
+    jabón para crear detalles y formas. Estas herramientas pueden incluir                                  herramientas especializadas,
+    cuchillos, cucharas, gubias, cucharas de helado y otros utensilios de                                  como cuchillos pequeños o
+    tallado. A medida que se elimina el material del jabón, se revelan las                                 gubias, para esculpir detalles
+    formas y detalles deseados, lo que permite a los artistas crear figuras y                              en la superficie de la pepa.
+    diseños personalizados.
+
+
+
+
+          Fuente: https://acortar.link/3lIDKP                       Fuente: https://acortar.link/s5xFqr
+
+      Escogemos una pastilla de                          Iniciamos el tallado con un
+    jabón sólido, puede ser jabon-                        estilete, cuchillo o gubias.
+                                                                                                              Fuente: https://www.manualidadesplus.com/wp-
+      cillo o jabón y realizamos el                                                                          content/uploads/2019/07/semilla-palta-aguacate-
+                  diseño.                                                                                                                     colgantes.png
+
+
+
+
+                  Fuente: https://acortar.link/s5xFqr          Fuente: https://acortar.link/yONGR8                          Fuente: https://acortar.link/bZOr3o
+
+     No olvidar quitar el excedente                     Trabajamos con cuidado, sin
+                                                                                                          Trabajo finalizado en alto relieve.
+    de jabón mientras vas tallando.                          romper lo tallado.
+        También ten cuidado de
+                cortarte.                                                                                                       VALORACIÓN
+
+ Reflexionamos a partir de las siguientes preguntas:
+
+ − ¿De qué manera ha cambiado nuestra comprensión respecto a la importancia o trascendencia de la
+   escultura?
+ − ¿Qué rol juega la escultura en la sociedad contemporánea?
+ − ¿Qué artistas o movimientos escultóricos tienen influencia social, político, histórico, artístico y cultural en
+   nuestro medio?
+
+                                                                                                                                PRODUCCIÓN
+
+ − Realizamos un informe escrito e ilustrado con ejemplos de tallados con bajo, medio y alto relieve realizados en
+   las culturas de Bolivia. Se sugiere el siguiente formato:
+   Portada: Título del Informe: Ejemplo de Tallados en Bajo, Medio y Alto Relieve en las Culturas de Bolivia;
+   Nombre del Autor: [Tu Nombre]; Fecha: [Fecha de Presentación]; Institución: [Nombre de la U. E. y Curso]
+   Índice: 1. Introducción; 2. Antecedentes Históricos y Culturales; 3. Bajo Relieve en las Culturas de
+   Bolivia; 3.1. Descripción y Técnica; 3.2. Ejemplos y Análisis; 4. Medio Relieve en las Culturas de Bolivia; 4.1.
+   Descripción y Técnica; 4.2. Ejemplos y Análisis; 5. Alto Relieve en las Culturas de Bolivia; 5.1. Descripción
+   y Técnica; 5.2. Ejemplos y Análisis; 6. Comparación de los Relieves; 7. Conclusión; 8. Referencias; 9.
+   Anexos.
+ − Realizamos el tallado en plastoformo en grupos comunitarios de trabajo, practicamos el reciclado, recolectando
+   material es desuso.
+ − De forma individual elaboramos un tallado aplicando el bajo, medio o alto relieve en madera o jabón.
+                                                                                                                                                                  41
+          SEGUNDO AÑO DE ESCOLARIDAD 2025
+
+                                                       BIBLIOGRAFÍA
+
+     ÁREA: ARTES PLÁSTICAS Y VISUALES
+
+     Academia de la Lengua Española, Teoría del Color (2007) Artes Plásticas, La Paz – Bolivia.
+
+     Acerete, Dora M. (1974) “Objetivos y Didáctica de la Educación Plástica” Edit. Kapelusz. Argentina. Real
+
+     Alau, Massa J. (1980) Dibujo Técnico. Ed. Bruño España.
+
+     Álvarez De Sayas, Rita Marina (2002), Metodología del Aprendizaje y la Enseñanza. Ed. Kipus, Cochabamba.
+
+     Aymerich, C. Y M. (1971) Expresión y arte en la escuela. Edit. Teide. Barcelona
+
+     Barredo Diana, “La geometría del triángulo”, México. 2019
+
+     Bernardo Mas, Francesc Infante y Ramon Gasull Barberà, “DIBUJO TÉCNICO 1-2”,
+
+     Cana,l Fernanda (2007) Dibujo Ed. Parramón España.
+
+     Ebert-Schifferer, Sybille. Still Life: A History, Harry N. Abrams
+
+     Eisnner E. (1992) Educar la Visión Artística, Ed. Paidós Educador, Buenos Aires.
+
+     Espriu Vizcaino, Rosa Ma. (1993) “El Niño y la Creatividad”. Edit. Trillas. México.
+
+     Fernández A, Efraín (2011). Artes Plásticas 4. Santa Cruz: Editorial Emprender. Alfa Internacional S.A. (1980)
+     El dibujo del natural. España.
+
+     F. Pérez- Dolz, (1974) “Teoría de los Colores” Edit. Mesenger. España.
+
+     Filander Y Diaz Chavez, Luis. (1971) Hacia una dialéctica del subdesarrollo. Ed. Grijalbo México.
+
+     Gadamer, Hans-Gerge, (2003) La actualidad de lo bello. El arte como juego, símbolo y fiesta. Ed. Paidos. Buenos
+     Aires.
+
+     García Bernal César, (1988) Principios de Geometría Descriptiva Ed. Don Bosco La Paz Bolivia.
+
+     García Cancini, Néstor, (1977) Arte popular y sociedad en América Latina. Grijalbo México
+
+     García Martinez, J. A. (1976.) Crisis y Revolución en el Arte de Hoy. Editorial Universitaria de Buenos Aires - Buenos
+     Aires.
+
+     Gusseme T. (1775). Diccionario enciclopédico popular ilustrado Salvat (1906-1914).
+
+     Ministerio de Educación (2016). Guía de Estudio: Unidad de Formación “Historia del Arte del Abya Yala“, Equipo
+     Nivelación Académica, La Paz Bolivia.
+
+     Ministerio de Educación (2022). “Planes y Programas de Educación Secundaria Comunitaria Productiva” La Paz,
+     Bolivia.
+
+     Ministerio de Educación (2022). “Lineamientos Curriculares del Subsistema de Educación Regular - 2023” La Paz,
+     Bolivia.
+
+     Ministerio de Educación, (2024). Texto de aprendizaje. 2do año de escolaridad. Educación Secundaria Comunitaria
+     Productiva. Subsitema de Educación Regular. La Paz, Bolivia.
+
+
+
+
+42
+Equipo de redactores del texto de aprendizaje del 2DO AÑO DE ESCOLARIDAD de Educación Secundaria Comunitaria Productiva.
+
+
+
+PRIMER TRIMESTRE                              SEGUNDO TRIMESTRE                             TERCER TRIMESTRE
+
+Artes Plásticas y visuales                    Artes Plásticas y visuales                    Artes Plásticas y visuales
+
+Jacinto Véliz Mamani                          Jacinto Véliz Mamani                          Jacinto Véliz Mamani
+minedu.gob.bo   @minedubol   minedu_bol
+

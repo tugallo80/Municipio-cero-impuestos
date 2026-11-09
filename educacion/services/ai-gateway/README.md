@@ -51,3 +51,15 @@ gcloud logging read 'jsonPayload.evento="kay_uso"' --project=municipio-ia --limi
 - `eduProfes`: lista de profes y a cuál eligió la última vez en cada materia.
 - `eduKayUso` acepta `resumen` (mismo formato que `mision`) y lo guarda en `edu/memoria/{alumnoId}`.
 - Sin `profe`, todo sigue como en EDU.02 (Kay + voz elegible, usado por `/prueba-motor/`).
+
+## Clase grabada (EDU.04a)
+
+- `eduClase` (solo cuentas con `edu/personal/{uid}` y rol de profe, en sus cursos): recibe el audio
+  de la clase en base64, lo manda a Gemini Flash-Lite en una sola llamada con salida JSON y guarda el
+  informe (`edu/clases`, 30 días; transcripción 7) y el contexto del día (`edu/contexto_dia`, 14 días).
+  **El audio no se guarda.** Nombres de alumnos → "un alumno" (instrucción + `anonimizar()`).
+  Suma al tope global de USD 5/día; 8 clases por profe por día; 75 min por clase.
+  Logs: `jsonPayload.evento="clase_resumida"` con `costoPorHoraUsd`.
+- `eduClases`: `listar` (el mismo informe para profe y dirección) y `borrar` (borra también el contexto).
+- `eduKayToken` suma a la instrucción de Taji/Jochi/Kay las últimas 3 clases del curso.
+- Ficha: `docs/sesiones/EDU.04a-clase-grabada.md`.

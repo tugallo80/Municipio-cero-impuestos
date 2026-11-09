@@ -24,11 +24,15 @@ export default defineConfig({
         // Módulo de voz de los profes para la maqueta del alumno: nombre fijo
         // (/voz/profes.js) porque lo importa una página que no pasa por Vite.
         profes: resolve(aqui, 'profes/profes-voz.js'),
+        // EDU.04a: cuenta y Functions de la clase grabada (/voz/clase.js) para la maqueta.
+        clase: resolve(aqui, 'clase/clase-cuenta.js'),
+        // EDU.04b: leer el texto de un PDF en el navegador (/voz/pdf-texto.js, con pdf.js incluido)
+        pdftexto: resolve(aqui, 'clase/pdf-texto.js'),
       },
       // El módulo de los profes no exporta nada: que Vite no le quite el código.
       preserveEntrySignatures: 'allow-extension',
       output: {
-        entryFileNames: (c) => (c.name === 'profes' ? 'voz/profes.js' : 'assets/[name]-[hash].js'),
+        entryFileNames: (c) => (c.name === 'profes' ? 'voz/profes.js' : c.name === 'clase' ? 'voz/clase.js' : c.name === 'pdftexto' ? 'voz/pdf-texto.js' : 'assets/[name]-[hash].js'),
       },
     },
   },

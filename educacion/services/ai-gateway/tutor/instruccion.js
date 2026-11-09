@@ -7,6 +7,7 @@
 //  SOLO los campos permitidos: aunque el perfil traiga otros datos, no pasan.
 // ══════════════════════════════════════════════════
 const fs = require('fs');
+const { textoClasesParaTutor } = require('./clase');
 const path = require('path');
 
 const PERSONALIDAD = fs
@@ -66,7 +67,7 @@ ${pensum || '- Todavía no hay contenido cargado por su profe. Ayudalo con lo qu
 
 # Tareas y exámenes que vienen
 
-${agenda || '- No hay tareas registradas.'}`;
+${agenda || '- No hay tareas registradas.'}${contenido.clases?.length ? `\n\n${textoClasesParaTutor(contenido.clases)}` : ''}`;
 }
 
 const HERRAMIENTAS = [
