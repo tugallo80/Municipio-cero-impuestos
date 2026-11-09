@@ -71,7 +71,7 @@ window.NandeClase = {
   // Cronograma (EDU.04b)
   leerPlan: (curso) => llamar(fnPlan, { accion: 'leer', curso }),
   guardarPlan: (curso, estado) => llamar(fnPlan, { accion: 'guardar', curso, estado }),
-  extraerPlan: (curso, pdf) => llamar(fnPlan, { accion: 'extraer', curso, pdf }),
+  extraerPlan: (curso, datos) => llamar(fnPlan, { accion: 'extraer', curso, ...datos }), // datos: { texto } o { pdf }
   mentora: (datos) => llamar(fnMentora, datos),
   async borrar(curso, id) {
     try { return (await fnClases({ accion: 'borrar', curso, id })).data } catch (e) { return { ok: false, error: mensaje(e) } }

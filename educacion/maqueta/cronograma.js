@@ -10,7 +10,8 @@
 // ══════════════════════════════════════════════════
 (function () {
   const C = window.Calendario;
-  const CURSO_SERVIDOR = { '4A': '4to_primaria', '5A': '5to_primaria' };
+  const CURSO_SERVIDOR = { S2: '2do_secundaria', '4A': '4to_primaria', '5A': '5to_primaria' };
+  const CURSO_NOMBRE = { S2: '2.º de secundaria', '4A': '4.º de primaria A', '5A': '5.º de primaria A' };
   const AREAS = {
     mat: { nombre: 'Matemática', corto: 'Mate', icono: '🔢', color: '#10B981' },
     len: { nombre: 'Comunicación y Lenguajes', corto: 'Lenguaje', icono: '📖', color: '#F59E0B' },
@@ -23,6 +24,10 @@
     tec: { nombre: 'Técnica Tecnológica', corto: 'Técnica', icono: '🛠️', color: '#EAB308' },
     ing: { nombre: 'Lengua extranjera', corto: 'Inglés', icono: '💬', color: '#6366F1' },
     ori: { nombre: 'Lengua originaria', corto: 'Originaria', icono: '🗣️', color: '#14B8A6' },
+    fil: { nombre: 'Cosmovisiones, Filosofía y Psicología', corto: 'Filosofía', icono: '🧠', color: '#F472B6' },
+    bio: { nombre: 'Biología - Geografía', corto: 'Biología', icono: '🧬', color: '#4ADE80' },
+    fis: { nombre: 'Física', corto: 'Física', icono: '🧲', color: '#60A5FA' },
+    qui: { nombre: 'Química', corto: 'Química', icono: '⚗️', color: '#FB923C' },
   };
   const DIAS = ['lun', 'mar', 'mie', 'jue', 'vie'];
   const N_PERIODOS = 6;
@@ -35,6 +40,14 @@
   const lunesDe = (f) => { const i = DIAS.indexOf(C.diaSemana(f)); return i < 0 ? C.sumarDias(f, C.diaSemana(f) === 'sab' ? 2 : 1) : C.sumarDias(f, -i); };
 
   // ── Datos de ejemplo (inventados) ──────────────────
+  // 2.º de secundaria (ejemplo de un curso con todas sus áreas; el profe deja solo las suyas)
+  const HORARIO_SEC = {
+    lun: ['len', 'len', 'mat', 'mat', 'ing', 'ing'],
+    mar: ['bio', 'bio', 'csoc', 'csoc', 'art', 'fil'],
+    mie: ['mat', 'mat', 'len', 'ing', 'mus', 'val'],
+    jue: ['bio', 'csoc', 'fil', 'art', 'art', 'efd'],
+    vie: ['mat', 'len', 'bio', 'mus', 'val', 'efd'],
+  };
   const HORARIO_EJEMPLO = {
     lun: ['mat', 'mat', 'len', 'len', 'cnat', 'art'],
     mar: ['len', 'len', 'mat', 'mat', 'csoc', 'efd'],
@@ -73,7 +86,7 @@
   };
 
   // ── Estado ─────────────────────────────────────────
-  let curso = '4A';
+  let curso = 'S2';
   let estado = null;      // { config, plan, hechos, perdidos }
   let cargado = false;
   let origen = 'local';   // 'servidor' | 'local'
@@ -88,7 +101,7 @@
   const guardarLocal = (e) => { try { localStorage.setItem(clave(), JSON.stringify(e)); } catch {} };
 
   function vacio() {
-    return { config: { anio: 2027, distrito: 'scz_rural_demo', multigrado: [], horario: JSON.parse(JSON.stringify(HORARIO_EJEMPLO)), sinClase: [], semanaEvaluacion: true, colchon: 0.1 }, plan: null, hechos: {}, perdidos: [] };
+    return { config: { anio: 2027, distrito: 'scz_rural_demo', multigrado: [], horario: JSON.parse(JSON.stringify(curso === 'S2' ? HORARIO_SEC : HORARIO_EJEMPLO)), sinClase: [], semanaEvaluacion: true, colchon: 0.1 }, plan: null, hechos: {}, perdidos: [] };
   }
 
   function repintar() {
@@ -142,6 +155,8 @@
   // ── Piezas de vista ────────────────────────────────
   const css = `
   .cr-may::first-letter{text-transform:uppercase}
+  @media print{body.imprimiendo-pdc *{visibility:hidden}body.imprimiendo-pdc #pdc-doc,body.imprimiendo-pdc #pdc-doc *{visibility:visible}
+    body.imprimiendo-pdc #pdc-doc{position:absolute;left:0;top:0;width:100%;padding:0}body.imprimiendo-pdc{background:#fff}}
   .cr-semana{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(170px,1fr);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
   .cr-semana>*{scroll-snap-align:start}
   .cr-dia.hoy{border-color:var(--verde)}
@@ -215,7 +230,7 @@
     const dias = DIAS.map((_, i) => C.sumarDias(semana, i));
     const totalTemas = Object.keys(temas).length, hechos = Object.keys(estado.hechos).filter((k) => temas[k]).length;
     return `<div class="encab"><div><h1>Cronograma</h1><p>${esc(estado.plan.titulo)} · ${curso} · gestión ${estado.config.anio}${cal.provisional ? ' <span class="pildora ambar">provisional</span>' : ''}</p></div>
-      <div class="fila envuelve" style="gap:8px">${avisoCuenta()}<a class="btn chico sec2" href="#cronograma/paso/1">⚙️ Ajustes</a><a class="btn chico sec2" href="#cronograma/plan">📄 Temas</a></div></div>
+      <div class="fila envuelve" style="gap:8px">${avisoCuenta()}<a class="btn chico sec2" href="#cronograma/paso/1">⚙️ Ajustes</a><a class="btn chico sec2" href="#cronograma/plan">📄 Temas</a><a class="btn chico" href="#cronograma/pdc">🖨️ PDC</a></div></div>
     ${cal.provisional ? `<div class="cr-aviso ambar">El calendario ${estado.config.anio} todavía no es oficial (falta la resolución del Ministerio). Se usa una fecha provisional y se recalcula cuando salga.</div>` : ''}
     ${rep.avisos.slice(0, 3).map((a) => `<div class="cr-aviso ${a.nivel}">⚠️ ${esc(a.texto)}</div>`).join('')}
 
@@ -277,14 +292,20 @@
       return `<a href="#cronograma" class="chica">← Cronograma</a><h1 style="margin-top:10px">Paso 1 · Tu plan</h1>${pasos(1)}
       ${ocupado ? `<div class="tarjeta cg-espera" style="text-align:center;padding:30px"><div class="ruedita" style="width:46px;height:46px;border-radius:50%;border:5px solid var(--sup3);border-top-color:var(--verde);margin:0 auto 14px;animation:cg-gira 1s linear infinite"></div><b>${esc(ocupado)}</b><p class="ter">Tarda entre 10 segundos y 1 minuto.</p></div>` : `
       <div class="tarjeta">
-        <b>Subí el PDF de tu plan anual, PDC o pensum</b>
-        <p class="ter" style="margin:4px 0 12px">La IA saca las áreas y los temas en orden. El PDF no se guarda. Si tiene nombres de alumnos, se ignoran.</p>
-        ${conCuenta() ? `<label class="btn ancho" style="cursor:pointer">📄 Elegir PDF<input type="file" accept="application/pdf" style="display:none" onchange="Cronograma.subir(this.files[0])"></label>`
+        <b>Subí el PDF de tu plan, PDC, pensum o el texto de aprendizaje del Ministerio</b>
+        <p class="ter" style="margin:4px 0 12px">La IA saca las áreas y los temas en orden (en los textos del Ministerio, del índice por trimestre). Si das varias áreas, subí un PDF por área: se van sumando. Los libros grandes no se suben enteros: se leen las primeras páginas en tu equipo. Si tiene nombres de alumnos, se ignoran.</p>
+        ${conCuenta() ? `<label class="btn ancho" style="cursor:pointer">📄 ${p ? 'Sumar otro PDF (otra área)' : 'Elegir PDF'}<input type="file" accept="application/pdf" style="display:none" onchange="Cronograma.subir(this.files[0])"></label>`
           : `<p class="chica" style="color:var(--ambar)">Para leer un PDF tenés que entrar con tu cuenta.</p>${api() ? '<button class="btn ancho sec2" style="margin-top:8px" onclick="Clase.login()">Entrar</button>' : ''}`}
-        <button class="btn ancho sec2" style="margin-top:10px" onclick="Cronograma.ejemplo()">Usar el plan de ejemplo (4.º de primaria)</button>
+      </div>
+      <div class="tarjeta" style="margin-top:12px">
+        <b>O usá un ejemplo</b>
+        ${curso === 'S2' && window.PLAN_EJEMPLO_2SEC ? `<p class="ter" style="margin:4px 0 10px">2.º de secundaria, con los índices de los textos de aprendizaje 2025 del Ministerio. <b>Ejemplo, a verificar con el profe.</b> Marcá las áreas que das:</p>
+          <div class="pila chica">${window.PLAN_EJEMPLO_2SEC.areas.map((a) => `<label class="fila" style="gap:10px;cursor:pointer"><input type="checkbox" class="cr-area-ej" value="${a.id}" style="width:22px;height:22px" ${['ing', 'mus', 'art'].includes(a.id) ? 'checked' : ''}> ${area(a.id).icono} ${esc(a.nombre)} <span class="ter">· ${a.temas.length} unidades</span></label>`).join('')}</div>
+          <button class="btn ancho sec2" style="margin-top:10px" onclick="Cronograma.ejemplo()">Usar estas áreas</button>`
+        : `<button class="btn ancho sec2" style="margin-top:10px" onclick="Cronograma.ejemplo()">Usar el plan de ejemplo (4.º de primaria, inventado)</button>`}
       </div>`}
       ${p ? `<div class="tarjeta" style="margin-top:12px"><div class="fila entre"><b>${esc(p.titulo)}</b><a class="chica" href="#cronograma/plan">Ver y editar temas</a></div>
-        <div class="chips" style="margin-top:10px">${p.areas.map((a) => `<span class="pildora gris">${area(a.id).icono} ${esc(area(a.id).corto)} · ${a.temas.length}</span>`).join('')}</div>
+        <div class="chips" style="margin-top:10px">${p.areas.map((a) => `<span class="pildora gris">${area(a.id).icono} ${esc(area(a.id).corto)} · ${a.temas.length} <button title="Quitar esta área" style="margin-left:4px" onclick="Cronograma.quitarArea('${a.id}')">✕</button></span>`).join('')}</div>
         ${(p.advertencias || []).map((x) => `<div class="cr-aviso ambar" style="margin-top:8px">${esc(x)}</div>`).join('')}</div>` : ''}
       ${pie(p ? '<a class="btn" href="#cronograma/paso/2">Siguiente →</a>' : '')}`;
     }
@@ -297,8 +318,8 @@
         <label class="campo"><span>Distrito educativo</span><select class="cr-campo" onchange="Cronograma.cfg('distrito', this.value)">
           ${dist.map(([id, d]) => `<option value="${id}" ${id === c.distrito ? 'selected' : ''}>${esc(d.nombre)}</option>`).join('')}</select></label>
         <label class="campo"><span>Curso</span><select class="cr-campo" onchange="Cronograma.curso(this.value)">
-          ${Object.keys(CURSO_SERVIDOR).map((k) => `<option ${k === curso ? 'selected' : ''}>${k}</option>`).join('')}</select></label>
-        <label class="fila chica" style="gap:10px;cursor:pointer"><input type="checkbox" style="width:22px;height:22px" ${c.multigrado.length ? 'checked' : ''} onchange="Cronograma.cfg('multigrado', this.checked ? ['3ro_primaria'] : [])"> Aula multigrado (doy 3.º y 4.º juntos)</label>
+          ${Object.keys(CURSO_SERVIDOR).map((k) => `<option value="${k}" ${k === curso ? 'selected' : ''}>${esc(CURSO_NOMBRE[k])}</option>`).join('')}</select></label>
+        <label class="fila chica" style="gap:10px;cursor:pointer"><input type="checkbox" style="width:22px;height:22px" ${c.multigrado.length ? 'checked' : ''} onchange="Cronograma.cfg('multigrado', this.checked ? ['3ro_primaria'] : [])"> Aula multigrado (doy dos cursos juntos)</label>
         <p class="ter">Capas que se aplican: nacional → ${esc(C.CAPAS.departamentos[(C.CAPAS.distritos[c.distrito] || {}).departamento]?.nombre || '—')} → ${esc((C.CAPAS.distritos[c.distrito] || {}).nombre || '')} → tu escuela → tus días.</p>
       </div>${pie('<a class="btn" href="#cronograma/paso/3">Siguiente →</a>')}`;
     }
@@ -337,7 +358,7 @@
     <div class="pila">${estado.plan.areas.map((a, ai) => `<details class="tarjeta" ${ai === 0 ? 'open' : ''}><summary style="cursor:pointer"><b>${area(a.id).icono} ${esc(area(a.id).nombre)}</b> <span class="ter">· ${a.temas.length} temas</span></summary>
       <div class="pila" style="margin-top:10px">${a.temas.map((x, i) => `<div class="fila envuelve" style="gap:6px;padding:8px;background:var(--sup3);border-radius:10px">
         <button class="btn chico ${estado.hechos[x.id] ? '' : 'sec2'}" title="Dado" onclick="Cronograma.hecho('${x.id}')">${estado.hechos[x.id] ? '✓' : '○'}</button>
-        <span class="crece chica" style="min-width:140px">${esc(x.titulo)}</span>
+        <span class="crece chica" style="min-width:140px">${esc(x.titulo)}${x.contenidos?.length ? `<br><span class="ter">${x.contenidos.map(esc).join(' · ')}</span>` : ''}</span>
         <select class="cr-campo" style="width:auto;min-height:38px" onchange="Cronograma.tema('${a.id}', ${i}, 'peso', Number(this.value))">${[1, 2, 3].map((p) => `<option value="${p}" ${p === x.peso ? 'selected' : ''}>${['corto', 'normal', 'largo'][p - 1]}</option>`).join('')}</select>
         <select class="cr-campo" style="width:auto;min-height:38px" onchange="Cronograma.tema('${a.id}', ${i}, 'trimestre', Number(this.value))">${[0, 1, 2, 3].map((p) => `<option value="${p}" ${p === x.trimestre ? 'selected' : ''}>${p ? p + '.º trim.' : 'cualquiera'}</option>`).join('')}</select>
         <button class="btn chico sec2" onclick="Cronograma.mover('${a.id}', ${i}, -1)">↑</button><button class="btn chico sec2" onclick="Cronograma.mover('${a.id}', ${i}, 1)">↓</button>
@@ -367,7 +388,7 @@
     else if (!tarjeta) { pedirIdea(tm); }
     const e = tarjeta?.evaluacion || {};
     return `<a href="javascript:history.back()" class="chica">← Volver</a>
-    <div class="encab" style="margin-top:10px"><div><h1>💡 ${esc(tm.titulo)}</h1><p>${a.icono} ${esc(a.nombre)} · ideas de la mentora</p></div></div>
+    <div class="encab" style="margin-top:10px"><div><h1>💡 ${esc(tm.titulo)}</h1><p>${a.icono} ${esc(a.nombre)} · ideas de la mentora${tm.contenidos?.length ? `<br><span class="ter">${tm.contenidos.map(esc).join(' · ')}</span>` : ''}</p></div></div>
     ${!tarjeta ? `<div class="tarjeta" style="text-align:center;padding:30px"><div style="width:46px;height:46px;border-radius:50%;border:5px solid var(--sup3);border-top-color:var(--verde);margin:0 auto 14px;animation:cg-gira 1s linear infinite"></div><b>La mentora está pensando una clase…</b><p class="ter">Unos segundos.</p></div>` : `
     ${tarjeta.ejemplo ? '<div class="cr-aviso ambar">Ejemplo sin conexión (fracciones). Entrá con tu cuenta para que la mentora arme la tarjeta de este tema.</div>' : ''}
     ${tarjeta.error ? `<div class="cr-aviso rojo">${esc(tarjeta.error)}</div>` : `
@@ -389,16 +410,134 @@
     ${!tarjeta.ejemplo ? `<button class="btn chico sec2" onclick="Cronograma.otraIdea('${temaId}')">↻ Otra idea</button>` : ''}`}`}`;
   }
 
+  // ── PDC (Plan de Desarrollo Curricular) imprimible / Word ─────────
+  // Borrador con los campos que se repiten en los modelos 2026 (ver la investigación): el formato
+  // exacto lo define la Dirección Distrital. Datos de la escuela y firmas quedan para llenar a mano.
+  let pdcSel = { mes: null, area: 'todas' };
+  const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'];
+  const MOMENTOS = [['Práctica', 'inicio'], ['Teoría', 'actividad'], ['Valoración', 'cierre'], ['Producción', 'comunidad']];
+
+  function datosPdc() {
+    const c = estado.config;
+    const cal = C.diasDelAnio({ anio: c.anio, distrito: c.distrito, profe: { sinClase: c.sinClase } });
+    // El PDC muestra el plan como fue diseñado (todo el año), no solo lo que falta.
+    const rep = C.repartir(estado.plan, c.horario, cal, { colchon: c.colchon, semanaEvaluacion: c.semanaEvaluacion, desde: cal.inicio, hechos: {}, perdidos: estado.perdidos });
+    const meses = [...new Set(Object.keys(rep.porFecha).map((f) => f.slice(0, 7)))].sort();
+    pdcSel.mes = meses.includes(pdcSel.mes) ? pdcSel.mes : meses[0];
+    const temas = {};
+    for (const a of estado.plan.areas) for (const x of a.temas) temas[x.id] = { ...x, area: a.id };
+    const filas = {};
+    let periodos = 0;
+    for (const [f, xs] of Object.entries(rep.porFecha)) {
+      if (!f.startsWith(pdcSel.mes)) continue;
+      for (const x of xs) {
+        if (pdcSel.area !== 'todas' && x.area !== pdcSel.area) continue;
+        periodos++;
+        const k = x.tipo === 'tema' ? x.temaId : `${x.tipo}-${x.area}`;
+        const r = (filas[k] ||= { tipo: x.tipo, area: x.area, tema: temas[x.temaId], desde: f, hasta: f, periodos: 0 });
+        r.hasta = f; r.periodos++;
+      }
+    }
+    const lista = Object.values(filas).sort((a, b) => (a.desde < b.desde ? -1 : 1));
+    const dias = cal.dias.filter((d) => d.fecha.startsWith(pdcSel.mes));
+    return { cal, meses, lista, periodos, trimestre: dias[0]?.trimestre || 1, desde: dias[0]?.fecha, hasta: dias[dias.length - 1]?.fecha };
+  }
+
+  function pdcHtml(d) {
+    const c = estado.config;
+    const [anio, mes] = pdcSel.mes.split('-');
+    const nivel = CURSO_SERVIDOR[curso].includes('secundaria') ? 'Educación Secundaria Comunitaria Productiva' : 'Educación Primaria Comunitaria Vocacional';
+    const areasTxt = pdcSel.area === 'todas' ? estado.plan.areas.map((a) => area(a.id).nombre).join(', ') : area(pdcSel.area).nombre;
+    const temasPdc = d.lista.filter((x) => x.tipo === 'tema');
+    const tarj = temasPdc.map((x) => ideas[x.tema.id]).filter((t) => t && !t.error && !t.ejemplo);
+    const linea = '<span style="display:inline-block;min-width:220px;border-bottom:1px solid #999">&nbsp;</span>';
+    const celda = 'style="border:1px solid #444;padding:6px;vertical-align:top"';
+    const celdaCon = (extra) => `style="border:1px solid #444;padding:6px;vertical-align:top;${extra}"`;
+    const objetivos = tarj.map((t) => t.objetivo).filter(Boolean);
+    const materiales = [...new Set(tarj.flatMap((t) => t.materiales || []))];
+    const ev = (k) => tarj.map((t) => t.evaluacion?.[k]).filter(Boolean);
+    return `<div id="pdc-doc" style="background:#fff;color:#111;font:13px/1.45 Arial,Helvetica,sans-serif;padding:20px;border-radius:8px;min-width:560px">
+      <h2 style="text-align:center;font:700 17px Arial;margin:0 0 4px">PLAN DE DESARROLLO CURRICULAR (PDC)</h2>
+      <p style="text-align:center;margin:0 0 14px;color:#555">${MESES[Number(mes) - 1]} ${anio} · ${d.trimestre}.º trimestre</p>
+      <h3 style="font:700 14px Arial;margin:12px 0 6px">I. DATOS REFERENCIALES</h3>
+      <table style="width:100%;border-collapse:collapse"><tbody>
+        <tr><td ${celda}><b>Distrito educativo:</b> ${esc((C.CAPAS.distritos[c.distrito] || {}).nombre || '')}</td><td ${celda}><b>Unidad educativa:</b> ${linea}</td></tr>
+        <tr><td ${celda}><b>Nivel:</b> ${nivel}</td><td ${celda}><b>Año de escolaridad:</b> ${esc(CURSO_NOMBRE[curso])}${c.multigrado.length ? ' (multigrado)' : ''}</td></tr>
+        <tr><td ${celda}><b>Área(s):</b> ${esc(areasTxt)}</td><td ${celda}><b>Periodos del mes:</b> ${d.periodos} (de 40 min)</td></tr>
+        <tr><td ${celda}><b>Maestra/o:</b> ${linea}</td><td ${celda}><b>Directora/or:</b> ${linea}</td></tr>
+        <tr><td ${celda} colspan="2"><b>Tiempo:</b> del ${d.desde ? fechaCorta(d.desde) : ''} al ${d.hasta ? fechaCorta(d.hasta) : ''} de ${anio}</td></tr>
+      </tbody></table>
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">II. OBJETIVO HOLÍSTICO / DE APRENDIZAJE</h3>
+      ${objetivos.length ? `<ul style="margin:0 0 0 18px">${objetivos.map((o) => `<li>${esc(o)}</li>`).join('')}</ul>` : `<p>${linea}${linea}</p>`}
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">III. CONTENIDOS</h3>
+      <table style="width:100%;border-collapse:collapse"><thead><tr><th ${celda}>Fechas</th><th ${celda}>Área</th><th ${celda}>Contenido</th><th ${celda}>Periodos</th></tr></thead><tbody>
+        ${d.lista.map((x) => `<tr><td ${celda}>${fechaCorta(x.desde)}${x.hasta !== x.desde ? ' – ' + fechaCorta(x.hasta) : ''}</td><td ${celda}>${esc(area(x.area).corto)}</td>
+          <td ${celda}>${x.tipo === 'tema' ? `<b>${esc(x.tema.titulo)}</b>${x.tema.contenidos?.length ? `<br>${x.tema.contenidos.map(esc).join('; ')}` : ''}` : x.tipo === 'evaluacion' ? 'Evaluación del trimestre' : 'Repaso / refuerzo'}</td><td ${celdaCon('text-align:center')}>${x.periodos}</td></tr>`).join('')}
+      </tbody></table>
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">IV. ORIENTACIONES METODOLÓGICAS</h3>
+      ${temasPdc.map((x) => { const t = ideas[x.tema.id]; return `<p style="margin:8px 0 4px"><b>${esc(x.tema.titulo)}</b></p>
+        <table style="width:100%;border-collapse:collapse"><tbody>${MOMENTOS.map(([m, k]) => `<tr><td ${celdaCon('width:22%')}><b>${m}</b></td><td ${celda}>${t && !t.error && !t.ejemplo ? esc(t[k]) : '&nbsp;'}</td></tr>`).join('')}</tbody></table>`; }).join('') || `<p>${linea}</p>`}
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">V. RECURSOS Y MATERIALES</h3>
+      <p>${materiales.length ? esc(materiales.join(', ')) : linea}</p>
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">VI. CRITERIOS DE EVALUACIÓN (RM 0001/2026)</h3>
+      <table style="width:100%;border-collapse:collapse"><tbody>
+        ${[['SER', 10, 'ser'], ['SABER', 45, 'saber'], ['HACER', 40, 'hacer'], ['AUTOEVALUACIÓN', 5, 'autoevaluacion']].map(([n, p, k]) => `<tr><td ${celdaCon('width:30%')}><b>${n}</b> (${p} pts.)</td><td ${celda}>${ev(k).length ? ev(k).map(esc).join('<br>') : '&nbsp;'}</td></tr>`).join('')}
+        <tr><td ${celda}><b>Total</b></td><td ${celda}>100 puntos</td></tr>
+      </tbody></table>
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">VII. PRODUCTO</h3><p>${linea}${linea}</p>
+      <h3 style="font:700 14px Arial;margin:14px 0 6px">VIII. ADAPTACIONES CURRICULARES</h3><p>${linea}${linea}</p>
+      <table style="width:100%;margin-top:40px"><tbody><tr><td style="text-align:center;width:50%">____________________<br>Maestra/o</td><td style="text-align:center">____________________<br>Directora/or (Vº Bº)</td></tr></tbody></table>
+      <p style="margin-top:18px;font-size:11px;color:#666">Borrador armado con ÑANDÉ a partir del cronograma. El formato exacto lo define la Dirección Distrital: revisalo antes de presentarlo.</p>
+    </div>`;
+  }
+
+  function pdcVista() {
+    if (!cargado) { cargar(); return '<p class="ter">Cargando…</p>'; }
+    if (!estado.plan) return bienvenida();
+    const d = datosPdc();
+    const faltan = d.lista.filter((x) => x.tipo === 'tema' && !ideas[x.tema.id]).length;
+    return `<a href="#cronograma" class="chica">← Cronograma</a>
+    <div class="encab" style="margin-top:10px"><div><h1>🖨️ PDC</h1><p>Plan de Desarrollo Curricular del mes, armado con tu cronograma. Para imprimir o llevar en Word.</p></div></div>
+    <div class="tarjeta pila no-imprimir">
+      <div class="grilla g2" style="gap:8px">
+        <label class="campo"><span>Mes</span><select class="cr-campo" onchange="Cronograma.pdc('mes', this.value)">${d.meses.map((m) => { const [a, n] = m.split('-'); return `<option value="${m}" ${m === pdcSel.mes ? 'selected' : ''}>${MESES[Number(n) - 1]} ${a}</option>`; }).join('')}</select></label>
+        <label class="campo"><span>Área</span><select class="cr-campo" onchange="Cronograma.pdc('area', this.value)"><option value="todas">Todas mis áreas</option>${estado.plan.areas.map((a) => `<option value="${a.id}" ${a.id === pdcSel.area ? 'selected' : ''}>${area(a.id).icono} ${esc(area(a.id).nombre)}</option>`).join('')}</select></label>
+      </div>
+      <div class="fila envuelve" style="gap:8px">
+        <button class="btn" onclick="Cronograma.imprimir()">🖨️ Imprimir / Guardar PDF</button>
+        <button class="btn sec2" onclick="Cronograma.word()">📝 Descargar Word</button>
+        ${faltan && conCuenta() ? `<button class="btn sec2" onclick="Cronograma.completarPdc()">💡 Completar con la mentora (${faltan} tema${faltan > 1 ? 's' : ''})</button>` : ''}
+      </div>
+      ${faltan && !conCuenta() ? '<p class="ter">Con tu cuenta, la mentora puede completar objetivos, momentos y criterios.</p>' : ''}
+    </div>
+    <div style="margin-top:14px;overflow-x:auto">${pdcHtml(d)}</div>`;
+  }
+
   async function pedirIdea(tm, nueva = false) {
     if (pedirIdea.en === tm.id) return;
     pedirIdea.en = tm.id;
-    const r = await api().mentora({ curso: CURSO_SERVIDOR[curso], area: tm.area, tema: tm.titulo, objetivo: tm.objetivo || '', multigrado: estado.config.multigrado, nueva });
+    const r = await api().mentora({ curso: CURSO_SERVIDOR[curso], area: tm.area, tema: tm.titulo, objetivo: tm.objetivo || '', contenidos: tm.contenidos || [], multigrado: estado.config.multigrado, nueva });
     pedirIdea.en = null;
     ideas[tm.id] = r.ok ? { ...r.tarjeta, costoUsd: r.costoUsd } : { error: r.error };
     repintar();
   }
 
   const aBase64 = (file) => new Promise((res, rej) => { const fr = new FileReader(); fr.onload = () => res(String(fr.result).split(',')[1] || ''); fr.onerror = () => rej(fr.error); fr.readAsDataURL(file); });
+
+  // Un PDF nuevo suma sus áreas; si un área ya estaba, se reemplaza (y se olvida lo marcado de esa área).
+  function fusionar(actual, nuevo) {
+    if (!actual) return nuevo;
+    const nuevas = new Set(nuevo.areas.map((a) => a.id));
+    for (const k of Object.keys(estado.hechos)) if (nuevas.has(k.split('-')[0])) delete estado.hechos[k];
+    return { titulo: actual.areas.length && !nuevo.areas.every((a) => actual.areas.some((b) => b.id === a.id)) ? 'Plan de varias áreas' : nuevo.titulo,
+      areas: [...actual.areas.filter((a) => !nuevas.has(a.id)), ...nuevo.areas], advertencias: nuevo.advertencias || [] };
+  }
+
+  // Texto de las primeras páginas del PDF con pdf.js (en el navegador, /voz/pdf-texto.js).
+  async function textoDelPdf(file) {
+    const m = await import('/voz/pdf-texto.js?v=edu04b-2');
+    return (await m.textoDelPdf(file)).texto;
+  }
 
   // ── Acciones ───────────────────────────────────────
   window.Cronograma = {
@@ -407,23 +546,51 @@
       if (param === 'plan') return planVista();
       if (param === 'dia') return diaVista(extra);
       if (param === 'idea') return ideaVista(extra);
+      if (param === 'pdc') return pdcVista();
       return principal();
     },
     async subir(file) {
       if (!file) return;
-      if (file.size > 10 * 1024 * 1024) return U.toast('El PDF es muy grande (máximo 10 MB)');
+      ocupado = `Leyendo "${file.name}" en tu equipo…`; repintar();
+      // Primero el texto de las primeras páginas (pdf.js, en el navegador): sirve para libros de
+      // 25 MB y es más barato. Si el PDF no tiene texto (escaneado), se manda el PDF si pesa poco.
+      let datos = null;
+      try {
+        const texto = await textoDelPdf(file);
+        if (texto.replace(/\s/g, '').length > 200) datos = { texto };
+      } catch (e) { console.warn('pdf.js', e); }
+      if (!datos) {
+        if (file.size > 10 * 1024 * 1024) { ocupado = ''; repintar(); return U.toast('No pude leer el texto y el PDF es muy grande (máximo 10 MB). Probá con las páginas del índice.', 5000); }
+        datos = { pdf: await aBase64(file) };
+      }
       ocupado = `La IA está leyendo "${file.name}"…`; repintar();
-      const r = await api().extraerPlan(CURSO_SERVIDOR[curso], await aBase64(file));
+      const r = await api().extraerPlan(CURSO_SERVIDOR[curso], datos);
       ocupado = '';
       if (!r.ok) { U.toast(r.error, 4000); repintar(); return; }
-      if (!r.plan.areas.length) { U.toast('No encontré temas en ese PDF', 4000); estado.plan = estado.plan || null; repintar(); return; }
-      estado.plan = r.plan; estado.hechos = {};
-      // Las áreas nuevas que no están en el horario se avisan en el paso 3.
+      if (!r.plan.areas.length) { U.toast('No encontré temas en ese PDF', 4000); repintar(); return; }
+      estado.plan = fusionar(estado.plan, r.plan);
       await guardar();
-      U.toast(`✅ ${r.plan.areas.reduce((a, x) => a + x.temas.length, 0)} temas leídos (USD ${r.costoUsd})`, 3500);
+      U.toast(`✅ ${r.plan.areas.map((a) => `${area(a.id).corto}: ${a.temas.length}`).join(' · ')} (USD ${r.costoUsd})`, 4000);
       repintar();
     },
-    async ejemplo() { estado.plan = JSON.parse(JSON.stringify(PLAN_EJEMPLO)); estado.hechos = {}; await guardar(); repintar(); },
+    async ejemplo() {
+      if (curso === 'S2' && window.PLAN_EJEMPLO_2SEC) {
+        const elegidas = [...document.querySelectorAll('.cr-area-ej:checked')].map((x) => x.value);
+        if (!elegidas.length) return U.toast('Marcá al menos un área');
+        const p = JSON.parse(JSON.stringify(window.PLAN_EJEMPLO_2SEC));
+        p.areas = p.areas.filter((a) => elegidas.includes(a.id));
+        estado.plan = { titulo: p.titulo, areas: p.areas, advertencias: ['Ejemplo armado con los índices de los textos oficiales 2025: a verificar con el profe.'] };
+      } else estado.plan = JSON.parse(JSON.stringify(PLAN_EJEMPLO));
+      estado.hechos = {};
+      await guardar(); repintar();
+    },
+    async quitarArea(id) {
+      if (!confirm(`¿Quitar ${area(id).nombre} del plan?`)) return;
+      estado.plan.areas = estado.plan.areas.filter((a) => a.id !== id);
+      for (const k of Object.keys(estado.hechos)) if (k.startsWith(id + '-')) delete estado.hechos[k];
+      if (!estado.plan.areas.length) estado.plan = null;
+      await guardar(); repintar();
+    },
     async cfg(k, v) { estado.config[k] = v; await guardar(); repintar(); },
     async curso(c) { curso = c; cargado = false; semana = null; repintar(); },
     async horario(d, i, v) { estado.config.horario[d] ||= []; estado.config.horario[d][i] = v; await guardar(); },
@@ -457,6 +624,26 @@
     otraIdea(id) {
       const tm = estado.plan.areas.flatMap((a) => a.temas.map((x) => ({ ...x, area: a.id }))).find((x) => x.id === id);
       delete ideas[id]; repintar(); pedirIdea(tm, true);
+    },
+    pdc(k, v) { pdcSel[k] = v; repintar(); },
+    imprimir() { document.body.classList.add('imprimiendo-pdc'); window.print(); setTimeout(() => document.body.classList.remove('imprimiendo-pdc'), 500); },
+    word() {
+      const doc = document.getElementById('pdc-doc');
+      if (!doc) return;
+      const html = `<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word"><head><meta charset="utf-8"><title>PDC</title></head><body>${doc.outerHTML}</body></html>`;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(['\ufeff', html], { type: 'application/msword' }));
+      a.download = `PDC-${pdcSel.area === 'todas' ? 'areas' : area(pdcSel.area).corto}-${pdcSel.mes}.doc`;
+      document.body.appendChild(a); a.click(); a.remove();
+      U.toast('📝 Word descargado');
+    },
+    async completarPdc() {
+      const d = datosPdc();
+      const temasPdc = d.lista.filter((x) => x.tipo === 'tema' && !ideas[x.tema.id]).slice(0, 12);
+      for (let i = 0; i < temasPdc.length; i++) {
+        U.toast(`💡 La mentora va por ${i + 1} de ${temasPdc.length}…`, 1800);
+        await pedirIdea({ ...temasPdc[i].tema, area: temasPdc[i].area });
+      }
     },
     PLAN_EJEMPLO, HORARIO_EJEMPLO,
   };

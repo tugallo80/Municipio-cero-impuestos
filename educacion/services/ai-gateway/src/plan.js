@@ -85,16 +85,22 @@ exports.eduPlan = onCall({ ...OPC, timeoutSeconds: 300, memory: '1GiB' }, async 
   }
 
   if (accion === 'extraer') {
+    // Dos formas: el PDF entero (hasta ~10 MB) o el TEXTO de sus primeras páginas, que el
+    // navegador saca con pdf.js (libros de 25 MB: se manda solo el índice).
     const pdf = typeof d.pdf === 'string' ? d.pdf : '';
-    if (pdf.length < 500) throw new HttpsError('invalid-argument', 'No llegó el PDF.');
-    if (pdf.length > MAX_PDF_BASE64) throw new HttpsError('invalid-argument', 'El PDF es muy grande (máximo 10 MB).');
+    const textoPlan = typeof d.texto === 'string' ? d.texto.slice(0, plan.MAX_TEXTO) : '';
+    if (!textoPlan && pdf.length < 500) throw new HttpsError('invalid-argument', 'No llegó el PDF.');
+    if (!textoPlan && pdf.length > MAX_PDF_BASE64) throw new HttpsError('invalid-argument', 'El PDF es muy grande (máximo 10 MB).');
+    if (textoPlan && textoPlan.trim().length < 80) throw new HttpsError('invalid-argument', 'El PDF no tiene texto (¿es una foto escaneada?).');
     const reserva = await datos.reservarClase(yo.id, MAX_PLANES_DIA, LIMITES.costoGlobalDiaUsd, 'plan');
     if (!reserva.ok) return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
     const inicio = Date.now();
     let r;
     try {
       r = await generarJson(
-        [{ inlineData: { mimeType: 'application/pdf', data: pdf } }, { text: `Curso del profe: ${plan.cursoLegible(curso)}. Extraé el plan.` }],
+        textoPlan
+          ? [{ text: `Curso del profe: ${plan.cursoLegible(curso)}. Texto de las primeras páginas del documento:\n\n${textoPlan}\n\nExtraé el plan.` }]
+          : [{ inlineData: { mimeType: 'application/pdf', data: pdf } }, { text: `Curso del profe: ${plan.cursoLegible(curso)}. Extraé el plan.` }],
         plan.instruccionPlan(),
         plan.ESQUEMA_PLAN,
         16384
@@ -109,7 +115,7 @@ exports.eduPlan = onCall({ ...OPC, timeoutSeconds: 300, memory: '1GiB' }, async 
     if (!r.json) throw new HttpsError('unavailable', 'La IA devolvió algo que no se entiende. Probá de nuevo.');
     const extraido = plan.normalizarPlan(r.json);
     const temas = extraido.areas.reduce((a, x) => a + x.temas.length, 0);
-    log('plan_extraido', { personalId: yo.id, curso, modelo: r.modelo, kbPdf: Math.round((pdf.length * 3) / 4 / 1024), areas: extraido.areas.length, temas, tokens: costo.tokens, costoUsd: costo.costoUsd, ms: Date.now() - inicio });
+    log('plan_extraido', { personalId: yo.id, curso, modelo: r.modelo, forma: textoPlan ? 'texto' : 'pdf', kb: Math.round((textoPlan ? textoPlan.length : (pdf.length * 3) / 4) / 1024), areas: extraido.areas.length, temas, tokens: costo.tokens, costoUsd: costo.costoUsd, ms: Date.now() - inicio });
     return { ok: true, plan: extraido, costoUsd: costo.costoUsd, tokens: costo.totalTokens, modelo: r.modelo };
   }
 

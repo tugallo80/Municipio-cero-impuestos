@@ -20,6 +20,11 @@ const AREAS = [
   { id: 'tec', nombre: 'Técnica Tecnológica', icono: '🛠️' },
   { id: 'ing', nombre: 'Lengua extranjera', icono: '💬' },
   { id: 'ori', nombre: 'Lengua originaria', icono: '🗣️' },
+  // Secundaria (EDU.04b, textos de 2.º de secundaria)
+  { id: 'fil', nombre: 'Cosmovisiones, Filosofía y Psicología', icono: '🧠' },
+  { id: 'bio', nombre: 'Biología - Geografía', icono: '🧬' },
+  { id: 'fis', nombre: 'Física', icono: '🧲' },
+  { id: 'qui', nombre: 'Química', icono: '⚗️' },
 ];
 const AREA_IDS = AREAS.map((a) => a.id);
 const EVALUACION = { ser: 10, saber: 45, hacer: 40, autoevaluacion: 5 };
@@ -27,19 +32,28 @@ const EVALUACION = { ser: 10, saber: 45, hacer: 40, autoevaluacion: 5 };
 const texto = (v, max) => String(v ?? '').replace(/\s+/g, ' ').trim().slice(0, max);
 const lista = (v, max, largo) => (Array.isArray(v) ? v : []).map((x) => texto(x, largo)).filter(Boolean).slice(0, max);
 const CURSO_VALIDO = /^[0-9]{1,2}(ro|do|to|vo|no|mo)_(primaria|secundaria)$/;
+// Texto del plan sacado del PDF en el navegador (libros grandes): solo las primeras páginas.
+const MAX_TEXTO = 80_000;
 const cursoLegible = (c) => (CURSO_VALIDO.test(c || '') ? c.replace('_', ' de ') : 'primaria');
 
 // ── Leer el plan (PDF) ──────────────────────────────
 function instruccionPlan() {
-  return `Sos un asistente pedagógico de la plataforma ÑANDÉ (Bolivia). Te dan el PDF del plan de un
-profe de primaria (plan anual, PDC, pensum o planes y programas). Extraé las áreas y los temas
-(contenidos) EN EL ORDEN en que aparecen, para armar un cronograma.
+  return `Sos un asistente pedagógico de la plataforma ÑANDÉ (Bolivia). Te dan el plan de un profe de
+primaria o secundaria (PDF o el texto de sus primeras páginas): plan anual, PDC, pensum, planes y
+programas o un texto de aprendizaje del Ministerio. Extraé las áreas y los temas EN EL ORDEN en que
+aparecen, para armar un cronograma.
+
+Si es un TEXTO DE APRENDIZAJE con ÍNDICE por trimestre ("Primer trimestre" → unidades → subtemas):
+cada UNIDAD del índice es un tema (título = la unidad, sin números de página), sus subtemas van en
+"contenidos" y el trimestre sale del encabezado. Ignorá la presentación y el resto del libro.
 
 Reglas:
 1. No inventes temas: solo lo que está en el documento. Si el documento no es un plan, devolvé
    areas vacías y explicalo en advertencias.
-2. Áreas: usá los códigos dados (mat, len, cnat, csoc, art, mus, efd, val, tec, ing, ori). Si un
-   área del PDF no corresponde a ninguno, usá la más parecida y avisá en advertencias.
+2. Áreas: usá los códigos dados (mat, len, cnat, csoc, art, mus, efd, val, tec, ing, ori, fil, bio,
+   fis, qui). ing = Lengua Extranjera; fil = Cosmovisiones, Filosofía y Psicología; bio = Biología -
+   Geografía; len = Lengua Castellana / Comunicación y Lenguajes. Si un área no corresponde a
+   ninguno, usá la más parecida y avisá en advertencias. Un mismo documento puede tener varias áreas.
 3. Cada tema: título corto (máx. 12 palabras), objetivo en una frase si está, peso 1 (corto, 1–2
    clases), 2 (normal) o 3 (largo, una unidad entera), y el trimestre (1, 2 o 3) solo si el
    documento lo dice; si no, 0.
@@ -65,6 +79,7 @@ const ESQUEMA_PLAN = {
               properties: {
                 titulo: { type: 'string' },
                 objetivo: { type: 'string' },
+                contenidos: { type: 'array', items: { type: 'string' }, description: 'subtemas, máx. 8' },
                 peso: { type: 'integer', minimum: 1, maximum: 3 },
                 trimestre: { type: 'integer', minimum: 0, maximum: 3 },
               },
@@ -95,6 +110,7 @@ function normalizarPlan(crudo) {
         idPrevio: typeof t?.id === 'string' ? t.id : '',
         titulo,
         objetivo: texto(t?.objetivo, 240),
+        contenidos: lista(t?.contenidos, 8, 120),
         peso: [1, 2, 3].includes(Number(t?.peso)) ? Number(t.peso) : 2,
         trimestre: [0, 1, 2, 3].includes(Number(t?.trimestre)) ? Number(t.trimestre) : 0,
       });
@@ -163,7 +179,7 @@ function validarEstado(e) {
 // ── Mentora ─────────────────────────────────────────
 function instruccionMentora() {
   return `Sos la mentora pedagógica de ÑANDÉ: una colega con experiencia que acompaña a profes de
-primaria de escuelas rurales de Santa Cruz, Bolivia. Proponés, el profe decide. Hablás claro, en
+primaria y secundaria de escuelas rurales de Santa Cruz, Bolivia. Proponés, el profe decide. Hablás claro, en
 español de Bolivia, con voseo y sin jerga.
 
 Para el tema que te pasan, armá UNA tarjeta de clase corta y concreta:
@@ -208,13 +224,13 @@ function validarPedidoMentora(d = {}) {
   if (!area) return { ok: false, error: 'Área inválida.' };
   const tema = texto(d.tema, 120);
   if (!tema) return { ok: false, error: 'Falta el tema.' };
-  return { ok: true, curso, area, tema, objetivo: texto(d.objetivo, 240), multigrado: lista(d.multigrado, 3, 20).filter((m) => CURSO_VALIDO.test(m)) };
+  return { ok: true, curso, area, tema, objetivo: texto(d.objetivo, 240), contenidos: lista(d.contenidos, 8, 120), multigrado: lista(d.multigrado, 3, 20).filter((m) => CURSO_VALIDO.test(m)) };
 }
 
 function pedidoMentora(p) {
   return `Curso: ${cursoLegible(p.curso)}${p.multigrado.length ? ` (multigrado con ${p.multigrado.map(cursoLegible).join(' y ')})` : ''}.
 Área: ${p.area.nombre}.
-Tema: "${p.tema}".${p.objetivo ? `\nObjetivo del plan del profe: ${p.objetivo}` : ''}
+Tema: "${p.tema}".${p.objetivo ? `\nObjetivo del plan del profe: ${p.objetivo}` : ''}${p.contenidos?.length ? `\nContenidos del tema: ${p.contenidos.join('; ')}` : ''}
 Escuela rural de Santa Cruz, Bolivia. Periodos de 40 minutos.`;
 }
 
@@ -258,4 +274,5 @@ module.exports = {
   limpiarTarjeta,
   claveIdea,
   cursoLegible,
+  MAX_TEXTO,
 };
