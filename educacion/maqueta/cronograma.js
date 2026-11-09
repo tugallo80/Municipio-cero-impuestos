@@ -300,7 +300,7 @@
       <div class="tarjeta" style="margin-top:12px">
         <b>O usá un ejemplo</b>
         ${curso === 'S2' && window.PLAN_EJEMPLO_2SEC ? `<p class="ter" style="margin:4px 0 10px">2.º de secundaria, con los índices de los textos de aprendizaje 2025 del Ministerio. <b>Ejemplo, a verificar con el profe.</b> Marcá las áreas que das:</p>
-          <div class="pila chica">${window.PLAN_EJEMPLO_2SEC.areas.map((a) => `<label class="fila" style="gap:10px;cursor:pointer"><input type="checkbox" class="cr-area-ej" value="${a.id}" style="width:22px;height:22px" ${['ing', 'mus', 'art'].includes(a.id) ? 'checked' : ''}> ${area(a.id).icono} ${esc(a.nombre)} <span class="ter">· ${a.temas.length} unidades</span></label>`).join('')}</div>
+          <div class="pila chica">${window.PLAN_EJEMPLO_2SEC.areas.map((a) => `<label class="fila" style="gap:10px;cursor:pointer"><input type="checkbox" class="cr-area-ej" value="${a.id}" style="width:22px;height:22px" ${['ing', 'fil', 'art', 'mus', 'val'].includes(a.id) ? 'checked' : ''}> ${area(a.id).icono} ${esc(a.nombre)} <span class="ter">· ${a.temas.length} unidades</span></label>`).join('')}</div>
           <button class="btn ancho sec2" style="margin-top:10px" onclick="Cronograma.ejemplo()">Usar estas áreas</button>`
         : `<button class="btn ancho sec2" style="margin-top:10px" onclick="Cronograma.ejemplo()">Usar el plan de ejemplo (4.º de primaria, inventado)</button>`}
       </div>`}
@@ -580,6 +580,8 @@
         const p = JSON.parse(JSON.stringify(window.PLAN_EJEMPLO_2SEC));
         p.areas = p.areas.filter((a) => elegidas.includes(a.id));
         estado.plan = { titulo: p.titulo, areas: p.areas, advertencias: ['Ejemplo armado con los índices de los textos oficiales 2025: a verificar con el profe.'] };
+        // En secundaria el profe da varias áreas: en el horario quedan solo las suyas (lo demás, libre).
+        estado.config.horario = Object.fromEntries(Object.entries(HORARIO_SEC).map(([d, xs]) => [d, xs.map((x) => (elegidas.includes(x) ? x : ''))]));
       } else estado.plan = JSON.parse(JSON.stringify(PLAN_EJEMPLO));
       estado.hechos = {};
       await guardar(); repintar();
