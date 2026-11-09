@@ -110,3 +110,15 @@ devuelve un resumen con 3 usos:
   (se pide Wake Lock); probar en el teléfono del profe del piloto.
 - Precios de agregadores: confirmar en ai.google.dev/pricing.
 - Próximo trabajo propuesto por la MAESTRA: EDU.04b (cronograma y mentora del profe), esperando su OK.
+
+## EDU.04d — Prueba de la clase "fallada" en main (9-nov-2026)
+- **Causa**: no era un error del código ni de Gemini. Se llegó al **tope global de USD 5 del día** (es el
+  mismo para los chicos y para las pruebas). En el día de Bolivia del 8-nov se gastaron USD 5,02: **USD 4,81
+  los gastó la prueba automática de voz de Kay** (cuenta `alu_e2e000`, ~USD 0,20 por deploy y ~24 deploys
+  de varias ramas); el dueño usó USD 0,08; clase grabada, PDF y mentora, USD 0,07 en total.
+- **Arreglo** (PR de `sesion/edu-04d`, sin tocar Functions):
+  - La prueba de voz de Kay corre solo al publicar en `main` (o a mano), no en cada push de rama.
+  - Las tres pruebas (clase, cronograma, Kay) se **saltean con un aviso** si el tope del día ya se
+    alcanzó, en vez de marcar error. El tope se reinicia a la medianoche de Bolivia (04:00 UTC).
+- **Pendiente para decidir con el dueño**: si las pruebas deberían tener un presupuesto propio aparte del
+  de los chicos (requiere cambiar `cuota.js` y publicar Functions).

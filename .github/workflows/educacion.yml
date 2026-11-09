@@ -114,8 +114,10 @@ jobs:
           echo "::add-mask::$FIREBASE_API_KEY"
           node e2e/probar-plan.mjs
 
+      # La prueba de voz de Kay es la cara (~USD 0,20 por corrida) y gasta del mismo tope diario
+      # que los chicos (USD 5): corre solo al publicar en main o a mano, no en cada push de rama.
       - name: Prueba de punta a punta (voz real contra Gemini)
-        if: env.SOLO_CANAL != 'true' && (github.event_name == 'push' || inputs.probar)
+        if: env.SOLO_CANAL != 'true' && ((github.event_name == 'push' && github.ref_name == 'main') || inputs.probar)
         working-directory: educacion/tools
         env:
           SALIDA: ${{ runner.temp }}/salida-e2e
@@ -126,7 +128,7 @@ jobs:
           node e2e/probar-kay.mjs
 
       - name: Guardar audios de las voces
-        if: always() && (github.event_name == 'push' || inputs.probar)
+        if: always() && ((github.event_name == 'push' && github.ref_name == 'main') || inputs.probar)
         uses: actions/upload-artifact@v4
         with:
           name: voces-kay
