@@ -277,6 +277,19 @@ del profe".
 
 ## Cierre
 
+**Estado**: ✅ mergeado en main con el PR #19 (3f472d5), con el OK del dueño.
+- Publicado en `nande-educacion.web.app/maqueta/`.
+- La rama `sesion/edu-01c` sigue publicando al sitio en vivo si se pushean cambios en
+  `educacion/`. No usarla sin avisar a la MAESTRA.
+
+**App instalada** (último ajuste antes del merge):
+- El manifest abre en el selector de perfiles: `start_url` es `/maqueta/` y `orientation` es
+  `any`.
+- Solo el juego del alumno traba la horizontal, y la suelta al salir con ✕.
+- El selector también enlaza el manifest y registra el service worker (cache v2).
+- Para ver el cambio enseguida en un celular que ya tenía la app instalada, hay que desinstalarla
+  y volver a instalarla desde `/maqueta/`.
+
 **Qué quedó**
 - **Aulas 3D por dentro**:
   - "Entrar · Mate" hace un fundido y lleva a la sala de 7 × 6 m, que está aparte del mapa, con la
