@@ -63,5 +63,30 @@ Base: `docs/investigacion/planificacion-y-calendario-bolivia.md` y
 - Temas pendientes de la clase grabada (EDU.04a) → ofrecerlos para reacomodar en el cronograma.
 - Sin internet (EDU.11): el cronograma se calcula en el equipo; falta guardar el plan para usarlo offline.
 
-## Cierre
-(se completa al cerrar)
+## Cierre (9-nov-2026)
+
+**Hecho** (en la rama `sesion/edu-04a`, PR #20, sin mergear; canal de vista previa)
+- Asistente de 4 pasos, cronograma (Hoy / semana / trimestres / días sin clase y su capa), edición de
+  temas, "Perdí este día", mentora 💡 y **PDC** del mes por área (imprimir / guardar PDF, descargar Word,
+  "Completar con la mentora").
+- **2.º de secundaria** (pedido del dueño): el plan de ejemplo sale de los **índices reales** de los textos de
+  aprendizaje 2025 (9 áreas; `tools/datos/armar-plan-ejemplo.mjs` → `maqueta/plan-ejemplo-2do-secundaria.js`),
+  marcado "a verificar con el profe". La demo arranca con **varias áreas** del profe (Inglés, Filosofía,
+  Artes, Música, Valores) y "Hoy" las mezcla según el horario. También queda 4.º de primaria.
+- **PDF grandes**: pdf.js va incluido en el sitio (`/voz/pdf-texto.js`); del libro se manda solo el texto de las
+  primeras 16 páginas (el índice). Probado con la muestra oficial de Inglés (4 MB → 19.000 caracteres).
+  Si el PDF no tiene texto (escaneado), se manda el PDF si pesa menos de 10 MB.
+- Varias áreas: cada PDF suma o reemplaza sus áreas; se puede quitar un área.
+- Arreglo general de la maqueta: los links `#ruta` sacaban de la página (por el `<base href>`).
+
+**Medido** (gemini-3.1-flash-lite, prueba automática en cada deploy ✅)
+- Leer un PDF de plan (2 páginas): **USD 0,0011**, 18 s. Índice del texto oficial de Inglés: **USD 0,0012**, 2 s
+  → 9 unidades, 3 por trimestre, subtemas como contenidos. Lista de alumnos ficticia: ignorada ✅.
+- Tarjeta de la mentora: **USD 0,0009**; la segunda vez sale del caché (USD 0).
+- Un año de un profe (1 PDF por área + ~150 tarjetas) ≈ **USD 0,15**.
+
+**Pendiente**
+- Lo de "Pendiente / a verificar" de arriba (RM completa, distrito real, formato de PDC de la Distrital).
+- La muestra de 12 páginas y los .txt vienen de la rama `maestra-2` (PR #18): cuando entren a `main`, no hay conflicto (mismo contenido).
+- El texto general de 2.º de secundaria solo trae las unidades del 1.er trimestre de Lengua, Matemática,
+  Biología-Geografía y Sociales: completar con el libro entero.
