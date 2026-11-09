@@ -31,7 +31,7 @@ sesión en la nube empieza con el código (ej. "EDU.01 — Migración de RubiKEd
 - `sesion/pantalla-<código>` (ej. `sesion/pantalla-edu-04c`): solo el sitio en su canal, en una cola
   propia, sin base, Functions ni pruebas con Gemini. Usarla cuando el cambio es solo de pantallas.
 - El link del canal queda en el resumen del workflow ("Vista previa de esta rama").
-- Una rama `sesion/<código>` normal no publica nada (salvo las que figuran en el workflow).
+- Una rama `sesion/<código>` normal no publica nada.
 
 ## Formato de cada ficha
 
