@@ -14,6 +14,14 @@
 //    edu/memoria/{alumnoId}            → { ultima: {profe, misionId, paso, peldanoMax, completa, fecha},
 //                                          materias: {mat: {la_profe: n, el_profe: n, ultimo}} }
 //                                          (memoria compartida de los dos profes: solo datos pedagógicos)
+//
+//  Clase grabada (EDU.04a):
+//    edu/personal/{uid}                → { id, roles: {tutor, direccion}, cursos: {curso: true} }
+//    edu/clases/{curso}/{claseId}      → informe (profe + dirección + contexto), vence a los 30 días;
+//                                          la transcripción vence a los 7 (sin nombres de alumnos)
+//    edu/contexto_dia/{curso}/{claseId} → lo que usan los profes IA (temas, tareas…), vence a los 14
+//    edu/uso_clase/{fecha}/{personalId} → { clases, costoUsd }
+//    El audio NO se guarda en ningún lado.
 // ══════════════════════════════════════════════════
 const { initializeApp, getApps } = require('firebase-admin/app');
 const NOMBRE_APP = 'educacion';
@@ -181,4 +189,168 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
   return { ok: true };
 }
 
-module.exports = { obtenerAlumno, obtenerContenido, reservarSesion, registrarUso, obtenerMemoria, anotarEleccion, guardarUltima, obtenerSesion };
+// ── Clase grabada (EDU.04a) ─────────────────────────
+const DIA = 24 * 3600e3;
+const VENCE = { informe: 30 * DIA, transcripcion: 7 * DIA, contexto: 14 * DIA };
+const ID_OK = /^[-_A-Za-z0-9]{10,40}$/;
+
+/** Cuenta de personal del colegio (profe / dirección). null si no es personal. */
+async function obtenerPersonal(uid) {
+  const p = (await base().ref(`edu/personal/${uid}`).once('value')).val();
+  if (!p || !p.id) return null;
+  const cursos = Object.keys(p.cursos || {}).filter((c) => p.cursos[c] === true);
+  return { id: String(p.id), tutor: p.roles?.tutor === true, direccion: p.roles?.direccion === true, cursos };
+}
+
+/** Reserva una clase (cuenta 1) si el profe no pasó su límite y hay presupuesto global. */
+async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd, tipo = 'clase') {
+  const fecha = fechaBolivia();
+  const usoGlobal = (await base().ref(`edu/uso_global/${fecha}`).once('value')).val() || {};
+  if ((usoGlobal.costoUsd || 0) >= costoGlobalDiaUsd) {
+    return { ok: false, motivo: 'tope_global', mensaje: 'Hoy ya se usó todo el presupuesto de IA del día. Mañana se puede de nuevo.' };
+  }
+  let rechazo = null;
+  const tx = await base()
+    .ref(`edu/uso_${tipo}/${fecha}/${personalId}`)
+    .transaction((u) => {
+      const x = u || {};
+      if ((x.clases || 0) >= maxClasesDia) {
+        rechazo = { ok: false, motivo: `${tipo}_dia`, mensaje: tipo === 'clase' ? `Hoy ya se resumieron ${maxClasesDia} clases tuyas. Mañana hay más.` : `Hoy ya usaste ${maxClasesDia} veces esta ayuda. Mañana hay más.` };
+        return undefined;
+      }
+      rechazo = null;
+      return { ...x, clases: (x.clases || 0) + 1 };
+    });
+  if (!tx.committed) return rechazo || { ok: false, motivo: 'error', mensaje: 'No se pudo reservar.' };
+  return { ok: true, fecha };
+}
+
+/** Suma el costo de una clase al día del profe y al global (el mismo tope que Kay). */
+async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo = 'clase') {
+  const sumar = (ruta, extra) =>
+    base()
+      .ref(ruta)
+      .transaction((u) => {
+        const x = u || {};
+        return { ...x, ...extra(x), costoUsd: Math.round(((x.costoUsd || 0) + costoUsd) * 1e6) / 1e6 };
+      });
+  await Promise.all([
+    sumar(`edu/uso_${tipo}/${fecha}/${personalId}`, () => ({})),
+    sumar(`edu/uso_global/${fecha}`, (x) =>
+      tipo === 'clase'
+        ? { clases: (x.clases || 0) + 1, segundosClase: (x.segundosClase || 0) + Math.round(segundos) }
+        : { [`${tipo}s`]: (x[`${tipo}s`] || 0) + 1 }
+    ),
+  ]);
+}
+
+/** Guarda el informe y el contexto del día. Devuelve el claseId. */
+async function guardarClase(curso, registro) {
+  const ahora = Date.now();
+  const ref = base().ref(`edu/clases/${curso}`).push();
+  const { informe, ...meta } = registro;
+  const { transcripcion, contexto, ...resto } = informe;
+  await ref.set({
+    ...meta,
+    curso,
+    creado: ahora,
+    vence: ahora + VENCE.informe,
+    venceTranscripcion: ahora + VENCE.transcripcion,
+    informe: { ...resto, contexto },
+    transcripcion: transcripcion || '',
+  });
+  if (informe.huboClase && (contexto.temas.length || contexto.tareas.length)) {
+    await base()
+      .ref(`edu/contexto_dia/${curso}/${ref.key}`)
+      .set({ fecha: meta.fecha, materia: meta.materia, tema: meta.tema || '', contexto, creado: ahora, vence: ahora + VENCE.contexto });
+  }
+  return ref.key;
+}
+
+/** Borra lo vencido de un curso (se llama al leer: no hace falta un cron). */
+async function limpiarVencidos(curso, ahora = Date.now()) {
+  const borrar = {};
+  const clases = (await base().ref(`edu/clases/${curso}`).once('value')).val() || {};
+  for (const [id, c] of Object.entries(clases)) {
+    if ((c.vence || 0) <= ahora) borrar[`edu/clases/${curso}/${id}`] = null;
+    else if (c.transcripcion && (c.venceTranscripcion || 0) <= ahora) borrar[`edu/clases/${curso}/${id}/transcripcion`] = null;
+  }
+  const ctx = (await base().ref(`edu/contexto_dia/${curso}`).once('value')).val() || {};
+  for (const [id, c] of Object.entries(ctx)) if ((c.vence || 0) <= ahora) borrar[`edu/contexto_dia/${curso}/${id}`] = null;
+  if (Object.keys(borrar).length) await base().ref().update(borrar);
+  return { clases, ctx, borrados: Object.keys(borrar).length };
+}
+
+/** Informes vigentes de los cursos dados (más nuevos primero). */
+async function listarClases(cursos) {
+  const ahora = Date.now();
+  const salida = [];
+  for (const curso of cursos) {
+    const { clases } = await limpiarVencidos(curso, ahora);
+    for (const [id, c] of Object.entries(clases)) {
+      if ((c.vence || 0) <= ahora) continue;
+      const transcripcion = (c.venceTranscripcion || 0) > ahora ? c.transcripcion || '' : '';
+      salida.push({ id, ...c, transcripcion });
+    }
+  }
+  return salida.sort((a, b) => b.creado - a.creado).slice(0, 30);
+}
+
+async function obtenerClase(curso, id) {
+  if (!ID_OK.test(id || '')) return null;
+  return (await base().ref(`edu/clases/${curso}/${id}`).once('value')).val();
+}
+
+async function borrarClase(curso, id) {
+  if (!ID_OK.test(id || '')) return;
+  await base().ref().update({ [`edu/clases/${curso}/${id}`]: null, [`edu/contexto_dia/${curso}/${id}`]: null });
+}
+
+/** Lo que ven los profes IA: las últimas clases vigentes del curso (sin nombres). */
+async function obtenerClasesRecientes(curso, max = 3) {
+  if (!/^[a-z0-9_]{3,30}$/.test(curso || '')) return [];
+  const ahora = Date.now();
+  const ctx = (await base().ref(`edu/contexto_dia/${curso}`).orderByChild('creado').limitToLast(10).once('value')).val() || {};
+  const arr = (v) => (Array.isArray(v) ? v : []);
+  return Object.values(ctx)
+    .filter((c) => (c.vence || 0) > ahora)
+    .map((c) => ({ ...c, contexto: { temas: arr(c.contexto?.temas), explicaciones: arr(c.contexto?.explicaciones), tareas: arr(c.contexto?.tareas), dudas: arr(c.contexto?.dudas) } }))
+    .sort((a, b) => b.creado - a.creado)
+    .slice(0, max);
+}
+
+// ── Cronograma del profe (EDU.04b) ──────────────────
+//    edu/planes/{personalId}/{curso} → { config, plan, hechos, perdidos, actualizado }
+//    edu/planes/{personalId}/{curso}/ideas/{clave} → tarjeta de la mentora (caché)
+async function leerPlan(personalId, curso) {
+  const v = (await base().ref(`edu/planes/${personalId}/${curso}`).once('value')).val();
+  if (!v) return null;
+  const { ideas, ...resto } = v;
+  return resto;
+}
+async function guardarPlan(personalId, curso, estado) {
+  const ideas = (await base().ref(`edu/planes/${personalId}/${curso}/ideas`).once('value')).val() || null;
+  await base().ref(`edu/planes/${personalId}/${curso}`).set({ ...estado, actualizado: Date.now(), ...(ideas ? { ideas } : {}) });
+}
+async function leerIdea(personalId, curso, clave) {
+  return (await base().ref(`edu/planes/${personalId}/${curso}/ideas/${clave}`).once('value')).val();
+}
+async function guardarIdea(personalId, curso, clave, tarjeta) {
+  await base().ref(`edu/planes/${personalId}/${curso}/ideas/${clave}`).set({ ...tarjeta, creado: Date.now() });
+}
+
+module.exports = {
+  leerPlan,
+  guardarPlan,
+  leerIdea,
+  guardarIdea,
+  obtenerPersonal,
+  reservarClase,
+  registrarCostoClase,
+  guardarClase,
+  listarClases,
+  obtenerClase,
+  borrarClase,
+  obtenerClasesRecientes,
+  VENCE,
+  obtenerAlumno, obtenerContenido, reservarSesion, registrarUso, obtenerMemoria, anotarEleccion, guardarUltima, obtenerSesion };

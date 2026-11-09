@@ -79,4 +79,36 @@ function resumirUso(lista) {
   return { turnos: turnos.length, tokens, totalTokens: totalTokens(tokens), costoUsd: costoUsd(tokens) };
 }
 
-module.exports = { PRECIOS_USD_POR_MILLON, normalizarUso, resumirUso, costoUsd, totalTokens };
+// ── Clase grabada (EDU.04a): una llamada normal (no Live) con audio adentro ──
+// USD por millón de tokens según el modelo (precios de agregadores, nov-2026:
+// confirmar en ai.google.dev/pricing). Audio ≈ 32 tokens por segundo.
+const PRECIOS_CLASE = {
+  'gemini-3.1-flash-lite': { entradaTexto: 0.25, entradaAudio: 0.5, salida: 1.5 },
+  'gemini-2.5-flash-lite': { entradaTexto: 0.1, entradaAudio: 0.3, salida: 0.4 },
+  'gemini-2.5-flash': { entradaTexto: 0.3, entradaAudio: 1.0, salida: 2.5 },
+};
+// Si el modelo no está en la tabla, se usa el más caro de la tabla (la estimación nunca queda corta).
+const PRECIO_CLASE_DESCONOCIDO = { entradaTexto: 0.3, entradaAudio: 1.0, salida: 3.0 };
+
+function precioClase(modelo) {
+  const base = PRECIOS_CLASE[String(modelo || '').replace(/-preview.*$|-\d{2}-\d{4}$/, '')] || PRECIO_CLASE_DESCONOCIDO;
+  return {
+    entradaTexto: precio('EDU_PRECIO_CLASE_ENTRADA_TEXTO', base.entradaTexto),
+    entradaAudio: precio('EDU_PRECIO_CLASE_ENTRADA_AUDIO', base.entradaAudio),
+    salida: precio('EDU_PRECIO_CLASE_SALIDA', base.salida),
+  };
+}
+
+/** Costo de una llamada generateContent a partir de su usageMetadata. */
+function costoClase(meta, modelo) {
+  const acc = VACIO();
+  if (meta && typeof meta === 'object') {
+    repartir(meta.promptTokensDetails, meta.promptTokenCount, 'entrada', acc);
+    acc.salidaTexto += entero(meta.candidatesTokenCount) + entero(meta.thoughtsTokenCount);
+  }
+  const p = precioClase(modelo);
+  const usd = (acc.entradaTexto * p.entradaTexto + acc.entradaAudio * p.entradaAudio + acc.salidaTexto * p.salida) / 1_000_000;
+  return { tokens: acc, totalTokens: totalTokens(acc), costoUsd: Math.round(usd * 1_000_000) / 1_000_000, precios: p };
+}
+
+module.exports = { PRECIOS_USD_POR_MILLON, normalizarUso, resumirUso, costoUsd, totalTokens, costoClase, precioClase };

@@ -62,13 +62,13 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
   let instruccion;
   let herramientas = HERRAMIENTAS;
   if (profe) {
-    const memoria = await datos.obtenerMemoria(alumnoId);
-    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, relevo: reserva.relevo, cursoLegible });
+    const [memoria, clases] = await Promise.all([datos.obtenerMemoria(alumnoId), datos.obtenerClasesRecientes(perfil.curso)]);
+    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, clases, relevo: reserva.relevo, cursoLegible });
     herramientas = profes.HERRAMIENTAS_PROFES;
     if (mision && !reserva.relevo) await datos.anotarEleccion(alumnoId, mision.materia, profe.id);
   } else {
-    const contenido = await datos.obtenerContenido(perfil.curso);
-    instruccion = construirInstruccion(perfil, contenido);
+    const [contenido, clases] = await Promise.all([datos.obtenerContenido(perfil.curso), datos.obtenerClasesRecientes(perfil.curso)]);
+    instruccion = construirInstruccion(perfil, { ...contenido, clases });
   }
 
   const ahora = Date.now();
@@ -112,6 +112,7 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
     relevo: reserva.relevo,
     modelo: MODELO_KAY,
     caracteresInstruccion: instruccion.length,
+    clasesEnContexto: instruccion.includes('# Lo que pasó en las últimas clases'),
   });
 
   return {

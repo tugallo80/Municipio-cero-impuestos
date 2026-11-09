@@ -36,6 +36,15 @@
     return v;
   };
 
+  // Las páginas tienen <base href="/maqueta/"> (por cleanUrls): sin esto, un link "#ruta"
+  // iría a /maqueta/#ruta (el selector de perfiles) en vez de quedarse en esta página.
+  document.addEventListener('click', (e) => {
+    const a = e.target.closest && e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey) return;
+    e.preventDefault();
+    location.hash = a.getAttribute('href').slice(1);
+  });
+
   // Router por hash: #ruta/parametro
   U.router = (rutas, porDefecto) => {
     const pintar = () => {

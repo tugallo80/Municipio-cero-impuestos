@@ -29,7 +29,9 @@
   </div>
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
-<script src="comun.js?v=edu02d-2"></script>
+<script src="comun.js?v=edu04b-1"></script>
+<script src="clase.js?v=edu04a-2"></script>
+<script type="module">import('/voz/clase.js?v=edu04a-2').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
 U.$('#nom-colegio').textContent = D.colegio.nombre;
@@ -43,6 +45,9 @@ function dimensiones(n) {
 }
 
 const rutas = {
+  // EDU.04a: los mismos informes de clase que ve cada profe
+  clases(param) { return Clase.vistaDireccion(param); },
+
   resumen() {
     const tot = D.alumnos.length;
     return `<div class="encab"><div><h1>Estado de los cursos</h1><p>${D.colegio.hoy} · gestión ${D.colegio.gestion} · ${D.colegio.trimestre}er trimestre</p></div></div>
@@ -169,7 +174,14 @@ function descargar(curso) {
   U.toast('📄 Archivo de ejemplo descargado');
 }
 
+// EDU.04a: "Clases grabadas" solo con ?direccion=1 (pendiente de diseño fino con el dueño).
+if (new URLSearchParams(location.search).get('direccion') === '1') {
+  document.querySelector('.nav a[data-ruta="resumen"]').insertAdjacentHTML('afterend', '<a href="#clases" data-ruta="clases">🎙️ Clases grabadas</a>');
+} else delete rutas.clases;
 U.router(rutas, 'resumen');
+Clase.alRepintar = () => {
+  if ((location.hash.slice(1) || '').split('/')[0] === 'clases') window.dispatchEvent(new HashChangeEvent('hashchange'));
+};
 </script>
 </body>
 </html>
