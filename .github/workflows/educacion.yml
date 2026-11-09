@@ -8,7 +8,7 @@ name: Educación — deploy
 
 on:
   push:
-    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, sesion/edu-04a, sesion/edu-04c]
+    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, sesion/edu-04a, sesion/edu-04c, sesion/edu-04e]
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'
@@ -74,7 +74,7 @@ jobs:
         working-directory: educacion
         run: |
           case "$GITHUB_REF_NAME" in
-            sesion/edu-04a|sesion/edu-04c)
+            sesion/edu-04a|sesion/edu-04c|sesion/edu-04e)
               CANAL="${GITHUB_REF_NAME#sesion/}"
               $FIREBASE_CLI hosting:channel:deploy "$CANAL" --project "$PROYECTO" --expires 14d --non-interactive --json > "$RUNNER_TEMP/canal.json"
               URL=$(node -e 'const r=require(process.argv[1]).result;console.log(Object.values(r)[0].url)' "$RUNNER_TEMP/canal.json")
@@ -135,6 +135,11 @@ jobs:
           path: ${{ runner.temp }}/salida-e2e/*.wav
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Gasto de IA de las pruebas hoy
+        if: always() && env.SOLO_CANAL != 'true'
+        working-directory: educacion/tools
+        run: node e2e/gasto-pruebas.mjs || true
 
       - name: Links
         if: success()

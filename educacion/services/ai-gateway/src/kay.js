@@ -39,9 +39,9 @@ async function alumnoDeLaCuenta(request) {
 //    memoria compartida. `relevoDe`: sesión anterior si es un cambio de profe.
 //  - Sin `profe`: Kay con la voz elegida (página técnica /prueba-motor/, EDU.02).
 exports.eduKayToken = onCall(OPCIONES, async (request) => {
-  const { alumnoId, perfil, limites: propios } = await alumnoDeLaCuenta(request);
-  // El tope global de costo diario (costoGlobalDiaUsd) no se puede cambiar por cuenta.
-  const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd };
+  const { alumnoId, perfil, limites: propios, prueba } = await alumnoDeLaCuenta(request);
+  // Los topes de costo diario (general y de pruebas) no se pueden cambiar por cuenta.
+  const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd, costoPruebasDiaUsd: LIMITES.costoPruebasDiaUsd };
   const profe = profes.profePorId(String(request.data?.profe || ''));
   const pedida = String(request.data?.voz || '');
   const voz = profe ? profe.voz : VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;
@@ -52,10 +52,11 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
     alumnoId,
     limites,
     { voz, modelo: MODELO_KAY, ...(profe ? { profe: profe.id } : {}) },
-    relevoDe
+    relevoDe,
+    prueba
   );
   if (!reserva.ok) {
-    log('kay_cuota_agotada', { alumnoId, motivo: reserva.motivo });
+    log('kay_cuota_agotada', { alumnoId, motivo: reserva.motivo, prueba });
     return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
   }
 

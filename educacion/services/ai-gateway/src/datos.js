@@ -9,7 +9,10 @@
 //    edu/contenido/{curso}/pensum/{materia}/{id} → { titulo, texto }
 //    edu/contenido/{curso}/agenda/{id} → { tipo, titulo, fecha, descripcion }
 //    edu/uso/{fecha}/{alumnoId}        → { sesiones, tokens, segundos, costoUsd }
-//    edu/uso_global/{fecha}            → { sesiones, tokens, segundos, costoUsd }
+//    edu/uso_global/{fecha}            → { sesiones, tokens, segundos, costoUsd }   (chicos, profes, dueño)
+//    edu/uso_pruebas/{fecha}           → lo mismo, solo de las cuentas de prueba automática (EDU.04e)
+//    Una cuenta es de prueba si su perfil (edu/alumnos/… o edu/personal/…) tiene pruebaAuto: true
+//    (lo pone solo el workflow con la cuenta de deploy; el navegador no puede escribir la base).
 //    edu/sesiones/{sesionId}           → { alumnoId, inicio, inicioCadena, voz, modelo, profe, relevo, cerrada }
 //    edu/memoria/{alumnoId}            → { ultima: {profe, misionId, paso, peldanoMax, completa, fecha},
 //                                          materias: {mat: {la_profe: n, el_profe: n, ultimo}} }
@@ -26,7 +29,7 @@
 const { initializeApp, getApps } = require('firebase-admin/app');
 const NOMBRE_APP = 'educacion';
 const { getDatabase, ServerValue } = require('firebase-admin/database');
-const { fechaBolivia, evaluarCuota } = require('./cuota');
+const { fechaBolivia, evaluarCuota, bolsa } = require('./cuota');
 
 // Cambios de profe por día (cada uno es una conexión nueva a Gemini).
 const MAX_RELEVOS_DIA = 40;
@@ -54,7 +57,7 @@ async function obtenerAlumno(uid) {
   const limites = {};
   if (Number(perfil.limiteSesionesDia) > 0) limites.sesionesPorAlumnoDia = Math.min(Number(perfil.limiteSesionesDia), 100);
   if (Number(perfil.limiteTokensDia) > 0) limites.tokensPorAlumnoDia = Math.min(Number(perfil.limiteTokensDia), 10_000_000);
-  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo }, limites };
+  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo }, limites, prueba: perfil.pruebaAuto === true };
 }
 
 async function obtenerContenido(curso) {
@@ -80,9 +83,10 @@ async function obtenerContenido(curso) {
  * hereda el reloj (inicioCadena): la cadena entera dura como mucho minutosPorSesion.
  * El tope de tokens del alumno y el de costo global se siguen revisando.
  */
-async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null) {
+async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null, esPrueba = false) {
   const fecha = fechaBolivia();
-  const usoGlobal = (await base().ref(`edu/uso_global/${fecha}`).once('value')).val() || {};
+  const rutaBolsa = bolsa(esPrueba, limites).ruta;
+  const usoGlobal = (await base().ref(`${rutaBolsa}/${fecha}`).once('value')).val() || {};
   const ahora = Date.now();
 
   let inicioCadena = ahora;
@@ -102,7 +106,7 @@ async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null) {
     .transaction((actual) => {
       const uso = actual || {};
       // En un relevo no se cuenta la charla, pero sí tokens y costo global.
-      const ev = evaluarCuota(esRelevo ? { ...uso, sesiones: 0 } : uso, usoGlobal, limites);
+      const ev = evaluarCuota(esRelevo ? { ...uso, sesiones: 0 } : uso, usoGlobal, limites, esPrueba);
       if (ev.ok && esRelevo && (uso.relevos || 0) >= MAX_RELEVOS_DIA) {
         rechazo = { ok: false, motivo: 'relevos', mensaje: 'Hoy ya cambiaste muchas veces de profe. ¡Seguí con este!' };
         return undefined;
@@ -116,9 +120,9 @@ async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null) {
     });
   if (!tx.committed) return rechazo || { ok: false, motivo: 'error', mensaje: 'No se pudo reservar la charla.' };
 
-  if (!esRelevo) await base().ref(`edu/uso_global/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
+  if (!esRelevo) await base().ref(`${rutaBolsa}/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
   const ref = base().ref('edu/sesiones').push();
-  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, inicioCadena, relevo: esRelevo, cerrada: false, ...datosSesion });
+  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, inicioCadena, relevo: esRelevo, cerrada: false, ...(esPrueba ? { prueba: true } : {}), ...datosSesion });
   const usoAlumno = tx.snapshot.val() || {};
   return {
     ok: true,
@@ -162,12 +166,14 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
   if (!/^[-_A-Za-z0-9]{10,40}$/.test(sesionId || '')) return { ok: false, error: 'Sesión inválida.' };
   const refSesion = base().ref(`edu/sesiones/${sesionId}`);
   let fecha = null;
+  let esPrueba = false;
   const tx = await refSesion.transaction((s) => {
     // La primera pasada puede llegar con null (sin caché local): se devuelve null
     // para que el servidor responda con el valor real y la función vuelva a correr.
     if (s === null) return null;
     if (s.alumnoId !== alumnoId || s.cerrada) return undefined;
     fecha = s.fecha;
+    esPrueba = s.prueba === true;
     return { ...s, cerrada: true, totalTokens, costoUsd, segundos };
   });
   const final = tx.snapshot.val();
@@ -185,7 +191,7 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
           costoUsd: Math.round(((x.costoUsd || 0) + costoUsd) * 1e6) / 1e6,
         };
       });
-  await Promise.all([sumarA(`edu/uso/${fecha}/${alumnoId}`), sumarA(`edu/uso_global/${fecha}`)]);
+  await Promise.all([sumarA(`edu/uso/${fecha}/${alumnoId}`), sumarA(`${esPrueba ? 'edu/uso_pruebas' : 'edu/uso_global'}/${fecha}`)]);
   return { ok: true };
 }
 
@@ -199,15 +205,19 @@ async function obtenerPersonal(uid) {
   const p = (await base().ref(`edu/personal/${uid}`).once('value')).val();
   if (!p || !p.id) return null;
   const cursos = Object.keys(p.cursos || {}).filter((c) => p.cursos[c] === true);
-  return { id: String(p.id), tutor: p.roles?.tutor === true, direccion: p.roles?.direccion === true, cursos };
+  return { id: String(p.id), tutor: p.roles?.tutor === true, direccion: p.roles?.direccion === true, cursos, prueba: p.pruebaAuto === true };
 }
 
-/** Reserva una clase (cuenta 1) si el profe no pasó su límite y hay presupuesto global. */
-async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd, tipo = 'clase') {
+/**
+ * Reserva una clase / PDF / tarjeta (cuenta 1) si el profe no pasó su límite y hay presupuesto
+ * en su bolsa (general, o la de pruebas si es una cuenta de prueba automática).
+ */
+async function reservarClase(personalId, maxClasesDia, limites, tipo = 'clase', esPrueba = false) {
   const fecha = fechaBolivia();
-  const usoGlobal = (await base().ref(`edu/uso_global/${fecha}`).once('value')).val() || {};
-  if ((usoGlobal.costoUsd || 0) >= costoGlobalDiaUsd) {
-    return { ok: false, motivo: 'tope_global', mensaje: 'Hoy ya se usó todo el presupuesto de IA del día. Mañana se puede de nuevo.' };
+  const b = bolsa(esPrueba, limites);
+  const usoGlobal = (await base().ref(`${b.ruta}/${fecha}`).once('value')).val() || {};
+  if ((usoGlobal.costoUsd || 0) >= b.tope) {
+    return { ok: false, motivo: b.motivo, mensaje: esPrueba ? b.mensaje : 'Hoy ya se usó todo el presupuesto de IA del día. Mañana se puede de nuevo.' };
   }
   let rechazo = null;
   const tx = await base()
@@ -226,7 +236,7 @@ async function reservarClase(personalId, maxClasesDia, costoGlobalDiaUsd, tipo =
 }
 
 /** Suma el costo de una clase al día del profe y al global (el mismo tope que Kay). */
-async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo = 'clase') {
+async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo = 'clase', esPrueba = false) {
   const sumar = (ruta, extra) =>
     base()
       .ref(ruta)
@@ -236,7 +246,7 @@ async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo =
       });
   await Promise.all([
     sumar(`edu/uso_${tipo}/${fecha}/${personalId}`, () => ({})),
-    sumar(`edu/uso_global/${fecha}`, (x) =>
+    sumar(`${esPrueba ? 'edu/uso_pruebas' : 'edu/uso_global'}/${fecha}`, (x) =>
       tipo === 'clase'
         ? { clases: (x.clases || 0) + 1, segundosClase: (x.segundosClase || 0) + Math.round(segundos) }
         : { [`${tipo}s`]: (x[`${tipo}s`] || 0) + 1 }

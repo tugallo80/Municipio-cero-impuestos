@@ -115,7 +115,7 @@ let tokenProfe = null
 try {
   // Cuentas
   tokenProfe = await cuenta(PROFE)
-  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true } })
+  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true }, pruebaAuto: true })
   await db.ref(`edu/uso_clase/${fecha}/${PROFE.id}`).remove()
   // Restos de corridas anteriores que fallaron a mitad: que no queden en el contexto del curso.
   const viejas = (await db.ref(`edu/clases/${CURSO}`).orderByChild('personalId').equalTo(PROFE.id).once('value')).val() || {}
@@ -123,7 +123,7 @@ try {
   if (Object.keys(viejas).length) md(`- Limpié ${Object.keys(viejas).length} clase(s) de pruebas anteriores`)
   const tokenAlu = await cuenta(ALU)
   await db.ref(`edu/uid_alumno/${ALU.uid}`).set(ALU.alumnoId)
-  await db.ref(`edu/alumnos/${ALU.alumnoId}`).set({ curso: CURSO, estilo: 'visual' })
+  await db.ref(`edu/alumnos/${ALU.alumnoId}`).set({ curso: CURSO, estilo: 'visual', pruebaAuto: true })
   await db.ref(`edu/uso/${fecha}/${ALU.alumnoId}`).remove()
 
   const audio = audioClase()
@@ -142,10 +142,10 @@ try {
   const t0 = Date.now()
   const r = await llamar('eduClase', pedido(audio.webm, 'audio/webm;codecs=opus'), tokenProfe)
   const ms = Date.now() - t0
-  // El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+  // Las pruebas tienen su propia bolsa (USD 1/día, aparte de la de los chicos): si se agotó,
   // la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
-  if (r.result?.motivo === 'tope_global') {
-    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
+  if (/^tope_/.test(r.result?.motivo || '')) {
+    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA de las pruebas o el general (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
     console.log('::warning::Prueba de la clase grabada salteada: tope diario de IA alcanzado')
     if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
     process.exit(0)

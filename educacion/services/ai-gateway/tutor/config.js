@@ -34,6 +34,8 @@ const LIMITES = {
   tokensPorAlumnoDia: numeroEnv('MAX_TOKENS_PER_STUDENT_DAY', 600000),
   // Freno de mano de todo el sistema: costo estimado máximo por día, en USD.
   costoGlobalDiaUsd: numeroEnv('EDU_TOPE_COSTO_GLOBAL_DIA_USD', 5),
+  // Bolsa aparte para las cuentas de prueba automática del workflow (EDU.04e): no tocan la de arriba.
+  costoPruebasDiaUsd: numeroEnv('EDU_TOPE_COSTO_PRUEBAS_DIA_USD', 1),
 };
 
 module.exports = { MODELO_KAY, VOCES, VOZ_POR_DEFECTO, LIMITES };

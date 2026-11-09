@@ -92,7 +92,7 @@ exports.eduPlan = onCall({ ...OPC, timeoutSeconds: 300, memory: '1GiB' }, async 
     if (!textoPlan && pdf.length < 500) throw new HttpsError('invalid-argument', 'No llegó el PDF.');
     if (!textoPlan && pdf.length > MAX_PDF_BASE64) throw new HttpsError('invalid-argument', 'El PDF es muy grande (máximo 10 MB).');
     if (textoPlan && textoPlan.trim().length < 80) throw new HttpsError('invalid-argument', 'El PDF no tiene texto (¿es una foto escaneada?).');
-    const reserva = await datos.reservarClase(yo.id, MAX_PLANES_DIA, LIMITES.costoGlobalDiaUsd, 'plan');
+    const reserva = await datos.reservarClase(yo.id, MAX_PLANES_DIA, LIMITES, 'plan', yo.prueba);
     if (!reserva.ok) return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
     const inicio = Date.now();
     let r;
@@ -111,7 +111,7 @@ exports.eduPlan = onCall({ ...OPC, timeoutSeconds: 300, memory: '1GiB' }, async 
     }
     d.pdf = null; // el PDF no se guarda
     const costo = costoClase(r.uso, r.modelo);
-    await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, 0, 'plan');
+    await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, 0, 'plan', yo.prueba);
     if (!r.json) throw new HttpsError('unavailable', 'La IA devolvió algo que no se entiende. Probá de nuevo.');
     const extraido = plan.normalizarPlan(r.json);
     const temas = extraido.areas.reduce((a, x) => a + x.temas.length, 0);
@@ -130,7 +130,7 @@ exports.eduMentora = onCall({ ...OPC, timeoutSeconds: 60, memory: '256MiB' }, as
   const guardada = request.data?.nueva ? null : await datos.leerIdea(yo.id, p.curso, clave);
   if (guardada) return { ok: true, tarjeta: plan.limpiarTarjeta(guardada), deCache: true, costoUsd: 0 };
 
-  const reserva = await datos.reservarClase(yo.id, MAX_IDEAS_DIA, LIMITES.costoGlobalDiaUsd, 'mentora');
+  const reserva = await datos.reservarClase(yo.id, MAX_IDEAS_DIA, LIMITES, 'mentora', yo.prueba);
   if (!reserva.ok) return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
   let r;
   try {
@@ -140,7 +140,7 @@ exports.eduMentora = onCall({ ...OPC, timeoutSeconds: 60, memory: '256MiB' }, as
     throw new HttpsError('unavailable', 'La mentora no pudo responder. Probá de nuevo.');
   }
   const costo = costoClase(r.uso, r.modelo);
-  await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, 0, 'mentora');
+  await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, 0, 'mentora', yo.prueba);
   if (!r.json) throw new HttpsError('unavailable', 'La mentora devolvió algo que no se entiende. Probá de nuevo.');
   const tarjeta = plan.limpiarTarjeta(r.json);
   await datos.guardarIdea(yo.id, p.curso, clave, tarjeta);

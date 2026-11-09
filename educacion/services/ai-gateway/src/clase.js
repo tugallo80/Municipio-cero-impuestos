@@ -107,7 +107,7 @@ exports.eduClase = onCall(
     if (audio.length > MAX_BASE64) throw new HttpsError('invalid-argument', `La grabación es muy larga (máximo ${MAX_MINUTOS_CLASE} minutos).`);
     if (p.segundos > MAX_MINUTOS_CLASE * 60 + 60) throw new HttpsError('invalid-argument', `Máximo ${MAX_MINUTOS_CLASE} minutos por clase.`);
 
-    const reserva = await datos.reservarClase(yo.id, MAX_CLASES_DIA, LIMITES.costoGlobalDiaUsd);
+    const reserva = await datos.reservarClase(yo.id, MAX_CLASES_DIA, LIMITES, 'clase', yo.prueba);
     if (!reserva.ok) {
       log('clase_cuota_agotada', { personalId: yo.id, motivo: reserva.motivo });
       return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
@@ -134,7 +134,7 @@ exports.eduClase = onCall(
       crudo = null;
     }
     const costo = costoClase(r.usageMetadata, modelo);
-    await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, p.segundos);
+    await datos.registrarCostoClase(yo.id, reserva.fecha, costo.costoUsd, p.segundos, 'clase', yo.prueba);
     if (!crudo) {
       log('clase_json_invalido', { personalId: yo.id, modelo, costoUsd: costo.costoUsd });
       throw new HttpsError('unavailable', 'La IA devolvió algo que no se entiende. Probá de nuevo.');

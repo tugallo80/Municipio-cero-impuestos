@@ -30,7 +30,7 @@ const fecha = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
 async function entrar() {
   const clave = randomBytes(24).toString('base64url')
   try { await getAuth().updateUser(PROFE.uid, { email: PROFE.email, password: clave }) } catch { await getAuth().createUser({ uid: PROFE.uid, email: PROFE.email, password: clave }) }
-  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true, '2do_secundaria': true } })
+  await db.ref(`edu/personal/${PROFE.uid}`).set({ id: PROFE.id, roles: { tutor: true, direccion: false }, cursos: { [CURSO]: true, '2do_secundaria': true }, pruebaAuto: true })
   for (const t of ['plan', 'mentora']) await db.ref(`edu/uso_${t}/${fecha}/${PROFE.id}`).remove()
   await db.ref(`edu/planes/${PROFE.id}`).remove()
   const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
@@ -113,10 +113,10 @@ try {
 
   const t0 = Date.now()
   const r = await llamar('eduPlan', { accion: 'extraer', curso: CURSO, pdf: PDF.toString('base64') }, token)
-  // El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+  // Las pruebas tienen su propia bolsa (USD 1/día, aparte de la de los chicos): si se agotó,
   // la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
-  if (r.result?.motivo === 'tope_global') {
-    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
+  if (/^tope_/.test(r.result?.motivo || '')) {
+    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA de las pruebas o el general (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
     console.log('::warning::Prueba del cronograma salteada: tope diario de IA alcanzado')
     if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
     await db.ref(`edu/planes/${PROFE.id}`).remove()
@@ -159,6 +159,31 @@ try {
     md(`- Comunidad: ${tj?.comunidad}`)
     md(`- Evaluación: Ser: ${tj?.evaluacion?.ser} / Saber: ${tj?.evaluacion?.saber} / Hacer: ${tj?.evaluacion?.hacer} / Autoev.: ${tj?.evaluacion?.autoevaluacion}`)
   }
+
+  // EDU.04e — Bolsas separadas. Una cuenta COMÚN (como la del dueño o un chico) sigue sacando de la
+  // bolsa general; la de prueba, de la suya. Pedir el token de voz no gasta Gemini (no se abre la charla).
+  md()
+  md('### Bolsas de gasto (chicos vs. pruebas)')
+  const COMUN = { uid: 'e2e-comun', email: `e2e-comun@${PROFE.email.split('@')[1]}`, alumnoId: 'alu_e2eg00' }
+  const claveComun = randomBytes(24).toString('base64url')
+  try { await getAuth().updateUser(COMUN.uid, { email: COMUN.email, password: claveComun }) } catch { await getAuth().createUser({ uid: COMUN.uid, email: COMUN.email, password: claveComun }) }
+  await db.ref(`edu/uid_alumno/${COMUN.uid}`).set(COMUN.alumnoId)
+  await db.ref(`edu/alumnos/${COMUN.alumnoId}`).set({ curso: '4to_primaria', estilo: 'visual' }) // sin pruebaAuto
+  await db.ref(`edu/uso/${fecha}/${COMUN.alumnoId}`).remove()
+  const rc = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: COMUN.email, password: claveComun, returnSecureToken: true }),
+  })
+  const tokComun = (await rc.json()).idToken
+  const leer = async (ruta) => (await db.ref(ruta).once('value')).val() || 0
+  const antesG = await leer(`edu/uso_global/${fecha}/sesiones`), antesP = await leer(`edu/uso_pruebas/${fecha}/sesiones`)
+  const tc = await llamar('eduKayToken', { profe: 'la_profe' }, tokComun)
+  const despuesG = await leer(`edu/uso_global/${fecha}/sesiones`), despuesP = await leer(`edu/uso_pruebas/${fecha}/sesiones`)
+  chequear(tc.result?.ok === true && !!tc.result?.token, `Una cuenta común (como la del dueño) recibe su token de voz (${tc.result?.ok ? 'ok' : tc.result?.error || tc.error?.message})`)
+  chequear(despuesG === antesG + 1 && despuesP === antesP, `…y cuenta en la bolsa general, no en la de pruebas (general ${antesG}→${despuesG}, pruebas ${antesP}→${despuesP})`)
+  const sesion = tc.result?.sesionId ? (await db.ref(`edu/sesiones/${tc.result.sesionId}`).once('value')).val() : null
+  chequear(sesion && !sesion.prueba, 'La charla de la cuenta común no queda marcada como prueba')
+  await db.ref(`edu/alumnos/${COMUN.alumnoId}`).remove()
+  await db.ref(`edu/uid_alumno/${COMUN.uid}`).remove()
 } catch (err) {
   chequear(false, `Error: ${err.message}`)
 } finally {

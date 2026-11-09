@@ -45,8 +45,21 @@ try {
 }
 const fecha = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
 await getDatabase().ref(`edu/uid_alumno/${E2E.uid}`).set(E2E.alumnoId)
-await getDatabase().ref(`edu/alumnos/${E2E.alumnoId}`).set({ curso: '4to_primaria', estilo: 'auditivo' })
+await getDatabase().ref(`edu/alumnos/${E2E.alumnoId}`).set({ curso: '4to_primaria', estilo: 'auditivo', pruebaAuto: true })
 await getDatabase().ref(`edu/uso/${fecha}/${E2E.alumnoId}`).remove()
+
+// Esta prueba cuesta ~USD 0,20. Si a la bolsa de pruebas (USD 1/día) no le alcanza, se saltea antes
+// de empezar, para no quedar a mitad de camino.
+{
+  const gastado = (await getDatabase().ref(`edu/uso_pruebas/${fecha}/costoUsd`).once('value')).val() || 0
+  const tope = Number(process.env.EDU_TOPE_COSTO_PRUEBAS_DIA_USD) || 1
+  if (gastado + 0.25 > tope) {
+    md(`- ⏸️ Prueba de Kay salteada: las pruebas ya gastaron USD ${gastado.toFixed(3)} de ${tope} hoy (se reinicia a la medianoche de Bolivia).`)
+    console.log('::warning::Prueba de Kay salteada: presupuesto diario de pruebas casi agotado')
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
+    process.exit(0)
+  }
+}
 
 async function entrar() {
   const r = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
@@ -211,11 +224,11 @@ async function vozNatural(frase) {
 // 2) Charla principal con la voz por defecto: audio real + texto
 md()
 md('### Charla guiada (voz Sulafat)')
-// El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+// Las pruebas tienen su propia bolsa (USD 1/día, aparte de la de los chicos): si se agotó,
 // la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
 const t1 = await llamar('eduKayToken', { voz: 'Sulafat' }, idToken)
-if (t1.result?.motivo === 'tope_global') {
-  md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${t1.result.error}). Se reinicia a la medianoche de Bolivia.`)
+if (/^tope_/.test(t1.result?.motivo || '')) {
+  md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA de las pruebas o el general (${t1.result.error}). Se reinicia a la medianoche de Bolivia.`)
   console.log('::warning::Prueba de Kay salteada: tope diario de IA alcanzado')
   if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
   process.exit(0)
