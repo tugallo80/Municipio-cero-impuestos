@@ -153,3 +153,12 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 2. **¿Educación usa el proyecto nuevo o sigue en `rubikeduai`?** Recomendación: proyecto nuevo único
    para toda la súper app; los datos de `rubikeduai` son de prueba familiar y se recrean con el seed.
 3. **Plan Blaze (facturación)**: necesario para Cloud Functions. Hosting solo funciona gratis.
+
+## Decisión del 8-nov-2026 (noche): clase grabada (EDU.04a)
+
+- El profe graba su clase; la IA resume para el profe (pensum del día, sugerencias positivas) y da
+  **contexto del día a los profes IA** del alumno. El audio no se guarda; sin nombres de alumnos.
+- **Parte "dirección" (protección de los chicos ante maltrato o bullying)**: programada pero escondida;
+  se diseña en detalle con el dueño más adelante. Estrategia del dueño: primero mostrar el valor a
+  profes y alumnos; **todos los usos se presentan abiertos antes de grabar clases reales** (consentimiento
+  del profe, padres y dirección distrital). Regla: el profe ve lo mismo que la dirección.
