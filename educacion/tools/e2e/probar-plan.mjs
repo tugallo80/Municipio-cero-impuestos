@@ -113,6 +113,15 @@ try {
 
   const t0 = Date.now()
   const r = await llamar('eduPlan', { accion: 'extraer', curso: CURSO, pdf: PDF.toString('base64') }, token)
+  // El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+  // la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
+  if (r.result?.motivo === 'tope_global') {
+    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
+    console.log('::warning::Prueba del cronograma salteada: tope diario de IA alcanzado')
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
+    await db.ref(`edu/planes/${PROFE.id}`).remove()
+    process.exit(0)
+  }
   chequear(r.result?.ok === true, `Leyó el PDF en ${((Date.now() - t0) / 1000).toFixed(1)} s (${r.result?.modelo || r.error?.message || r.result?.error})`)
   if (r.result?.ok) {
     const p = r.result.plan

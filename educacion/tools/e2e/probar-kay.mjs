@@ -211,7 +211,15 @@ async function vozNatural(frase) {
 // 2) Charla principal con la voz por defecto: audio real + texto
 md()
 md('### Charla guiada (voz Sulafat)')
+// El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+// la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
 const t1 = await llamar('eduKayToken', { voz: 'Sulafat' }, idToken)
+if (t1.result?.motivo === 'tope_global') {
+  md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${t1.result.error}). Se reinicia a la medianoche de Bolivia.`)
+  console.log('::warning::Prueba de Kay salteada: tope diario de IA alcanzado')
+  if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
+  process.exit(0)
+}
 chequear(t1.result?.ok === true, `eduKayToken da token efímero (modelo ${t1.result?.modelo}, sesión ${t1.result?.sesionId ? 'creada' : '—'})`)
 if (t1.result?.ok) {
   const pregunta = 'Hola Kay. ¿Cuánto es tres cuartos más un cuarto? Decime la respuesta nomás.'

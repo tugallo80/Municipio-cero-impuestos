@@ -142,6 +142,14 @@ try {
   const t0 = Date.now()
   const r = await llamar('eduClase', pedido(audio.webm, 'audio/webm;codecs=opus'), tokenProfe)
   const ms = Date.now() - t0
+  // El tope global de USD 5/día es el mismo para los chicos y para las pruebas: si ya se llegó,
+  // la prueba se saltea con un aviso (no es una falla del código) y no gasta más.
+  if (r.result?.motivo === 'tope_global') {
+    md(`- ⏸️ Prueba salteada: hoy ya se llegó al tope de gasto de IA (${r.result.error}). Se reinicia a la medianoche de Bolivia.`)
+    console.log('::warning::Prueba de la clase grabada salteada: tope diario de IA alcanzado')
+    if (process.env.GITHUB_STEP_SUMMARY) appendFileSync(process.env.GITHUB_STEP_SUMMARY, resumen.join('\n') + '\n')
+    process.exit(0)
+  }
   chequear(r.result?.ok === true, `eduClase resumió la clase webm/opus en ${(ms / 1000).toFixed(1)} s (${r.result?.clase?.modelo || r.error?.message || r.result?.error})`)
   if (r.result?.ok) {
     const c = r.result.clase
