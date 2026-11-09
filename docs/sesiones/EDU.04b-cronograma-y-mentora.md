@@ -65,7 +65,7 @@ Base: `docs/investigacion/planificacion-y-calendario-bolivia.md` y
 
 ## Cierre (9-nov-2026)
 
-**Hecho** (en la rama `sesion/edu-04a`, PR #20, sin mergear; canal de vista previa)
+**Hecho** (PR #20, mergeado a `main` el 9-nov-2026 con el OK del dueño)
 - Asistente de 4 pasos, cronograma (Hoy / semana / trimestres / días sin clase y su capa), edición de
   temas, "Perdí este día", mentora 💡 y **PDC** del mes por área (imprimir / guardar PDF, descargar Word,
   "Completar con la mentora").

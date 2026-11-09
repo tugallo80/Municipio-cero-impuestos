@@ -92,7 +92,7 @@ devuelve un resumen con 3 usos:
 
 ## Cierre (9-nov-2026)
 
-**Hecho** (PR #20, sin mergear)
+**Hecho** (PR #20, mergeado a `main` el 9-nov-2026 con el OK del dueño)
 - Publicado en el canal de vista previa `https://nande-educacion--edu-04a-m9feaits.web.app/maqueta/tutor.html#clase`
   (vence a los 14 días; esta rama ya no publica en el sitio en vivo para no pisar a EDU.06b).
   Functions `eduClase` y `eduClases` en vivo; `eduKayToken`/`eduProfes` siguen andando (prueba de Kay ✅).
