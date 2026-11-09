@@ -155,6 +155,12 @@
   // ── Piezas de vista ────────────────────────────────
   const css = `
   .cr-may::first-letter{text-transform:uppercase}
+  .cr-tema{display:grid;grid-template-columns:auto 1fr;gap:8px 10px;align-items:start;padding:10px;background:var(--sup3);border-radius:12px}
+  .cr-tema-ctl{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px}
+  .cr-tema-ctl select{width:auto;min-height:40px;flex:1 1 110px}
+  .cr-tema-ctl .btn{min-width:44px}
+  @media (min-width:900px){.cr-tema{grid-template-columns:auto 1fr auto}.cr-tema-ctl{grid-column:auto;flex-wrap:nowrap}.cr-tema-ctl select{flex:0 0 auto}}
+  @media (max-width:600px){.cr-semana{grid-auto-columns:80%}}
   @media print{body.imprimiendo-pdc *{visibility:hidden}body.imprimiendo-pdc #pdc-doc,body.imprimiendo-pdc #pdc-doc *{visibility:visible}
     body.imprimiendo-pdc #pdc-doc{position:absolute;left:0;top:0;width:100%;padding:0}body.imprimiendo-pdc{background:#fff}}
   .cr-semana{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(170px,1fr);gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:6px}
@@ -165,7 +171,7 @@
   .cr-item .n{color:var(--texto3);font-size:11px;min-width:14px}
   .cr-item.hecho{opacity:.55;text-decoration:line-through}
   .cr-item.colchon,.cr-item.evaluacion{background:transparent;border:1px dashed var(--borde);color:var(--texto2)}
-  .cr-per{display:flex;gap:10px;align-items:center;padding:12px;border-radius:14px;background:var(--sup2);border:1px solid var(--borde)}
+  .cr-per{padding:12px;border-radius:14px;background:var(--sup2);border:1px solid var(--borde)}
   .cr-per .ic{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
   .cr-per .btn{min-height:44px;min-width:44px;padding:0 12px}
   .cr-per.hecho{opacity:.6}
@@ -208,14 +214,16 @@
 
   function periodoHoy(x, temas, fecha) {
     const a = area(x.area);
-    if (x.tipo !== 'tema') return `<div class="cr-per"><div class="ic" style="background:${a.color}22">${a.icono}</div><div class="crece"><b>${x.tipo === 'evaluacion' ? 'Evaluación' : 'Repaso / libre'}</b><div class="ter">${etiquetaPeriodo(x)} · ${esc(a.nombre)}</div></div></div>`;
+    if (x.tipo !== 'tema') return `<div class="cr-per fila-accion"><div class="ic" style="background:${a.color}22">${a.icono}</div><div class="crece"><b>${x.tipo === 'evaluacion' ? 'Evaluación' : 'Repaso / libre'}</b><div class="ter">${etiquetaPeriodo(x)} · ${esc(a.nombre)}</div></div></div>`;
     const tm = temas[x.temaId];
     const hecho = !!estado.hechos[x.temaId];
-    return `<div class="cr-per ${hecho ? 'hecho' : ''}">
+    return `<div class="cr-per fila-accion ${hecho ? 'hecho' : ''}">
       <div class="ic" style="background:${a.color}22">${a.icono}</div>
       <div class="crece"><b>${esc(tm.titulo)}</b><div class="ter">${etiquetaPeriodo(x)} · ${esc(a.corto)}</div></div>
-      <button class="btn sec2" title="Ideas de la mentora" onclick="location.hash='cronograma/idea/${tm.id}'">💡</button>
-      <button class="btn ${hecho ? '' : 'sec2'}" title="Marcar como dado" onclick="Cronograma.hecho('${tm.id}','${fecha}')">${hecho ? '✓' : '○'}</button>
+      <div class="acciones">
+        <button class="btn chico sec2" title="Ideas de la mentora" onclick="location.hash='cronograma/idea/${tm.id}'">💡 Ideas</button>
+        <button class="btn chico ${hecho ? '' : 'sec2'}" title="Marcar como dado" onclick="Cronograma.hecho('${tm.id}','${fecha}')">${hecho ? '✓ Dado' : '○ Dado'}</button>
+      </div>
     </div>`;
   }
 
@@ -356,13 +364,15 @@
     return `<a href="#cronograma" class="chica">← Cronograma</a>
     <div class="encab" style="margin-top:10px"><div><h1>Temas del plan</h1><p>Cambiá el orden, el largo (peso) o el trimestre. Lo que cambies se reacomoda solo.</p></div></div>
     <div class="pila">${estado.plan.areas.map((a, ai) => `<details class="tarjeta" ${ai === 0 ? 'open' : ''}><summary style="cursor:pointer"><b>${area(a.id).icono} ${esc(area(a.id).nombre)}</b> <span class="ter">· ${a.temas.length} temas</span></summary>
-      <div class="pila" style="margin-top:10px">${a.temas.map((x, i) => `<div class="fila envuelve" style="gap:6px;padding:8px;background:var(--sup3);border-radius:10px">
+      <div class="pila" style="margin-top:10px">${a.temas.map((x, i) => `<div class="cr-tema">
         <button class="btn chico ${estado.hechos[x.id] ? '' : 'sec2'}" title="Dado" onclick="Cronograma.hecho('${x.id}')">${estado.hechos[x.id] ? '✓' : '○'}</button>
-        <span class="crece chica" style="min-width:140px">${esc(x.titulo)}${x.contenidos?.length ? `<br><span class="ter">${x.contenidos.map(esc).join(' · ')}</span>` : ''}</span>
-        <select class="cr-campo" style="width:auto;min-height:38px" onchange="Cronograma.tema('${a.id}', ${i}, 'peso', Number(this.value))">${[1, 2, 3].map((p) => `<option value="${p}" ${p === x.peso ? 'selected' : ''}>${['corto', 'normal', 'largo'][p - 1]}</option>`).join('')}</select>
-        <select class="cr-campo" style="width:auto;min-height:38px" onchange="Cronograma.tema('${a.id}', ${i}, 'trimestre', Number(this.value))">${[0, 1, 2, 3].map((p) => `<option value="${p}" ${p === x.trimestre ? 'selected' : ''}>${p ? p + '.º trim.' : 'cualquiera'}</option>`).join('')}</select>
-        <button class="btn chico sec2" onclick="Cronograma.mover('${a.id}', ${i}, -1)">↑</button><button class="btn chico sec2" onclick="Cronograma.mover('${a.id}', ${i}, 1)">↓</button>
-        <button class="btn chico sec2" onclick="Cronograma.quitarTema('${a.id}', ${i})">✕</button></div>`).join('')}
+        <div class="chica"><b>${esc(x.titulo)}</b>${x.contenidos?.length ? `<br><span class="ter">${x.contenidos.map(esc).join(' · ')}</span>` : ''}</div>
+        <div class="cr-tema-ctl">
+          <select class="cr-campo" onchange="Cronograma.tema('${a.id}', ${i}, 'peso', Number(this.value))">${[1, 2, 3].map((p) => `<option value="${p}" ${p === x.peso ? 'selected' : ''}>${['corto', 'normal', 'largo'][p - 1]}</option>`).join('')}</select>
+          <select class="cr-campo" onchange="Cronograma.tema('${a.id}', ${i}, 'trimestre', Number(this.value))">${[0, 1, 2, 3].map((p) => `<option value="${p}" ${p === x.trimestre ? 'selected' : ''}>${p ? p + '.º trim.' : 'cualquiera'}</option>`).join('')}</select>
+          <button class="btn chico sec2" title="Subir" onclick="Cronograma.mover('${a.id}', ${i}, -1)">↑</button><button class="btn chico sec2" title="Bajar" onclick="Cronograma.mover('${a.id}', ${i}, 1)">↓</button>
+          <button class="btn chico sec2" title="Quitar" onclick="Cronograma.quitarTema('${a.id}', ${i})">✕</button>
+        </div></div>`).join('')}
         <button class="btn chico sec2" onclick="Cronograma.agregarTema('${a.id}')">+ Agregar tema</button></div></details>`).join('')}</div>`;
   }
 

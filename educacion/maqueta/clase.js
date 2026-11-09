@@ -328,8 +328,8 @@
   // ── Vistas ─────────────────────────────────────────
   function tarjetaHoy() {
     const h = claseDeHoy();
-    if (rec) return `<div class="tarjeta cg-hoy fila envuelve" style="gap:14px"><div class="crece"><b>🔴 Grabando ${esc(rec.clase.nombreMateria)} · ${esc(rec.clase.curso)}</b><div class="ter">Mirá la barra roja de abajo para pausar o terminar.</div></div></div>`;
-    return `<div class="tarjeta cg-hoy fila envuelve" style="gap:14px">
+    if (rec) return `<div class="tarjeta cg-hoy fila-accion"><div class="crece"><b>🔴 Grabando ${esc(rec.clase.nombreMateria)} · ${esc(rec.clase.curso)}</b><div class="ter">Mirá la barra roja de abajo para pausar o terminar.</div></div></div>`;
+    return `<div class="tarjeta cg-hoy fila-accion">
       <div class="ico-caja" style="background:#10B98122">🎙️</div>
       <div class="crece"><b>Tu clase ahora: ${esc(h.nombreMateria)} · ${esc(h.curso)}</b><div class="ter">${esc(h.hora)} · ${esc(h.tema)} · ${esc(h.pensum)}</div>
         <div class="ter" style="margin-top:4px">Grabá la clase y la IA te arma el resumen contra el pensum.</div></div>
@@ -386,7 +386,7 @@
     return `<div class="encab"><div><h1>🎙️ Clase grabada</h1><p>Empezá la clase, se graba el audio y al terminar la IA te devuelve el resumen contra el pensum. El audio no se guarda.</p></div></div>
     ${esperaHtml()}
     <div class="seccion"><h3>Horario de hoy</h3><div class="pila">
-      ${h.map((x) => `<div class="tarjeta fila envuelve">
+      ${h.map((x) => `<div class="tarjeta fila-accion">
         <div class="ico-caja" style="background:${(U.materia(x.materia) || {}).color || '#10B981'}22">${esc(x.icono)}</div>
         <div class="crece"><b>${esc(x.tema)}</b><div class="ter">${esc(x.hora)} · ${esc(x.nombreMateria)} · ${esc(U.curso(x.curso).nombre)} · ${x.minutos} min</div></div>
         <button class="btn chico" ${rec || enviando ? 'disabled' : ''} onclick="Clase.empezar('${x.id}')">▶ Empezar clase</button></div>`).join('')}

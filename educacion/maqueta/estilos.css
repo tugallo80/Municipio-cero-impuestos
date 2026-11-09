@@ -137,3 +137,15 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .punto { width: 8px; height: 8px; border-radius: 50%; background: var(--verde); display: inline-block; }
 .punto.vivo { animation: latido 1.4s infinite; }
 @keyframes latido { 0%,100% { box-shadow: 0 0 0 0 rgba(16,185,129,.6); } 50% { box-shadow: 0 0 0 6px rgba(16,185,129,0); } }
+
+/* EDU.04c — Tarjetas con botón: en el celular, texto arriba y botón abajo a todo el ancho.
+   <div class="tarjeta fila-accion"> ícono · <div class="crece">texto</div> · botón(es) </div> */
+.fila-accion { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.fila-accion > .crece { flex: 1 1 200px; min-width: 0; }
+.fila-accion > .acciones { display: flex; gap: 8px; flex-shrink: 0; }
+@media (max-width: 600px) {
+  .fila-accion > .crece { flex-basis: calc(100% - 60px); }
+  .fila-accion > .btn, .fila-accion > .acciones { flex: 1 1 100%; }
+  .fila-accion > .acciones > * { flex: 1; }
+  .fila-accion > .btn.chico { min-height: 44px; }
+}
