@@ -620,6 +620,160 @@ function panelDireccion(motivo) {
       : '<div class="caja-info" style="color:var(--texto2)">Pronto: acá van a aparecer los avisos (actos, feriados, reuniones).</div>'}`);
 }
 
+// ============================================================
+// EDU.06b entrega 3 — La acción central de cada materia (minijuegos cortos en el panel)
+// ============================================================
+const pie = id => `<button class="bj gris ancho" style="margin-top:14px" onclick="panelObjeto('${id}')">💡 Curiosidad y pregunta del profe</button>`;
+// Mate: ábaco — mové cuentas para formar el número
+let ABACO = null;
+function panelAbaco(id = 'mat', nuevo = true) {
+  if (nuevo || !ABACO) ABACO = { c: 0, d: 0, u: 0, meta: 10 + Math.floor(Math.random() * 90) + (Math.random() < .4 ? 100 * (1 + Math.floor(Math.random() * 3)) : 0) };
+  const A = ABACO, val = A.c * 100 + A.d * 10 + A.u, ok = val === A.meta;
+  const fila = (k, n, col, nombre) => `<div style="display:flex;align-items:center;gap:8px;margin:8px 0">
+    <b style="width:74px;font-size:13px">${nombre}</b>
+    <div style="flex:1;display:flex;gap:4px;padding:6px;border-radius:12px;background:rgba(255,255,255,.06)">${Array.from({ length: 9 }, (_, i) =>
+      `<button onclick="ABACO.${k}=${i < n ? i : i + 1};panelAbaco('${id}',false)" aria-label="${nombre} ${i + 1}" style="flex:1;height:30px;border-radius:50%;background:${i < n ? col : 'rgba(255,255,255,.12)'};border:0"></button>`).join('')}</div>
+    <b style="width:22px;text-align:center">${n}</b></div>`;
+  abrir(cab('🧮', 'rgba(239,68,68,.18)', 'Ábaco', 'Tocá las cuentas para formar el número') + `
+    <div class="caja-info" style="font-size:18px;text-align:center">Formá el <b style="font-size:26px;color:var(--oro)">${A.meta}</b></div>
+    ${fila('c', A.c, '#a855f7', 'Centenas')}${fila('d', A.d, '#3b82f6', 'Decenas')}${fila('u', A.u, '#ef4444', 'Unidades')}
+    <div class="caja-info" style="text-align:center;font-size:16px">${A.c} × 100 + ${A.d} × 10 + ${A.u} = <b>${val}</b> ${ok ? ' ✅ ¡Justo!' : ''}</div>
+    ${ok ? `<button class="bj ancho" style="margin-top:12px" onclick="panelAbaco('${id}')">🔁 Otro número</button>` : ''}` + pie(id));
+  if (ok) window.sonar('bien');
+}
+// Ciencias: microscopio con 3 muestras
+const MUESTRAS = [
+  ['hoja', '🍃 Hoja', 'Son <b>células</b> de una hoja: cada cajita verde tiene <b>cloroplastos</b>, que usan la luz del sol para fabricar alimento.'],
+  ['celula', '🔵 Célula', 'Una célula de la piel de la cebolla: el puntito oscuro es el <b>núcleo</b>, que guarda las instrucciones de la célula.'],
+  ['agua', '💧 Agua de río', 'Una gota de agua de río tiene seres vivos tan chiquitos que solo se ven con microscopio, como el <b>paramecio</b>.']
+];
+let MICRO = { k: 0, foco: .4 };
+function panelMicroscopio(id = 'cnat', k) {
+  if (k !== undefined) MICRO.k = k;
+  const [, nombre, txt] = MUESTRAS[MICRO.k];
+  abrir(cab('🔬', 'rgba(34,197,94,.18)', 'Microscopio', 'Elegí una muestra y enfocá') + `
+    <div class="frases" style="margin-bottom:10px">${MUESTRAS.map((m, i) => `<button class="frase" style="${i === MICRO.k ? 'background:#6EE7B7' : ''}" onclick="panelMicroscopio('${id}',${i})">${m[1]}</button>`).join('')}</div>
+    <canvas id="lente" width="300" height="300" style="display:block;margin:0 auto;width:min(260px,70vw);border-radius:50%;border:8px solid #1f2937;background:#f8fafc"></canvas>
+    <label style="display:block;margin-top:10px;font-size:13px">🔎 Enfocar<input id="foco" type="range" min="0" max="100" value="${MICRO.foco * 100}" style="width:100%"></label>
+    <div class="caja-info" style="margin-top:8px">${txt}</div>` + pie(id));
+  const dib = () => dibujarMuestra(document.getElementById('lente'), MUESTRAS[MICRO.k][0], MICRO.foco);
+  document.getElementById('foco').oninput = e => { MICRO.foco = e.target.value / 100; dib(); };
+  dib();
+}
+function dibujarMuestra(cv, tipo, foco) {
+  const g = cv.getContext('2d'), W = cv.width, borroso = Math.abs(foco - .75) * 14;
+  g.save(); g.clearRect(0, 0, W, W); g.filter = `blur(${borroso.toFixed(1)}px)`;
+  let semilla = 7; const rnd = () => (semilla = (semilla * 9301 + 49297) % 233280) / 233280;
+  if (tipo === 'hoja') { g.fillStyle = '#dcfce7'; g.fillRect(0, 0, W, W); for (let y = 0; y < W; y += 42) for (let x = (y / 42 % 2) * 24; x < W; x += 52) { g.fillStyle = '#86efac'; g.strokeStyle = '#15803d'; g.lineWidth = 3; g.beginPath(); g.roundRect(x, y, 48, 38, 10); g.fill(); g.stroke(); g.fillStyle = '#16a34a'; for (let i = 0; i < 5; i++) { g.beginPath(); g.arc(x + 8 + rnd() * 32, y + 8 + rnd() * 22, 4, 0, 7); g.fill(); } } }
+  if (tipo === 'celula') { g.fillStyle = '#fef3c7'; g.fillRect(0, 0, W, W); for (let y = -20; y < W; y += 70) for (let x = (y / 70 % 2) * 40 - 20; x < W; x += 90) { g.fillStyle = '#fde68a'; g.strokeStyle = '#b45309'; g.lineWidth = 3; g.beginPath(); g.roundRect(x, y, 86, 66, 6); g.fill(); g.stroke(); g.fillStyle = '#7c3aed'; g.beginPath(); g.arc(x + 30 + rnd() * 26, y + 22 + rnd() * 20, 9, 0, 7); g.fill(); } }
+  if (tipo === 'agua') { g.fillStyle = '#e0f2fe'; g.fillRect(0, 0, W, W); for (let i = 0; i < 6; i++) { const x = 40 + rnd() * 220, y = 40 + rnd() * 220, a = rnd() * 3; g.save(); g.translate(x, y); g.rotate(a); g.fillStyle = '#bbf7d0'; g.strokeStyle = '#0f766e'; g.lineWidth = 2; g.beginPath(); g.ellipse(0, 0, 30, 13, 0, 0, 7); g.fill(); g.stroke(); g.fillStyle = '#0f766e'; g.beginPath(); g.arc(4, 0, 4, 0, 7); g.fill(); for (let k = -26; k <= 26; k += 6) { g.beginPath(); g.moveTo(k, -12); g.lineTo(k + 2, -17); g.stroke(); } g.restore(); } for (let i = 0; i < 20; i++) { g.fillStyle = 'rgba(14,116,144,.35)'; g.beginPath(); g.arc(rnd() * W, rnd() * W, 2 + rnd() * 3, 0, 7); g.fill(); } }
+  g.restore();
+}
+// Ciencias: cuerpo humano armable (arrastrar cada órgano a su lugar)
+const ORGANOS = [['cerebro', '🧠', 'Cerebro', 50, 10], ['corazon', '❤️', 'Corazón', 56, 36], ['pulmones', '🫁', 'Pulmones', 44, 34], ['estomago', '🟠', 'Estómago', 54, 52], ['intestino', '🌀', 'Intestinos', 50, 65]];
+function panelCuerpo(id = 'cnat') {
+  abrir(cab('🫀', 'rgba(239,68,68,.18)', 'Cuerpo humano', 'Arrastrá cada órgano a su lugar') + `
+    <div style="display:flex;gap:10px;align-items:flex-start">
+    <div id="cuerpo" style="position:relative;flex:1.3;height:min(300px,62vh);border-radius:18px;background:rgba(255,255,255,.04);touch-action:none">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;left:18%;top:2%;width:64%;height:96%"><g fill="#fecaca" stroke="#f87171" stroke-width="1">
+        <ellipse cx="50" cy="10" rx="9" ry="9"/><rect x="45" y="18" width="10" height="5"/><path d="M32 24 Q50 20 68 24 L66 70 Q50 74 34 70 Z"/>
+        <path d="M32 25 L22 55 L26 56 L35 32 Z"/><path d="M68 25 L78 55 L74 56 L65 32 Z"/><path d="M36 70 L38 98 L46 98 L48 72 Z"/><path d="M64 70 L62 98 L54 98 L52 72 Z"/></g></svg>
+      ${ORGANOS.map(([k, ic, n, x, y]) => `<div class="hueco" data-k="${k}" style="position:absolute;left:calc(18% + ${x * .64}% - 17px);top:calc(2% + ${y * .96}% - 17px);width:34px;height:34px;border:2px dashed #94a3b8;border-radius:50%"></div>`).join('')}
+    </div>
+    <div id="piezas" style="flex:1;display:flex;flex-direction:column;gap:8px;touch-action:none">
+      ${ORGANOS.map(([k, ic, n]) => `<div class="pieza" data-k="${k}" style="padding:7px 10px;border-radius:14px;background:#E2E8F0;color:#0F172A;font-weight:700;cursor:grab;user-select:none;touch-action:none">${ic} ${n}</div>`).join('')}
+    </div></div>
+    <div id="cuerpo-ok" class="caja-info" style="margin-top:10px;text-align:center">0 de ${ORGANOS.length} en su lugar</div>` + pie(id));
+  armarArrastre('#piezas .pieza', '.hueco', (k, hueco) => hueco.dataset.k === k, n => { document.getElementById('cuerpo-ok').innerHTML = n === ORGANOS.length ? '✅ ¡Armaste el cuerpo humano!' : `${n} de ${ORGANOS.length} en su lugar`; });
+}
+// arrastrar con el dedo: si la pieza cae en su hueco, queda; si no, vuelve
+function armarArrastre(selPiezas, selHuecos, coincide, alCambiar) {
+  let n = 0;
+  document.querySelectorAll(selPiezas).forEach(el => {
+    el.onpointerdown = e => {
+      e.preventDefault(); el.setPointerCapture(e.pointerId);
+      const r0 = el.getBoundingClientRect(), dx = e.clientX - r0.left, dy = e.clientY - r0.top;
+      el.style.position = 'fixed'; el.style.zIndex = 50; el.style.width = r0.width + 'px'; el.style.left = r0.left + 'px'; el.style.top = r0.top + 'px';
+      el.onpointermove = ev => { el.style.left = ev.clientX - dx + 'px'; el.style.top = ev.clientY - dy + 'px'; };
+      el.onpointerup = ev => {
+        el.onpointermove = el.onpointerup = null;
+        const cx = ev.clientX, cy = ev.clientY;   // donde está el dedo
+        const h = [...document.querySelectorAll(selHuecos)].find(h => { const b = h.getBoundingClientRect(); return cx > b.left - 18 && cx < b.right + 18 && cy > b.top - 18 && cy < b.bottom + 18; });
+        if (h && !h.dataset.lleno && coincide(el.dataset.k, h)) {
+          h.dataset.lleno = '1'; h.style.border = '0'; h.style.display = 'grid'; h.style.placeItems = 'center'; h.style.width = 'auto'; h.innerHTML = `<span style="font-size:22px">${el.textContent.trim().split(' ')[0]}</span>`;
+          el.remove(); n++; window.sonar('bien'); alCambiar(n);
+        } else { el.style.position = ''; el.style.left = el.style.top = el.style.width = ''; el.style.zIndex = ''; if (h) window.sonar('casi'); }
+      };
+    };
+  });
+}
+// Sociales: globo terráqueo que se gira con el dedo (continentes simplificados)
+const CONTINENTES = [
+  ['#22c55e', [[-80, 10], [-77, 0], [-81, -6], [-70, -18], [-72, -30], [-73, -45], [-68, -55], [-63, -40], [-57, -36], [-48, -26], [-39, -15], [-35, -7], [-50, 0], [-60, 8], [-72, 12]]],
+  ['#16a34a', [[-165, 65], [-140, 70], [-95, 72], [-75, 62], [-60, 50], [-75, 40], [-81, 26], [-97, 26], [-105, 20], [-87, 15], [-83, 9], [-95, 16], [-110, 23], [-118, 34], [-125, 48], [-150, 60]]],
+  ['#eab308', [[-17, 15], [-10, 35], [10, 37], [32, 31], [43, 12], [51, 11], [40, -15], [35, -25], [20, -35], [12, -18], [9, 4], [-8, 5]]],
+  ['#84cc16', [[-9, 43], [-5, 36], [10, 44], [28, 41], [40, 45], [60, 55], [60, 70], [30, 70], [10, 58], [0, 50]]],
+  ['#65a30d', [[40, 45], [60, 25], [77, 8], [90, 22], [105, 10], [120, 22], [122, 40], [140, 50], [160, 62], [180, 68], [100, 75], [60, 70], [60, 55]]],
+  ['#a3e635', [[114, -22], [122, -18], [136, -12], [146, -18], [153, -28], [146, -38], [135, -35], [116, -34]]]
+];
+let GLOBO = { lon: -64, arr: null };
+function panelGlobo(id = 'csoc') {
+  abrir(cab('🌎', 'rgba(59,130,246,.18)', 'Globo terráqueo', 'Giralo con el dedo') + `
+    <canvas id="globo" width="320" height="320" style="display:block;margin:0 auto;width:min(270px,72vw);touch-action:none;cursor:grab"></canvas>
+    <div class="caja-info" style="margin-top:10px">📍 El puntito amarillo es <b>Bolivia</b>, en el centro de América del Sur. ¡Buscalo!</div>` + pie(id));
+  const cv = document.getElementById('globo'), dib = () => dibujarGlobo(cv, GLOBO.lon);
+  cv.onpointerdown = e => { cv.setPointerCapture(e.pointerId); GLOBO.arr = e.clientX; };
+  cv.onpointermove = e => { if (GLOBO.arr === null) return; GLOBO.lon -= (e.clientX - GLOBO.arr) * .6; GLOBO.arr = e.clientX; dib(); };
+  cv.onpointerup = cv.onpointercancel = () => { GLOBO.arr = null; };
+  dib();
+}
+function dibujarGlobo(cv, lon0) {
+  const g = cv.getContext('2d'), W = cv.width, R = W * .46, cx = W / 2, cy = W / 2, inc = 15 * Math.PI / 180;
+  const pr = (lon, lat) => { const l = (lon - lon0) * Math.PI / 180, f = lat * Math.PI / 180; const x = Math.cos(f) * Math.sin(l), y = Math.sin(f), z = Math.cos(f) * Math.cos(l);
+    const y2 = y * Math.cos(inc) - z * Math.sin(inc), z2 = y * Math.sin(inc) + z * Math.cos(inc); return [cx + x * R, cy - y2 * R, z2]; };
+  g.clearRect(0, 0, W, W);
+  const gr = g.createRadialGradient(cx - R * .3, cy - R * .3, R * .1, cx, cy, R); gr.addColorStop(0, '#60a5fa'); gr.addColorStop(1, '#1d4ed8');
+  g.fillStyle = gr; g.beginPath(); g.arc(cx, cy, R, 0, 7); g.fill();
+  for (const [col, pts] of CONTINENTES) {
+    const fino = []; for (let i = 0; i < pts.length; i++) { const [a, b] = pts[i], [c, d] = pts[(i + 1) % pts.length]; for (let k = 0; k < 6; k++) fino.push([a + (c - a) * k / 6, b + (d - b) * k / 6]); }
+    const P = fino.map(([lo, la]) => pr(lo, la)); if (P.every(p => p[2] < 0)) continue;
+    g.fillStyle = col; g.beginPath(); P.forEach(([x, y, z], i) => { const k = z < 0 ? R / Math.hypot(x - cx, y - cy || 1e-3) : 1; const X = cx + (x - cx) * k, Y = cy + (y - cy) * k; i ? g.lineTo(X, Y) : g.moveTo(X, Y); }); g.closePath(); g.fill();
+  }
+  const [bx, by, bz] = pr(-64.5, -16.5); if (bz > 0) { g.fillStyle = '#facc15'; g.strokeStyle = '#7c2d12'; g.lineWidth = 3; g.beginPath(); g.arc(bx, by, 9, 0, 7); g.fill(); g.stroke(); }
+  g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, R, 0, 7); g.stroke();
+}
+// Sociales: mapa de Bolivia por departamentos (simplificado) — arrastrá cada nombre a su lugar
+const DEPTOS = [['pando', 'Pando', 22, 10], ['beni', 'Beni', 45, 25], ['lapaz', 'La Paz', 18, 38], ['santacruz', 'Santa Cruz', 68, 52], ['cochabamba', 'Cochabamba', 40, 50], ['oruro', 'Oruro', 22, 63], ['potosi', 'Potosí', 30, 80], ['chuquisaca', 'Chuquisaca', 48, 70], ['tarija', 'Tarija', 50, 88]];
+function panelMapa(id = 'csoc') {
+  abrir(cab('🗺️', 'rgba(250,204,21,.18)', 'Mapa de Bolivia', 'Arrastrá cada departamento a su lugar') + `
+    <div style="display:flex;gap:10px;align-items:flex-start">
+    <div id="mapa" style="position:relative;flex:1.5;height:min(300px,62vh);border-radius:18px;background:#e0f2fe">
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%"><path d="M12 4 L32 6 L40 16 L62 18 L70 30 L90 40 L92 60 L80 66 L70 78 L58 80 L56 96 L44 98 L36 90 L22 92 L14 74 L10 56 L14 44 L8 30 Z" fill="#bbf7d0" stroke="#166534" stroke-width="1"/></svg>
+      ${DEPTOS.map(([k, n, x, y]) => `<div class="hueco" data-k="${k}" style="position:absolute;left:calc(${x}% - 16px);top:calc(${y}% - 12px);width:32px;height:24px;border:2px dashed #166534;border-radius:8px;background:rgba(255,255,255,.5);color:#0f172a;font-size:11px;font-weight:700"></div>`).join('')}
+    </div>
+    <div id="piezas" style="flex:1;display:flex;flex-direction:column;gap:5px;touch-action:none">
+      ${DEPTOS.map(d => d).sort((a, b) => a[1].localeCompare(b[1])).map(([k, n]) => `<div class="pieza" data-k="${k}" style="padding:4px 8px;border-radius:12px;background:#E2E8F0;color:#0F172A;font-weight:700;font-size:12px;cursor:grab;user-select:none;touch-action:none">📍 ${n}</div>`).join('')}
+    </div></div>
+    <div id="mapa-ok" class="caja-info" style="margin-top:10px;text-align:center">0 de 9 en su lugar · <span style="color:var(--texto2)">mapa simplificado</span></div>` + pie(id));
+  armarArrastre('#piezas .pieza', '.hueco', (k, h) => h.dataset.k === k, n => {
+    document.querySelectorAll('#mapa .hueco[data-lleno]').forEach(h => { h.style.width = 'auto'; h.style.padding = '2px 6px'; h.textContent = DEPTOS.find(d => d[0] === h.dataset.k)[1]; h.style.background = h.dataset.k === 'santacruz' ? '#86efac' : '#fff'; });
+    document.getElementById('mapa-ok').innerHTML = n === 9 ? '✅ ¡Armaste los 9 departamentos!' : `${n} de 9 en su lugar · <span style="color:var(--texto2)">mapa simplificado</span>`;
+  });
+}
+// Inglés: la radio (palabras y una canción corta; con voz del celular si hay, si no, texto)
+const PALABRAS = [['Hello', 'Hola'], ['Thank you', 'Gracias'], ['Friend', 'Amigo/a'], ['School', 'Escuela'], ['Tree', 'Árbol'], ['Sun', 'Sol']];
+const CANCION = ['Hello, hello, how are you?', 'I am fine, and how are you?', 'Sun is up and sky is blue,', 'Hello, hello, how are you?'];
+function decir(t) { try { const u = new SpeechSynthesisUtterance(t); u.lang = 'en-US'; u.rate = .85; speechSynthesis.cancel(); speechSynthesis.speak(u); return true; } catch (e) { return false; } }
+function panelRadio(id = 'ing') {
+  const voz = 'speechSynthesis' in window;
+  abrir(cab('📻', 'rgba(20,184,166,.18)', 'Radio en inglés', voz ? 'Tocá para escuchar' : 'Leé en voz alta') + `
+    <div class="tit">Palabras</div>
+    <div class="frases">${PALABRAS.map(([en, es]) => `<button class="frase" onclick="decir('${en}')">${voz ? '🔊 ' : ''}${en} · <span style="font-weight:400">${es}</span></button>`).join('')}</div>
+    <div class="tit">Canción corta</div>
+    <div class="caja-info" style="font-size:16px;line-height:1.6">${CANCION.join('<br>')}</div>
+    ${voz ? `<button class="bj ancho" style="margin-top:10px" onclick="decir(CANCION.join(' '))">▶ Escuchar la canción</button>` : ''}` + pie(id));
+}
+
 function preguntaActual() { const c = contenido(E.mision); return E.fase === 'repaso' ? c.repaso[E.i] : c.pasos[E.i]; }
 function preguntar() {
   const x = E.mision, c = contenido(x), p = preguntaActual(), rep = E.fase === 'repaso';
@@ -1419,6 +1573,8 @@ function iniciar(THREE) {
   const nodos = {};          // nombre → nodo (para la lógica: posiciones y tamaños salen de acá)
   const USOS = {};           // comportamientos por cosa: silla, hamaca, resbalin, subeybaja, pizarra, kiosco… (más abajo)
   const PREF = /^(aula|puerta|obj|zona|colision|interior|deco)_([a-z0-9_]+)$/;
+  // acción central de cada materia (minijuego en el panel)
+  const JUEGOS = { abaco: ['🧮 Ábaco · Jugar', 'panelAbaco'], microscopio: ['🔬 Microscopio · Mirar', 'panelMicroscopio'], cuerpo: ['🫀 Cuerpo humano · Armar', 'panelCuerpo'], globo: ['🌎 Globo · Girar', 'panelGlobo'], mapa: ['🗺️ Mapa de Bolivia · Armar', 'panelMapa'], radio: ['📻 Radio · Escuchar', 'panelRadio'] };
   const alCuadro = [];        // funciones que corren en cada cuadro (animaciones de zonas y compañeros)
   const salas = {};           // nombre → sala por dentro (aulas y biblioteca)
   let salaActual = null, saltoCam = false;
@@ -1436,6 +1592,7 @@ function iniciar(THREE) {
       if (USOS[cosa]) return USOS[cosa](o, mid || donde, n);   // cosas que se usan (sentarse, hamaca, pizarra, kiosco…)
       if (mid) {
         if (cosa === 'libros') return { texto: '📚 Libros · Leer', accion: () => window.panelBiblioteca() };
+        const J = JUEGOS[cosa]; if (J) return { texto: J[0], accion: () => window[J[1]](mid) };
         if (cosa === 'estante') return { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) };
         return { texto: (COSAS[cosa] || '✨ Mirar') + ' · Mirar', accion: () => window.panelObjeto(mid) };
       }
@@ -1574,16 +1731,22 @@ function iniciar(THREE) {
       mesa(0, 0, g, .9, .6, .45);
       bloque(0, .5, 0, .22, .04, .18, '#111827', g); bloque(0, .66, -.06, .05, .3, .05, '#111827', g); cil(0, .76, .02, .07, .24, .07, '#e5e7eb', g).rotation.x = .35;
       for (const sx of [-1, 1]) { cil(sx * .32, .55, .12, .14, .16, .14, '#b45309', g); bola(sx * .32, .72, .12, .24, .24, .24, '#16a34a', g); }
+      const cu = grupo('obj_cuerpo_ciencias', 3.0, .45, -Math.PI / 2, g.parent, { frente: .85, alto: 1.9 });
+      cil(0, .35, 0, .3, .7, .3, '#475569', cu); bola(0, .95, 0, .5, .55, .3, '#fecaca', cu); bola(0, 1.38, 0, .26, .3, .26, '#fecaca', cu);
+      bola(.06, 1.0, .1, .12, .14, .08, '#dc2626', cu); for (const sx of [-1, 1]) bola(sx * .12, 1.04, .08, .14, .22, .08, '#f9a8d4', cu); bola(-.04, .82, .1, .16, .1, .08, '#f59e0b', cu);
+      solidoEn(g.parent.position.x + 3.0, g.parent.position.z + .45, .5, .5, 1);
     } else if (id === 'csoc') {   // globo terráqueo y mapa de Bolivia
       mesa(0, 0, g, .7, .5, .5);
       cil(0, .6, 0, .06, .2, .06, C_MADERA_OSC, g); bola(0, .9, 0, .42, .42, .42, '#3b82f6', g); bola(.1, .98, .12, .16, .14, .1, '#22c55e', g); bola(-.12, .82, .1, .12, .14, .1, '#22c55e', g);
-      letrero('', 1.3, 1.0, '#e0f2fe', g, 0, 1.75, -.48, { dibujar: (c, w, h) => {
+      const mp = grupo('obj_mapa_sociales', 3.44, .35, -Math.PI / 2, g.parent, { frente: 1.25, alto: 2.4 });
+      letrero('', 1.3, 1.0, '#e0f2fe', mp, 0, 1.6, 0, { dibujar: (c, w, h) => {
         c.fillStyle = '#86efac'; c.strokeStyle = '#166534'; c.lineWidth = 6; c.beginPath();
         const P = [[.42, .12], [.6, .2], [.72, .36], [.84, .5], [.78, .68], [.62, .8], [.5, .9], [.36, .82], [.3, .62], [.2, .5], [.24, .3], [.32, .2]];
         P.forEach(([x, y], k) => k ? c.lineTo(x * w, y * h) : c.moveTo(x * w, y * h)); c.closePath(); c.fill(); c.stroke();
         c.fillStyle = '#0f172a'; c.font = '700 44px Inter, sans-serif'; c.textAlign = 'center'; c.fillText('BOLIVIA', w / 2, h * .52);
         c.font = '600 26px Inter, sans-serif'; c.fillText('9 departamentos', w / 2, h * .62); } });
     } else if (id === 'art') {   // caballete e instrumentos
+      g.userData.superficie = { w: .66, h: .5, y: 1.05, z: .075 };   // el lienzo: ahí se pinta
       for (const [x, rz] of [[-.25, -.12], [.25, .12]]) { const p = bloque(x, .75, 0, .05, 1.5, .05, C_MADERA, g); p.rotation.z = rz; }
       const tr = bloque(0, .7, -.3, .05, 1.4, .05, C_MADERA, g); tr.rotation.x = -.25;
       letrero('', .7, .55, '#fffbeb', g, 0, 1.05, .06, { dibujar: (c, w, h) => { [['#ef4444', .3, .4], ['#3b82f6', .6, .55], ['#facc15', .45, .7], ['#22c55e', .7, .3]].forEach(([col, x, y]) => { c.fillStyle = col; c.beginPath(); c.arc(x * w, y * h, h * .16, 0, 7); c.fill(); }); } });
@@ -1726,6 +1889,7 @@ function iniciar(THREE) {
   USOS.resbalin = o => ({ texto: '🛝 Tirarse por el resbalín', accion: () => usar('resbalin', o) });
   USOS.subeybaja = o => ({ texto: '⚖️ Subirse al sube y baja', accion: () => usar('subeybaja', o) });
   USOS.pizarra = (o, mid) => NOM_MAT[MAT_NOM[mid]] ? { texto: '🖍️ Pizarra · Dibujar', accion: () => usar('pizarra', o, mid) } : null;
+  USOS.caballete = (o, mid) => ({ texto: '🎨 Caballete · Pintar', accion: () => usar('pizarra', o, mid) });
   USOS.kiosco = () => ({ texto: '🧃 Kiosco · Menú', accion: () => window.panelKiosco() });
   USOS.estante = (o, mid) => MAT_NOM[mid] ? { texto: '📋 Estante · Misiones y avance', accion: () => window.abrirAula(mid) } : null;
 
@@ -2187,7 +2351,7 @@ function iniciar(THREE) {
   let enfoque = null; const pizarras = new Map();
   const uiPiz = document.createElement('div');
   uiPiz.style.cssText = 'position:fixed;right:calc(var(--sd, 0px) + 10px);top:50%;transform:translateY(-50%);z-index:13;display:none;flex-wrap:wrap;width:120px;justify-content:center;gap:8px;align-items:center;background:rgba(15,26,23,.88);padding:10px;border-radius:20px;border:2px solid rgba(255,255,255,.12)';
-  const TIZAS = ['#ffffff', '#fde047', '#f9a8d4', '#7dd3fc', '#86efac', '#fdba74'];
+  const TIZAS = ['#ffffff', '#fde047', '#f9a8d4', '#7dd3fc', '#86efac', '#fdba74'], PINTURAS = ['#ef4444', '#f97316', '#facc15', '#22c55e', '#3b82f6', '#a855f7'];
   uiPiz.innerHTML = TIZAS.map(c => `<button data-tiza="${c}" style="width:38px;height:38px;border-radius:50%;background:${c};border:3px solid transparent" aria-label="Tiza"></button>`).join('') +
     `<button data-tiza="borrar" style="width:44px;height:34px;border-radius:10px;background:#f1f5f9;font-size:18px" aria-label="Borrador">🧽</button>
      <button data-acc="limpiar" style="width:44px;height:34px;border-radius:10px;background:#f1f5f9;font-size:16px" aria-label="Borrar todo">🗑️</button>
@@ -2215,7 +2379,10 @@ function iniciar(THREE) {
     }
     const sup = P.sup, vf = 40 * Math.PI / 180, asp = innerWidth / innerHeight, hf = 2 * Math.atan(Math.tan(vf / 2) * asp);
     const d = Math.max((sup.h / 2) / Math.tan(vf / 2), (sup.w / 2) / Math.tan(hf / 2) * 1.25) * 1.08;
-    enfoque = { P, mid, o, cam: aMundo(o, sup.w * .06, sup.y, sup.z + d), mira: aMundo(o, sup.w * .06, sup.y, sup.z), trazo: null };
+    const pintura = /^obj_caballete/.test(o.userData.nombre || '');
+    enfoque = { P, mid, o, pintura, cam: aMundo(o, sup.w * .06, sup.y, sup.z + d), mira: aMundo(o, sup.w * .06, sup.y, sup.z), trazo: null };
+    uiPiz.querySelectorAll('[data-tiza]:not([data-tiza="borrar"])').forEach((b, i) => { const c = (pintura ? PINTURAS : TIZAS)[i]; b.dataset.tiza = c; b.style.background = c; });
+    uiPiz.querySelector('[data-acc="mision"]').style.display = pintura ? 'none' : ''; tiza = pintura ? PINTURAS[0] : TIZAS[0];
     pararPiloto(); yo.visible = false; uiPiz.style.display = 'flex'; marcarTiza(); document.getElementById('aviso-ayuda').classList.remove('ver');
     document.getElementById('joy').style.visibility = 'hidden'; document.body.classList.add('dibujando');
     window.sonar('pop');
@@ -2229,8 +2396,8 @@ function iniciar(THREE) {
     const P = enfoque.P, x = h.uv.x * P.cv.width, y = (1 - h.uv.y) * P.cv.height, g = P.g;
     if (tipo === 'down' || !enfoque.trazo) { enfoque.trazo = [x, y]; }
     g.globalCompositeOperation = tiza === 'borrar' ? 'destination-out' : 'source-over';
-    g.strokeStyle = tiza === 'borrar' ? '#000' : tiza; g.lineWidth = tiza === 'borrar' ? 56 : 9; g.lineCap = g.lineJoin = 'round';
-    g.globalAlpha = tiza === 'borrar' ? 1 : .9;
+    g.strokeStyle = tiza === 'borrar' ? '#000' : tiza; g.lineWidth = P.cv.width * (tiza === 'borrar' ? .055 : enfoque.pintura ? .03 : .009); g.lineCap = g.lineJoin = 'round';
+    g.globalAlpha = tiza === 'borrar' || enfoque.pintura ? 1 : .9;
     g.beginPath(); g.moveTo(enfoque.trazo[0], enfoque.trazo[1]); g.lineTo(x + .01, y); g.stroke();
     enfoque.trazo = [x, y]; P.tex.needsUpdate = true;
   }

@@ -178,6 +178,33 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
   - el profe en el aula.
   - Sin errores.
 
+## Entrega 3 — la acción central de cada materia
+Cada objeto abre un minijuego corto en el panel. Abajo de cada uno sigue "💡 Curiosidad y pregunta
+del profe".
+
+| Materia | Objeto | Minijuego |
+|---|---|---|
+| Mate | `obj_abaco_mate` | **Ábaco**: tocar cuentas en centenas, decenas y unidades para formar el número pedido (✅ ¡Justo! y "Otro número") |
+| Ciencias | `obj_microscopio_ciencias` | **Microscopio**: 3 muestras (hoja, célula, agua de río) dibujadas en la lente, con perilla de enfoque y un dato de cada una |
+| Ciencias | `obj_cuerpo_ciencias` (nuevo maniquí en el aula) | **Cuerpo humano armable**: arrastrar cerebro, corazón, pulmones, estómago e intestinos a su lugar |
+| Sociales | `obj_globo_sociales` | **Globo terráqueo** que se gira con el dedo (continentes simplificados, Bolivia marcada) |
+| Sociales | `obj_mapa_sociales` (el mapa de la pared) | **Mapa de Bolivia** para armar: arrastrar los 9 departamentos a su lugar (mapa simplificado, Santa Cruz destacada) |
+| Artes | `obj_caballete_artes` | **Pintar en el caballete**: primer plano, 6 pinturas, borrador; usa el mismo dibujo que la pizarra |
+| Inglés | `obj_radio_ingles` | **Radio**: 6 palabras y una canción corta original. Suenan con la voz del celular si tiene; si no, queda el texto |
+| Lenguaje | `obj_libros_lenguaje` | **Lecturas** de la biblioteca de aula |
+
+- En horizontal, la figura y las piezas para arrastrar quedan una al lado de la otra, para que
+  entren en 412 px de alto. La pieza cae donde está el dedo.
+- El caballete tiene `userData.superficie` (el lienzo).
+- **Probado** (Playwright, 915×412, táctil) en P1, P5 y S6:
+  - formar el número en el ábaco;
+  - las 3 muestras del microscopio;
+  - arrastrar órganos y departamentos a su lugar;
+  - girar el globo;
+  - pintar en el caballete;
+  - la radio y los libros.
+  - Las entregas 1 y 2 siguen andando. Sin errores.
+
 ## Cierre
 
 **Qué quedó**
@@ -229,7 +256,6 @@ dibuja por código usa los mismos nombres y pasa por el mismo enlace.
 - En P3, S1 y S3: caminar, entrar al aula 3D, salir y la profe. Sin errores.
 
 **Pendiente**
-- Profes con cuerpo en la pizarra (hoy explican desde el panel y por voz).
 - "Jugar con el curso" en la cancha, y más lecturas reales de cada curso (EDU.05/EDU.08).
 - Avisos de la dirección desde la base (EDU.03 / EDU.10).
 - Cargar la maqueta GLB del dueño con `__enlazar` cuando esté (EDU.07).
