@@ -8,7 +8,10 @@ name: Educación — deploy
 
 on:
   push:
-    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, sesion/edu-04a, sesion/edu-04c, sesion/edu-04e]
+    # Ramas de sesión que no van al sitio en vivo (para no pisar a otra sesión):
+    #   sesion/canal-*    → sitio en un canal de vista previa + Functions y pruebas (cola compartida)
+    #   sesion/pantalla-* → solo el sitio en su canal (sin base, Functions ni pruebas; cola propia)
+    branches: [main, sesion/edu-02, sesion/edu-02b, sesion/edu-02c, sesion/edu-01c, 'sesion/canal-*', 'sesion/pantalla-*']
     paths:
       - 'educacion/**'
       - '.github/workflows/educacion.yml'
@@ -23,16 +26,16 @@ permissions:
   contents: read
   id-token: write
 
-# Una sola cola para todo lo que toca las Functions o el sitio en vivo. Las ramas que solo
-# cambian pantallas (SOLO_CANAL) van en su propia cola: no tocan lo compartido.
+# Una sola cola para todo lo que toca las Functions o el sitio en vivo. Las ramas sesion/pantalla-*
+# solo cambian pantallas (SOLO_CANAL) y van en su propia cola: no tocan lo compartido.
 concurrency:
-  group: ${{ github.ref_name == 'sesion/edu-04c' && 'educacion-canal-edu-04c' || 'educacion-deploy' }}
+  group: ${{ startsWith(github.ref_name, 'sesion/pantalla-') && format('educacion-{0}', github.ref_name) || 'educacion-deploy' }}
   cancel-in-progress: false
 
 env:
   PROYECTO: municipio-ia
   # true = solo publicar el sitio en su canal de vista previa (sin base, Functions ni pruebas con Gemini)
-  SOLO_CANAL: ${{ github.ref_name == 'sesion/edu-04c' }}
+  SOLO_CANAL: ${{ startsWith(github.ref_name, 'sesion/pantalla-') }}
   EDU_DATABASE_URL: https://municipio-ia-educacion.firebaseio.com
   FIREBASE_CLI: npx --yes firebase-tools@15.34.1
 
@@ -74,7 +77,7 @@ jobs:
         working-directory: educacion
         run: |
           case "$GITHUB_REF_NAME" in
-            sesion/edu-04a|sesion/edu-04c|sesion/edu-04e)
+            sesion/canal-*|sesion/pantalla-*)
               CANAL="${GITHUB_REF_NAME#sesion/}"
               $FIREBASE_CLI hosting:channel:deploy "$CANAL" --project "$PROYECTO" --expires 14d --non-interactive --json > "$RUNNER_TEMP/canal.json"
               URL=$(node -e 'const r=require(process.argv[1]).result;console.log(Object.values(r)[0].url)' "$RUNNER_TEMP/canal.json")

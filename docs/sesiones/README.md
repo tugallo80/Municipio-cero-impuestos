@@ -24,6 +24,15 @@ Numeración: `EDU.01`, `EDU.02`… en orden de ejecución dentro del módulo.
 Archivo: `docs/sesiones/<CÓDIGO>-<tema>.md`. Rama sugerida: `sesion/edu-01`. El título de la
 sesión en la nube empieza con el código (ej. "EDU.01 — Migración de RubiKEduAI").
 
+**Educación — ramas que publican solas** (workflow `educacion.yml`, sin tocar el sitio en vivo):
+- `sesion/canal-<código>` (ej. `sesion/canal-edu-05`): el sitio sale en un **canal de vista previa** de
+  `nande-educacion` (14 días) y además se publican las Functions y corren las pruebas. Usarla cuando el
+  cambio toca el servidor.
+- `sesion/pantalla-<código>` (ej. `sesion/pantalla-edu-04c`): solo el sitio en su canal, en una cola
+  propia, sin base, Functions ni pruebas con Gemini. Usarla cuando el cambio es solo de pantallas.
+- El link del canal queda en el resumen del workflow ("Vista previa de esta rama").
+- Una rama `sesion/<código>` normal no publica nada (salvo las que figuran en el workflow).
+
 ## Formato de cada ficha
 
 - **Objetivo** — qué queda funcionando al final.
