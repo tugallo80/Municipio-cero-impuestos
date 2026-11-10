@@ -58,6 +58,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.06 | Mundo 3D del colegio | App del alumno: colegio estilo bloques, aulas por materia, misiones (PWA) | EDU.05 | ⏳ |
 | EDU.06a | Evoluciones en el alumno | El juego del alumno dibuja su mundo con la evolución de su curso (P1–P2 Bloques … S6 Promo), selector de curso con `?demo=1` y transición al subir, calidad automática y `?diag=1` | EDU.01c, EDU.02c | ✅ Mergeado (PR #16), publicado en `nande-educacion.web.app/maqueta/alumno/` |
 | EDU.06b | Vida e interacción en el colegio | Aulas 3D por dentro con objetos interactivos, zonas nuevas (biblioteca, cancha, huerto, kiosco, dirección), compañeros con animación y convención de nombres para la maqueta GLB | EDU.06a | ✅ Mergeado (PR #19, 3f472d5), publicado en `nande-educacion.web.app/maqueta/` |
+| EDU.06c | Regente y guardias | El regente de adentro solo se despierta si pasás muy cerca y persigue poco; sin guardia en la galería; un guardia hace la ronda afuera (plazuela, canchas, parque) | EDU.06b | 🔎 PR abierto, en el canal de vista previa de `sesion/pantalla-edu-06c` |
 | EDU.07 | Modelos 3D en Blender | Colegio y aulas en glTF liviano, Blender en la nube con Claude | EDU.01 | ⏳ |
 | EDU.08 | Minijuegos | 2–3 minijuegos que desbloquean las misiones | EDU.05–06 | ⏳ |
 | EDU.09 | App de padres | Avance en tiempo real, cronograma, reportes, permisos, pagos, libretas | EDU.03, 05 | ⏳ |

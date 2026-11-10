@@ -1917,7 +1917,8 @@ function iniciar(THREE) {
 
   // --- Puesto del regente (una silla en la galería) y ruta del guardia (nodos ruta_<quien>_NN_KK) ---
   silla(5.8, 5.8, escena, 'obj_silla_galeria_01', -Math.PI * .75);
-  [[-5.8, -5.8], [5.8, -5.8], [5.8, 1.8], [-5.8, 1.8]].forEach(([x, z], k) => grupo('ruta_guardia_01_0' + (k + 1), x, z, 0, escena));
+  // EDU.06c: la ronda del guardia es AFUERA (plazuela, canchas, parque); adentro solo está el regente dormido
+  [[-14.4, 15.5], [15.6, 15.5], [15.6, -14.5], [-14.4, -14.5]].forEach(([x, z], k) => grupo('ruta_guardia_01_0' + (k + 1), x, z, 0, escena));
 
   // --- Comportamientos de las cosas que se usan (la lógica está más abajo y lee el nodo por nombre) ---
   USOS.silla = (o, mid) => ({ texto: NOM_MAT[MAT_NOM[mid]] ? '🪑 Sentarse · Misión del día' : '🪑 Sentarse', accion: () => usar('silla', o, mid) });
@@ -2654,7 +2655,9 @@ function iniciar(THREE) {
   // --- Escondidas: el regente (duerme en su silla) y el guardia (patrulla) ---
   const icono = (texto, color) => { const s2 = etiqueta(texto, color, 200); s2.visible = false; return s2; };
   function vigilante(P, tipo) {
-    const V = { P, tipo, estado: tipo === 'regente' ? 'dormido' : 'patrulla', t: 0, perdido: 0, atascado: 0, cool: 0, ruta: [], k: 0 };
+    const V = { P, tipo, estado: tipo === 'regente' ? 'dormido' : 'patrulla', t: 0, perdido: 0, atascado: 0, cool: 0, ruta: [], k: 0, tPersigue: 0, inicio: new THREE.Vector3() };
+    // EDU.06c: el regente (adentro) se despierta solo si pasás muy cerca y persigue poco; el guardia (afuera) persigue más
+    V.cfg = tipo === 'regente' ? { despierta: 1.8, maxT: 2.5, correa: 3.5, vel: 3.2 } : { maxT: 10, correa: 28, vel: 3.6 };
     V.zzz = icono('💤 Zzz', '#93C5FD'); V.ojo = icono('❗', '#F87171'); V.mmm = icono('❓ Mmm…', '#FDE68A');
     for (const s2 of [V.zzz, V.ojo, V.mmm]) { s2.position.y = P.H + .55; P.yo.add(s2); }
     if (tipo === 'guardia') V.ruta = Object.keys(nodos).length && (() => { const r = []; escena.traverse(o => { const m = /^ruta_guardia_01_(\d+)$/.exec(o.name || ''); if (m) r[+m[1] - 1] = o.getWorldPosition(new THREE.Vector3()); }); return r.filter(Boolean); })();
@@ -2671,6 +2674,8 @@ function iniciar(THREE) {
   const rayoV = new THREE.Ray(), ojoV = new THREE.Vector3(), aYo = new THREE.Vector3(), golpeV = new THREE.Vector3();
   function meVe(V) {
     if (salaActual || V.cool > 0 || !yo.visible) return false;
+    const adentroCol = Math.abs(yo.position.x) < 13 && Math.abs(yo.position.z) < 13;
+    if (V.tipo === 'guardia' ? adentroCol : !adentroCol) return false;   // el guardia no entra al colegio; el regente no sale
     const pos = V.P.yo.position, dx = yo.position.x - pos.x, dz = yo.position.z - pos.z, d = Math.hypot(dx, dz);
     if (d > 8) return false;
     const ry = V.P.yo.rotation.y, cosA = (Math.sin(ry) * dx + Math.cos(ry) * dz) / (d || 1);
@@ -2710,6 +2715,7 @@ function iniciar(THREE) {
   }
   window.__vigilantes = () => vigilantes.map(V => V.tipo + ':' + V.estado);   // (para las pruebas)
   window.__despertar = () => despertar(VR);
+  window.__posVig = () => vigilantes.map(V => [V.P.yo.position.x, V.P.yo.position.z]);   // (para las pruebas)
   window.__gracia = () => vigilantes.forEach(V => { V.cool = Math.max(V.cool, 3); });
   alCuadro.push((dt, t) => {
     let alguno = false;
@@ -2719,25 +2725,27 @@ function iniciar(THREE) {
       const d = Math.hypot(yo.position.x - V.P.yo.position.x, yo.position.z - V.P.yo.position.z);
       if (V.estado === 'dormido') {
         V.P.cuerpo.rotation.x = .15 + Math.sin(t * 1.2) * .03; V.zzz.position.y = V.P.H + .2 + Math.sin(t * 2) * .08;
-        if (V.cool <= 0 && !salaActual && d < 2.4 && velYo.length() > 3.5) despertar(V);   // correr cerca lo despierta
+        if (V.cool <= 0 && !salaActual && d < V.cfg.despierta) despertar(V);   // solo si pasás muy cerca (o lo tocás)
       } else if (V.estado === 'patrulla') {
         const p = V.ruta[V.k]; if (p && caminarA(V, p.x, p.z, 1.3, dt)) V.k = (V.k + 1) % V.ruta.length;
         if (ve) { V.estado = 'alerta'; V.t = 0; window.sonar('sorpresa'); hablar(V.P, '¡Ey, vos! 👀', 1800, '#FECACA'); }
       } else if (V.estado === 'alerta') {
         V.P.yo.rotation.y = Math.atan2(yo.position.x - V.P.yo.position.x, yo.position.z - V.P.yo.position.z); animar(V.P, false, dt, t);
-        if (V.t > .7) { V.estado = 'persigue'; V.perdido = 0; V.atascado = 0; }
+        if (V.t > .7) { V.estado = 'persigue'; V.perdido = 0; V.atascado = 0; V.tPersigue = 0; V.inicio.copy(V.P.yo.position); }
       } else if (V.estado === 'persigue') {
         alguno = true;
-        caminarA(V, yo.position.x, yo.position.z, 3.6, dt);
+        caminarA(V, yo.position.x, yo.position.z, V.cfg.vel, dt); V.tPersigue += dt;
         V.perdido = ve ? 0 : V.perdido + dt;
+        const adentroCol = Math.abs(yo.position.x) < 13 && Math.abs(yo.position.z) < 13, fueraDeSuLugar = V.tipo === 'guardia' ? adentroCol : !adentroCol;
+        const cansado = V.tPersigue > V.cfg.maxT || V.P.yo.position.distanceTo(V.inicio) > V.cfg.correa || fueraDeSuLugar;   // corto: no te sigue por todo el colegio
         if (d < .8 && !salaActual) atrapado(V);
-        else if (V.perdido > 2.2 || V.atascado > 1.5 || salaActual) { V.estado = 'vuelve'; V.atascado = 0; hablar(V.P, 'Mmm… ¿a dónde se fue? 🤔', 2200, '#FDE68A'); }
+        else if (V.perdido > 2.2 || V.atascado > 1.5 || salaActual || cansado) { V.estado = 'vuelve'; V.atascado = 0; if (V.tipo === 'regente') V.cool = Math.max(V.cool, 6); hablar(V.P, 'Mmm… ¿a dónde se fue? 🤔', 2200, '#FDE68A'); }
       } else if (V.estado === 'vuelve') {
         const casa = V.tipo === 'regente' ? VR.casa : V.ruta.reduce((a, p) => !a || p.distanceTo(V.P.yo.position) < a.distanceTo(V.P.yo.position) ? p : a, null);
         if (!casa) { V.estado = 'patrulla'; continue; }
         const llego = caminarA(V, casa.x, casa.z, 1.6, dt);
         if (V.atascado > 1.5) { V.P.yo.position.set(casa.x, 0, casa.z); }   // si se traba, aparece en su lugar
-        if (ve && V.cool <= 0) { V.estado = 'alerta'; V.t = 0; }
+        if (ve && V.cool <= 0 && V.tipo === 'guardia') { V.estado = 'alerta'; V.t = 0; }   // el regente vuelve directo a dormir
         else if (llego || V.atascado > 1.5) {
           V.atascado = 0;
           if (V.tipo === 'regente' && sillaRegente) { sentarNPC(V.P, sillaRegente); V.estado = 'dormido'; V.cool = Math.max(V.cool, 4); }
