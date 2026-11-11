@@ -70,13 +70,15 @@ acorta lo práctico. Rama `sesion/pantalla-edu-14b`.
 
 Salieron "El aula de hoy" (quedó dentro de la 2) y "Qué gana el profe" (dentro de la 6).
 
-## Nombres en un solo lugar
+## Nombres
 
-Al principio del `<script>` de `educacion/presentacion/index.html`:
-`const NOMBRES = { marca: 'ÑANDÉ', profe1: 'Taji', profe2: 'Jochi' };` — cambia la marca, el título
-de la pestaña y los nombres de los profes. Los números de lámina se calculan solos.
-Ojo: la captura del resumen de clase (`img/profe-resumen.jpg`) muestra "Taji y Jochi" dentro de la
-imagen; si cambian los nombres, rehacer esa captura.
+- Investigación de nombres (MAESTRA, 11-nov): se descarta "Jochi". En la presentación los profes IA
+  **no se nombran** ("Dos profes IA para cada alumno") y una línea chica dice que los nombres son
+  provisionales y que **los chicos ayudan a elegirlos en los talleres**.
+- La marca está en una sola variable al principio del `<script>`: `const NOMBRES = { marca: 'ÑANDÉ' };`
+  (cambia la marca y el título de la pestaña). Las capturas usadas no muestran nombres de los profes.
+- "Moneda" → **"semillas de conocimiento"**: se ganan al aprender y el curso las planta para hacer
+  crecer su ciudad (láminas 3 y 4). El lema queda igual.
 
 ## Imágenes
 

@@ -121,6 +121,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .bajada { font-size: calc(var(--f) * 1.12); color: #e5e5e5; max-width: 40ch; }
 .antetitulo { font-size: var(--chico); color: var(--verde); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
 .hero .lista { max-width: 46ch; }
+.bajada b { color: var(--verde); font-weight: 600; }
 .declaracion .cuerpo { gap: calc(var(--gap) * 1.6); }
 .declaracion h1 { max-width: 22ch; }
 .lineas { display: flex; flex-direction: column; gap: 8px; font-size: calc(var(--f) * 1.12); color: #d4d4d4; max-width: 44ch; border-left: 3px solid var(--verde); padding-left: 16px; }
@@ -244,7 +245,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     <div class="marca"><b class="n"></b> Nuestro lema</div>
     <div class="cuerpo">
       <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
-      <p class="bajada">En este mundo la moneda es el conocimiento. Colegios fiscales, rurales y particulares se encuentran por portales y compiten limpio: por mejora y por alumno, no por plata.</p>
+      <p class="bajada">Acá se gana con <b>semillas de conocimiento</b>: se ganan al aprender y cada curso las planta para hacer crecer su ciudad. Colegios fiscales, rurales y particulares se encuentran por portales y compiten limpio: por mejora y por alumno, no por plata.</p>
     </div>
   </section>
 
@@ -256,7 +257,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
       <h1>Aprender jugando, <span class="verde">con sentido.</span></h1>
       <ul class="lista">
         <li>Las tareas dejan de ser un castigo: son <b>misiones</b> que premian lo aprendido.</li>
-        <li>Con lo que aprenden, los cursos <b>construyen juntos su Santa Cruz</b>: un zoológico, un parque.</li>
+        <li>Con las semillas que ganan, los cursos <b>construyen juntos su Santa Cruz</b>: un zoológico, un parque.</li>
         <li><b>Mundo cerrado y seguro</b>: sin desconocidos, sin ranking de alumnos, con frases amables predefinidas.</li>
       </ul>
       <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
@@ -267,13 +268,14 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     <div class="marca"><b class="n"></b> Para el alumno</div>
     <div class="cuerpo dos img-grande">
       <div class="texto">
-        <h2><span data-n="profe1">Taji</span> y <span data-n="profe2">Jochi</span>: <span class="verde">dos profes IA</span> para cada alumno</h2>
+        <h2><span class="verde">Dos profes IA</span> para cada alumno</h2>
         <ul class="lista">
           <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
           <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
           <li><b>Un mundo-juego</b>: cada materia es un aula y las tareas son misiones.</li>
           <li><b>Modo directo</b> para cuando hay apuro: solo las tareas, sin el juego.</li>
         </ul>
+        <p class="chico sec">Los nombres de los profes son provisionales: los chicos van a ayudar a elegirlos en los talleres.</p>
       </div>
       <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · modo directo.</figcaption></figure>
     </div>
@@ -394,7 +396,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 <script>
 (() => {
   // Nombres en un solo lugar: si cambian la marca o los profes IA, se cambia acá.
-  const NOMBRES = { marca: 'ÑANDÉ', profe1: 'Taji', profe2: 'Jochi' };
+  // Los profes IA no se nombran en las láminas (nombres en revisión; los eligen los chicos en los talleres).
+  const NOMBRES = { marca: 'ÑANDÉ' };
   document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
   document.title = NOMBRES.marca + ' Educación · Presentación';
 
