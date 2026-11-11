@@ -8,7 +8,7 @@
 <title>Tutor · Educación ÑANDÉ (maqueta)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="estilos.css?v=edu04c-1">
+<link rel="stylesheet" href="estilos.css?v=edu04f-1">
 </head>
 <body>
 <div class="app">
@@ -22,6 +22,8 @@
       <a href="#hoy" data-ruta="hoy">📌 Hoy</a>
       <a href="#clase" data-ruta="clase">🎙️ Clase grabada</a>
       <a href="#cronograma" data-ruta="cronograma">🗓️ Cronograma</a>
+      <a href="#tareas" data-ruta="tareas">📝 Tareas</a>
+      <a href="#mapa" data-ruta="mapa">🗺️ Mapa del curso</a>
       <a href="#pensum" data-ruta="pensum">📚 Pensum</a>
       <a href="#alumnos" data-ruta="alumnos">👧 Alumnos</a>
       <a href="#misiones" data-ruta="misiones">🎯 Retos / Misiones</a>
@@ -30,12 +32,15 @@
   </div>
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
-<script src="comun.js?v=edu04b-1"></script>
-<script src="clase.js?v=edu04c-1"></script>
+<script src="comun.js?v=edu04f-1"></script>
+<script src="clase.js?v=edu04f-1"></script>
 <script src="calendario.js?v=edu04b-2"></script>
 <script src="plan-ejemplo-2do-secundaria.js?v=edu04b-2"></script>
-<script src="cronograma.js?v=edu04c-1"></script>
-<script type="module">import('/voz/clase.js?v=edu04c-1').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
+<script src="cronograma.js?v=edu04f-1"></script>
+<script src="tareas.js?v=edu04f-1"></script>
+<script src="curso-demo.js?v=edu04f-1"></script>
+<script src="mapa.js?v=edu04f-1"></script>
+<script type="module">import('/voz/clase.js?v=edu04f-1').catch(() => { /* sin servidor: queda el ejemplo */ });</script>
 <script>
 const D = DEMO;
 U.$('#nom-tutor').textContent = D.tutor.nombre;
@@ -78,6 +83,9 @@ const rutas = {
 
   // EDU.04b: cronograma día a día con el calendario por capas y la mentora (maqueta/cronograma.js)
   cronograma() { const p = location.hash.slice(1).split('/'); return Cronograma.vista(p[1], p[2]); },
+  // EDU.04f: tareas sugeridas por la mentora y mapa del curso
+  tareas() { const p = location.hash.slice(1).split('/'); return Tareas.vista(p[1], p[2]); },
+  mapa() { return Mapa.vista(); },
 
   pensum() {
     return `<div class="encab"><div><h1>Pensum por materia</h1><p>Contenidos y avance. En la versión real: subís el PDF y la IA lo arma.</p></div>
@@ -188,7 +196,7 @@ U.router(rutas, 'hoy');
 // Clase grabada: vuelve a pintar la pantalla actual cuando cambia algo (grabando, IA, informes).
 Clase.alRepintar = () => {
   const ruta = (location.hash.slice(1) || 'hoy').split('/')[0];
-  if (ruta === 'hoy' || ruta === 'clase' || ruta === 'cronograma') window.dispatchEvent(new HashChangeEvent('hashchange'));
+  if (ruta === 'hoy' || ruta === 'clase' || ruta === 'cronograma' || ruta === 'tareas' || ruta === 'mapa') window.dispatchEvent(new HashChangeEvent('hashchange'));
 };
 </script>
 </body>

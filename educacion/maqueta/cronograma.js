@@ -417,7 +417,7 @@
       <h4>🔁 Repaso para empezar la próxima clase</h4><ol class="chica" style="margin-left:18px">${(tarjeta.repaso || []).map((x) => `<li>${esc(x)}</li>`).join('')}</ol>
     </div>
     <p class="ter" style="margin-top:10px">Es una propuesta: usá lo que te sirva y cambiá lo que quieras.${tarjeta.costoUsd ? ` · costo de IA USD ${tarjeta.costoUsd}` : ''}</p>
-    ${!tarjeta.ejemplo ? `<button class="btn chico sec2" onclick="Cronograma.otraIdea('${temaId}')">↻ Otra idea</button>` : ''}`}`}`;
+    <div class="fila envuelve" style="gap:8px;margin-top:8px">${!tarjeta.ejemplo ? `<button class="btn chico sec2" onclick="Cronograma.otraIdea('${temaId}')">↻ Otra idea</button>` : ''}<a class="btn chico" href="#tareas/tema/${temaId}">📝 Sugerir tareas para este tema</a></div>`}`}`;
   }
 
   // ── PDC (Plan de Desarrollo Curricular) imprimible / Word ─────────
@@ -658,6 +658,9 @@
       }
     },
     PLAN_EJEMPLO, HORARIO_EJEMPLO,
+    // EDU.04f: para las tareas sugeridas desde un tema
+    buscarTema(id) { return (estado?.plan?.areas || []).flatMap((a) => a.temas.map((x) => ({ ...x, area: a.id }))).find((x) => x.id === id) || null; },
+    cursoServidor() { return CURSO_SERVIDOR[curso]; },
   };
   // Al entrar o salir de la cuenta, volver a leer.
   window.addEventListener('nande-clase-listo', () => { cargado = false; repintar(); });

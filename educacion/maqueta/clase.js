@@ -322,7 +322,8 @@
     <div class="fila entre envuelve ter" style="margin-top:14px;gap:10px">
       <span>Se borra solo el ${fechaCorta(c.vence)} · costo de IA ${usd(c.costoUsd)}${c.costoPorHoraUsd ? ` (≈ ${usd(c.costoPorHoraUsd)} por hora de clase)` : ''} · ${esc(c.modelo || '')}</span>
       ${c.ejemplo ? '' : `<button class="btn chico sec2" onclick="Clase.borrar('${esc(c.curso)}','${esc(c.id)}')">🗑 Borrar ahora</button>`}
-    </div>`;
+    </div>
+    ${quien === 'direccion' ? '' : `<div class="tarjeta fila-accion" style="margin-top:14px;border-color:var(--verde)"><div class="crece"><b>📝 Tareas para esta clase</b><div class="ter">La mentora propone 2–3 tareas con lo que se vio y lo que quedó pendiente. Vos las editás y las mandás.</div></div><a class="btn" href="#tareas/clase/${esc(c.id)}">✨ Sugerir tareas</a></div>`}`;
   }
 
   // ── Vistas ─────────────────────────────────────────
@@ -452,6 +453,7 @@
     empezar: pedirEmpezar, terminar: () => terminar('profe'), pausar, reintentar: enviar, descartar, borrar, login,
     async salir() { await api()?.salir(); listado = null; repintar(); window.dispatchEvent(new Event('nande-cuenta')); },
     tarjetaHoy, vistaProfe, vistaDireccion, informeHtml, EJEMPLO,
+    obtener: (id) => (id === 'ejemplo' ? EJEMPLO : informes[id] || null),
     grabando: () => !!rec,
     alRepintar: null,
   };

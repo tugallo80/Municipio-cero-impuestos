@@ -54,11 +54,13 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.04a | Clase grabada | El profe graba su clase (▶ Empezar / 🔴 Grabando / ■ Terminar, corte automático); la IA arma informe para el profe y la dirección (el mismo) y el contexto del día para Taji/Jochi/Kay. Audio no se guarda, sin nombres, vencimientos | EDU.02b | ✅ En `main` (9-nov, PR #20). `nande-educacion.web.app/maqueta/tutor.html#clase` (cuenta `dueno`). ≈ USD 0,002/min de clase. Dirección escondida (`?direccion=1`) |
 | EDU.04b | Cronograma y mentora | PDF del plan → cronograma día a día con calendario por capas (nacional, Santa Cruz, distrito, escuela, profe), reajuste ("Perdí este día") y mentora IA por tema (Ser 10/Saber 45/Hacer 40/Autoev. 5) | EDU.04a | ✅ En `main` (9-nov, PR #20). `nande-educacion.web.app/maqueta/tutor.html#cronograma`. Demo 2.º de secundaria con índices oficiales y varias áreas; PDC imprimible/Word |
 | EDU.04c | Panel del profe en celular y PC | Tarjetas con botón apiladas en el celular, revisión en 360/390/1280 px de todo el panel del profe | EDU.04b | 🔎 PR #22 abierto. `nande-educacion--edu-04c-isjznr7h.web.app/maqueta/tutor.html` |
+| EDU.04f | Tareas sugeridas y mapa del curso | La mentora propone 2–3 tareas desde la clase o el cronograma (variantes por nivel) → modo directo del alumno (EDU.06d); mapa del aula con perfiles y propuesta de agrupación (IDs opacos a la IA) | EDU.04a–b | 🔎 PR #33 abierto, rama `sesion/canal-edu-04f` · vista previa https://nande-educacion--canal-edu-04f-jxh3iyfj.web.app · USD 0,0014 por sugerencia, 0,0015 por mapa |
 | EDU.05 | Retos / Misiones | Editor del tutor + motor de misiones + tutor IA dentro de la misión | EDU.03–04 | ⏳ |
 | EDU.06 | Mundo 3D del colegio | App del alumno: colegio estilo bloques, aulas por materia, misiones (PWA) | EDU.05 | ⏳ |
 | EDU.06a | Evoluciones en el alumno | El juego del alumno dibuja su mundo con la evolución de su curso (P1–P2 Bloques … S6 Promo), selector de curso con `?demo=1` y transición al subir, calidad automática y `?diag=1` | EDU.01c, EDU.02c | ✅ Mergeado (PR #16), publicado en `nande-educacion.web.app/maqueta/alumno/` |
 | EDU.06b | Vida e interacción en el colegio | Aulas 3D por dentro con objetos interactivos, zonas nuevas (biblioteca, cancha, huerto, kiosco, dirección), compañeros con animación y convención de nombres para la maqueta GLB | EDU.06a | ✅ Mergeado (PR #19, 3f472d5), publicado en `nande-educacion.web.app/maqueta/` |
 | EDU.06c | Regente y guardias | El regente de adentro solo se despierta si pasás muy cerca y persigue poco; sin guardia en la galería; un guardia hace la ronda afuera (plazuela, canchas, parque) | EDU.06b | 🔎 PR abierto, en el canal de vista previa de `sesion/pantalla-edu-06c` |
+| EDU.06d | Modo directo de tareas | El alumno puede ir directo a sus tareas sin el mundo 3D (`/maqueta/tareas/`): lista por materia, origen (clase, cronograma, mentora), resolver con pistas en escalera y voz de los profes; cuenta igual que en el juego | EDU.06b, EDU.04 | 🔎 PR abierto, en el canal de vista previa de `sesion/pantalla-edu-06d` |
 | EDU.07 | Modelos 3D en Blender | Colegio y aulas en glTF liviano, Blender en la nube con Claude | EDU.01 | ⏳ |
 | EDU.08 | Minijuegos | 2–3 minijuegos que desbloquean las misiones | EDU.05–06 | ⏳ |
 | EDU.09 | App de padres | Avance en tiempo real, cronograma, reportes, permisos, pagos, libretas | EDU.03, 05 | ⏳ |
@@ -66,6 +68,7 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.11 | Sin internet + cifrado | Offline, sincronización y datos locales cifrados | EDU.06, 08 | ⏳ |
 | EDU.12 | Prueba Alfa familiar | Prueba con los hijos, ajustes, guion de la demo para la presentación | EDU.04–11 | ⏳ |
 | EDU.13 | Limpieza | Archivar `rubikeduai-backend` (PR aparte, con OK del dueño) | EDU.12 | ⏳ |
+| EDU.14 | Presentación del proyecto | 10 láminas para el profe del piloto (celular, PC, proyector, PDF), en `/presentacion/` del sitio de Educación | EDU.04b | 🔎 PR abierto, canal `pantalla-edu-14` |
 | NUC.01 | Núcleo ciudadano | Login, perfil, plan de suscripción, billetera de créditos, Hub con diseño ÑANDÉ | INF.01 | ⏳ |
 | TRA.01 | Transporte | Del prototipo a MVP: pedir viaje, conductor, pago con créditos | NUC.01 | ⏳ |
 | MKT.01 | eMarket | Catálogo de comercios, pedidos, suscripción comercial | NUC.01 | ⏳ |

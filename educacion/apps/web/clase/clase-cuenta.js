@@ -24,6 +24,9 @@ const fnClases = httpsCallable(f, 'eduClases')
 // EDU.04b: cronograma y mentora del profe
 const fnPlan = httpsCallable(f, 'eduPlan', { timeout: 300_000 })
 const fnMentora = httpsCallable(f, 'eduMentora', { timeout: 70_000 })
+// EDU.04f: tareas sugeridas y mapa del curso
+const fnTareas = httpsCallable(f, 'eduTareas', { timeout: 70_000 })
+const fnMapa = httpsCallable(f, 'eduMapa', { timeout: 70_000 })
 const llamar = async (fn, datos) => {
   try {
     const r = await fn(datos)
@@ -73,6 +76,9 @@ window.NandeClase = {
   guardarPlan: (curso, estado) => llamar(fnPlan, { accion: 'guardar', curso, estado }),
   extraerPlan: (curso, datos) => llamar(fnPlan, { accion: 'extraer', curso, ...datos }), // datos: { texto } o { pdf }
   mentora: (datos) => llamar(fnMentora, datos),
+  // Tareas y mapa (EDU.04f)
+  tareas: (datos) => llamar(fnTareas, datos),
+  mapa: (datos) => llamar(fnMapa, datos),
   async borrar(curso, id) {
     try { return (await fnClases({ accion: 'borrar', curso, id })).data } catch (e) { return { ok: false, error: mensaje(e) } }
   },

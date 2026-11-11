@@ -72,3 +72,8 @@ gcloud logging read 'jsonPayload.evento="kay_uso"' --project=municipio-ia --limi
   ponen los scripts de `educacion/tools/e2e/` con la cuenta de deploy; el navegador no puede escribir la base.
 - Las pruebas nunca gastan de la bolsa general: si la suya se agota, responden `motivo: 'tope_pruebas'` y
   el workflow las saltea con aviso. El resumen del workflow muestra lo gastado (`e2e/gasto-pruebas.mjs`).
+
+## Tareas sugeridas y mapa del curso (EDU.04f)
+- `eduTareas`: profe → `sugerir` (IA), `enviar`, `listar`, `borrar`; alumno → `mias`, `marcar`. Formato común
+  con el modo directo del alumno (EDU.06d): `docs/sesiones/EDU.04f-tareas-y-mapa.md`.
+- `eduMapa`: `curso` (alumnos demo sin nombres + lo guardado), `proponer` (IA, solo IDs y rasgos), `guardar`.
