@@ -349,7 +349,69 @@ async function guardarIdea(personalId, curso, clave, tarjeta) {
   await base().ref(`edu/planes/${personalId}/${curso}/ideas/${clave}`).set({ ...tarjeta, creado: Date.now() });
 }
 
+// ── Tareas y mapa del curso (EDU.04f) ─────────────
+//    edu/tareas/{curso}/{tareaId}       → tarea enviada (+ asignacion {alumnoId: variante}, personalId, vence)
+//    edu/tareas_estado/{curso}/{tareaId}/{alumnoId} → { estado: 'hecha', fecha }
+//    edu/mapas/{personalId}/{curso}     → disposición del aula que guardó el profe
+const VENCE_TAREA = 60 * DIA;
+
+async function guardarTarea(curso, tarea) {
+  const ahora = Date.now();
+  const ref = base().ref(`edu/tareas/${curso}`).push();
+  await ref.set({ ...tarea, enviada: ahora, vence: ahora + VENCE_TAREA });
+  return ref.key;
+}
+
+/** Tareas vigentes del curso (borra las vencidas al leer, sin cron). */
+async function listarTareas(curso) {
+  const ahora = Date.now();
+  const todas = (await base().ref(`edu/tareas/${curso}`).once('value')).val() || {};
+  const borrar = {};
+  const vigentes = [];
+  for (const [id, t] of Object.entries(todas)) {
+    if ((t.vence || 0) <= ahora) {
+      borrar[`edu/tareas/${curso}/${id}`] = null;
+      borrar[`edu/tareas_estado/${curso}/${id}`] = null;
+    } else vigentes.push({ id, ...t });
+  }
+  if (Object.keys(borrar).length) await base().ref().update(borrar);
+  return vigentes.sort((a, b) => (a.entrega < b.entrega ? -1 : a.entrega > b.entrega ? 1 : b.enviada - a.enviada));
+}
+
+async function obtenerTarea(curso, id) {
+  if (!ID_OK.test(id || '')) return null;
+  return (await base().ref(`edu/tareas/${curso}/${id}`).once('value')).val();
+}
+
+async function borrarTarea(curso, id) {
+  if (!ID_OK.test(id || '')) return;
+  await base().ref().update({ [`edu/tareas/${curso}/${id}`]: null, [`edu/tareas_estado/${curso}/${id}`]: null });
+}
+
+async function marcarTarea(curso, id, alumnoId, estado) {
+  await base().ref(`edu/tareas_estado/${curso}/${id}/${alumnoId}`).set(estado ? { estado, fecha: fechaBolivia() } : null);
+}
+
+async function estadosTareas(curso) {
+  return (await base().ref(`edu/tareas_estado/${curso}`).once('value')).val() || {};
+}
+
+async function leerMapa(personalId, curso) {
+  return (await base().ref(`edu/mapas/${personalId}/${curso}`).once('value')).val();
+}
+async function guardarMapa(personalId, curso, mapa) {
+  await base().ref(`edu/mapas/${personalId}/${curso}`).set({ ...mapa, actualizado: Date.now() });
+}
+
 module.exports = {
+  guardarTarea,
+  listarTareas,
+  obtenerTarea,
+  borrarTarea,
+  marcarTarea,
+  estadosTareas,
+  leerMapa,
+  guardarMapa,
   leerPlan,
   guardarPlan,
   leerIdea,

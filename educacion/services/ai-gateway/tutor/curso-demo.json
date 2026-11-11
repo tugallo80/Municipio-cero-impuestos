@@ -1,0 +1,383 @@
+{
+ "_nota": "GENERADO por tools/datos/armar-curso-demo.mjs. Curso demo SIN nombres: solo IDs opacos y rasgos pedagógicos.",
+ "cursos": {
+  "4to_primaria": [
+   {
+    "id": "A01",
+    "avance": 78,
+    "tendencia": "sube",
+    "misiones": 12,
+    "aprende": "haciendo y explicándole a otros",
+    "ritmo": "constante",
+    "fortalezas": [
+     "cálculo mental",
+     "creatividad",
+     "ayuda a sus compañeros"
+    ],
+    "practicando": [
+     "sumar fracciones con distinto denominador",
+     "mayúscula al empezar una oración"
+    ],
+    "intereses": [
+     "fútbol",
+     "animales",
+     "construir"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Multiplicación": "logrado",
+     "Texto descriptivo": "en camino"
+    },
+    "ultimas": [
+     "El mercado de las fracciones (en curso)",
+     "Tablas en carrera (hecha)"
+    ],
+    "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
+    "atencion": ""
+   },
+   {
+    "id": "A02",
+    "avance": 85,
+    "tendencia": "estable",
+    "misiones": 15,
+    "aprende": "leyendo y ordenando por escrito",
+    "ritmo": "rápido",
+    "fortalezas": [
+     "comprensión lectora",
+     "orden",
+     "constancia"
+    ],
+    "practicando": [
+     "problemas de varios pasos sin apurarse",
+     "pedir ayuda cuando se traba"
+    ],
+    "intereses": [
+     "libros",
+     "dibujo"
+    ],
+    "temas": {
+     "Fracciones": "logrado",
+     "Texto descriptivo": "logrado"
+    },
+    "ultimas": [
+     "Describí tu barrio (hecha)",
+     "El mercado de las fracciones (hecha)"
+    ],
+    "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
+    "atencion": ""
+   },
+   {
+    "id": "A03",
+    "avance": 58,
+    "tendencia": "baja",
+    "misiones": 6,
+    "aprende": "con imágenes y consignas cortas leídas en voz alta",
+    "ritmo": "necesita más tiempo",
+    "fortalezas": [
+     "trabajo en equipo",
+     "deportes",
+     "memoria visual"
+    ],
+    "practicando": [
+     "numerador y denominador",
+     "leer consignas largas"
+    ],
+    "intereses": [
+     "fútbol",
+     "motos",
+     "música"
+    ],
+    "temas": {
+     "Fracciones": "inicio",
+     "Multiplicación": "en camino",
+     "Texto descriptivo": "inicio"
+    },
+    "ultimas": [
+     "El mercado de las fracciones (a la mitad)",
+     "Tablas en carrera (a la mitad)"
+    ],
+    "mentora": "Avanza mejor con un compañero paciente y misiones cortas.",
+    "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
+   },
+   {
+    "id": "A04",
+    "avance": 72,
+    "tendencia": "sube",
+    "misiones": 10,
+    "aprende": "escuchando y hablando (voz de los profes)",
+    "ritmo": "constante",
+    "fortalezas": [
+     "expresión oral",
+     "inglés",
+     "curiosidad"
+    ],
+    "practicando": [
+     "b/v y s/c al escribir"
+    ],
+    "intereses": [
+     "música",
+     "animales del agua"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Ortografía": "inicio",
+     "Daily routines": "logrado"
+    },
+    "ultimas": [
+     "My morning (hecha)",
+     "Describí tu barrio (en curso)"
+    ],
+    "mentora": "Mejoró mucho con las misiones de voz.",
+    "atencion": ""
+   },
+   {
+    "id": "A09",
+    "avance": 90,
+    "tendencia": "estable",
+    "misiones": 16,
+    "aprende": "resolviendo problemas y dibujándolos",
+    "ritmo": "rápido",
+    "fortalezas": [
+     "matemática",
+     "paciencia para explicar"
+    ],
+    "practicando": [
+     "escribir textos largos"
+    ],
+    "intereses": [
+     "plantas",
+     "rompecabezas"
+    ],
+    "temas": {
+     "Fracciones": "logrado",
+     "Multiplicación": "logrado",
+     "Texto descriptivo": "en camino"
+    },
+    "ultimas": [
+     "El mercado de las fracciones (hecha)",
+     "Plantas que beben (hecha)"
+    ],
+    "mentora": "Explica fracciones con dibujos muy claros: puede ayudar en parejas.",
+    "atencion": ""
+   },
+   {
+    "id": "A10",
+    "avance": 64,
+    "tendencia": "estable",
+    "misiones": 8,
+    "aprende": "moviéndose y con objetos concretos",
+    "ritmo": "variable",
+    "fortalezas": [
+     "energía",
+     "manualidades",
+     "juegos en grupo"
+    ],
+    "practicando": [
+     "quedarse en una tarea hasta terminarla",
+     "fracciones equivalentes"
+    ],
+    "intereses": [
+     "autos",
+     "construir"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Multiplicación": "en camino"
+    },
+    "ultimas": [
+     "Tablas en carrera (hecha)",
+     "El mercado de las fracciones (en curso)"
+    ],
+    "mentora": "Rinde más con material concreto (tiras de papel, tapitas).",
+    "atencion": ""
+   },
+   {
+    "id": "A11",
+    "avance": 76,
+    "tendencia": "sube",
+    "misiones": 11,
+    "aprende": "en silencio y con ejemplos resueltos",
+    "ritmo": "constante",
+    "fortalezas": [
+     "prolijidad",
+     "memoria",
+     "ortografía"
+    ],
+    "practicando": [
+     "hablar frente al grupo"
+    ],
+    "intereses": [
+     "dibujo",
+     "música"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Texto descriptivo": "logrado",
+     "Ortografía": "logrado"
+    },
+    "ultimas": [
+     "Describí tu barrio (hecha)",
+     "Collage de colores cálidos (hecha)"
+    ],
+    "mentora": "Participa más en grupos chicos que frente a todo el curso.",
+    "atencion": ""
+   },
+   {
+    "id": "A12",
+    "avance": 69,
+    "tendencia": "sube",
+    "misiones": 9,
+    "aprende": "compitiendo con juegos y desafíos",
+    "ritmo": "rápido pero se apura",
+    "fortalezas": [
+     "liderazgo",
+     "cálculo rápido"
+    ],
+    "practicando": [
+     "revisar antes de entregar",
+     "texto descriptivo"
+    ],
+    "intereses": [
+     "fútbol",
+     "videojuegos"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Multiplicación": "logrado",
+     "Texto descriptivo": "inicio"
+    },
+    "ultimas": [
+     "Tablas en carrera (hecha)",
+     "Describí tu barrio (a la mitad)"
+    ],
+    "mentora": "Le motiva ser 'capitán' de un grupo con una tarea clara.",
+    "atencion": ""
+   },
+   {
+    "id": "A13",
+    "avance": 55,
+    "tendencia": "estable",
+    "misiones": 5,
+    "aprende": "con calma, en voz alta y con mucho ánimo",
+    "ritmo": "necesita más tiempo",
+    "fortalezas": [
+     "creatividad",
+     "cuentos",
+     "empatía"
+    ],
+    "practicando": [
+     "tablas de multiplicar",
+     "confianza para preguntar"
+    ],
+    "intereses": [
+     "cuentos",
+     "animales"
+    ],
+    "temas": {
+     "Fracciones": "inicio",
+     "Multiplicación": "inicio",
+     "Texto descriptivo": "en camino"
+    },
+    "ultimas": [
+     "Describí tu barrio (hecha)",
+     "Tablas en carrera (a la mitad)"
+    ],
+    "mentora": "Escribe cuentos muy lindos; en matemática necesita más práctica guiada.",
+    "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
+   },
+   {
+    "id": "A14",
+    "avance": 80,
+    "tendencia": "sube",
+    "misiones": 13,
+    "aprende": "preguntando y experimentando",
+    "ritmo": "constante",
+    "fortalezas": [
+     "ciencias",
+     "curiosidad",
+     "preguntas buenas"
+    ],
+    "practicando": [
+     "orden en el cuaderno"
+    ],
+    "intereses": [
+     "experimentos",
+     "dinosaurios"
+    ],
+    "temas": {
+     "Fracciones": "logrado",
+     "Ciclo del agua": "logrado",
+     "Texto descriptivo": "en camino"
+    },
+    "ultimas": [
+     "Plantas que beben (hecha)",
+     "El mercado de las fracciones (hecha)"
+    ],
+    "mentora": "Sus preguntas en clase ayudan a todo el curso.",
+    "atencion": ""
+   },
+   {
+    "id": "A15",
+    "avance": 70,
+    "tendencia": "estable",
+    "misiones": 10,
+    "aprende": "en pareja, conversando",
+    "ritmo": "constante",
+    "fortalezas": [
+     "colaboración",
+     "lectura en voz alta"
+    ],
+    "practicando": [
+     "fracciones equivalentes",
+     "cálculo mental"
+    ],
+    "intereses": [
+     "baile",
+     "música"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Multiplicación": "en camino",
+     "Texto descriptivo": "logrado"
+    },
+    "ultimas": [
+     "Describí tu barrio (hecha)",
+     "El mercado de las fracciones (en curso)"
+    ],
+    "mentora": "Trabaja mejor en pareja que sola.",
+    "atencion": ""
+   },
+   {
+    "id": "A16",
+    "avance": 61,
+    "tendencia": "sube",
+    "misiones": 7,
+    "aprende": "con tecnología y paso a paso",
+    "ritmo": "variable",
+    "fortalezas": [
+     "tecnología",
+     "dibujo digital"
+    ],
+    "practicando": [
+     "leer con fluidez",
+     "multiplicación de dos cifras"
+    ],
+    "intereses": [
+     "videojuegos",
+     "robots"
+    ],
+    "temas": {
+     "Fracciones": "en camino",
+     "Multiplicación": "en camino",
+     "Texto descriptivo": "inicio"
+    },
+    "ultimas": [
+     "Tablas en carrera (hecha)",
+     "My morning (en curso)"
+    ],
+    "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
+    "atencion": ""
+   }
+  ]
+ }
+}

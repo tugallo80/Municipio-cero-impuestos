@@ -12,3 +12,6 @@ exports.eduClases = eduClases;
 const { eduPlan, eduMentora } = require('./src/plan');
 exports.eduPlan = eduPlan;
 exports.eduMentora = eduMentora;
+const { eduTareas, eduMapa } = require('./src/tareas');
+exports.eduTareas = eduTareas;
+exports.eduMapa = eduMapa;
