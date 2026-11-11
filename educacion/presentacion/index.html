@@ -107,6 +107,28 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .pasos li::before { content: counter(p); font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #000; background: var(--verde);
   width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; margin-top: 1px; }
 
+
+/* Apertura con imagen de fondo (EDU.14b) */
+.hero .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 60% 50%); z-index: 0; }
+.hero::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.86) 42%, rgba(0,0,0,.25) 72%, rgba(0,0,0,.45) 100%); }
+.hero > :not(.fondo) { position: relative; z-index: 2; }
+.hero .cuerpo { justify-content: flex-end; }
+.hero h1, .declaracion h1 { font-size: calc(var(--h1) * 1.05); max-width: 16ch; text-wrap: balance; }
+.hero p, .hero li, .hero h1 { text-shadow: 0 1px 14px rgba(0,0,0,.7); }
+.hero .marca { text-shadow: 0 1px 8px rgba(0,0,0,.9); color: #e5e5e5; }
+@media screen and (orientation: portrait) { .sin-vertical { display: none; } }
+.bajada { font-size: calc(var(--f) * 1.12); color: #e5e5e5; max-width: 40ch; }
+.antetitulo { font-size: var(--chico); color: var(--verde); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.hero .lista { max-width: 46ch; }
+.declaracion .cuerpo { gap: calc(var(--gap) * 1.6); }
+.declaracion h1 { max-width: 22ch; }
+.lineas { display: flex; flex-direction: column; gap: 8px; font-size: calc(var(--f) * 1.12); color: #d4d4d4; max-width: 44ch; border-left: 3px solid var(--verde); padding-left: 16px; }
+.lineas b { color: var(--txt); font-weight: 600; }
+@media (orientation: landscape), print {
+  .hero::before { background: linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.82) 38%, rgba(0,0,0,.2) 72%, rgba(0,0,0,.05) 100%); }
+  .hero .cuerpo { justify-content: center; max-width: 60%; }
+}
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -126,7 +148,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .acciones { position: fixed; top: calc(10px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); display: flex; gap: 8px; z-index: 5; }
 .acciones .btn { height: 38px; min-width: 38px; padding: 0 10px; font-size: 13px; background: rgba(17,17,17,.9); }
 
-@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 22vh; --gap: 9px; } }
+@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 19vh; --gap: 9px; } }
 /* ── Celular horizontal (alto bajo) ─────── */
 @media (orientation: landscape) and (max-height: 520px) {
   :root { --f: 13.5px; --chico: 11.5px; --h1: 28px; --h2: 21px; --grande: 18px; --pad-x: 28px; --pad-y: 12px; --gap: 9px; --barra: 46px; --img-alto: calc(100vh - 120px); }
@@ -191,38 +213,61 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 <body>
 <main class="deck" id="deck" aria-live="polite">
 
-  <!-- 1 · Portada -->
-  <section class="lam portada" aria-label="Lámina 1">
-    <div class="marca"><b>ÑANDÉ</b> Educación</div>
+  <!-- Soñar en grande desde acá -->
+  <section class="lam hero" style="--pos: 62% 55%">
+    <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
+    <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
-      <div class="raya"></div>
-      <h1>Cada alumno, <span class="verde">a su ritmo.</span></h1>
-      <p class="bajada">Educación individualizada gracias a la IA: potenciar la inteligencia y el potencial de cada chico, no enseñarles a todos igual.</p>
-      <p class="sec chico">Propuesta de piloto · U.E. Nuevo Horizonte · 2.º de secundaria</p>
+      <p class="antetitulo">Propuesta de piloto · U.E. Nuevo Horizonte</p>
+      <h1>¿Y si la nueva forma de educar <span class="verde">empieza acá?</span></h1>
+      <p class="bajada">No en una capital lejana: en una escuela rural de Santa Cruz. Este profe y estos chicos pueden ser los primeros.</p>
       <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
     </div>
   </section>
 
-  <!-- 2 · El problema -->
-  <section class="lam" aria-label="Lámina 2">
-    <div class="marca"><b>02</b> El aula de hoy</div>
+  <!-- La IA como aliada -->
+  <section class="lam declaracion">
+    <div class="marca"><b class="n"></b> La IA ya llegó</div>
     <div class="cuerpo">
-      <h2>Un profe. Muchos chicos. <span class="verde">Cada uno con su ritmo.</span></h2>
-      <div class="tarjetas">
-        <div class="tarjeta"><h3>Ritmos distintos</h3><p class="sec">Unos ya entendieron y se aburren; otros se quedan atrás y no preguntan.</p></div>
-        <div class="tarjeta"><h3>Varias materias</h3><p class="sec">El mismo profe prepara clases de varias áreas, todas las semanas.</p></div>
-        <div class="tarjeta"><h3>Poco tiempo</h3><p class="sec">Cronograma, PDC y papeles se comen horas que serían para los chicos.</p></div>
+      <h1>La IA ya llegó. Podemos darle la espalda… <span class="verde">o ponerla a trabajar para nuestros chicos.</span></h1>
+      <div class="lineas">
+        <p>Un profe, muchos chicos, cada uno con su ritmo.</p>
+        <p>Acá la IA no reemplaza al profe: <b>le devuelve tiempo</b> y le ayuda a <b>ver a cada chico</b>.</p>
       </div>
-      <p class="nota">No es falta de ganas: con un solo profe, el tiempo no alcanza para atender a cada uno.</p>
+      <p class="frase">El que enseña <span>sigue siendo el profe.</span></p>
     </div>
   </section>
 
-  <!-- 3 · Para el alumno -->
-  <section class="lam" aria-label="Lámina 3">
-    <div class="marca"><b>03</b> Para el alumno</div>
+  <!-- Lo que sabés -->
+  <section class="lam hero" style="--pos: 50% 50%">
+    <img class="fondo" src="img/mundo-portal.jpg" alt="" width="1600" height="925">
+    <div class="marca"><b class="n"></b> Nuestro lema</div>
+    <div class="cuerpo">
+      <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
+      <p class="bajada">En este mundo la moneda es el conocimiento. Colegios fiscales, rurales y particulares se encuentran por portales y compiten limpio: por mejora y por alumno, no por plata.</p>
+    </div>
+  </section>
+
+  <!-- Aprender jugando, con sentido -->
+  <section class="lam hero" style="--pos: 70% 50%">
+    <img class="fondo" src="img/mundo-zoologico.jpg" alt="" width="1600" height="963">
+    <div class="marca"><b class="n"></b> Aprender jugando</div>
+    <div class="cuerpo">
+      <h1>Aprender jugando, <span class="verde">con sentido.</span></h1>
+      <ul class="lista">
+        <li>Las tareas dejan de ser un castigo: son <b>misiones</b> que premian lo aprendido.</li>
+        <li>Con lo que aprenden, los cursos <b>construyen juntos su Santa Cruz</b>: un zoológico, un parque.</li>
+        <li><b>Mundo cerrado y seguro</b>: sin desconocidos, sin ranking de alumnos, con frases amables predefinidas.</li>
+      </ul>
+      <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
+    </div>
+  </section>
+
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Para el alumno</div>
     <div class="cuerpo dos img-grande">
       <div class="texto">
-        <h2>Taji y Jochi: <span class="verde">dos profes IA</span> para cada alumno</h2>
+        <h2><span data-n="profe1">Taji</span> y <span data-n="profe2">Jochi</span>: <span class="verde">dos profes IA</span> para cada alumno</h2>
         <ul class="lista">
           <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
           <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
@@ -234,9 +279,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     </div>
   </section>
 
-  <!-- 4 · Para el profe: mentora -->
-  <section class="lam" aria-label="Lámina 4">
-    <div class="marca"><b>04</b> Para el profe</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Para el profe</div>
     <div class="cuerpo dos img-chica">
       <div class="texto">
         <h2>Una <span class="verde">mentora IA</span> para el profe</h2>
@@ -251,14 +295,14 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
             <p><b>Mapa del curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
         </div>
         <p class="frase">La IA propone. <span>El profe decide.</span></p>
+        <p class="nota">Lo que gana el profe: <b style="color:var(--txt)">tiempo</b> (cronograma, PDC y resúmenes salen como borrador para revisar) y <b style="color:var(--txt)">ver a cada alumno</b>.</p>
       </div>
-      <figure><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
+      <figure class="sin-vertical"><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
     </div>
   </section>
 
-  <!-- 5 · Mapa del curso -->
-  <section class="lam" aria-label="Lámina 5">
-    <div class="marca"><b>05</b> Mapa del curso</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Mapa del curso</div>
     <div class="cuerpo dos">
       <div class="texto">
         <h2>Ver a cada alumno, <span class="verde">no al promedio</span></h2>
@@ -273,22 +317,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     </div>
   </section>
 
-  <!-- 6 · Qué gana el profe -->
-  <section class="lam" aria-label="Lámina 6">
-    <div class="marca"><b>06</b> Qué gana el profe</div>
-    <div class="cuerpo dos">
-      <div class="texto">
-        <h2>Qué gana el profe</h2>
-        <div class="tarjeta"><span class="num">Tiempo</span><p class="sec">Cronograma, PDC y resumen de cada clase salen como borrador. El profe revisa y ajusta; no empieza de cero.</p></div>
-        <div class="tarjeta"><span class="num">Ver a cada uno</span><p class="sec">Sabe quién necesita repaso y quién está listo para más, antes de la próxima clase.</p></div>
-      </div>
-      <figure><img src="img/profe-pdc.jpg" alt="PDC armado desde el cronograma" width="994" height="889"><figcaption>Demo: PDC armado desde el cronograma, para imprimir o en Word.</figcaption></figure>
-    </div>
-  </section>
-
-  <!-- 7 · Evidencia -->
-  <section class="lam" aria-label="Lámina 7">
-    <div class="marca"><b>07</b> Evidencia</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Evidencia</div>
     <div class="cuerpo">
       <h2>Lo que dice la evidencia</h2>
       <div class="evid">
@@ -301,9 +331,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     </div>
   </section>
 
-  <!-- 8 · Cuidado de los chicos -->
-  <section class="lam" aria-label="Lámina 8">
-    <div class="marca"><b>08</b> Cuidado de los chicos</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Cuidado de los chicos</div>
     <div class="cuerpo">
       <h2>Cuidado de los chicos</h2>
       <div class="tarjetas">
@@ -315,9 +344,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     </div>
   </section>
 
-  <!-- 9 · Piloto -->
-  <section class="lam" aria-label="Lámina 9">
-    <div class="marca"><b>09</b> Propuesta</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Propuesta</div>
     <div class="cuerpo">
       <h2>La propuesta de piloto</h2>
       <div class="tarjetas t4">
@@ -330,9 +358,8 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     </div>
   </section>
 
-  <!-- 10 · Próximos pasos -->
-  <section class="lam" aria-label="Lámina 10">
-    <div class="marca"><b>10</b> Próximos pasos</div>
+  <section class="lam">
+    <div class="marca"><b class="n"></b> Próximos pasos</div>
     <div class="cuerpo lado">
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
         <h2>Próximos pasos</h2>
@@ -347,7 +374,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
         <p class="frase">Hablemos.</p>
         <p class="campo"><span>Nombre</span><b id="c-nombre"></b></p>
         <p class="campo"><span>Teléfono</span><b id="c-tel"></b></p>
-        <p class="chico sec"><b class="verde" style="font-family:'Space Grotesk',sans-serif">ÑANDÉ</b> Educación · Santa Cruz</p>
+        <p class="chico sec"><b class="verde" style="font-family:'Space Grotesk',sans-serif" data-n="marca">ÑANDÉ</b> Educación · Santa Cruz</p>
       </div>
     </div>
   </section>
@@ -360,13 +387,19 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 </div>
 <nav class="barra" aria-label="Navegación de láminas">
   <button class="btn" id="b-ant" type="button" aria-label="Lámina anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <div class="progreso"><div class="riel"><i id="riel"></i></div><small id="cont">1 / 10</small></div>
+  <div class="progreso"><div class="riel"><i id="riel"></i></div><small id="cont"></small></div>
   <button class="btn primario" id="b-sig" type="button" aria-label="Lámina siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
 </nav>
 
 <script>
 (() => {
+  // Nombres en un solo lugar: si cambian la marca o los profes IA, se cambia acá.
+  const NOMBRES = { marca: 'ÑANDÉ', profe1: 'Taji', profe2: 'Jochi' };
+  document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
+  document.title = NOMBRES.marca + ' Educación · Presentación';
+
   const lams = [...document.querySelectorAll('.lam')];
+  lams.forEach((l, k) => { l.setAttribute('aria-label', 'Lámina ' + (k + 1)); const n = l.querySelector('.marca .n'); if (n) n.textContent = String(k + 1).padStart(2, '0'); });
   const N = lams.length;
   const $ = (id) => document.getElementById(id);
   let i = 0;

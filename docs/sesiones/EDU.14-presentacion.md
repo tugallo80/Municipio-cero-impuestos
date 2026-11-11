@@ -51,3 +51,40 @@ ni debajo de los botones. PDF de 10 páginas. Capturas en `docs/sesiones/captura
 - `img/alumno-tareas.jpg` sale de la rama `sesion/pantalla-edu-06d` (modo directo) y `img/profe-mapa.jpg`
   de `sesion/canal-edu-04f` (mapa del curso). Si esas pantallas cambian antes de mergear, rehacer las capturas.
 - La foto del juego es una captura guardada (EDU.02c); el demo en vivo usa 4.º de primaria de ejemplo.
+
+---
+
+# EDU.14b — Presentación con alma (11-nov-2026)
+
+Pedido del dueño: "es muy técnica, le falta alma". Se agrega una **apertura con propósito** y se
+acorta lo práctico. Rama `sesion/pantalla-edu-14b`.
+
+## Nuevo orden (11 láminas)
+
+1. **¿Y si la nueva forma de educar empieza acá?** — escuela rural de Santa Cruz, el profe y los chicos como pioneros. Foto: el colegio (evolución Promo).
+2. **La IA ya llegó** — darle la espalda o ponerla a trabajar para nuestros chicos; no reemplaza al profe, le devuelve tiempo y le ayuda a ver a cada chico.
+3. **"Acá no vale lo que tenés, sino lo que sabés."** — la moneda es el conocimiento; fiscales, rurales y particulares por portales; compiten por mejora y por alumno. Foto: portal.
+4. **Aprender jugando, con sentido** — tareas → misiones; los cursos construyen su Santa Cruz (zoológico); mundo cerrado, sin ranking de alumnos, frases predefinidas. Foto: zoológico en obra.
+5. Para el alumno (profes IA + modo directo) · 6. Mentora del profe (incluye "lo que gana el profe") ·
+7. Mapa del curso · 8. Evidencia · 9. Cuidado de los chicos · 10. Piloto · 11. Próximos pasos y contacto.
+
+Salieron "El aula de hoy" (quedó dentro de la 2) y "Qué gana el profe" (dentro de la 6).
+
+## Nombres en un solo lugar
+
+Al principio del `<script>` de `educacion/presentacion/index.html`:
+`const NOMBRES = { marca: 'ÑANDÉ', profe1: 'Taji', profe2: 'Jochi' };` — cambia la marca, el título
+de la pestaña y los nombres de los profes. Los números de lámina se calculan solos.
+Ojo: la captura del resumen de clase (`img/profe-resumen.jpg`) muestra "Taji y Jochi" dentro de la
+imagen; si cambian los nombres, rehacer esa captura.
+
+## Imágenes
+
+`img/mundo-colegio.jpg`, `img/mundo-portal.jpg`, `img/mundo-zoologico.jpg` salen de
+`educacion/estilos/capturas/PROMO-*-horizontal.jpg`, recortadas para sacar los carteles de texto.
+`img/profe-pdc.jpg` quedó sin usar (era de la lámina "Qué gana el profe"); se puede borrar con OK del dueño.
+
+## Probado
+
+Playwright en 390×844, 844×390, 1280×800, 360×740 y 1920×1080: sin desbordes. En celular vertical
+la imagen de la lámina 6 se oculta (no entraba). PDF de 11 páginas.

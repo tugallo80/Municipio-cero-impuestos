@@ -67,7 +67,8 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.11 | Sin internet + cifrado | Offline, sincronización y datos locales cifrados | EDU.06, 08 | ⏳ |
 | EDU.12 | Prueba Alfa familiar | Prueba con los hijos, ajustes, guion de la demo para la presentación | EDU.04–11 | ⏳ |
 | EDU.13 | Limpieza | Archivar `rubikeduai-backend` (PR aparte, con OK del dueño) | EDU.12 | ⏳ |
-| EDU.14 | Presentación del proyecto | 10 láminas para el profe del piloto (celular, PC, proyector, PDF), en `/presentacion/` del sitio de Educación | EDU.04b | 🔎 PR abierto, canal `pantalla-edu-14` |
+| EDU.14 | Presentación del proyecto | 10 láminas para el profe del piloto (celular, PC, proyector, PDF), en `/presentacion/` del sitio de Educación | EDU.04b | ✅ En `main` (PR #32) |
+| EDU.14b | Presentación con alma | Apertura con propósito (4 láminas: pioneros, IA aliada, "lo que sabés", aprender jugando) + lo práctico más corto; 11 láminas | EDU.14 | 🔎 PR abierto, canal `pantalla-edu-14b` |
 | NUC.01 | Núcleo ciudadano | Login, perfil, plan de suscripción, billetera de créditos, Hub con diseño ÑANDÉ | INF.01 | ⏳ |
 | TRA.01 | Transporte | Del prototipo a MVP: pedir viaje, conductor, pago con créditos | NUC.01 | ⏳ |
 | MKT.01 | eMarket | Catálogo de comercios, pedidos, suscripción comercial | NUC.01 | ⏳ |
