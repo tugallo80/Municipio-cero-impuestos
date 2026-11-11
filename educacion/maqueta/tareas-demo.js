@@ -39,11 +39,27 @@
     marcar(id) { const l = leer(); if (!l.includes(id)) { l.push(id); try { localStorage.setItem(CLAVE, JSON.stringify(l)); } catch (e) {} } },
     borrar() { try { localStorage.removeItem(CLAVE); } catch (e) {} }
   };
-  // Tareas generadas del lado del profe (EDU.04f), si están cargadas en el mismo formato.
+  // Formato de EDU.04f (Function eduTareas, accion 'mias'): se adapta a esta pantalla.
+  // { id, curso, materia, titulo, consigna, tipo: practica|lectura|investigacion|proyecto|mision, entrega,
+  //   variante, textoVariante, criterios, puntos, autoevaluacion, origen: { tipo, tema }, enviada, como?, pistas?, mision?, estado? }
+  window.adaptarTareaProfe = function (t) {
+    if (!t || !t.entrega) return t;   // ya viene en el formato de esta pantalla
+    const como = t.como || (t.tipo === 'mision' ? 'mision' : t.tipo === 'proyecto' ? 'foto' : t.tipo === 'lectura' ? 'nada' : 'texto');
+    const env = t.enviada ? new Date(t.enviada) : null, dia = env ? DIAS[env.getDay()] : '';
+    const tema = t.origen && t.origen.tema ? t.origen.tema : '';
+    return {
+      id: t.id, curso: t.curso, materia: t.materia, titulo: t.titulo, consigna: t.textoVariante || t.consigna,
+      tipo: como === 'nada' ? 'texto' : como, minimo: como === 'nada' ? 0 : undefined, soloMarcar: como === 'nada',
+      mision: t.mision, escalera: t.pistas, vence: t.entrega, creada: env ? env.toISOString().slice(0, 10) : t.entrega,
+      origen: { tipo: (t.origen && t.origen.tipo) || 'profe', texto: t.origen && t.origen.tipo === 'cronograma' ? `del cronograma${tema ? ': ' + tema : ''}` : `la dejó el profe${dia ? ' el ' + dia : ''}${tema ? ' (clase de ' + tema + ')' : ''}` },
+      autoevaluacion: t.autoevaluacion, criterios: t.criterios, estado: t.estado === 'hecha' ? 'hecha' : 'pendiente', delProfe: true
+    };
+  };
+  // Tareas generadas del lado del profe (EDU.04f), si están cargadas (su formato o este).
   window.tareasDelAlumno = function () {
     let extra = [];
     try { extra = JSON.parse(localStorage.getItem('nande-tareas-profe') || '[]'); } catch (e) {}
-    const todas = [...(window.TAREAS_PROFE || []), ...extra, ...window.TAREAS_DEMO];
+    const todas = [...(window.TAREAS_PROFE || []), ...extra].map(window.adaptarTareaProfe).concat(window.TAREAS_DEMO);
     const vistas = new Set(), hechas = new Set(leer());
     return todas.filter(t => !vistas.has(t.id) && vistas.add(t.id)).map(t => Object.assign({}, t, { estado: hechas.has(t.id) || hechas.has(t.mision) ? 'hecha' : t.estado }));
   };

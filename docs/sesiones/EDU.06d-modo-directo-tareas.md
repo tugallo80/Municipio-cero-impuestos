@@ -67,6 +67,37 @@ En `educacion/maqueta/tareas-demo.js`:
   de la clase grabada (`p.tareas` = `{ descripcion, para }`) se conviertan a este formato y se
   guarden donde las lea el alumno, en la base, cuando haya cuentas reales (EDU.03).
 
+## Acuerdo con EDU.04f (respuesta del 11/11)
+
+- **Leer las tareas**: EDU.04f publica la Function `eduTareas`. El alumno logueado llama a
+  `eduTareas({ accion: 'mias' })` y recibe `{ ok, tareas, hoy }`.
+- **Formato de EDU.04f**:
+
+  ```
+  { id, curso, materia, titulo, consigna,
+    tipo: practica | lectura | investigacion | proyecto | mision,
+    entrega, variante, textoVariante, criterios, puntos, autoevaluacion,
+    origen: { tipo, tema }, enviada }
+  ```
+
+  Se usa tal cual. `window.adaptarTareaProfe()` (en `tareas-demo.js`) lo pasa a esta pantalla:
+  - se muestra `textoVariante`;
+  - el origen dice "la dejó el profe el martes (clase de …)" o "del cronograma: …";
+  - "Qué se mira" sale de `criterios`;
+  - las caritas de autoevaluación aparecen al terminar;
+  - la lectura se completa con "✅ La hice";
+  - práctica → texto y proyecto → foto, salvo que venga `como`.
+- **Pedidos a EDU.04f**:
+  - acción `marcar` (`{ id, estado: 'hecha' | 'entregada', texto? }`; sin fotos hasta que haya
+    permisos y Storage);
+  - que `mias` traiga el estado de cada tarea;
+  - campos opcionales `como`, `pistas` (la escalera) y `mision`.
+- **Pendiente**: cuando la Function esté publicada y haya una cuenta de prueba de alumno, llamarla
+  desde `/maqueta/tareas/`. Hoy la página lee `window.TAREAS_PROFE` o
+  `localStorage['nande-tareas-profe']` y, si no hay nada, la demo.
+- **Probado**: tareas en el formato de EDU.04f, cargadas por `localStorage` (Música con criterios y
+  autoevaluación; Lenguaje de lectura), se listan, se completan y muestran las caritas. Sin errores.
+
 ## Probado (Playwright)
 
 - En 390×844 y 1280×800:
