@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/maqueta/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Mis textos · Mi colegio ÑANDÉ</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css?v=edu17-1">
+<style>
+  .principal { max-width: 980px; }
+  .areas { display: grid; gap: 12px; }
+  @media (min-width: 640px) { .areas { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 1100px) { .areas { grid-template-columns: 1fr 1fr 1fr; } }
+  .area { display: flex; gap: 12px; align-items: flex-start; padding: 16px; border-radius: 18px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); }
+  .area .ico { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 24px; flex: none; }
+  .area b { font-family: 'Space Grotesk'; font-size: 17px; display: block; line-height: 1.25; }
+  .area small { color: var(--texto3); font-size: 13px; display: block; margin-top: 4px; }
+  .aqui { display: inline-flex; gap: 6px; align-items: center; margin-top: 8px; font-size: 13px; color: var(--verde); font-weight: 600; }
+  .buscar { display: flex; gap: 8px; margin: 12px 0 16px; }
+  .buscar input { flex: 1; min-height: 50px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 16px; padding: 0 14px; }
+  .unidad { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); }
+  .unidad + .unidad { margin-top: 8px; }
+  .unidad.aqui-u { border-color: var(--verde); box-shadow: 0 0 0 1px var(--verde) inset; }
+  .unidad .n { width: 36px; height: 36px; border-radius: 12px; background: var(--sup3); display: grid; place-items: center; font-weight: 700; flex: none; }
+  .unidad .t { flex: 1; min-width: 0; line-height: 1.35; }
+  .aviso { padding: 12px 14px; border-radius: 14px; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.35); font-size: 14px; line-height: 1.45; margin-bottom: 14px; }
+  /* lector */
+  .lector { --tam: 19px; }
+  .lector .hoja { background: var(--sup2); border: 1px solid var(--borde); border-radius: 20px; padding: 22px 20px; }
+  .lector.claro .hoja { background: #FBF7EE; color: #1F1A12; border-color: #E8DFCB; }
+  .lector.claro .hoja .ter { color: #6B6150; }
+  .lector .hoja h1 { font-family: 'Space Grotesk'; font-size: calc(var(--tam) + 7px); line-height: 1.25; margin-bottom: 10px; }
+  .lector .hoja p { font-size: var(--tam); line-height: 1.7; margin: 0 0 14px; max-width: 70ch; overflow-wrap: anywhere; }
+  .lector mark { background: #FDE047; color: #1F1A12; border-radius: 4px; padding: 0 2px; }
+  .herr { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+  .herr button { min-width: 48px; min-height: 46px; border-radius: 12px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-weight: 700; font-size: 15px; padding: 0 12px; }
+  .pasar { display: flex; gap: 10px; margin-top: 14px; }
+  .pasar .btn { flex: 1; }
+  .sub { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .res { display: block; padding: 12px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 14px; line-height: 1.45; }
+  .res + .res { margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" id="volver" href="hoy/" title="Volver">←</a>
+    <div class="marca"><b id="tit">Mis textos</b><span id="subt"></span></div>
+    <span class="pildora">Alumno</span>
+  </header>
+  <main class="principal" id="principal"><p class="sec">Cargando…</p></main>
+</div>
+<script src="calendario.js?v=edu17-1"></script>
+<script src="plan-ejemplo-2do-secundaria.js?v=edu17-1"></script>
+<script src="datos-demo.js?v=edu02d-2"></script>
+<script src="estudiante-demo.js?v=edu17-1"></script>
+<script src="estudiante.js?v=edu17-1"></script>
+<script>
+const { E, hoy, materia, esc } = EST;
+EST.nav('textos');
+const $ = s => document.querySelector(s);
+let INDICE = null; const AREAS = {};
+const traer = async id => AREAS[id] || (AREAS[id] = await (await fetch(`textos/${id}.json`, { cache: 'no-cache' })).json());
+const normal = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const pref = (() => { try { return JSON.parse(localStorage.getItem('textos-pref') || '{}'); } catch (e) { return {}; } })();
+const guardarPref = () => { try { localStorage.setItem('textos-pref', JSON.stringify(pref)); } catch (e) {} };
+
+// ---------- ¿En qué parte va el curso? Reparto del cronograma (EDU.04b) sobre el plan de 2.º ----------
+let VA = {};   // area → índice de la unidad que toca hoy
+function calcularDondeVa() {
+  try {
+    const C = window.Calendario, cal = C.diasDelAnio({ anio: new Date().getFullYear(), distrito: E.distrito || 'scz_capital' });
+    const rep = C.repartir(window.PLAN_EJEMPLO_2SEC, E.horario, cal, { colchon: 0.1, semanaEvaluacion: true, desde: cal.inicio });
+    const fechas = Object.keys(rep.porFecha).filter(f => f <= hoy).sort();
+    const ultimo = {};   // area → temaId más reciente
+    for (const f of fechas) for (const x of rep.porFecha[f]) if (x.tipo === 'tema') ultimo[x.area] = x.temaId;
+    const hoyTrim = (cal.dias.find(d => d.fecha >= hoy) || cal.dias[cal.dias.length - 1]).trimestre;
+    for (const a of INDICE.areas) {
+      const plan = (window.PLAN_EJEMPLO_2SEC.areas.find(p => p.id === a.id) || { temas: [] }).temas;
+      const tema = plan.find(t => t.id === ultimo[a.id]);
+      let k = -1;   // el plan de ejemplo puede no cubrir el trimestre actual: entonces se estima por la fecha
+      if (tema && tema.trimestre === hoyTrim) { const clave = normal(tema.titulo).slice(0, 24); k = a.temas.findIndex(u => normal(u.titulo).startsWith(clave.slice(0, 18))); }
+      if (k < 0) {   // sin coincidencia exacta: la parte del trimestre que corresponde a hoy
+        const delTrim = a.temas.map((u, i) => [u, i]).filter(([u]) => u.trimestre === hoyTrim);
+        if (delTrim.length) {
+          const tr = cal.trimestres[hoyTrim - 1], ini = new Date(tr[0]), fin = new Date(tr[1]), ahora = new Date(hoy);
+          const frac = Math.min(.999, Math.max(0, (ahora - ini) / (fin - ini)));
+          k = delTrim[Math.floor(frac * delTrim.length)][1];
+        }
+      }
+      if (k >= 0) VA[a.id] = k;
+    }
+  } catch (e) { console.warn('[textos] sin cronograma', e); }
+}
+
+// ---------- Vistas ----------
+function cab(t, s, volver) { $('#tit').textContent = t; $('#subt').textContent = s || ''; $('#volver').href = volver || 'hoy/'; }
+function inicio() {
+  cab('Mis textos', E.cursoNombre);
+  const seguir = (() => { try { return JSON.parse(localStorage.getItem('textos-seguir') || 'null'); } catch (e) { return null; } })();
+  $('#principal').innerHTML = `
+    ${seguir ? `<a class="area" href="textos/#${seguir.area}/${seguir.parte}" style="border-color:var(--verde);margin-bottom:14px"><div class="ico" style="background:var(--verde-suave)">📖</div><div><b>Seguir leyendo</b><small>${esc(seguir.titulo)}</small></div></a>` : ''}
+    <form class="buscar" onsubmit="event.preventDefault();location.hash='buscar='+encodeURIComponent(this.q.value)"><input name="q" placeholder="🔎 Buscar en todos mis textos" aria-label="Buscar"><button class="btn">Buscar</button></form>
+    <div class="areas">${INDICE.areas.map(a => {
+      const m = materia(a.id), k = VA[a.id], u = k !== undefined ? a.temas[k] : null;
+      return `<a class="area" href="textos/#${a.id}"><div class="ico" style="background:${m.color}22">${m.icono}</div><div style="min-width:0"><b>${esc(a.nombre)}</b>
+        <small>${a.temas.length} unidades${a.completo ? '' : ' · ⚠️ texto incompleto'}</small>
+        ${u ? `<span class="aqui">📍 El curso va acá: ${esc(u.titulo.length > 46 ? u.titulo.slice(0, 44) + '…' : u.titulo)}</span>` : ''}</div></a>`;
+    }).join('')}</div>
+    <p class="ter" style="margin-top:16px">Textos de aprendizaje 2025 del Ministerio de Educación de Bolivia (distribución gratuita). El texto se extrajo de los PDF: algunas columnas o ejercicios pueden verse simples.</p>`;
+}
+async function area(id) {
+  const a = INDICE.areas.find(x => x.id === id); if (!a) return inicio();
+  const d = await traer(id), m = materia(id);
+  cab(a.nombre, m.corto, 'textos/');
+  const porT = [1, 2, 3].map(t => d.temas.map((u, i) => [u, i]).filter(([u]) => u.trimestre === t));
+  $('#principal').innerHTML = `
+    ${d.completo ? '' : `<div class="aviso">⚠️ ${esc(d.aviso)}</div>`}
+    <form class="buscar" onsubmit="event.preventDefault();location.hash='buscar='+encodeURIComponent(this.q.value)+'&area=${id}'"><input name="q" placeholder="🔎 Buscar en ${esc(m.corto)}" aria-label="Buscar"><button class="btn">Buscar</button></form>
+    ${porT.map((lista, t) => lista.length ? `<section class="seccion"><h3>${t + 1}.º trimestre</h3>${lista.map(([u, i]) => `
+      <a class="unidad ${VA[id] === i ? 'aqui-u' : ''}" href="textos/#${id}/${i}"><span class="n">${i + 1}</span><span class="t"><b>${esc(u.titulo)}</b>
+        ${VA[id] === i ? '<br><span class="aqui">📍 El curso va acá (según el cronograma)</span>' : ''}
+        ${u.parrafos.length ? '' : '<br><span class="pildora gris">Solo en el índice</span>'}</span><span class="ter">›</span></a>`).join('')}</section>` : '').join('')}`;
+}
+async function leer(id, i, buscar, foco) {
+  const d = await traer(id), u = d.temas[i]; if (!u) return area(id);
+  const m = materia(id);
+  cab(m.corto, `${u.trimestre}.º trimestre · unidad ${i + 1} de ${d.temas.length}`, `textos/#${id}`);
+  if (u.parrafos.length) try { localStorage.setItem('textos-seguir', JSON.stringify({ area: id, parte: i, titulo: `${m.corto}: ${u.titulo}` })); } catch (e) {}
+  const re = buscar ? new RegExp(buscar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi') : null;
+  const resaltar = p => re ? esc(p).replace(re, x => `<mark>${x}</mark>`) : esc(p);
+  $('#principal').innerHTML = `<div class="lector ${pref.claro ? 'claro' : ''}" style="--tam:${pref.tam || 19}px">
+    <div class="herr"><button onclick="tam(-2)" aria-label="Letra más chica">A−</button><button onclick="tam(2)" aria-label="Letra más grande">A+</button>
+      <button onclick="pref.claro=!pref.claro;guardarPref();ruta()">${pref.claro ? '🌙 Oscuro' : '☀️ Claro'}</button>
+      ${VA[id] === i ? '<span class="aqui" style="margin:0 0 0 auto">📍 El curso va acá</span>' : ''}</div>
+    <article class="hoja"><h1>${esc(u.titulo)}</h1>
+      ${u.subtemas && u.subtemas.length ? `<div class="sub">${u.subtemas.map(s => `<span class="pildora gris">${esc(s)}</span>`).join('')}</div>` : ''}
+      ${u.parrafos.length ? u.parrafos.map((p, k) => `<p id="p${k}">${resaltar(p)}</p>`).join('') : `<p>Esta unidad figura en el índice del texto oficial, pero su contenido todavía no está cargado. ${esc(d.aviso || '')}</p>`}
+      <p class="ter" style="font-size:13px">Fuente: ${esc(d.fuente)}</p></article>
+    <div class="pasar">${i > 0 ? `<a class="btn sec2" href="textos/#${id}/${i - 1}">‹ Anterior</a>` : ''}${i < d.temas.length - 1 ? `<a class="btn" href="textos/#${id}/${i + 1}">Siguiente ›</a>` : ''}</div></div>`;
+  if (foco !== undefined) { const el = document.getElementById('p' + foco); if (el) el.scrollIntoView({ block: 'center' }); } else scrollTo(0, 0);
+}
+function tam(n) { pref.tam = Math.max(15, Math.min(30, (pref.tam || 19) + n)); guardarPref(); document.querySelector('.lector').style.setProperty('--tam', pref.tam + 'px'); }
+async function buscarEn(q, soloArea) {
+  cab('Buscar', `“${q}”`, soloArea ? `textos/#${soloArea}` : 'textos/');
+  $('#principal').innerHTML = '<p class="sec">Buscando…</p>';
+  const nq = normal(q.trim()); if (nq.length < 3) { $('#principal').innerHTML = '<p class="sec">Escribí al menos 3 letras.</p>'; return; }
+  const res = [];
+  for (const a of INDICE.areas.filter(a => !soloArea || a.id === soloArea)) {
+    const d = await traer(a.id);
+    d.temas.forEach((u, i) => {
+      if (normal(u.titulo).includes(nq)) res.push({ a, i, k: undefined, txt: u.titulo, u });
+      u.parrafos.forEach((p, k) => { const j = normal(p).indexOf(nq); if (j >= 0 && res.length < 60) res.push({ a, i, k, txt: p.slice(Math.max(0, j - 60), j + 100), u }); });
+    });
+  }
+  const re = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  $('#principal').innerHTML = `<p class="sec" style="margin-bottom:10px">${res.length ? `${res.length}${res.length >= 60 ? '+' : ''} resultados` : 'No encontramos nada con esa palabra.'}</p>` +
+    res.map(r => `<a class="res" href="textos/#${r.a.id}/${r.i}${r.k !== undefined ? '/' + r.k : ''}?q=${encodeURIComponent(q)}"><b>${materia(r.a.id).icono} ${esc(materia(r.a.id).corto)} · ${esc(r.u.titulo.slice(0, 60))}</b><br>…${esc(r.txt).replace(re, x => `<mark>${x}</mark>`)}…</a>`).join('');
+}
+// rutas: #  · #ing · #ing/3 · #ing/3/12?q=palabra · #buscar=palabra&area=ing
+function ruta() {
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (h.startsWith('buscar=')) { const [q, ar] = h.slice(7).split('&area='); return buscarEn(q, ar); }
+  const [camino, query] = h.split('?q='); const [id, i, k] = camino.split('/');
+  if (!id) return inicio();
+  if (i === undefined) return area(id);
+  return leer(id, +i, query, k !== undefined ? +k : undefined);
+}
+(async () => {
+  INDICE = await (await fetch('textos/indice.json', { cache: 'no-cache' })).json();
+  calcularDondeVa();
+  addEventListener('hashchange', ruta); ruta();
+})();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
+</script>
+</body>
+</html>

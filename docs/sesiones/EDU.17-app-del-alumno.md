@@ -66,3 +66,26 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
   - en junio de 2026 marca Corpus Christi y el Año Nuevo Andino Amazónico (22 de junio);
   - las capas se apagan;
   - sin desbordes.
+
+## Parte 3 — Mis textos (`/maqueta/textos/`)
+
+- Los textos oficiales 2025 de 2.º de secundaria, armados una sola vez con
+  `educacion/tools/datos/armar-textos.mjs` → `educacion/maqueta/textos/<área>.json` + `indice.json`.
+  Se carga solo el área que se abre.
+- **Áreas** con sus unidades por trimestre. **"📍 El curso va acá"**: el reparto del cronograma
+  (`calendario.js` de EDU.04b sobre el plan de ejemplo de 2.º). Si el plan no cubre el trimestre
+  actual, se estima por la fecha dentro del trimestre.
+- **Lector**: letra A−/A+, modo claro u oscuro (se guardan en el celular), anterior/siguiente.
+  **"Seguir leyendo"** se guarda y aparece en Mis textos y en Hoy.
+- **Buscador** en un área o en todos los textos; resalta la palabra y salta al párrafo.
+- **Honesto con lo que falta**:
+  - libros de área (Inglés, Filosofía, Artes, Música, Valores): todas las unidades con texto;
+  - texto general: Lenguaje 19 de 20 unidades, Matemática solo 2 de 10, Biología y Sociales
+    solo el índice. Cada área lo avisa y cada unidad vacía dice "Solo en el índice".
+  - El texto sale de los PDF: algunas columnas o ejercicios se ven simples o mezclados.
+- **Probado** en 390, 820 y 1280: inicio, área, lector, unidad sin texto y búsqueda; sin desbordes
+  ni errores.
+
+### Pendiente
+- Volver a extraer Biología, Sociales y el resto de Matemática cuando haya un PDF mejor del texto
+  general.
