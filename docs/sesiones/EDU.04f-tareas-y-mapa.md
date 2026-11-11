@@ -79,4 +79,13 @@ Tarea = {
   propósito (no hay notas por alumno).
 
 ## Cierre
-(se completa al cerrar)
+- Vista previa: https://nande-educacion--canal-edu-04f-jxh3iyfj.web.app/maqueta/tutor.html#tareas
+  y `#mapa` (vence a los 14 días). PR #33.
+- Costo medido (prueba automática): sugerir 2–3 tareas **USD 0,0014**; propuesta del mapa **USD 0,0015**.
+- Prueba de punta a punta OK: sugerir → enviar → el alumno la ve (`mias`) y la entrega → el profe la
+  ve hecha; mapa sin nombres, 12 alumnos en 6 parejas, tono positivo, guardar y leer.
+- Revisado en 360, 390 y 1280 px sin desbordes.
+- Cuenta de prueba `alumno2` (2.º de secundaria, solo el hash en el repo; la clave la tiene el dueño).
+- Ojo: en el primer deploy las Functions nuevas dieron 401 (falta de invocación pública); el deploy
+  siguiente lo arregló solo.
+- Pendiente de decidir: mover la cuenta `dueno` (4to_primaria) a 2do_secundaria para que vea estas tareas.
