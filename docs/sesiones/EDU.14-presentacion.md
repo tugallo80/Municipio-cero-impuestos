@@ -28,7 +28,7 @@ horizontal), PC y proyector, y se descarga en PDF.
 2. El aula de hoy — un profe, muchos chicos, ritmos distintos, poco tiempo.
 3. Para el alumno — Taji y Jochi, preguntas en vez de respuestas, mundo-juego, modo directo (captura real de EDU.06d).
 4. Para el profe — mentora IA: clase → resumen, cronograma + PDC, tareas, mapa del curso. La IA propone, el profe decide.
-5. Mapa del curso — perfil de cada alumno, propuestas que el profe acepta o cambia (vista del curso en desarrollo).
+5. Mapa del curso — el aula por mesas, propuestas de la mentora (parejas, grupos, a quién acompañar) que el profe acepta o cambia (captura real de EDU.04f).
 6. Qué gana el profe — tiempo y ver a cada uno.
 7. Evidencia — Nigeria (BM 2025), TaRL (J-PAL), EEF −31 % planificación, OLPC Perú sin efecto.
 8. Cuidado de los chicos — sin nombres a la IA, audio no se guarda, consentimiento.
@@ -46,9 +46,8 @@ ni debajo de los botones. PDF de 10 páginas. Capturas en `docs/sesiones/captura
 
 - **Nigeria**: los documentos del repo dan +0,23 DE (educacion-piloto) y +0,3 DE (mentor-del-profesor).
   La lámina dice "+0,2 a 0,3 DE" para no exagerar. Verificar en el informe del Banco Mundial.
-- **Mapa del curso** (EDU.04f): sigue marcado "en desarrollo" en la lámina 5. Cuando se publique,
-  reemplazar `img/profe-perfil.jpg` por la captura real y borrar la línea con la etiqueta.
 - Las capturas son archivos sueltos en `educacion/presentacion/img/`: se cambian sin tocar el HTML
   (mismo nombre; si cambia la proporción, ajustar `width`/`height` del `<img>`).
-- `img/alumno-tareas.jpg` sale de la rama `sesion/pantalla-edu-06d` (modo directo).
+- `img/alumno-tareas.jpg` sale de la rama `sesion/pantalla-edu-06d` (modo directo) y `img/profe-mapa.jpg`
+  de `sesion/canal-edu-04f` (mapa del curso). Si esas pantallas cambian antes de mergear, rehacer las capturas.
 - La foto del juego es una captura guardada (EDU.02c); el demo en vivo usa 4.º de primaria de ejemplo.
