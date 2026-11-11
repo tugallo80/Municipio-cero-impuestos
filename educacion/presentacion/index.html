@@ -54,6 +54,11 @@ figure { min-width: 0; display: flex; flex-direction: column; gap: 6px; align-it
 figure img { display: block; max-width: 100%; max-height: var(--img-alto); width: auto; height: auto;
   border-radius: 12px; border: 1px solid var(--borde); background: var(--sup); }
 figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
+/* Dos capturas a la misma altura (juego 1200x555 + tareas 468x606) */
+.par { display: flex; gap: 8px; align-items: flex-start; width: min(100%, calc(var(--img-alto) * 2.93 + 8px)); }
+.par img { min-width: 0; width: 0; max-height: none; }
+.par img:nth-child(1) { flex: 2.162 1 0; }
+.par img:nth-child(2) { flex: .772 1 0; }
 
 /* Listas con viñeta verde */
 .lista { list-style: none; display: flex; flex-direction: column; gap: calc(var(--gap) * .8); }
@@ -127,6 +132,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   :root { --f: 13.5px; --chico: 11.5px; --h1: 28px; --h2: 21px; --grande: 18px; --pad-x: 28px; --pad-y: 12px; --gap: 9px; --barra: 46px; --img-alto: calc(100vh - 120px); }
   .dos { grid-template-columns: 1fr 1fr; }
   .dos.img-chica { grid-template-columns: 1.25fr .75fr; }
+  .dos.img-grande { grid-template-columns: .95fr 1.05fr; }
   .tarjetas { grid-template-columns: repeat(3, 1fr); }
   .tarjetas.t4 { grid-template-columns: repeat(2, 1fr); }
   .tarjeta { padding: 10px 12px; }
@@ -147,6 +153,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     --barra: 68px; --radio: 18px; --img-alto: 62vh; }
   .dos { grid-template-columns: 1fr 1.1fr; gap: 4vw; }
   .dos.img-chica { grid-template-columns: 1.2fr .8fr; }
+  .dos.img-grande { grid-template-columns: .85fr 1.15fr; gap: 3vw; }
   .tarjetas { grid-template-columns: repeat(3, 1fr); }
   .tarjetas.t4 { grid-template-columns: repeat(4, 1fr); }
   .tarjeta { padding: clamp(16px, 1.6vw, 30px); gap: 8px; }
@@ -171,6 +178,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   .lam:last-child { break-after: auto; page-break-after: auto; }
   .dos { grid-template-columns: 1fr 1.1fr; gap: 50px; }
   .dos.img-chica { grid-template-columns: 1.2fr .8fr; }
+  .dos.img-grande { grid-template-columns: .85fr 1.15fr; gap: 36px; }
   .tarjetas { grid-template-columns: repeat(3, 1fr); }
   .tarjetas.t4 { grid-template-columns: repeat(4, 1fr); }
   .ev { grid-template-columns: 220px 1fr; gap: 24px; padding: 10px 0; }
@@ -212,17 +220,17 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   <!-- 3 · Para el alumno -->
   <section class="lam" aria-label="Lámina 3">
     <div class="marca"><b>03</b> Para el alumno</div>
-    <div class="cuerpo dos">
+    <div class="cuerpo dos img-grande">
       <div class="texto">
         <h2>Taji y Jochi: <span class="verde">dos profes IA</span> para cada alumno</h2>
         <ul class="lista">
           <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
           <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
           <li><b>Un mundo-juego</b>: cada materia es un aula y las tareas son misiones.</li>
-          <li><b>Modo directo</b> para cuando hay apuro: solo las tareas. <span class="etiqueta">en desarrollo</span></li>
+          <li><b>Modo directo</b> para cuando hay apuro: solo las tareas, sin el juego.</li>
         </ul>
       </div>
-      <figure><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><figcaption>Demo: misión de fracciones con pistas de los profes.</figcaption></figure>
+      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · modo directo.</figcaption></figure>
     </div>
   </section>
 

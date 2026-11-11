@@ -26,7 +26,7 @@ horizontal), PC y proyector, y se descarga en PDF.
 
 1. Cada alumno, a su ritmo — educación individualizada gracias a la IA.
 2. El aula de hoy — un profe, muchos chicos, ritmos distintos, poco tiempo.
-3. Para el alumno — Taji y Jochi, preguntas en vez de respuestas, mundo-juego, modo directo (en desarrollo).
+3. Para el alumno — Taji y Jochi, preguntas en vez de respuestas, mundo-juego, modo directo (captura real de EDU.06d).
 4. Para el profe — mentora IA: clase → resumen, cronograma + PDC, tareas, mapa del curso. La IA propone, el profe decide.
 5. Mapa del curso — perfil de cada alumno, propuestas que el profe acepta o cambia (vista del curso en desarrollo).
 6. Qué gana el profe — tiempo y ver a cada uno.
@@ -46,6 +46,9 @@ ni debajo de los botones. PDF de 10 páginas. Capturas en `docs/sesiones/captura
 
 - **Nigeria**: los documentos del repo dan +0,23 DE (educacion-piloto) y +0,3 DE (mentor-del-profesor).
   La lámina dice "+0,2 a 0,3 DE" para no exagerar. Verificar en el informe del Banco Mundial.
-- "Modo directo" del alumno y "mapa del curso" con propuestas: no existen todavía en el demo
-  (están marcados "en desarrollo"). Candidatos a sub-sesión si el profe los valora.
+- **Mapa del curso** (EDU.04f): sigue marcado "en desarrollo" en la lámina 5. Cuando se publique,
+  reemplazar `img/profe-perfil.jpg` por la captura real y borrar la línea con la etiqueta.
+- Las capturas son archivos sueltos en `educacion/presentacion/img/`: se cambian sin tocar el HTML
+  (mismo nombre; si cambia la proporción, ajustar `width`/`height` del `<img>`).
+- `img/alumno-tareas.jpg` sale de la rama `sesion/pantalla-edu-06d` (modo directo).
 - La foto del juego es una captura guardada (EDU.02c); el demo en vivo usa 4.º de primaria de ejemplo.
