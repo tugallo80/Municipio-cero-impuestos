@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/presentacion/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>ÑANDÉ Educación · Presentación</title>
+<meta name="description" content="Educación individualizada gracias a la IA. Propuesta de piloto para la U.E. Nuevo Horizonte.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* EDU.14 — Presentación para el profe del piloto. Diseño ÑANDÉ.
+   Tamaños: celular vertical (base), celular horizontal (alto bajo), PC/proyector, impresión 16:9. */
+:root {
+  --verde: #10B981; --verde-osc: #064E3B; --fondo: #000; --sup: #0A0A0A; --sup2: #111; --borde: #222;
+  --txt: #fff; --sec: #A3A3A3; --ambar: #FBBF24;
+  --f: 16px; --chico: 13px; --h1: 36px; --h2: 26px; --grande: 22px;
+  --pad-x: 20px; --pad-y: 18px; --gap: 12px; --barra: 60px; --radio: 14px;
+  --img-alto: 34vh;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: var(--fondo); color: var(--txt); }
+body { font-family: Inter, system-ui, sans-serif; font-size: var(--f); line-height: 1.45; overflow: hidden;
+  -webkit-tap-highlight-color: transparent; -webkit-text-size-adjust: 100%; }
+h1, h2, h3, .num { font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; letter-spacing: -0.01em; line-height: 1.1; }
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: calc(var(--f) * 1.06); font-weight: 600; }
+p, li { text-wrap: pretty; }
+.verde { color: var(--verde); }
+.sec { color: var(--sec); }
+.chico { font-size: var(--chico); }
+
+/* ── Láminas ───────────────────────────── */
+.deck { position: fixed; inset: 0; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.lam { position: absolute; inset: 0; display: flex; flex-direction: column; gap: var(--gap);
+  padding: calc(var(--pad-y) + env(safe-area-inset-top)) calc(var(--pad-x) + env(safe-area-inset-right))
+           calc(var(--barra) + 8px + env(safe-area-inset-bottom)) calc(var(--pad-x) + env(safe-area-inset-left));
+  overflow-y: auto; opacity: 0; visibility: hidden; transform: translateX(16px);
+  transition: opacity .28s ease, transform .28s ease, visibility 0s .28s; }
+.lam.activa { opacity: 1; visibility: visible; transform: none; transition: opacity .28s ease, transform .28s ease; }
+.lam.antes { transform: translateX(-16px); }
+.marca { display: flex; align-items: center; gap: 10px; font-size: var(--chico); color: var(--sec);
+  letter-spacing: .06em; text-transform: uppercase; font-weight: 600; padding-right: 96px; min-height: 38px; flex: none; }
+.marca b { color: var(--verde); font-family: 'Space Grotesk', sans-serif; }
+.cuerpo { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: safe center; gap: var(--gap); }
+
+/* Texto + imagen: en vertical, apilado; en horizontal, dos columnas */
+.dos { display: grid; grid-template-columns: 1fr; gap: calc(var(--gap) * 1.4); align-items: center; align-content: safe center; }
+.dos .texto { display: flex; flex-direction: column; gap: var(--gap); min-width: 0; }
+figure { min-width: 0; display: flex; flex-direction: column; gap: 6px; align-items: center; }
+figure img { display: block; max-width: 100%; max-height: var(--img-alto); width: auto; height: auto;
+  border-radius: 12px; border: 1px solid var(--borde); background: var(--sup); }
+figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
+
+/* Listas con viñeta verde */
+.lista { list-style: none; display: flex; flex-direction: column; gap: calc(var(--gap) * .8); }
+.lista li { padding-left: 18px; position: relative; }
+.lista li::before { content: ''; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; border-radius: 2px; background: var(--verde); }
+.lista b { font-weight: 600; }
+
+/* Tarjetas */
+.tarjetas { display: grid; grid-template-columns: 1fr; gap: var(--gap); }
+.tarjeta { background: var(--sup2); border: 1px solid var(--borde); border-radius: var(--radio); padding: 14px 16px; display: flex; flex-direction: column; gap: 4px; }
+.tarjeta .num { font-size: var(--grande); color: var(--verde); }
+.filas { display: flex; flex-direction: column; gap: calc(var(--gap) * .7); }
+.fila { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: start; }
+.ico { width: 40px; height: 40px; border-radius: 10px; background: rgba(16,185,129,.12); color: var(--verde);
+  display: grid; place-items: center; }
+.ico svg { width: 22px; height: 22px; }
+.etiqueta { display: inline-block; font-size: calc(var(--chico) * .92); font-weight: 600; color: var(--ambar);
+  border: 1px solid rgba(251,191,36,.45); border-radius: 999px; padding: 1px 9px; margin-left: 4px; white-space: nowrap; vertical-align: 1px; }
+.frase { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: var(--grande); }
+.frase span { color: var(--verde); }
+.nota { font-size: var(--chico); color: var(--sec); border-top: 1px solid var(--borde); padding-top: 10px; }
+
+/* Portada */
+.portada .cuerpo { justify-content: center; gap: calc(var(--gap) * 1.6); }
+.portada h1 { font-size: calc(var(--h1) * 1.25); max-width: 14ch; }
+.portada .bajada { font-size: calc(var(--f) * 1.12); color: #d4d4d4; max-width: 36ch; }
+.pista { color: var(--sec); font-size: var(--chico); display: flex; align-items: center; gap: 8px; }
+.pista svg { width: 18px; height: 18px; }
+.raya { width: 56px; height: 4px; border-radius: 2px; background: var(--verde); }
+
+/* Evidencia */
+.evid { display: flex; flex-direction: column; gap: calc(var(--gap) * .7); }
+.ev { display: grid; grid-template-columns: 1fr; gap: 2px; padding: 10px 0; border-top: 1px solid var(--borde); }
+.ev:first-child { border-top: 0; padding-top: 0; }
+.ev .num { font-size: var(--grande); color: var(--verde); white-space: nowrap; }
+.ev .num.gris { color: var(--sec); }
+.ev .fuente { font-size: var(--chico); color: var(--sec); }
+
+/* Contacto */
+.contacto { background: var(--sup2); border: 1px solid var(--verde); border-radius: var(--radio); padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; }
+.campo { display: flex; gap: 10px; align-items: baseline; }
+.campo span { color: var(--sec); font-size: var(--chico); min-width: 70px; }
+.campo b { flex: 1; border-bottom: 1px dashed #555; min-height: 1.4em; font-weight: 600; }
+.pasos { list-style: none; counter-reset: p; display: flex; flex-direction: column; gap: calc(var(--gap) * .8); }
+.pasos li { counter-increment: p; display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: start; }
+.pasos li::before { content: counter(p); font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #000; background: var(--verde);
+  width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; margin-top: 1px; }
+
+/* ── Controles ───────────────────────────── */
+.barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
+  padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
+  display: flex; align-items: center; gap: 12px; background: linear-gradient(to top, #000 60%, rgba(0,0,0,0)); z-index: 5; }
+.btn { appearance: none; border: 1px solid var(--borde); background: var(--sup2); color: var(--txt); border-radius: 12px;
+  height: 44px; min-width: 44px; padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  font: 600 14px Inter, sans-serif; cursor: pointer; }
+.btn:hover { border-color: #444; }
+.btn:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.btn.primario { background: var(--verde); color: #000; border-color: var(--verde); }
+.btn svg { width: 20px; height: 20px; }
+.btn:disabled { opacity: .35; cursor: default; }
+.progreso { flex: 1; display: flex; flex-direction: column; gap: 6px; align-items: center; min-width: 0; }
+.progreso .riel { width: 100%; max-width: 420px; height: 4px; background: #1a1a1a; border-radius: 2px; overflow: hidden; }
+.progreso .riel i { display: block; height: 100%; width: 10%; background: var(--verde); transition: width .28s ease; }
+.progreso small { font-size: 12px; color: var(--sec); font-variant-numeric: tabular-nums; }
+.acciones { position: fixed; top: calc(10px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); display: flex; gap: 8px; z-index: 5; }
+.acciones .btn { height: 38px; min-width: 38px; padding: 0 10px; font-size: 13px; background: rgba(17,17,17,.9); }
+
+@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 22vh; --gap: 9px; } }
+/* ── Celular horizontal (alto bajo) ─────── */
+@media (orientation: landscape) and (max-height: 520px) {
+  :root { --f: 13.5px; --chico: 11.5px; --h1: 28px; --h2: 21px; --grande: 18px; --pad-x: 28px; --pad-y: 12px; --gap: 9px; --barra: 46px; --img-alto: calc(100vh - 120px); }
+  .dos { grid-template-columns: 1fr 1fr; }
+  .dos.img-chica { grid-template-columns: 1.25fr .75fr; }
+  .tarjetas { grid-template-columns: repeat(3, 1fr); }
+  .tarjetas.t4 { grid-template-columns: repeat(2, 1fr); }
+  .tarjeta { padding: 10px 12px; }
+  .fila { grid-template-columns: 30px 1fr; gap: 10px; }
+  .ico { width: 30px; height: 30px; border-radius: 8px; } .ico svg { width: 17px; height: 17px; }
+  .ev { grid-template-columns: 136px 1fr; gap: 10px; padding: 6px 0; }
+  .marca { min-height: 32px; }
+  .lam { padding-top: calc(var(--pad-y) + env(safe-area-inset-top)); }
+  .btn { height: 38px; min-width: 38px; }
+  .acciones .btn { height: 32px; min-width: 32px; }
+  .pasos li { grid-template-columns: 26px 1fr; } .pasos li::before { width: 22px; height: 22px; font-size: 12px; }
+  .lado { display: grid; grid-template-columns: 1.2fr .8fr; gap: 18px; align-items: center; }
+}
+/* ── PC y proyector ─────────────────────── */
+@media (min-width: 900px) and (min-height: 560px) {
+  :root { --f: clamp(18px, 1.1vw + .75vh, 30px); --chico: clamp(14px, .75vw + .45vh, 21px); --h1: clamp(50px, 4.8vw, 100px);
+    --h2: clamp(36px, 3.2vw, 66px); --grande: clamp(26px, 2.2vw, 46px); --pad-x: 6vw; --pad-y: 5vh; --gap: clamp(14px, 1.6vh, 26px);
+    --barra: 68px; --radio: 18px; --img-alto: 62vh; }
+  .dos { grid-template-columns: 1fr 1.1fr; gap: 4vw; }
+  .dos.img-chica { grid-template-columns: 1.2fr .8fr; }
+  .tarjetas { grid-template-columns: repeat(3, 1fr); }
+  .tarjetas.t4 { grid-template-columns: repeat(4, 1fr); }
+  .tarjeta { padding: clamp(16px, 1.6vw, 30px); gap: 8px; }
+  .fila { grid-template-columns: clamp(40px, 3vw, 58px) 1fr; gap: 16px; }
+  .ico { width: clamp(40px, 3vw, 58px); height: clamp(40px, 3vw, 58px); } .ico svg { width: 55%; height: 55%; }
+  .ev { grid-template-columns: clamp(170px, 15vw, 300px) 1fr; gap: 24px; padding: 12px 0; }
+  .lado { display: grid; grid-template-columns: 1.15fr .85fr; gap: 5vw; align-items: center; }
+  .pasos li { grid-template-columns: clamp(32px, 2.4vw, 46px) 1fr; } .pasos li::before { width: clamp(28px, 2vw, 40px); height: clamp(28px, 2vw, 40px); font-size: clamp(14px, 1vw, 20px); }
+  .marca { padding-right: 180px; }
+}
+@media (prefers-reduced-motion: reduce) { .lam, .lam.activa, .progreso .riel i { transition: none; transform: none; } }
+
+/* ── PDF: una lámina por página, 16:9 ───── */
+@page { size: 1280px 720px; margin: 0; }
+@media print {
+  :root { --f: 19px; --chico: 14px; --h1: 56px; --h2: 40px; --grande: 30px; --pad-x: 70px; --pad-y: 40px; --gap: 16px; --barra: 0px; --radio: 16px; --img-alto: 520px; }
+  html, body { height: auto; overflow: visible; -webkit-print-color-adjust: exact; print-color-adjust: exact; background: #000; }
+  .barra, .acciones, .pista { display: none !important; }
+  .deck { position: static; }
+  .lam { position: relative; inset: auto; width: 1280px; height: 720px; opacity: 1; visibility: visible; transform: none; transition: none;
+    overflow: hidden; break-after: page; page-break-after: always; padding: 40px 70px 34px; background: #000; }
+  .lam:last-child { break-after: auto; page-break-after: auto; }
+  .dos { grid-template-columns: 1fr 1.1fr; gap: 50px; }
+  .dos.img-chica { grid-template-columns: 1.2fr .8fr; }
+  .tarjetas { grid-template-columns: repeat(3, 1fr); }
+  .tarjetas.t4 { grid-template-columns: repeat(4, 1fr); }
+  .ev { grid-template-columns: 220px 1fr; gap: 24px; padding: 10px 0; }
+  .lado { display: grid; grid-template-columns: 1.15fr .85fr; gap: 60px; align-items: center; }
+  .marca { padding-right: 0; }
+  .marca::after { content: attr(data-pie); margin-left: auto; }
+}
+</style>
+</head>
+<body>
+<main class="deck" id="deck" aria-live="polite">
+
+  <!-- 1 · Portada -->
+  <section class="lam portada" aria-label="Lámina 1">
+    <div class="marca"><b>ÑANDÉ</b> Educación</div>
+    <div class="cuerpo">
+      <div class="raya"></div>
+      <h1>Cada alumno, <span class="verde">a su ritmo.</span></h1>
+      <p class="bajada">Educación individualizada gracias a la IA: potenciar la inteligencia y el potencial de cada chico, no enseñarles a todos igual.</p>
+      <p class="sec chico">Propuesta de piloto · U.E. Nuevo Horizonte · 2.º de secundaria</p>
+      <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
+    </div>
+  </section>
+
+  <!-- 2 · El problema -->
+  <section class="lam" aria-label="Lámina 2">
+    <div class="marca"><b>02</b> El aula de hoy</div>
+    <div class="cuerpo">
+      <h2>Un profe. Muchos chicos. <span class="verde">Cada uno con su ritmo.</span></h2>
+      <div class="tarjetas">
+        <div class="tarjeta"><h3>Ritmos distintos</h3><p class="sec">Unos ya entendieron y se aburren; otros se quedan atrás y no preguntan.</p></div>
+        <div class="tarjeta"><h3>Varias materias</h3><p class="sec">El mismo profe prepara clases de varias áreas, todas las semanas.</p></div>
+        <div class="tarjeta"><h3>Poco tiempo</h3><p class="sec">Cronograma, PDC y papeles se comen horas que serían para los chicos.</p></div>
+      </div>
+      <p class="nota">No es falta de ganas: con un solo profe, el tiempo no alcanza para atender a cada uno.</p>
+    </div>
+  </section>
+
+  <!-- 3 · Para el alumno -->
+  <section class="lam" aria-label="Lámina 3">
+    <div class="marca"><b>03</b> Para el alumno</div>
+    <div class="cuerpo dos">
+      <div class="texto">
+        <h2>Taji y Jochi: <span class="verde">dos profes IA</span> para cada alumno</h2>
+        <ul class="lista">
+          <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
+          <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
+          <li><b>Un mundo-juego</b>: cada materia es un aula y las tareas son misiones.</li>
+          <li><b>Modo directo</b> para cuando hay apuro: solo las tareas. <span class="etiqueta">en desarrollo</span></li>
+        </ul>
+      </div>
+      <figure><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><figcaption>Demo: misión de fracciones con pistas de los profes.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 4 · Para el profe: mentora -->
+  <section class="lam" aria-label="Lámina 4">
+    <div class="marca"><b>04</b> Para el profe</div>
+    <div class="cuerpo dos img-chica">
+      <div class="texto">
+        <h2>Una <span class="verde">mentora IA</span> para el profe</h2>
+        <div class="filas">
+          <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
+            <p><b>Escucha la clase</b> y arma el resumen contra el pensum: qué se vio y qué quedó pendiente.</p></div>
+          <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
+            <p><b>Arma el cronograma</b> día a día con el calendario oficial, y el PDC listo para imprimir.</p></div>
+          <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></span>
+            <p><b>Sugiere tareas</b> según lo que pasó en la clase de hoy.</p></div>
+          <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
+            <p><b>Mapa del curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
+        </div>
+        <p class="frase">La IA propone. <span>El profe decide.</span></p>
+      </div>
+      <figure><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 5 · Mapa del curso -->
+  <section class="lam" aria-label="Lámina 5">
+    <div class="marca"><b>05</b> Mapa del curso</div>
+    <div class="cuerpo dos img-chica">
+      <div class="texto">
+        <h2>Ver a cada alumno, <span class="verde">no al promedio</span></h2>
+        <p class="sec">Cada alumno con su perfil: fortalezas, temas logrados y en camino, errores frecuentes y ritmo.</p>
+        <ul class="lista">
+          <li><b>La IA propone</b>: un repaso, un reto más difícil, con quién trabajar en grupo.</li>
+          <li><b>El profe acepta, cambia o descarta.</b> Nada se aplica solo.</li>
+          <li>Lenguaje positivo, sin etiquetas ni diagnósticos.</li>
+        </ul>
+        <p class="chico sec">Vista de todo el curso con propuestas <span class="etiqueta">en desarrollo</span></p>
+      </div>
+      <figure><img src="img/profe-perfil.jpg" alt="Perfil psicopedagógico de un alumno ficticio" width="662" height="680"><figcaption>Demo: perfil de un alumno ficticio.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 6 · Qué gana el profe -->
+  <section class="lam" aria-label="Lámina 6">
+    <div class="marca"><b>06</b> Qué gana el profe</div>
+    <div class="cuerpo dos">
+      <div class="texto">
+        <h2>Qué gana el profe</h2>
+        <div class="tarjeta"><span class="num">Tiempo</span><p class="sec">Cronograma, PDC y resumen de cada clase salen como borrador. El profe revisa y ajusta; no empieza de cero.</p></div>
+        <div class="tarjeta"><span class="num">Ver a cada uno</span><p class="sec">Sabe quién necesita repaso y quién está listo para más, antes de la próxima clase.</p></div>
+      </div>
+      <figure><img src="img/profe-pdc.jpg" alt="PDC armado desde el cronograma" width="994" height="889"><figcaption>Demo: PDC armado desde el cronograma, para imprimir o en Word.</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- 7 · Evidencia -->
+  <section class="lam" aria-label="Lámina 7">
+    <div class="marca"><b>07</b> Evidencia</div>
+    <div class="cuerpo">
+      <h2>Lo que dice la evidencia</h2>
+      <div class="evid">
+        <div class="ev"><span class="num">+0,2 a 0,3 DE</span><div><p>Tutor IA en Nigeria: 6 semanas de inglés, con docentes guiando.</p><p class="fuente">Banco Mundial, 2025 · ensayo con sorteo</p></div></div>
+        <div class="ev"><span class="num">0,07 a 0,70 DE</span><div><p>Enseñar según el nivel real de cada chico, no el del grado.</p><p class="fuente">J-PAL, Teaching at the Right Level · 6 ensayos con sorteo en India</p></div></div>
+        <div class="ev"><span class="num">−31 %</span><div><p>Tiempo de planificación de docentes que usaron IA con una guía, sin bajar la calidad.</p><p class="fuente">EEF, Inglaterra, 2024 · ensayo con sorteo</p></div></div>
+        <div class="ev"><span class="num gris">Sin efecto</span><div><p>Repartir computadoras sin uso guiado no mejoró matemática ni lenguaje.</p><p class="fuente">BID, Perú 2012 · sorteo en 319 escuelas</p></div></div>
+      </div>
+      <p class="nota">DE = desviación estándar, la medida que usan estos estudios. Son resultados de otros países: este piloto tiene que medir los suyos.</p>
+    </div>
+  </section>
+
+  <!-- 8 · Cuidado de los chicos -->
+  <section class="lam" aria-label="Lámina 8">
+    <div class="marca"><b>08</b> Cuidado de los chicos</div>
+    <div class="cuerpo">
+      <h2>Cuidado de los chicos</h2>
+      <div class="tarjetas">
+        <div class="tarjeta"><h3>Sin nombres hacia la IA</h3><p class="sec">Cada alumno es un código (ej. A01). Nombres, fotos y ubicación no salen.</p></div>
+        <div class="tarjeta"><h3>El audio no se guarda</h3><p class="sec">Se usa para armar el resumen y se descarta. El resumen se borra solo.</p></div>
+        <div class="tarjeta"><h3>Con consentimiento</h3><p class="sec">De las familias y del profe, explicando para qué se usa todo antes de empezar.</p></div>
+      </div>
+      <p class="nota">Bolivia todavía no tiene una ley general de datos personales: por eso aplicamos la regla más estricta.</p>
+    </div>
+  </section>
+
+  <!-- 9 · Piloto -->
+  <section class="lam" aria-label="Lámina 9">
+    <div class="marca"><b>09</b> Propuesta</div>
+    <div class="cuerpo">
+      <h2>La propuesta de piloto</h2>
+      <div class="tarjetas t4">
+        <div class="tarjeta"><span class="num">Gratis</span><p class="sec">Para la escuela y las familias.</p></div>
+        <div class="tarjeta"><span class="num">Un curso</span><p class="sec">Durante 8 a 12 semanas.</p></div>
+        <div class="tarjeta"><span class="num">Medido</span><p class="sec">Antes y después, comparado con otro curso parecido.</p></div>
+        <div class="tarjeta"><span class="num">Con el profe</span><p class="sec">Co-diseñador: lo que no sirve, se cambia.</p></div>
+      </div>
+      <p class="nota">Qué medimos: lectura y matemática, minutos de uso, tiempo que ahorra el profe y qué opinan profe y alumnos.</p>
+    </div>
+  </section>
+
+  <!-- 10 · Próximos pasos -->
+  <section class="lam" aria-label="Lámina 10">
+    <div class="marca"><b>10</b> Próximos pasos</div>
+    <div class="cuerpo lado">
+      <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
+        <h2>Próximos pasos</h2>
+        <ol class="pasos">
+          <li><span>Probar el demo juntos.</span></li>
+          <li><span>Carta de intención del colegio y permiso de la Dirección Distrital.</span></li>
+          <li><span>Elegir el curso del piloto y uno de comparación; revisar luz, internet y carga de tablets.</span></li>
+          <li><span>Consentimientos, medición inicial y arranque.</span></li>
+        </ol>
+      </div>
+      <div class="contacto">
+        <p class="frase">Hablemos.</p>
+        <p class="campo"><span>Nombre</span><b id="c-nombre"></b></p>
+        <p class="campo"><span>Teléfono</span><b id="c-tel"></b></p>
+        <p class="chico sec"><b class="verde" style="font-family:'Space Grotesk',sans-serif">ÑANDÉ</b> Educación · Santa Cruz</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<div class="acciones">
+  <button class="btn" id="b-pdf" type="button" title="Descargar en PDF (una lámina por página)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>PDF</button>
+  <button class="btn" id="b-full" type="button" title="Pantalla completa (F)" aria-label="Pantalla completa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+</div>
+<nav class="barra" aria-label="Navegación de láminas">
+  <button class="btn" id="b-ant" type="button" aria-label="Lámina anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+  <div class="progreso"><div class="riel"><i id="riel"></i></div><small id="cont">1 / 10</small></div>
+  <button class="btn primario" id="b-sig" type="button" aria-label="Lámina siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
+</nav>
+
+<script>
+(() => {
+  const lams = [...document.querySelectorAll('.lam')];
+  const N = lams.length;
+  const $ = (id) => document.getElementById(id);
+  let i = 0;
+
+  // Contacto: se completa con ?nombre=…&tel=… (sin tocar el código). Si no viene, queda la línea para escribir.
+  const q = new URLSearchParams(location.search);
+  if (q.get('nombre')) $('c-nombre').textContent = q.get('nombre');
+  if (q.get('tel')) $('c-tel').textContent = q.get('tel');
+
+  lams.forEach((l, k) => { const m = l.querySelector('.marca'); if (m) m.dataset.pie = (k + 1) + ' / ' + N; });
+
+  function ir(n) {
+    i = Math.max(0, Math.min(N - 1, n));
+    lams.forEach((l, k) => {
+      l.classList.toggle('activa', k === i);
+      l.classList.toggle('antes', k < i);
+      l.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+      if (k === i) l.scrollTop = 0;
+    });
+    $('cont').textContent = (i + 1) + ' / ' + N;
+    $('riel').style.width = ((i + 1) / N * 100) + '%';
+    $('b-ant').disabled = i === 0;
+    $('b-sig').disabled = i === N - 1;
+    history.replaceState(null, '', location.pathname + location.search + '#' + (i + 1));
+  }
+  const sig = () => ir(i + 1), ant = () => ir(i - 1);
+
+  $('b-sig').addEventListener('click', sig);
+  $('b-ant').addEventListener('click', ant);
+  $('b-pdf').addEventListener('click', () => window.print());
+  const pantallaCompleta = () => {
+    const d = document.documentElement;
+    if (document.fullscreenElement || document.webkitFullscreenElement) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
+    else if (d.requestFullscreen) d.requestFullscreen().catch(() => {});
+    else if (d.webkitRequestFullscreen) d.webkitRequestFullscreen();
+  };
+  $('b-full').addEventListener('click', pantallaCompleta);
+  if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('b-full').hidden = true;
+
+  document.addEventListener('keydown', (e) => {
+    if (e.altKey || e.ctrlKey || e.metaKey) return;
+    const k = e.key;
+    if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { if (k === 'Enter' && e.target.closest('button')) return; e.preventDefault(); sig(); }
+    else if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(k)) { e.preventDefault(); ant(); }
+    else if (k === 'Home') { e.preventDefault(); ir(0); }
+    else if (k === 'End') { e.preventDefault(); ir(N - 1); }
+    else if (k === 'f' || k === 'F') pantallaCompleta();
+  });
+
+  // Toque y deslizamiento: deslizar a los lados cambia de lámina; un toque en el tercio izquierdo vuelve, en el resto avanza.
+  const deck = $('deck');
+  let x0 = 0, y0 = 0, t0 = 0, activo = false;
+  deck.addEventListener('pointerdown', (e) => { if (e.button) return; activo = true; x0 = e.clientX; y0 = e.clientY; t0 = Date.now(); });
+  deck.addEventListener('pointerup', (e) => {
+    if (!activo) return; activo = false;
+    const dx = e.clientX - x0, dy = e.clientY - y0;
+    if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) { dx < 0 ? sig() : ant(); return; }
+    if (Math.abs(dx) < 10 && Math.abs(dy) < 10 && Date.now() - t0 < 500) {
+      if (e.target.closest('a, button')) return;
+      if (window.getSelection && String(window.getSelection())) return;
+      e.clientX < window.innerWidth / 3 ? ant() : sig();
+    }
+  });
+  deck.addEventListener('pointercancel', () => { activo = false; });
+
+  const inicial = parseInt(location.hash.slice(1), 10);
+  ir(Number.isFinite(inicial) ? inicial - 1 : 0);
+})();
+</script>
+</body>
+</html>
