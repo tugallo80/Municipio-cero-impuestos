@@ -44,15 +44,17 @@
   //   variante, textoVariante, criterios, puntos, autoevaluacion, origen: { tipo, tema }, enviada, como?, pistas?, mision?, estado? }
   window.adaptarTareaProfe = function (t) {
     if (!t || !t.entrega) return t;   // ya viene en el formato de esta pantalla
-    const como = t.como || (t.tipo === 'mision' ? 'mision' : t.tipo === 'proyecto' ? 'foto' : t.tipo === 'lectura' ? 'nada' : 'texto');
+    let como = t.como || (t.tipo === 'proyecto' ? 'foto' : t.tipo === 'lectura' ? 'nada' : 'texto');
+    if (como === 'opciones' && !(t.preguntas && t.preguntas.length) && !t.mision) como = 'texto';   // sin preguntas: se responde escribiendo
+    if (como === 'opciones' && t.mision) como = 'mision';
     const env = t.enviada ? new Date(t.enviada) : null, dia = env ? DIAS[env.getDay()] : '';
     const tema = t.origen && t.origen.tema ? t.origen.tema : '';
     return {
       id: t.id, curso: t.curso, materia: t.materia, titulo: t.titulo, consigna: t.textoVariante || t.consigna,
       tipo: como === 'nada' ? 'texto' : como, minimo: como === 'nada' ? 0 : undefined, soloMarcar: como === 'nada',
-      mision: t.mision, escalera: t.pistas, vence: t.entrega, creada: env ? env.toISOString().slice(0, 10) : t.entrega,
+      mision: t.mision, preguntas: t.preguntas, escalera: t.pistas && t.pistas.length ? t.pistas : null, vence: t.entrega, creada: env ? env.toISOString().slice(0, 10) : t.entrega,
       origen: { tipo: (t.origen && t.origen.tipo) || 'profe', texto: t.origen && t.origen.tipo === 'cronograma' ? `del cronograma${tema ? ': ' + tema : ''}` : `la dejó el profe${dia ? ' el ' + dia : ''}${tema ? ' (clase de ' + tema + ')' : ''}` },
-      autoevaluacion: t.autoevaluacion, criterios: t.criterios, estado: t.estado === 'hecha' ? 'hecha' : 'pendiente', delProfe: true
+      autoevaluacion: t.autoevaluacion, criterios: t.criterios, estado: t.hecha || t.estado === 'hecha' || t.estado === 'entregada' ? 'hecha' : 'pendiente', delProfe: true
     };
   };
   // Tareas generadas del lado del profe (EDU.04f), si están cargadas (su formato o este).

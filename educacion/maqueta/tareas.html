@@ -104,6 +104,7 @@ function lista() {
   $('#principal').innerHTML = `
     <div class="hola">¡Hola, ${esc(YO.apodo.split(' ')[0])}! 👋</div>
     <div class="sec">Solo tus tareas, sin el juego. Cuando termines una, cuenta igual que en el colegio 3D.</div>
+    ${avisoServidor()}
     <div class="resumen"><span class="pildora ambar">📅 ${paraHoy.length} para hoy</span><span class="pildora gris">⏳ ${luego.length} pendientes</span><span class="pildora">✅ ${hechas.length} hechas</span></div>
     <div class="filtros"><button data-f="todas" class="${filtro === 'todas' ? 'activo' : ''}">Todas</button>${mats.map(id => `<button data-f="${id}" class="${filtro === id ? 'activo' : ''}">${materia(id).icono} ${esc(materia(id).corto)}</button>`).join('')}</div>
     ${bloque('Para hoy', paraHoy)}${bloque('Pendientes', luego)}${bloque('Hechas', hechas)}
@@ -200,6 +201,7 @@ function verFoto(inp) { const f = inp.files && inp.files[0]; if (!f) return; con
 function entregarFoto() { terminar(); }
 function terminar() {
   window.TAREAS_HECHAS.marcar(T.id); if (T.mision) window.TAREAS_HECHAS.marcar(T.mision);
+  marcarEnServidor(T, $('#txt') ? { texto: $('#txt').value.trim().slice(0, 2000) } : null);
   const m = materia(T.materia), l = T.premio && T.premio.llave && lugar(T.premio.llave);
   avisarProfes('completa', { titulo: T.titulo });
   $('#principal').innerHTML = cabTarea() + `<div class="tarjeta hecho" style="margin-top:12px">
@@ -220,6 +222,42 @@ function avisarProfes(tipo, datos) {
 function hablar() { const PV = window.ProfesVoz; if (!PV) return; avisarProfes(); PV.llamar(profeDe()); }
 addEventListener('profes-voz-listo', () => { const PV = window.ProfesVoz; PV.al('pista', n => { while (T && R && R.peldano < n) subir(); }); if (T) pintarTarea(); }, { once: true });
 addEventListener('load', () => setTimeout(() => import('/voz/profes.js?v=edu02d-2').catch(() => {}), 800));
+
+// ---------- Tareas reales del profe (EDU.04f): misma cuenta y módulo que el panel del profe ----------
+const NC = () => window.NandeClase && typeof window.NandeClase.tareas === 'function' ? window.NandeClase : null;
+let estadoServidor = 'demo';   // 'demo' | 'sin-sesion' | 'cargando' | 'ok' | 'error'
+async function cargarDelServidor() {
+  const nc = NC(); if (!nc) return;
+  if (!nc.usuario()) { estadoServidor = 'sin-sesion'; if (!T) lista(); return; }
+  estadoServidor = 'cargando';
+  const r = await nc.tareas({ accion: 'mias' });
+  if (r && r.ok) { window.TAREAS_PROFE = r.tareas || []; estadoServidor = 'ok'; } else estadoServidor = 'error';
+  if (!T) lista();
+}
+async function entrarCuenta(ev) {
+  ev.preventDefault(); const nc = NC(); if (!nc) return;
+  const u = $('#cu-usuario').value.trim(), c = $('#cu-clave').value;
+  $('#cu-msj').textContent = 'Entrando…';
+  const r = await nc.entrar(u, c);
+  if (r.ok) { $('#cu-msj').textContent = ''; cargarDelServidor(); } else $('#cu-msj').textContent = r.error || 'No se pudo entrar.';
+}
+function avisoServidor() {
+  if (estadoServidor === 'sin-sesion') return `<form class="tarjeta" style="margin-top:12px" onsubmit="entrarCuenta(event)">
+      <b>🔐 Entrá con tu cuenta para ver las tareas de tu profe</b>
+      <div class="ter" style="margin:4px 0 10px">Mientras tanto ves las tareas de ejemplo.</div>
+      <input id="cu-usuario" class="op" style="width:100%;margin-bottom:8px" placeholder="Usuario" autocomplete="username">
+      <input id="cu-clave" class="op" style="width:100%" type="password" placeholder="Clave" autocomplete="current-password">
+      <button class="btn ancho" style="margin-top:10px">Entrar</button><div class="ter" id="cu-msj" style="margin-top:6px"></div></form>`;
+  if (estadoServidor === 'ok') return `<div class="ter" style="margin-top:8px">🧑‍🏫 Tareas de tu profe al día · ${esc(window.NandeClase.usuario())}</div>`;
+  if (estadoServidor === 'error') return '<div class="ter" style="margin-top:8px">⚠️ No se pudieron traer las tareas del profe. Ves las de ejemplo.</div>';
+  return '';
+}
+async function marcarEnServidor(t, extra) {
+  const nc = NC(); if (!nc || !t.delProfe) return;
+  await nc.tareas({ accion: 'marcar', id: t.id, estado: extra && extra.texto ? 'entregada' : 'hecha', ...(extra || {}) });
+}
+addEventListener('nande-clase-listo', cargarDelServidor);
+addEventListener('load', () => setTimeout(() => import('/voz/clase.js').catch(() => {}), 300));
 
 // ---------- Rutas ----------
 function ruta() { const m = /t=([^&]+)/.exec(location.hash); if (m) abrirTarea(decodeURIComponent(m[1])); else { T = null; lista(); } }

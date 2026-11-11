@@ -92,9 +92,29 @@ En `educacion/maqueta/tareas-demo.js`:
     permisos y Storage);
   - que `mias` traiga el estado de cada tarea;
   - campos opcionales `como`, `pistas` (la escalera) y `mision`.
-- **Pendiente**: cuando la Function esté publicada y haya una cuenta de prueba de alumno, llamarla
-  desde `/maqueta/tareas/`. Hoy la página lee `window.TAREAS_PROFE` o
-  `localStorage['nande-tareas-profe']` y, si no hay nada, la demo.
+- **Conexión ya armada en la página**:
+  - carga el mismo módulo de cuentas del panel del profe, `/voz/clase.js` (`window.NandeClase`);
+  - si no hay sesión, muestra "🔐 Entrá con tu cuenta" (usuario y clave);
+  - con sesión, trae las tareas de su profe con `NandeClase.tareas({ accion: 'mias' })`;
+  - al terminar, avisa con `NandeClase.tareas({ accion: 'marcar', id, estado: 'hecha' | 'entregada',
+    texto? })`;
+  - si no hay módulo o falla, queda la demo.
+- **Versión final de EDU.04f** (PR #33):
+  - `estado` y `hecha` en cada tarea; `entregada` cuenta como hecha;
+  - `como` (si es "opciones" sin preguntas, se responde escribiendo);
+  - `pistas`: si vienen vacías, no hay botón;
+  - sin `mision`.
+- **Pendiente**:
+  - que EDU.04f exponga `tareas` en `NandeClase`; ya se lo pedí con ese nombre;
+  - probar con una cuenta de alumno de `2do_secundaria`, que es el curso demo actual;
+  - la página lee también `window.TAREAS_PROFE` o `localStorage['nande-tareas-profe']`.
+- **Probado con un módulo simulado** (390×844 y 1280×800):
+  - formulario de entrada;
+  - error con una clave mala;
+  - las tareas del profe aparecen primero, con "al día";
+  - pistas;
+  - al entregar se manda `marcar` con el texto;
+  - sin errores.
 - **Probado**: tareas en el formato de EDU.04f, cargadas por `localStorage` (Música con criterios y
   autoevaluación; Lenguaje de lectura), se listan, se completan y muestran las caritas. Sin errores.
 
