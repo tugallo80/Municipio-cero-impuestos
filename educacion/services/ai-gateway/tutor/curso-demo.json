@@ -1,0 +1,385 @@
+{
+ "_nota": "GENERADO por tools/datos/armar-curso-demo.mjs. Curso demo SIN nombres: solo IDs opacos y rasgos pedagógicos.",
+ "cursos": {
+  "2do_secundaria": [
+   {
+    "id": "S01",
+    "avance": 78,
+    "tendencia": "sube",
+    "misiones": 12,
+    "aprende": "haciendo y explicándole a otros",
+    "ritmo": "constante",
+    "fortalezas": [
+     "cálculo mental",
+     "creatividad",
+     "ayuda a sus compañeros"
+    ],
+    "practicando": [
+     "operaciones con números racionales",
+     "puntuación en textos largos"
+    ],
+    "intereses": [
+     "fútbol",
+     "música",
+     "construir"
+    ],
+    "temas": {
+     "Números racionales": "en camino",
+     "Simple present": "logrado",
+     "Género narrativo": "en camino"
+    },
+    "ultimas": [
+     "Racionales en la feria (en curso)",
+     "My daily routine (hecha)"
+    ],
+    "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
+    "atencion": ""
+   },
+   {
+    "id": "S02",
+    "avance": 86,
+    "tendencia": "estable",
+    "misiones": 15,
+    "aprende": "leyendo y ordenando por escrito",
+    "ritmo": "rápido",
+    "fortalezas": [
+     "comprensión lectora",
+     "orden",
+     "constancia"
+    ],
+    "practicando": [
+     "problemas de varios pasos sin apurarse",
+     "pedir ayuda cuando se traba"
+    ],
+    "intereses": [
+     "libros",
+     "dibujo"
+    ],
+    "temas": {
+     "Números racionales": "logrado",
+     "Género narrativo": "logrado",
+     "Tawantinsuyu": "logrado"
+    },
+    "ultimas": [
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (hecha)"
+    ],
+    "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
+    "atencion": ""
+   },
+   {
+    "id": "S03",
+    "avance": 58,
+    "tendencia": "baja",
+    "misiones": 6,
+    "aprende": "con imágenes y consignas cortas",
+    "ritmo": "necesita más tiempo",
+    "fortalezas": [
+     "trabajo en equipo",
+     "deportes",
+     "memoria visual"
+    ],
+    "practicando": [
+     "números racionales",
+     "leer consignas largas"
+    ],
+    "intereses": [
+     "fútbol",
+     "motos",
+     "música"
+    ],
+    "temas": {
+     "Números racionales": "inicio",
+     "Simple present": "en camino",
+     "Género narrativo": "inicio"
+    },
+    "ultimas": [
+     "Racionales en la feria (a la mitad)",
+     "My daily routine (a la mitad)"
+    ],
+    "mentora": "Avanza mejor con un compañero paciente y tareas cortas.",
+    "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
+   },
+   {
+    "id": "S04",
+    "avance": 74,
+    "tendencia": "sube",
+    "misiones": 10,
+    "aprende": "escuchando y hablando (voz de los profes)",
+    "ritmo": "constante",
+    "fortalezas": [
+     "expresión oral",
+     "inglés",
+     "curiosidad"
+    ],
+    "practicando": [
+     "ortografía (b/v, s/c)"
+    ],
+    "intereses": [
+     "música",
+     "series en inglés"
+    ],
+    "temas": {
+     "Simple present": "logrado",
+     "Género narrativo": "en camino",
+     "Números racionales": "en camino"
+    },
+    "ultimas": [
+     "My daily routine (hecha)",
+     "Leyendas del Abya Yala (en curso)"
+    ],
+    "mentora": "Mejoró mucho con las tareas de voz y en inglés ayuda a sus compañeros.",
+    "atencion": ""
+   },
+   {
+    "id": "S05",
+    "avance": 90,
+    "tendencia": "estable",
+    "misiones": 16,
+    "aprende": "resolviendo problemas y dibujándolos",
+    "ritmo": "rápido",
+    "fortalezas": [
+     "matemática",
+     "paciencia para explicar"
+    ],
+    "practicando": [
+     "escribir textos argumentativos"
+    ],
+    "intereses": [
+     "plantas",
+     "rompecabezas"
+    ],
+    "temas": {
+     "Números racionales": "logrado",
+     "Expresiones algebraicas": "logrado",
+     "Género narrativo": "en camino"
+    },
+    "ultimas": [
+     "Racionales en la feria (hecha)",
+     "El sistema solar (hecha)"
+    ],
+    "mentora": "Explica racionales con dibujos muy claros: puede acompañar en parejas.",
+    "atencion": ""
+   },
+   {
+    "id": "S06",
+    "avance": 64,
+    "tendencia": "estable",
+    "misiones": 8,
+    "aprende": "moviéndose y con objetos concretos",
+    "ritmo": "variable",
+    "fortalezas": [
+     "energía",
+     "manualidades",
+     "trabajo en grupo"
+    ],
+    "practicando": [
+     "terminar una tarea antes de empezar otra",
+     "vocabulario en inglés"
+    ],
+    "intereses": [
+     "autos",
+     "construir"
+    ],
+    "temas": {
+     "Números racionales": "en camino",
+     "Simple present": "en camino"
+    },
+    "ultimas": [
+     "My daily routine (hecha)",
+     "Racionales en la feria (en curso)"
+    ],
+    "mentora": "Rinde más con material concreto y consignas paso a paso.",
+    "atencion": ""
+   },
+   {
+    "id": "S07",
+    "avance": 77,
+    "tendencia": "sube",
+    "misiones": 11,
+    "aprende": "en silencio y con ejemplos resueltos",
+    "ritmo": "constante",
+    "fortalezas": [
+     "prolijidad",
+     "memoria",
+     "ortografía"
+    ],
+    "practicando": [
+     "hablar frente al grupo",
+     "speaking en inglés"
+    ],
+    "intereses": [
+     "dibujo",
+     "música"
+    ],
+    "temas": {
+     "Género narrativo": "logrado",
+     "Simple present": "en camino",
+     "Tawantinsuyu": "logrado"
+    },
+    "ultimas": [
+     "Leyendas del Abya Yala (hecha)",
+     "Mapa del Tawantinsuyu (hecha)"
+    ],
+    "mentora": "Participa más en grupos chicos que frente a todo el curso.",
+    "atencion": ""
+   },
+   {
+    "id": "S08",
+    "avance": 69,
+    "tendencia": "sube",
+    "misiones": 9,
+    "aprende": "con desafíos y juegos",
+    "ritmo": "rápido pero se apura",
+    "fortalezas": [
+     "liderazgo",
+     "cálculo rápido"
+    ],
+    "practicando": [
+     "revisar antes de entregar",
+     "redacción"
+    ],
+    "intereses": [
+     "fútbol",
+     "videojuegos"
+    ],
+    "temas": {
+     "Números racionales": "en camino",
+     "Expresiones algebraicas": "en camino",
+     "Género narrativo": "inicio"
+    },
+    "ultimas": [
+     "Racionales en la feria (hecha)",
+     "Leyendas del Abya Yala (a la mitad)"
+    ],
+    "mentora": "Le motiva coordinar un grupo con una tarea clara.",
+    "atencion": ""
+   },
+   {
+    "id": "S09",
+    "avance": 55,
+    "tendencia": "estable",
+    "misiones": 5,
+    "aprende": "con calma, en voz alta y con mucho ánimo",
+    "ritmo": "necesita más tiempo",
+    "fortalezas": [
+     "creatividad",
+     "escritura de cuentos",
+     "empatía"
+    ],
+    "practicando": [
+     "números racionales",
+     "confianza para preguntar"
+    ],
+    "intereses": [
+     "cuentos",
+     "animales"
+    ],
+    "temas": {
+     "Números racionales": "inicio",
+     "Género narrativo": "logrado",
+     "Simple present": "en camino"
+    },
+    "ultimas": [
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (a la mitad)"
+    ],
+    "mentora": "Escribe relatos muy lindos; en matemática necesita más práctica guiada.",
+    "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
+   },
+   {
+    "id": "S10",
+    "avance": 81,
+    "tendencia": "sube",
+    "misiones": 13,
+    "aprende": "preguntando y experimentando",
+    "ritmo": "constante",
+    "fortalezas": [
+     "ciencias",
+     "curiosidad",
+     "preguntas buenas"
+    ],
+    "practicando": [
+     "orden en el cuaderno"
+    ],
+    "intereses": [
+     "astronomía",
+     "experimentos"
+    ],
+    "temas": {
+     "Números racionales": "logrado",
+     "Sistema solar": "logrado",
+     "Género narrativo": "en camino"
+    },
+    "ultimas": [
+     "El sistema solar (hecha)",
+     "Racionales en la feria (hecha)"
+    ],
+    "mentora": "Sus preguntas en clase ayudan a todo el curso.",
+    "atencion": ""
+   },
+   {
+    "id": "S11",
+    "avance": 70,
+    "tendencia": "estable",
+    "misiones": 10,
+    "aprende": "en pareja, conversando",
+    "ritmo": "constante",
+    "fortalezas": [
+     "colaboración",
+     "lectura en voz alta"
+    ],
+    "practicando": [
+     "expresiones algebraicas",
+     "listening en inglés"
+    ],
+    "intereses": [
+     "baile",
+     "música"
+    ],
+    "temas": {
+     "Expresiones algebraicas": "en camino",
+     "Simple present": "en camino",
+     "Género narrativo": "logrado"
+    },
+    "ultimas": [
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (en curso)"
+    ],
+    "mentora": "Trabaja mejor en pareja que sola.",
+    "atencion": ""
+   },
+   {
+    "id": "S12",
+    "avance": 61,
+    "tendencia": "sube",
+    "misiones": 7,
+    "aprende": "con tecnología y paso a paso",
+    "ritmo": "variable",
+    "fortalezas": [
+     "tecnología",
+     "dibujo digital"
+    ],
+    "practicando": [
+     "leer con fluidez",
+     "expresiones algebraicas"
+    ],
+    "intereses": [
+     "videojuegos",
+     "robots"
+    ],
+    "temas": {
+     "Números racionales": "en camino",
+     "Simple present": "logrado",
+     "Género narrativo": "inicio"
+    },
+    "ultimas": [
+     "My daily routine (hecha)",
+     "Racionales en la feria (en curso)"
+    ],
+    "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
+    "atencion": ""
+   }
+  ]
+ }
+}

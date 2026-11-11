@@ -47,7 +47,11 @@
 
   // Router por hash: #ruta/parametro
   U.router = (rutas, porDefecto) => {
+    let ultimo = null;
     const pintar = () => {
+      // Al cambiar de pantalla de verdad (no al repintar la misma), se cierran las hojas abiertas.
+      if (ultimo !== null && ultimo !== location.hash) document.querySelectorAll('.velo').forEach((v) => v.remove());
+      ultimo = location.hash;
       const [ruta, param] = (location.hash.slice(1) || porDefecto).split('/');
       const fn = rutas[ruta] || rutas[porDefecto];
       document.querySelectorAll('[data-ruta]').forEach(a => a.classList.toggle('activo', a.dataset.ruta === ruta));

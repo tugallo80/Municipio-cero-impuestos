@@ -168,7 +168,7 @@ try {
   const claveComun = randomBytes(24).toString('base64url')
   try { await getAuth().updateUser(COMUN.uid, { email: COMUN.email, password: claveComun }) } catch { await getAuth().createUser({ uid: COMUN.uid, email: COMUN.email, password: claveComun }) }
   await db.ref(`edu/uid_alumno/${COMUN.uid}`).set(COMUN.alumnoId)
-  await db.ref(`edu/alumnos/${COMUN.alumnoId}`).set({ curso: '4to_primaria', estilo: 'visual' }) // sin pruebaAuto
+  await db.ref(`edu/alumnos/${COMUN.alumnoId}`).set({ curso: '2do_secundaria', estilo: 'visual' }) // sin pruebaAuto
   await db.ref(`edu/uso/${fecha}/${COMUN.alumnoId}`).remove()
   const rc = await fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: COMUN.email, password: claveComun, returnSecureToken: true }),
@@ -182,6 +182,44 @@ try {
   chequear(despuesG === antesG + 1 && despuesP === antesP, `…y cuenta en la bolsa general, no en la de pruebas (general ${antesG}→${despuesG}, pruebas ${antesP}→${despuesP})`)
   const sesion = tc.result?.sesionId ? (await db.ref(`edu/sesiones/${tc.result.sesionId}`).once('value')).val() : null
   chequear(sesion && !sesion.prueba, 'La charla de la cuenta común no queda marcada como prueba')
+
+  // ── EDU.04f — Tareas sugeridas (profe) → modo directo (alumno) ──
+  md()
+  md('### Tareas sugeridas y mapa del curso (EDU.04f)')
+  const NOMBRES = ['Mateo', 'Valentina', 'Thiago', 'Camila', 'Lucía', 'Joaquín', 'Emma', 'Santiago', 'Martina', 'Gael', 'Renata', 'Dylan']
+  const sug = await llamar('eduTareas', { accion: 'sugerir', curso: '2do_secundaria', materia: 'ing', tema: 'The simple present tense', origen: 'clase', vistos: ['Simple present: affirmative and negative sentences about daily routines'], pendiente: ['Questions with do / does'], hoy: fecha }, token)
+  const ts = sug.result?.tareas || []
+  chequear(sug.result?.ok && ts.length >= 2 && ts.length <= 3, `La mentora sugirió ${ts.length} tareas (USD ${sug.result?.costoUsd}): ${ts.map((t) => `"${t.titulo}" (${t.tipo}, ${t.entrega})`).join(' · ')}`)
+  chequear(ts.every((t) => t.consigna && t.variantes?.apoyo && t.variantes?.desafio && t.criterios?.saber && t.puntos?.saber === 45), 'Cada tarea trae consigna, variantes (apoyo/base/desafío) y criterios Ser/Saber/Hacer/Autoev.')
+  if (ts[0]) md(`> ${ts[0].consigna}\n>\n> Apoyo: ${ts[0].variantes.apoyo}\n>\n> Desafío: ${ts[0].variantes.desafio}`)
+  const env = ts[0] ? await llamar('eduTareas', { accion: 'enviar', curso: '2do_secundaria', tarea: ts[0] }, token) : {}
+  chequear(env.result?.ok === true, 'El profe la envía a sus alumnos')
+  const mias = await llamar('eduTareas', { accion: 'mias' }, tokComun)
+  const mia = (mias.result?.tareas || []).find((t) => t.id === env.result?.id)
+  chequear(!!mia && mia.variante === 'base' && !!mia.textoVariante && mia.puntos?.ser === 10, `El alumno la ve en su modo directo (eduTareas 'mias'), con su variante (${mia?.variante})`)
+  chequear(mia?.estado === 'pendiente' && ['texto', 'foto', 'nada', 'opciones'].includes(mia?.como) && Array.isArray(mia?.pistas), `Trae estado, cómo se entrega (${mia?.como}) y pistas (${mia?.pistas?.length})`)
+  const marca = await llamar('eduTareas', { accion: 'marcar', id: env.result?.id, estado: 'entregada', texto: 'I get up at seven.' }, tokComun)
+  const mias2 = await llamar('eduTareas', { accion: 'mias' }, tokComun)
+  chequear((mias2.result?.tareas || []).find((t) => t.id === env.result?.id)?.estado === 'entregada', 'El alumno la entrega con un texto y queda "entregada"')
+  const lista = await llamar('eduTareas', { accion: 'listar', curso: '2do_secundaria' }, token)
+  chequear(marca.result?.ok && (lista.result?.tareas || []).find((t) => t.id === env.result?.id)?.hechas === 1, 'El alumno la marca hecha y el profe lo ve')
+  if (env.result?.id) await llamar('eduTareas', { accion: 'borrar', curso: '2do_secundaria', id: env.result.id }, token)
+
+  // ── Mapa del curso ──
+  const cur = await llamar('eduMapa', { accion: 'curso', curso: '2do_secundaria' }, token)
+  chequear(cur.result?.alumnos?.length === 12 && !/nombre|avatar/.test(JSON.stringify(cur.result.alumnos)), 'El curso demo llega sin nombres (12 alumnos ficticios con ID opaco)')
+  const pro = await llamar('eduMapa', { accion: 'proponer', curso: '2do_secundaria', objetivo: 'parejas', tema: 'Números racionales' }, token)
+  const pr = pro.result?.propuesta
+  const todos = (pr?.grupos || []).flatMap((g) => g.alumnos)
+  chequear(pro.result?.ok && todos.length === 12 && new Set(todos).size === 12, `La mentora propuso ${pr?.grupos?.length} grupos con los 12 alumnos (USD ${pro.result?.costoUsd})`)
+  chequear(!NOMBRES.some((n) => JSON.stringify(pr || {}).includes(n)), 'La propuesta no tiene nombres (la IA solo vio códigos)')
+  chequear(!/\b(flojo|problem[aá]tico|lento|vago|burro)\b/i.test(JSON.stringify(pr || {})), 'Tono positivo: sin etiquetas negativas')
+  if (pr) md(`> ${pr.resumen}\n>\n> ${pr.grupos.slice(0, 3).map((g) => `**${g.nombre}** (${g.alumnos.join(', ')}): ${g.porque}`).join('\n>\n> ')}`)
+  const gu = pr ? await llamar('eduMapa', { accion: 'guardar', curso: '2do_secundaria', mapa: pr }, token) : {}
+  const re = await llamar('eduMapa', { accion: 'curso', curso: '2do_secundaria' }, token)
+  chequear(gu.result?.ok && re.result?.guardado?.grupos?.length === pr?.grupos?.length, 'El profe guarda la disposición y se lee igual')
+  await db.ref(`edu/mapas/${PROFE.id}`).remove()
+
   await db.ref(`edu/alumnos/${COMUN.alumnoId}`).remove()
   await db.ref(`edu/uid_alumno/${COMUN.uid}`).remove()
 } catch (err) {
