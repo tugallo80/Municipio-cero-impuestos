@@ -66,7 +66,11 @@ a la educación como respuesta a la pobreza y a la falta de alcance.
 
 **Apertura (6):**
 1. **Seguimos enseñando como hace 100 años.** ¿Y si el cambio empieza en una escuela rural? Pioneros. (foto colegio)
-2. **La IA ya llegó.** ¿Espalda o ponerla a trabajar? No es una app más; no reemplaza al profe.
+2. **La IA ya llegó.** ¿Espalda o ponerla a trabajar? Agregado del dueño, el problema: "Hoy" la IA
+   hace la tarea por el chico y el profe no sabe qué copió; "Acá" el tutor guía con preguntas y
+   pistas, la tarea se hace paso a paso y el profe ve el proceso. "Hoy la IA le hace la tarea al
+   chico. Acá le enseña a hacerla." Sin prometer que es imposible copiar ("pensada para aprender,
+   no para copiar"). "No es una app más…" pasó a la lámina 6.
 3. **Una tablet por alumno, con todo adentro** — sello "La visión": alcaldía, textos oficiales del
    Ministerio (gratuitos), ahorro en útiles. Cifra: lista básica ≈ Bs 1.000 al año sin libros; libros
    Bs 80–180 c/u (El Deber, feb-2025, **a verificar**; Defensa del Consumidor publicó precios
