@@ -48,3 +48,21 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
 - **Se viene**: exámenes, actos y reuniones de los próximos 10 días.
 - **Avisos para la casa**.
 - Atajos a "Seguir leyendo" y al mundo.
+
+## Parte 2 — Agenda
+
+- **Semana** (lunes a viernes) y **mes**, con flechas, botón "Hoy" y el día de hoy marcado.
+- **Capas que se prenden y apagan**:
+  - clases (en grupos: "Mate ×2");
+  - tareas y entregas (tocarlas abre la tarea);
+  - exámenes;
+  - feriados y días sin clase, más los días con menos horas: todo sale del **calendario por capas
+    de EDU.04b** (`calendario.js`, nacional → departamento → distrito);
+  - actos y avisos.
+- **En el mes**: puntos de color por capa; los días sin clase van en ámbar; tocar un día muestra su
+  detalle abajo.
+- **Probado** en 390, 820 y 1280:
+  - semana con 5 días;
+  - en junio de 2026 marca Corpus Christi y el Año Nuevo Andino Amazónico (22 de junio);
+  - las capas se apagan;
+  - sin desbordes.
