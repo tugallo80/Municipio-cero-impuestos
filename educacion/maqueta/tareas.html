@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/maqueta/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Mis tareas · Educación ÑANDÉ (maqueta)</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css?v=edu06d-1">
+<style>
+  /* EDU.06d — Modo directo: solo las tareas, sin el mundo 3D. Celular vertical primero; en PC, centrado. */
+  .principal { max-width: 720px; padding-bottom: 40px; }
+  .hola { font-family: 'Space Grotesk'; font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .resumen { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 16px; }
+  .filtros { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 4px; scrollbar-width: none; }
+  .filtros button { flex: none; min-height: 40px; padding: 0 14px; border-radius: 99px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto2); font-weight: 600; font-size: 14px; }
+  @media (min-width: 561px) { .filtros { flex-wrap: wrap; overflow: visible; } }
+  .filtros button.activo { background: var(--verde-suave); border-color: var(--verde); color: var(--verde); }
+  .tarea { display: flex; gap: 12px; align-items: center; }
+  .tarea + .tarea { margin-top: 10px; }
+  .tarea .info { flex: 1; min-width: 0; }
+  .tarea .tit { font-family: 'Space Grotesk'; font-weight: 700; font-size: 17px; line-height: 1.25; }
+  .tarea .meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+  .tarea .origen { font-size: 12px; color: var(--texto3); margin-top: 6px; }
+  .tarea.hecha { opacity: .65; }
+  .tarea .btn { flex: none; }
+  @media (max-width: 560px) {   /* celular: texto arriba y botón abajo a todo el ancho */
+    .tarea { flex-wrap: wrap; }
+    .tarea .btn { width: 100%; }
+  }
+  .consigna { font-size: 17px; line-height: 1.5; }
+  .preg { font-family: 'Space Grotesk'; font-size: 20px; font-weight: 700; line-height: 1.3; margin: 6px 0 14px; }
+  .ops { display: grid; gap: 10px; }
+  .op { min-height: 56px; border-radius: 16px; background: var(--sup3); border: 2px solid var(--borde); color: var(--texto); font-size: 17px; font-weight: 600; text-align: left; padding: 10px 16px; }
+  .op.bien { border-color: var(--verde); background: var(--verde-suave); }
+  .op.mal { border-color: #F87171; background: rgba(239,68,68,.12); }
+  .fb { margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: var(--sup3); font-size: 15px; line-height: 1.45; }
+  .peldanos { display: grid; gap: 8px; margin-top: 12px; }
+  .peldano { display: flex; gap: 10px; padding: 10px 12px; border-radius: 14px; background: rgba(250,204,21,.08); border: 1px solid rgba(250,204,21,.3); font-size: 15px; line-height: 1.4; }
+  .ayuda-fila { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 14px; }
+  .ayuda-fila .btn { flex: 1 1 200px; }
+  textarea { width: 100%; min-height: 160px; border-radius: 14px; background: var(--sup3); border: 1px solid var(--borde); color: var(--texto); font: 16px/1.5 Inter, sans-serif; padding: 12px; resize: vertical; }
+  .foto { width: 100%; max-height: 320px; object-fit: contain; border-radius: 14px; background: var(--sup3); margin-top: 10px; }
+  .hecho { text-align: center; padding: 22px 16px; }
+  .hecho .grande { font-size: 56px; }
+  .materia-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; flex: none; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
+    <div class="marca"><b>📋 Mis tareas</b><span id="quien"></span></div>
+    <a class="btn chico" href="/maqueta/alumno/" title="Ir al juego">🎮 Jugar</a>
+  </header>
+  <main class="principal" id="principal"></main>
+</div>
+<script src="datos-demo.js?v=edu02d-2"></script>
+<script src="misiones-demo.js?v=edu02d-2"></script>
+<script src="tareas-demo.js?v=edu06d-1"></script>
+<script>
+const D = window.DEMO, YO = D.alumnoDemo, $ = s => document.querySelector(s);
+// materias que manda el profe (EDU.04f) aunque no estén en la demo
+const EXTRA = { mus: ['Música', '🎵', '#ec4899'], efd: ['Ed. Física', '⚽', '#22c55e'], val: ['Valores', '🤝', '#f59e0b'], tec: ['Tecnología', '💻', '#0ea5e9'], ori: ['Orientación', '🧭', '#a855f7'], fil: ['Filosofía', '💭', '#6366f1'], bio: ['Biología', '🧬', '#16a34a'], fis: ['Física', '🧲', '#3b82f6'], qui: ['Química', '⚗️', '#14b8a6'] };
+const materia = id => D.materias.find(m => m.id === id) || (EXTRA[id] ? { id, corto: EXTRA[id][0], nombre: EXTRA[id][0], icono: EXTRA[id][1], color: EXTRA[id][2] } : { id, corto: id, nombre: id, icono: '📘', color: '#10B981' });
+const lugar = id => (D.mundo.lugares || []).find(l => l.id === id);
+const { CONT, GEN, REPASO_GEN } = window.MISIONES_DEMO;
+const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+$('#quien').textContent = `${YO.apodo} · ${YO.curso || '4A'}`;
+let filtro = 'todas';
+
+// ---------- Fechas ----------
+const hoyISO = (() => { const d = new Date(); d.setHours(12, 0, 0, 0); return d.toISOString().slice(0, 10); })();
+const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
+function cuando(iso) {
+  const n = Math.round((new Date(iso + 'T12:00:00') - new Date(hoyISO + 'T12:00:00')) / 864e5);
+  if (n === 0) return 'para hoy'; if (n === 1) return 'para mañana'; if (n === -1) return 'era para ayer';
+  if (n < 0) return `era para el ${DIAS[new Date(iso + 'T12:00:00').getDay()]}`;
+  return `para el ${DIAS[new Date(iso + 'T12:00:00').getDay()]} ${+iso.slice(8)}`;
+}
+
+// ---------- Lista ----------
+function lista() {
+  const todas = window.tareasDelAlumno(), ver = t => filtro === 'todas' || t.materia === filtro;
+  const pend = todas.filter(t => t.estado !== 'hecha').sort((a, b) => a.vence.localeCompare(b.vence));
+  const paraHoy = pend.filter(t => t.vence <= hoyISO), luego = pend.filter(t => t.vence > hoyISO), hechas = todas.filter(t => t.estado === 'hecha');
+  const mats = [...new Set(todas.map(t => t.materia))];
+  const tarjeta = t => {
+    const m = materia(t.materia), hecha = t.estado === 'hecha', atras = !hecha && t.vence < hoyISO;
+    return `<div class="tarjeta tarea ${hecha ? 'hecha' : ''}">
+      <div class="materia-ico" style="background:${m.color}22">${m.icono}</div>
+      <div class="info"><div class="tit">${esc(t.titulo)}</div>
+        <div class="meta"><span class="pildora gris">${esc(m.corto)}</span>
+          <span class="pildora ${hecha ? '' : atras ? 'rojo' : t.vence === hoyISO ? 'ambar' : 'gris'}">${hecha ? '✅ Hecha' : (atras ? '⏰ ' : '📅 ') + cuando(t.vence)}</span>
+          ${t.premio && t.premio.llave && !hecha ? '<span class="pildora ambar">🗝️ Llave</span>' : ''}</div>
+        <div class="origen">${t.origen ? (t.origen.tipo === 'mentora' ? '✨ ' : t.origen.tipo === 'cronograma' ? '🗓️ ' : '🧑‍🏫 ') + esc(t.origen.texto.replace(/^./, c => c.toUpperCase())) : ''}</div></div>
+      <a class="btn ${hecha ? 'sec2' : ''}" href="tareas/#t=${encodeURIComponent(t.id)}">${hecha ? 'Ver' : 'Hacer'}</a>
+    </div>`;
+  };
+  const bloque = (titulo, l) => l.filter(ver).length ? `<section class="seccion"><h3>${titulo}</h3>${l.filter(ver).map(tarjeta).join('')}</section>` : '';
+  $('#principal').innerHTML = `
+    <div class="hola">¡Hola, ${esc(YO.apodo.split(' ')[0])}! 👋</div>
+    <div class="sec">Solo tus tareas, sin el juego. Cuando termines una, cuenta igual que en el colegio 3D.</div>
+    ${avisoServidor()}
+    <div class="resumen"><span class="pildora ambar">📅 ${paraHoy.length} para hoy</span><span class="pildora gris">⏳ ${luego.length} pendientes</span><span class="pildora">✅ ${hechas.length} hechas</span></div>
+    <div class="filtros"><button data-f="todas" class="${filtro === 'todas' ? 'activo' : ''}">Todas</button>${mats.map(id => `<button data-f="${id}" class="${filtro === id ? 'activo' : ''}">${materia(id).icono} ${esc(materia(id).corto)}</button>`).join('')}</div>
+    ${bloque('Para hoy', paraHoy)}${bloque('Pendientes', luego)}${bloque('Hechas', hechas)}
+    ${pend.filter(ver).length === 0 ? '<div class="tarjeta" style="margin-top:16px;text-align:center">🎉 ¡No te queda nada pendiente acá!</div>' : ''}`;
+  document.querySelectorAll('.filtros button').forEach(b => b.onclick = () => { filtro = b.dataset.f; lista(); });
+}
+
+// ---------- Una tarea ----------
+let T = null, R = null;   // tarea abierta y su resolución { fase, i, peldano, preguntas }
+function preguntasDe(t) {
+  if (t.tipo === 'mision') { const c = CONT[t.mision] || { repaso: REPASO_GEN, pasos: [GEN[t.materia]].filter(Boolean) }; return [...c.repaso.map(p => ({ ...p, rep: true })), ...c.pasos]; }
+  if (t.tipo === 'opciones' || t.tipo === 'respuesta') return t.preguntas || [];
+  return [];
+}
+function abrirTarea(id) {
+  const t = window.tareasDelAlumno().find(x => x.id === id); if (!t) return lista();
+  T = t; R = { i: 0, peldano: 0, preguntas: preguntasDe(t), elegida: null, foto: null };
+  pintarTarea(); avisarProfes(); scrollTo(0, 0);
+}
+function cabTarea() {
+  const m = materia(T.materia), l = T.premio && T.premio.llave && lugar(T.premio.llave);
+  return `<a class="ter" href="tareas/" style="display:inline-block;margin-bottom:10px">← Mis tareas</a>
+    <div class="tarjeta"><div class="fila" style="display:flex;gap:12px;align-items:center">
+      <div class="materia-ico" style="background:${m.color}22">${m.icono}</div>
+      <div style="min-width:0"><div class="tit" style="font-family:'Space Grotesk';font-weight:700;font-size:20px;line-height:1.25">${esc(T.titulo)}</div>
+        <div class="ter">${esc(m.nombre)} · ${cuando(T.vence)}</div></div></div>
+      <p class="consigna" style="margin-top:12px">${esc(T.consigna)}</p>
+      ${T.origen ? `<div class="ter" style="margin-top:8px">${T.origen.tipo === 'mentora' ? '✨' : T.origen.tipo === 'cronograma' ? '🗓️' : '🧑‍🏫'} ${esc(T.origen.texto.replace(/^./, c => c.toUpperCase()))}</div>` : ''}
+      ${T.criterios && T.criterios.hacer ? `<div class="ter" style="margin-top:8px">👀 Qué se mira: ${esc([T.criterios.saber, T.criterios.hacer].filter(Boolean).join(' · '))}</div>` : ''}
+      ${l && T.estado !== 'hecha' ? `<div class="pildora ambar" style="margin-top:10px">🗝️ Al terminar ganás la llave del ${esc(l.nombre)}</div>` : ''}
+    </div>`;
+}
+const PELDANOS = [['💬', 'Pregunta guía'], ['💡', 'Pista'], ['📝', 'Ejemplo']];
+function escaleraActual() { const p = R.preguntas[R.i]; return (p && p.escalera) || T.escalera || null; }
+function ayudaHtml() {
+  const esc3 = escaleraActual();
+  return `<div class="peldanos" id="peldanos">${(esc3 || []).slice(0, R.peldano).map((x, k) => `<div class="peldano"><span>${PELDANOS[k][0]}</span><span><b>${PELDANOS[k][1]}:</b> ${esc(x.replace(/^Ejemplo resuelto: /, ''))}</span></div>`).join('')}</div>
+    <div class="ayuda-fila">
+      ${esc3 && R.peldano < 3 ? `<button class="btn sec2" onclick="subir()">${['🤔 No entiendo', '💡 Darme una pista', '📝 Mostrarme un ejemplo'][R.peldano]}</button>` : ''}
+      ${window.ProfesVoz ? `<button class="btn sec2" onclick="hablar()">🎙️ Preguntarle a ${profeDe() === 'la_profe' ? 'la profe Taji' : 'el profe Jochi'}</button>` : ''}
+    </div>
+    ${!esc3 && !window.ProfesVoz ? '<div class="ter" style="margin-top:10px">Si te trabás, pedile ayuda al profe en la clase o en el juego 🎮.</div>' : ''}`;
+}
+function pintarTarea() {
+  if (T.estado === 'hecha') { $('#principal').innerHTML = cabTarea() + `<div class="tarjeta hecho" style="margin-top:12px"><div class="grande">✅</div><b>Esta tarea ya está hecha.</b><div style="margin-top:14px"><a class="btn sec2" href="tareas/">📋 Volver a mis tareas</a></div></div>`; return; }
+  let cuerpo = '';
+  if (R.preguntas.length) {
+    const p = R.preguntas[R.i], total = R.preguntas.length;
+    cuerpo = `<div class="tarjeta" style="margin-top:12px">
+      <div class="ter" style="display:flex;justify-content:space-between"><span>${p.rep ? '🔁 Repaso' : '🎯 Misión'} · ${R.i + 1} de ${total}</span>${p.de ? `<span>de ${esc(p.de)}</span>` : ''}</div>
+      <div class="barra" style="margin:8px 0 4px"><i style="width:${R.i / total * 100}%"></i></div>
+      <div class="preg">${esc(p.q)}</div>
+      ${p.ops ? `<div class="ops">${p.ops.map((o, k) => `<button class="op ${R.elegida === k ? (k === p.ok ? 'bien' : 'mal') : ''}" onclick="responder(${k})">${esc(o)}</button>`).join('')}</div>`
+        : `<input id="resp" class="op" style="width:100%" placeholder="Tu respuesta"><button class="btn ancho" style="margin-top:10px" onclick="responderTexto()">Responder</button>`}
+      <div id="fb"></div>
+      ${ayudaHtml()}</div>`;
+  } else if (T.soloMarcar) {
+    cuerpo = `<div class="tarjeta" style="margin-top:12px"><button class="btn ancho" onclick="terminar()">✅ La hice</button>${ayudaHtml()}</div>`;
+  } else if (T.tipo === 'texto') {
+    cuerpo = `<div class="tarjeta" style="margin-top:12px"><label class="ter" for="txt">Escribí acá tu tarea</label>
+      <textarea id="txt" placeholder="Empezá a escribir…" oninput="contar()"></textarea>
+      <div class="ter" id="cuenta" style="margin-top:6px">0 letras</div>
+      <button class="btn ancho" style="margin-top:10px" onclick="entregarTexto()">📤 Entregar</button>
+      ${ayudaHtml()}</div>`;
+  } else if (T.tipo === 'foto') {
+    cuerpo = `<div class="tarjeta" style="margin-top:12px">
+      <label class="btn sec2 ancho" for="foto">📷 Sacar o elegir foto</label>
+      <input id="foto" type="file" accept="image/*" capture="environment" hidden onchange="verFoto(this)">
+      <img id="vista" class="foto" alt="Tu foto" hidden>
+      <div class="ter" style="margin-top:8px">La foto queda en tu celular (en esta demo no se sube).</div>
+      <button class="btn ancho" id="entregar-foto" style="margin-top:10px" onclick="entregarFoto()" disabled>📤 Entregar</button>
+      ${ayudaHtml()}</div>`;
+  }
+  $('#principal').innerHTML = cabTarea() + cuerpo;
+}
+function responder(k) {
+  const p = R.preguntas[R.i]; if (R.elegida === p.ok) return;
+  R.elegida = k; pintarTarea();
+  const fb = $('#fb');
+  if (k === p.ok) {
+    fb.innerHTML = '<div class="fb">✅ ¡Bien!</div>'; avisarProfes('respuesta', { bien: true });
+    setTimeout(() => { R.i++; R.elegida = null; R.peldano = 0; if (R.i >= R.preguntas.length) terminar(); else { pintarTarea(); avisarProfes(); } }, 700);
+  } else { fb.innerHTML = `<div class="fb">🧩 ${esc((p.mal && p.mal[k]) || 'Casi. Mirá otra vez cada opción.')}</div>`; avisarProfes('respuesta', { bien: false }); }
+}
+function responderTexto() {
+  const p = R.preguntas[R.i], v = ($('#resp').value || '').trim().toLowerCase();
+  if (v && v === String(p.ok).toLowerCase()) { R.i++; R.peldano = 0; if (R.i >= R.preguntas.length) terminar(); else pintarTarea(); }
+  else $('#fb').innerHTML = '<div class="fb">🧩 Todavía no. Probá pedir una pista.</div>';
+}
+function subir() { if (R.peldano < 3) { R.peldano++; const fb = $('#fb') ? $('#fb').innerHTML : ''; pintarTarea(); if ($('#fb')) $('#fb').innerHTML = fb; avisarProfes('peldano', { peldano: R.peldano }); } }
+function contar() { const n = $('#txt').value.trim().length; $('#cuenta').textContent = `${n} letras${T.minimo && n < T.minimo ? ` · mínimo ${T.minimo}` : ''}`; }
+function entregarTexto() { const n = $('#txt').value.trim().length; if (n < (T.minimo || 20)) { $('#cuenta').textContent = `Escribí un poco más (mínimo ${T.minimo || 20} letras).`; return; } terminar(); }
+function verFoto(inp) { const f = inp.files && inp.files[0]; if (!f) return; const img = $('#vista'); img.src = URL.createObjectURL(f); img.hidden = false; $('#entregar-foto').disabled = false; }
+function entregarFoto() { terminar(); }
+function terminar() {
+  window.TAREAS_HECHAS.marcar(T.id); if (T.mision) window.TAREAS_HECHAS.marcar(T.mision);
+  marcarEnServidor(T, $('#txt') ? { texto: $('#txt').value.trim().slice(0, 2000) } : null);
+  const m = materia(T.materia), l = T.premio && T.premio.llave && lugar(T.premio.llave);
+  avisarProfes('completa', { titulo: T.titulo });
+  $('#principal').innerHTML = cabTarea() + `<div class="tarjeta hecho" style="margin-top:12px">
+    <div class="grande">🎉</div><div class="hola" style="font-size:22px">¡Tarea hecha!</div>
+    <p class="sec" style="margin-top:6px">Cuenta igual que en el juego: suma a tu avance en ${esc(m.corto)}${l ? `, te da la 🗝️ llave del ${esc(l.nombre)}` : ''} y desbloquea los juegos de ${esc(m.corto)} y la cancha del colegio.</p>
+    ${T.autoevaluacion ? `<div class="fb" style="margin-top:14px">${esc(T.autoevaluacion)}<div class="ayuda-fila" id="caritas" style="justify-content:center">${['😟', '🙂', '😄'].map(c => `<button class="btn sec2" style="flex:0 0 64px;font-size:26px" onclick="document.getElementById('caritas').innerHTML='¡Gracias! ${c}'">${c}</button>`).join('')}</div></div>` : ''}
+    <div class="ayuda-fila" style="margin-top:16px"><a class="btn sec2" href="tareas/">📋 Mis tareas</a><a class="btn" href="/maqueta/alumno/">🎮 Ir al juego</a></div></div>`;
+  T.estado = 'hecha';
+}
+
+// ---------- Profes IA por voz (si el servidor de voz está) ----------
+const profeDe = () => (window.ProfesVoz && window.ProfesVoz.preferido) || (['mat', 'len', 'art'].includes(T && T.materia) ? 'la_profe' : 'el_profe');
+function avisarProfes(tipo, datos) {
+  const PV = window.ProfesVoz; if (!PV || !T) return;
+  PV.contexto({ materia: T.materia, mision: T.tipo === 'mision' ? { id: T.mision, fase: R && R.preguntas[R.i] && R.preguntas[R.i].rep ? 'repaso' : 'pasos', paso: R ? R.i : 0, peldano: R ? R.peldano : 0, completa: T.estado === 'hecha' } : null, tarea: { id: T.id, titulo: T.titulo, consigna: T.consigna } });
+  if (tipo) PV.evento(tipo, datos);
+}
+function hablar() { const PV = window.ProfesVoz; if (!PV) return; avisarProfes(); PV.llamar(profeDe()); }
+addEventListener('profes-voz-listo', () => { const PV = window.ProfesVoz; PV.al('pista', n => { while (T && R && R.peldano < n) subir(); }); if (T) pintarTarea(); }, { once: true });
+addEventListener('load', () => setTimeout(() => import('/voz/profes.js?v=edu02d-2').catch(() => {}), 800));
+
+// ---------- Tareas reales del profe (EDU.04f): misma cuenta y módulo que el panel del profe ----------
+const NC = () => window.NandeClase && typeof window.NandeClase.tareas === 'function' ? window.NandeClase : null;
+let estadoServidor = 'demo';   // 'demo' | 'sin-sesion' | 'cargando' | 'ok' | 'error'
+async function cargarDelServidor() {
+  const nc = NC(); if (!nc) return;
+  if (!nc.usuario()) { estadoServidor = 'sin-sesion'; if (!T) lista(); return; }
+  estadoServidor = 'cargando';
+  const r = await nc.tareas({ accion: 'mias' });
+  if (r && r.ok) { window.TAREAS_PROFE = r.tareas || []; estadoServidor = 'ok'; } else estadoServidor = 'error';
+  if (!T) lista();
+}
+async function entrarCuenta(ev) {
+  ev.preventDefault(); const nc = NC(); if (!nc) return;
+  const u = $('#cu-usuario').value.trim(), c = $('#cu-clave').value;
+  $('#cu-msj').textContent = 'Entrando…';
+  const r = await nc.entrar(u, c);
+  if (r.ok) { $('#cu-msj').textContent = ''; cargarDelServidor(); } else $('#cu-msj').textContent = r.error || 'No se pudo entrar.';
+}
+function avisoServidor() {
+  if (estadoServidor === 'sin-sesion') return `<form class="tarjeta" style="margin-top:12px" onsubmit="entrarCuenta(event)">
+      <b>🔐 Entrá con tu cuenta para ver las tareas de tu profe</b>
+      <div class="ter" style="margin:4px 0 10px">Mientras tanto ves las tareas de ejemplo.</div>
+      <input id="cu-usuario" class="op" style="width:100%;margin-bottom:8px" placeholder="Usuario" autocomplete="username">
+      <input id="cu-clave" class="op" style="width:100%" type="password" placeholder="Clave" autocomplete="current-password">
+      <button class="btn ancho" style="margin-top:10px">Entrar</button><div class="ter" id="cu-msj" style="margin-top:6px"></div></form>`;
+  if (estadoServidor === 'ok') return `<div class="ter" style="margin-top:8px">🧑‍🏫 Tareas de tu profe al día · ${esc(window.NandeClase.usuario())}</div>`;
+  if (estadoServidor === 'error') return '<div class="ter" style="margin-top:8px">⚠️ No se pudieron traer las tareas del profe. Ves las de ejemplo.</div>';
+  return '';
+}
+async function marcarEnServidor(t, extra) {
+  const nc = NC(); if (!nc || !t.delProfe) return;
+  await nc.tareas({ accion: 'marcar', id: t.id, estado: extra && extra.texto ? 'entregada' : 'hecha', ...(extra || {}) });
+}
+addEventListener('nande-clase-listo', cargarDelServidor);
+addEventListener('load', () => setTimeout(() => import('/voz/clase.js').catch(() => {}), 300));
+
+// ---------- Rutas ----------
+function ruta() { const m = /t=([^&]+)/.exec(location.hash); if (m) abrirTarea(decodeURIComponent(m[1])); else { T = null; lista(); } }
+addEventListener('hashchange', ruta); ruta();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
+</script>
+</body>
+</html>
