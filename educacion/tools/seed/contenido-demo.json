@@ -1,5 +1,5 @@
 {
-  "_nota": "Contenido de demostración para 4to de primaria (lo que normalmente sube el profe). Inventado para la prueba.",
+  "_nota": "Contenido de demostración para 4to de primaria (lo que normalmente sube el profe). Inventado para la prueba. También 2do de secundaria (EDU.04f), inventado.",
   "4to_primaria": {
     "pensum": {
       "matematica": {
@@ -27,6 +27,36 @@
         "titulo": "Evaluación de fracciones",
         "fecha": "2026-12-11",
         "descripcion": "Fracciones, fracciones equivalentes y sumas."
+      }
+    }
+  },
+  "2do_secundaria": {
+    "pensum": {
+      "matematica": {
+        "racionales": {
+          "titulo": "Números racionales",
+          "texto": "Un número racional se puede escribir como fracción a/b con b distinto de cero: enteros, fracciones y decimales exactos o periódicos. Para ordenarlos conviene pasarlos a decimal o a igual denominador. En la recta numérica, -1/2 está entre -1 y 0. Para sumar fracciones con distinto denominador se busca el mínimo común múltiplo. Ejemplo: 1/4 + 2/3 = 3/12 + 8/12 = 11/12."
+        }
+      },
+      "ingles": {
+        "simple_present": {
+          "titulo": "The simple present tense",
+          "texto": "El presente simple sirve para rutinas y hechos: I get up at seven. Con he, she, it el verbo lleva -s o -es: she works, he watches. Negativo con don't / doesn't: I don't drink coffee, he doesn't play. Preguntas con do / does al inicio: Do you like music? Does she live in Santa Cruz? Después de does el verbo va sin -s."
+        }
+      }
+    },
+    "agenda": {
+      "tarea1": {
+        "tipo": "tarea",
+        "titulo": "My daily routine",
+        "fecha": "2026-11-27",
+        "descripcion": "Escribir 8 oraciones en presente simple sobre tu rutina, con 2 negativas y 2 preguntas."
+      },
+      "examen1": {
+        "tipo": "examen",
+        "titulo": "Evaluación de números racionales",
+        "fecha": "2026-12-09",
+        "descripcion": "Ordenar racionales, ubicarlos en la recta y sumar fracciones con distinto denominador."
       }
     }
   }
