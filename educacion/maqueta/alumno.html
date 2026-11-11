@@ -226,6 +226,7 @@
   .inicio h1 { font-size: 30px; margin: 10px 0 4px; }
   .inicio p, .girar p { color: #cbd5e1; font-size: 15px; line-height: 1.4; max-width: 320px; margin: 0 auto; }
   .inicio .bj { min-height: 64px; padding: 0 40px; font-size: 22px; margin-top: 18px; }
+  .inicio .bj.directo { min-height: 52px; font-size: 17px; margin-top: 12px; text-decoration: none; }
   .inicio .instalar-inicio { display: inline-flex; margin-top: 14px; min-height: 52px; padding: 0 20px; font-size: 16px; font-weight: 700; color: #04261B; background: #FDE047; border-color: #FEF9C3; border-radius: 16px; }
   .inicio .instalar-inicio[hidden], .pasos-instalar[hidden] { display: none; }
   .pasos-instalar { margin: 12px auto 0; max-width: 340px; text-align: left; background: rgba(0,0,0,.35); border: 1px solid rgba(255,255,255,.2); border-radius: 14px; padding: 10px 14px; font-size: 14px; color: #e2e8f0; }
@@ -318,7 +319,8 @@
     <h1>La isla de 4A</h1>
     <p class="solo-vertical">Girá tu pantalla: se juega con el celular acostado.</p>
     <p class="solo-vertical nota-rot">Si no gira, tocá el <b>botón de girar</b> que aparece en una esquina de tu pantalla, o activá la <b>Rotación automática</b> en el panel rápido (deslizá desde arriba).</p>
-    <button class="bj" id="jugar">▶ Jugar</button><br>
+    <button class="bj" id="jugar">🎮 Jugar</button><br>
+    <a class="bj gris directo" href="/maqueta/tareas/" id="directo">📋 Ir directo a mis tareas</a><br>
     <button class="sug instalar-inicio" id="instalar-inicio" hidden>📲 Instalar ÑANDÉ (pantalla completa sin avisos)</button>
     <div class="pasos-instalar" id="pasos-instalar" hidden>
       <b>Instalar en 2 pasos</b>
@@ -342,6 +344,7 @@
 
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script src="misiones-demo.js?v=edu02d-2"></script>
+<script src="tareas-demo.js?v=edu06d-1"></script>
 <script>
 // ============================================================
 // Maqueta del alumno v2 (EDU.01b). Todo simulado, sin backend.
@@ -538,6 +541,19 @@ function panelBloqueado(id, que) {
 }
 const lsLeer = k => { try { return localStorage.getItem(k); } catch (e) { return null; } };
 const lsGuardar = (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} };
+// EDU.06d: lo que el alumno hizo en el modo directo (📋 Mis tareas) cuenta igual en el juego, y al revés
+const TAREAS_HECHAS = () => { try { return JSON.parse(lsLeer('alumno-tareas-hechas') || '[]'); } catch (e) { return []; } };
+function marcarTareaHecha(id) { const l = TAREAS_HECHAS(); if (!l.includes(id)) { l.push(id); lsGuardar('alumno-tareas-hechas', JSON.stringify(l)); } }
+TAREAS_HECHAS().forEach(id => {
+  const x = D.misiones.find(m => m.id === id); if (!x || x.estado === 'hecha') return;
+  x.hechos = x.total; x.estado = 'hecha';
+  YO.avance[x.materia] = Math.min(100, (YO.avance[x.materia] || 0) + 8); M.puente.hechas++; M.puente.mio++;
+  if (x.llave) S.llaves.add(x.llave);
+  DESBLOQ.add(x.materia);
+});
+// tareas que no son misiones (cuaderno, texto, foto): desbloquean su materia y suman al avance
+(window.TAREAS_DEMO || []).forEach(t => { if (!D.misiones.some(m => m.id === t.id) && TAREAS_HECHAS().includes(t.id) && !DESBLOQ.has('t:' + t.id)) { DESBLOQ.add(t.materia); YO.avance[t.materia] = Math.min(100, (YO.avance[t.materia] || 0) + 4); } });
+pintarHud();
 const CURIOSIDAD = {
   mat: ['🧮', 'El ábaco', 'El ábaco se usa hace miles de años para contar. En cada varilla, una cuenta vale 10 veces más que en la varilla de al lado.'],
   len: ['📚', 'La biblioteca del aula', 'Casi todos los cuentos se arman igual: un inicio, un problema (el nudo) y cómo se resuelve (el desenlace).'],
@@ -861,7 +877,7 @@ function responder(btn, i) {
 }
 function completar() {
   const x = E.mision;
-  x.hechos = x.total; x.estado = 'hecha'; S.hoy++;
+  x.hechos = x.total; x.estado = 'hecha'; S.hoy++; marcarTareaHecha(x.id);
   if (!DESBLOQ.has(x.materia)) { DESBLOQ.add(x.materia); setTimeout(() => toast('🔓 ¡Desbloqueaste los juegos de ' + materia(x.materia).corto + ' y la cancha!', 3200), 1200); }
   YO.avance[x.materia] = Math.min(100, YO.avance[x.materia] + 8);
   M.puente.hechas++; M.puente.mio++;
@@ -1179,6 +1195,7 @@ function avisarProfe() {
 // ============================================================
 function abrirMochila() {
   abrir(cab('🎒', 'rgba(255,255,255,.08)', 'Tu mochila', 'Lo que ganaste nunca se pierde') + `
+    <a class="bj gris ancho" style="text-decoration:none;margin-bottom:6px" href="/maqueta/tareas/" onclick="soltarPantalla()">📋 Ir directo a mis tareas</a>
     <div class="tit">Llaves</div>
     ${M.lugares.map(l => `<button class="mision" onclick="abrirLugar('${l.id}')"><span style="font-size:24px">${S.abiertos.has(l.id) ? l.icono : S.llaves.has(l.id) ? '🗝️' : '🌫️'}</span>
       <span><b>${l.nombre}</b><small>${S.abiertos.has(l.id) ? 'Abierto' : S.llaves.has(l.id) ? 'Tenés la llave: ¡andá a abrirlo!' : 'Con niebla · tocá para ver la pista'}</small></span></button>`).join('')}
