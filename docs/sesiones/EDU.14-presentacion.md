@@ -113,3 +113,26 @@ Fuentes del costo de útiles:
 Playwright en 390×844, 844×390, 1280×800, 360×740 y 1920×1080: sin desbordes. En celular vertical
 la imagen de la mentora se oculta (no entraba). PDF de 13 páginas. `img/mundo-portal.jpg` y
 `img/profe-pdc.jpg` quedaron sin usar (se pueden borrar con OK del dueño).
+
+## "▶ Verlo en vivo" (pedido del dueño para presentar en vivo)
+
+En las láminas con algo ya programado hay botones que abren esa parte de la plataforma en una
+**capa a pantalla completa dentro de la presentación** (iframe del mismo sitio, rutas relativas,
+`allow="fullscreen; microphone; autoplay; screen-wake-lock"`). Arriba siempre está
+**"✕ Volver a la presentación"**: vuelve a la misma lámina, corta audio y micrófono (el iframe queda
+en blanco) y también cierra con Esc o con el botón "atrás" del celular.
+
+| Lámina | Botones |
+|---|---|
+| 5 · Lema | El mundo y sus evoluciones (`/estilos/`, con "abrir aparte") |
+| 7 · Hoy en el demo | Juego (`/maqueta/alumno/?demo=1`, con "abrir aparte"), Mis tareas (`/maqueta/tareas/`) |
+| 8 · Mentora | Clase grabada (`#clase`), Cronograma y PDC (`#cronograma`), Tareas sugeridas (`#tareas`) en `/maqueta/tutor.html` |
+| 9 · Mapa del curso | Mapa del curso (`/maqueta/tutor.html#mapa`) |
+
+- "Lo que viene" (tutor 24 h, agenda, textos) no lleva botón.
+- No se enlaza `/maqueta/` (los 4 perfiles) porque muestra el perfil de dirección, que el dueño
+  dejó fuera de esta presentación.
+- "abrir aparte" en el juego y el mundo, por si la orientación o el 3D andan mejor fuera del iframe.
+- Probado con Playwright (servidor local con URLs limpias como Firebase) en 390×844, 844×390 y
+  1280×800: cada botón abre su parte y "Volver" deja en la misma lámina. En celular acostado, la
+  lámina 8 oculta su captura y pone las 4 funciones en dos columnas.

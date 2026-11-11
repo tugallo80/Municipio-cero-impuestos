@@ -118,6 +118,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .hero p, .hero li, .hero h1 { text-shadow: 0 1px 14px rgba(0,0,0,.7); }
 .hero .marca { text-shadow: 0 1px 8px rgba(0,0,0,.9); color: #e5e5e5; }
 @media screen and (orientation: portrait) { .sin-vertical { display: none; } }
+@media screen and (orientation: landscape) and (max-height: 520px) { .sin-vertical { display: none; } .dos.img-chica:has(> .sin-vertical) { grid-template-columns: 1fr; } .dos:has(> .sin-vertical) .filas { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; } }
 .bajada { font-size: calc(var(--f) * 1.12); color: #e5e5e5; max-width: 40ch; }
 .antetitulo { font-size: var(--chico); color: var(--verde); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
 .hero .lista { max-width: 46ch; }
@@ -155,6 +156,25 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
   .declaracion .cuerpo { gap: var(--gap); }
 }
 @media screen and (orientation: portrait) and (max-height: 780px) { h2.grande { font-size: var(--h2); } }
+
+/* Verlo en vivo: la demo dentro de la presentación (EDU.14b) */
+.envivo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.envivo-tit { display: inline-flex; align-items: center; gap: 6px; font-size: var(--chico); font-weight: 600; color: var(--verde); }
+.envivo-tit svg { width: 14px; height: 14px; }
+.btn.vivo-btn { height: 34px; padding: 0 12px; font-size: 13px; border-color: rgba(16,185,129,.5); background: rgba(16,185,129,.1); color: #d1fae5; }
+.btn.vivo-btn:hover { background: rgba(16,185,129,.2); }
+figure .envivo { justify-content: center; margin-top: 4px; }
+.vivo { position: fixed; inset: 0; z-index: 50; background: #000; display: flex; flex-direction: column; }
+.vivo[hidden] { display: none; }
+.vivo-barra { flex: none; display: flex; align-items: center; gap: 12px; padding: calc(6px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 6px calc(10px + env(safe-area-inset-left));
+  background: #0A0A0A; border-bottom: 1px solid var(--borde); }
+.vivo-barra .btn { height: 38px; font-size: 14px; }
+.vivo-titulo { flex: 1; min-width: 0; color: var(--sec); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vivo-aparte { color: var(--sec); font-size: 12px; white-space: nowrap; }
+.vivo-aparte[hidden] { display: none; }
+.vivo iframe { flex: 1; width: 100%; border: 0; background: #000; }
+@media (orientation: landscape) and (max-height: 520px) { .vivo-barra { padding-top: calc(4px + env(safe-area-inset-top)); padding-bottom: 4px; } .vivo-barra .btn { height: 32px; font-size: 13px; } .btn.vivo-btn { height: 30px; font-size: 12px; } }
+@media print { .envivo, .vivo { display: none !important; } }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -311,6 +331,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
       <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
       <p class="bajada">Al aprender se ganan <b>semillas de conocimiento</b>, y cada curso las planta para hacer crecer su Santa Cruz: un zoológico, un parque. Colegios fiscales, rurales y particulares se encuentran en un mundo cerrado y seguro, y compiten por mejora, no por plata.</p>
       <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
+      <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/estilos/" data-titulo="El mundo y sus evoluciones" data-aparte>El mundo y sus evoluciones</button></div>
     </div>
   </section>
 
@@ -341,7 +362,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
         </ul>
         <p class="chico sec">Los nombres de los profes son provisionales: los chicos van a ayudar a elegirlos en los talleres.</p>
       </div>
-      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · modo directo.</figcaption></figure>
+      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · modo directo.</figcaption><div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/alumno/?demo=1" data-titulo="Juego" data-aparte>Juego</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tareas/" data-titulo="Mis tareas">Mis tareas</button></div></figure>
     </div>
   </section>
 
@@ -361,6 +382,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
             <p><b>Mapa del curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
         </div>
         <p class="frase">La IA propone. <span>El profe decide.</span></p>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#clase" data-titulo="Clase grabada">Clase grabada</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-titulo="Cronograma y PDC">Cronograma y PDC</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#tareas" data-titulo="Tareas sugeridas">Tareas sugeridas</button></div>
         <p class="nota">Lo que gana el profe: <b style="color:var(--txt)">tiempo</b> (cronograma, PDC y resúmenes salen como borrador para revisar) y <b style="color:var(--txt)">ver a cada alumno</b>.</p>
       </div>
       <figure class="sin-vertical"><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
@@ -378,6 +400,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
           <li><b>El profe acepta, cambia o descarta.</b> Nada se aplica solo.</li>
           <li>A la mentora le llegan códigos, nunca nombres.</li>
         </ul>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#mapa" data-titulo="Mapa del curso">Mapa del curso</button></div>
       </div>
       <figure><img src="img/profe-mapa.jpg" alt="Mapa del curso: propuesta de parejas de la mentora y el aula por mesas" width="1000" height="647"><figcaption>Demo: propuesta de parejas y el aula (alumnos ficticios).</figcaption></figure>
     </div>
@@ -447,6 +470,15 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
 
 </main>
 
+
+<div class="vivo" id="vivo" hidden>
+  <div class="vivo-barra">
+    <button class="btn primario" id="vivo-cerrar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Volver a la presentación</button>
+    <span class="vivo-titulo" id="vivo-titulo"></span>
+    <a class="vivo-aparte" id="vivo-aparte" href="#" target="_blank" rel="noopener">abrir aparte ↗</a>
+  </div>
+  <iframe id="vivo-marco" title="Demo en vivo" allow="fullscreen; microphone; autoplay; screen-wake-lock" allowfullscreen></iframe>
+</div>
 <div class="acciones">
   <button class="btn" id="b-pdf" type="button" title="Descargar en PDF (una lámina por página)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>PDF</button>
   <button class="btn" id="b-full" type="button" title="Pantalla completa (F)" aria-label="Pantalla completa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
@@ -506,7 +538,35 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
   $('b-full').addEventListener('click', pantallaCompleta);
   if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('b-full').hidden = true;
 
+  // ── Verlo en vivo: abre la demo en una capa a pantalla completa y vuelve a la misma lámina ──
+  const vivo = $('vivo'), marco = $('vivo-marco');
+  let vivoAbierto = false;
+  function abrirVivo(url, titulo, aparte) {
+    vivoAbierto = true;
+    $('vivo-titulo').textContent = titulo || '';
+    const ap = $('vivo-aparte'); ap.href = url; ap.hidden = !aparte;
+    marco.src = url;
+    vivo.hidden = false;
+    $('vivo-cerrar').focus();
+    try { history.pushState({ vivo: 1 }, ''); } catch (e) {}
+  }
+  function cerrarVivo(desdeHistorial) {
+    if (!vivoAbierto) return;
+    vivoAbierto = false;
+    vivo.hidden = true;
+    marco.src = 'about:blank'; // corta audio y micrófono de la demo
+    if (!desdeHistorial) { try { if (history.state && history.state.vivo) history.back(); } catch (e) {} }
+    const b = lams[i].querySelector('.vivo-btn'); if (b) b.focus({ preventScroll: true });
+  }
+  document.querySelectorAll('.vivo-btn').forEach((b) => b.addEventListener('click', (e) => {
+    e.stopPropagation();
+    abrirVivo(b.dataset.vivo, 'En vivo · ' + b.dataset.titulo, b.hasAttribute('data-aparte'));
+  }));
+  $('vivo-cerrar').addEventListener('click', () => cerrarVivo(false));
+  window.addEventListener('popstate', () => { if (vivoAbierto) cerrarVivo(true); });
+
   document.addEventListener('keydown', (e) => {
+    if (vivoAbierto) { if (e.key === 'Escape') cerrarVivo(false); return; }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const k = e.key;
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { if (k === 'Enter' && e.target.closest('button')) return; e.preventDefault(); sig(); }
