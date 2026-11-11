@@ -13,6 +13,9 @@ const CURSO_DEMO = require('./curso-demo.json');
 
 const TIPOS = ['practica', 'lectura', 'investigacion', 'proyecto', 'mision'];
 const VARIANTES = ['apoyo', 'base', 'desafio'];
+// Cómo entrega el alumno (EDU.06d). Por defecto según el tipo.
+const COMO = ['texto', 'foto', 'opciones', 'nada'];
+const COMO_POR_TIPO = { practica: 'texto', lectura: 'nada', investigacion: 'texto', proyecto: 'foto', mision: 'opciones' };
 const PUNTOS = { ser: 10, saber: 45, hacer: 40, autoevaluacion: 5 };
 const FECHA = /^\d{4}-\d{2}-\d{2}$/;
 const CURSO_VALIDO = /^[0-9]{1,2}(ro|do|to|vo|no|mo)_(primaria|secundaria)$/;
@@ -35,6 +38,9 @@ Cada tarea:
 - Días hasta la entrega (1 a 7) según el trabajo.
 - Criterios RM 0001/2026 en una frase cada uno: Ser (10), Saber (45), Hacer (40), Autoevaluación (5).
 - Una pregunta de autoevaluación para el chico (caritas o semáforo).
+- Cómo entrega el chico: "texto" (escribe la respuesta), "foto" (de su trabajo; por ahora se anota
+  que la hizo), "nada" (solo marca que la hizo).
+- Una escalera de 3 ayudas que NO dan la respuesta: pregunta guía, pista, ejemplo resuelto con OTROS datos.
 - Tres variantes por nivel, en tono positivo: "apoyo" (con un ejemplo o pista, más corta), "base" y
   "desafio" (un paso más). Nunca etiquetes a nadie ("los flojos", "los que no saben").`;
 }
@@ -57,6 +63,8 @@ const ESQUEMA_TAREAS = {
             required: ['ser', 'saber', 'hacer', 'autoevaluacion'],
           },
           autoevaluacion: { type: 'string', description: 'pregunta para que el chico se autoevalúe' },
+          como: { type: 'string', enum: ['texto', 'foto', 'nada'] },
+          pistas: { type: 'array', items: { type: 'string' }, description: 'pregunta guía, pista, ejemplo resuelto con otros datos' },
           variantes: {
             type: 'object',
             properties: { apoyo: { type: 'string' }, base: { type: 'string' }, desafio: { type: 'string' } },
@@ -130,6 +138,8 @@ function normalizarTarea(t, { curso, materia, hoy, origen, tema }) {
     criterios: { ser: texto(c.ser, 200), saber: texto(c.saber, 200), hacer: texto(c.hacer, 200), autoevaluacion: texto(c.autoevaluacion, 200) },
     puntos: { ...PUNTOS },
     autoevaluacion: texto(x.autoevaluacion, 200),
+    como: COMO.includes(x.como) ? x.como : COMO_POR_TIPO[TIPOS.includes(x.tipo) ? x.tipo : 'practica'],
+    pistas: lista(x.pistas, 3, 300),
     variantes: { apoyo: texto(v.apoyo, 600) || consigna, base: texto(v.base, 600) || consigna, desafio: texto(v.desafio, 600) || consigna },
     origen: { tipo: origen === 'clase' ? 'clase' : 'cronograma', tema: texto(tema, 160) },
   };
@@ -160,6 +170,8 @@ function tareaParaAlumno(id, t, variante) {
     criterios: t.criterios,
     puntos: t.puntos || { ...PUNTOS },
     autoevaluacion: t.autoevaluacion || '',
+    como: COMO.includes(t.como) ? t.como : COMO_POR_TIPO[t.tipo] || 'texto',
+    pistas: Array.isArray(t.pistas) ? t.pistas : [],
     origen: t.origen || { tipo: 'cronograma', tema: '' },
     enviada: t.enviada || 0,
   };
@@ -281,6 +293,7 @@ function validarDisposicion(d, curso) {
 module.exports = {
   TIPOS,
   VARIANTES,
+  COMO,
   PUNTOS,
   OBJETIVOS,
   ESQUEMA_TAREAS,

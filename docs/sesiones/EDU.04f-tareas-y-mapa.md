@@ -5,7 +5,7 @@ Para la reunión con el profe del piloto, dos cosas en el panel del profe:
 1. **Tareas sugeridas por la IA**: desde una clase grabada (o un tema del cronograma), la mentora propone
    2–3 tareas con consigna, tipo, fecha, criterios Ser/Saber/Hacer/Autoevaluación y variantes por
    nivel. El profe edita y toca **"Enviar a mis alumnos"** → aparecen en el **modo directo** del alumno (EDU.06d).
-2. **Mapa del curso**: plano del aula con cada alumno (perfil, avance, últimas misiones, notas de la
+2. **Mapa del curso** (curso demo: **2.º de secundaria A**, 12 alumnos ficticios de 13–14 años, pedido del dueño): plano del aula con cada alumno (perfil, avance, últimas misiones, notas de la
    mentora). La mentora propone una agrupación con el porqué; el profe la usa o arma la suya y guarda.
 
 ## Dónde está
@@ -16,7 +16,7 @@ Para la reunión con el profe del piloto, dos cosas en el panel del profe:
 | Pieza | Archivo |
 |---|---|
 | Pantallas | `educacion/maqueta/tareas.js`, `educacion/maqueta/mapa.js` |
-| Curso demo (12 alumnos FICTICIOS) | `educacion/tools/datos/curso-demo-4A.json` → `armar-curso-demo.mjs` genera `maqueta/curso-demo.js` (con nombres, para la pantalla) y `services/ai-gateway/tutor/curso-demo.json` (SIN nombres, para el servidor y la IA) |
+| Curso demo (2.º de secundaria A, 12 alumnos FICTICIOS, IDs S01–S12) | `educacion/tools/datos/curso-demo.json` → `armar-curso-demo.mjs` genera `maqueta/curso-demo.js` (con nombres, para la pantalla) y `services/ai-gateway/tutor/curso-demo.json` (SIN nombres, para el servidor y la IA) |
 | Lógica (prompts, esquemas, limpieza) | `services/ai-gateway/tutor/tareas.js` |
 | Functions `eduTareas` y `eduMapa` | `services/ai-gateway/src/tareas.js` |
 | Pruebas | `test/tareas.test.js` (sin red) y `tools/e2e/probar-plan.mjs` (en cada deploy de canal y de main) |
@@ -24,7 +24,8 @@ Para la reunión con el profe del piloto, dos cosas en el panel del profe:
 ## Formato común de "tarea" (con EDU.06d)
 El alumno la lee con `httpsCallable(functions, 'eduTareas')({ accion: 'mias' })` →
 `{ ok, hoy, tareas: [Tarea] }` (solo las vigentes de su curso, ordenadas por entrega; sin costo de IA).
-Para marcarla: `{ accion: 'marcar', id, hecha: true | false }`.
+Para marcarla o entregarla: `{ accion: 'marcar', id, estado: 'hecha' | 'entregada' | 'pendiente', texto?: string (máx. 2000) }`
+(sin fotos ni archivos por ahora: datos de menores, falta Storage y permisos). Acordado con EDU.06d (PR #31, `/maqueta/tareas/`).
 
 ```js
 Tarea = {
@@ -40,9 +41,12 @@ Tarea = {
   criterios: { ser, saber, hacer, autoevaluacion },
   puntos: { ser: 10, saber: 45, hacer: 40, autoevaluacion: 5 },
   autoevaluacion: string,     // pregunta para el chico (caritas o semáforo)
+  como: 'texto' | 'foto' | 'opciones' | 'nada',   // cómo entrega (por defecto: práctica/investigación → texto, proyecto → foto, lectura → nada)
+  pistas: [guía, pista, ejemplo],                 // escalera de ayuda sin dar la respuesta (puede venir vacía)
   origen: { tipo: 'clase' | 'cronograma', tema: string },
   enviada: number,            // ms
-  hecha: boolean              // si este alumno la marcó
+  estado: 'pendiente' | 'hecha' | 'entregada',    // de este alumno
+  hecha: boolean              // estado !== 'pendiente'
 }
 ```
 - Base: `edu/tareas/{curso}/{id}` (lado profe, con `asignacion {alumnoId: variante}`, vence a los 60 días)
@@ -68,7 +72,7 @@ Tarea = {
   pruebas (USD 1). Medido: ver Cierre.
 
 ## Pendiente
-- Perfiles reales y alumnos de la base (EDU.03); hoy el mapa usa el curso demo 4A.
+- Perfiles reales y alumnos de la base (EDU.03); hoy el mapa usa el curso demo de 2.º de secundaria A.
 - Que el profe elija la variante por alumno al enviar (hoy: automática por avance; se puede cambiar
   agrupando "por nivel" en el mapa — falta conectar mapa → variante de la tarea).
 - "Lo que notó la mentora" por alumno sale de datos ficticios: las clases grabadas son anónimas a

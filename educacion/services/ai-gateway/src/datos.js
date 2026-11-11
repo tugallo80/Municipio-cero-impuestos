@@ -351,7 +351,7 @@ async function guardarIdea(personalId, curso, clave, tarjeta) {
 
 // ── Tareas y mapa del curso (EDU.04f) ─────────────
 //    edu/tareas/{curso}/{tareaId}       → tarea enviada (+ asignacion {alumnoId: variante}, personalId, vence)
-//    edu/tareas_estado/{curso}/{tareaId}/{alumnoId} → { estado: 'hecha', fecha }
+//    edu/tareas_estado/{curso}/{tareaId}/{alumnoId} → { estado: 'hecha'|'entregada', fecha, texto? }
 //    edu/mapas/{personalId}/{curso}     → disposición del aula que guardó el profe
 const VENCE_TAREA = 60 * DIA;
 
@@ -388,8 +388,8 @@ async function borrarTarea(curso, id) {
   await base().ref().update({ [`edu/tareas/${curso}/${id}`]: null, [`edu/tareas_estado/${curso}/${id}`]: null });
 }
 
-async function marcarTarea(curso, id, alumnoId, estado) {
-  await base().ref(`edu/tareas_estado/${curso}/${id}/${alumnoId}`).set(estado ? { estado, fecha: fechaBolivia() } : null);
+async function marcarTarea(curso, id, alumnoId, estado, texto = '') {
+  await base().ref(`edu/tareas_estado/${curso}/${id}/${alumnoId}`).set(estado ? { estado, fecha: fechaBolivia(), ...(texto ? { texto } : {}) } : null);
 }
 
 async function estadosTareas(curso) {

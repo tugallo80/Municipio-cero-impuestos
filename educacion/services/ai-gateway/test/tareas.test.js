@@ -5,12 +5,12 @@ const T = require('../tutor/tareas');
 const { NOMBRES_DEMO } = require('../tutor/clase');
 
 test('el curso demo del servidor no tiene nombres ni avatares, y la IA solo recibe IDs y rasgos', () => {
-  const alumnos = T.alumnosDemo('4to_primaria');
+  const alumnos = T.alumnosDemo('2do_secundaria');
   assert.equal(alumnos.length, 12);
-  const json = JSON.stringify(T.rasgosParaIA('4to_primaria')) + T.pedidoMapa('4to_primaria', 'parejas', 'Fracciones');
-  for (const n of NOMBRES_DEMO['4to_primaria']) for (const parte of n.split(' ')) assert.ok(!json.includes(parte), `se filtró "${parte}"`);
+  const json = JSON.stringify(T.rasgosParaIA('2do_secundaria')) + T.pedidoMapa('2do_secundaria', 'parejas', 'Fracciones');
+  for (const n of NOMBRES_DEMO['2do_secundaria']) for (const parte of n.split(' ')) assert.ok(!json.includes(parte), `se filtró "${parte}"`);
   assert.ok(!/avatar|nombre/.test(JSON.stringify(alumnos)));
-  assert.match(json, /"id":"A01"/);
+  assert.match(json, /"id":"S01"/);
 });
 
 test('la instrucción del mapa pide tono positivo y prohíbe etiquetas', () => {
@@ -24,12 +24,12 @@ test('normalizarMapa: cada alumno una sola vez, IDs inventados afuera, los que f
     {
       resumen: 'ok',
       grupos: [
-        { nombre: 'Mesa 1', alumnos: ['A01', 'A03', 'Z99'], porque: 'x', columna: 1, fila: 1 },
-        { nombre: 'Mesa 2', alumnos: ['A01', 'A02'], porque: 'y', columna: 1, fila: 1 },
+        { nombre: 'Mesa 1', alumnos: ['S01', 'S03', 'Z99'], porque: 'x', columna: 1, fila: 1 },
+        { nombre: 'Mesa 2', alumnos: ['S01', 'S02'], porque: 'y', columna: 1, fila: 1 },
       ],
-      atencion: [{ alumno: 'A03', porque: 'bajó' }, { alumno: 'Juan', porque: 'nada' }],
+      atencion: [{ alumno: 'S03', porque: 'bajó' }, { alumno: 'Juan', porque: 'nada' }],
     },
-    '4to_primaria'
+    '2do_secundaria'
   );
   const todos = m.grupos.flatMap((g) => g.alumnos);
   assert.equal(new Set(todos).size, 12);
@@ -38,7 +38,7 @@ test('normalizarMapa: cada alumno una sola vez, IDs inventados afuera, los que f
   assert.equal(m.grupos.at(-1).nombre, 'Mesa abierta');
   const lugares = m.grupos.map((g) => `${g.columna}-${g.fila}`);
   assert.equal(new Set(lugares).size, lugares.length);
-  assert.deepEqual(m.atencion.map((a) => a.alumno), ['A03']);
+  assert.deepEqual(m.atencion.map((a) => a.alumno), ['S03']);
 });
 
 test('normalizarTarea: tipos, recortes, variantes y entrega en día hábil', () => {
@@ -58,7 +58,8 @@ test('normalizarTarea: tipos, recortes, variantes y entrega en día hábil', () 
 test('tareaParaAlumno: formato común con EDU.06d y la variante que le toca', () => {
   const t = T.normalizarTarea({ consigna: 'Base', variantes: { apoyo: 'Apoyo', base: 'Base', desafio: 'Desafío' } }, { curso: '4to_primaria', materia: 'mat', hoy: '2026-11-11', origen: 'cronograma', tema: 'Fracciones' });
   const a = T.tareaParaAlumno('-Nabc', { ...t, enviada: 1 }, 'desafio');
-  assert.deepEqual(Object.keys(a).sort(), ['autoevaluacion', 'consigna', 'criterios', 'curso', 'entrega', 'enviada', 'id', 'materia', 'origen', 'puntos', 'textoVariante', 'tipo', 'titulo', 'variante'].sort());
+  assert.deepEqual(Object.keys(a).sort(), ['autoevaluacion', 'como', 'consigna', 'criterios', 'curso', 'entrega', 'enviada', 'id', 'materia', 'origen', 'pistas', 'puntos', 'textoVariante', 'tipo', 'titulo', 'variante'].sort());
+  assert.equal(a.como, 'texto'); // práctica → texto por defecto
   assert.equal(a.textoVariante, 'Desafío');
   assert.equal(T.tareaParaAlumno('x', t, 'inventada').variante, 'base');
   assert.equal(T.varianteSugerida({ avance: 55 }), 'apoyo');

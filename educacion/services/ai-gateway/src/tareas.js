@@ -3,7 +3,8 @@
 //
 //  eduTareas
 //    profe:  'sugerir' (IA, ~USD 0,003) · 'enviar' · 'listar' (con quién la marcó hecha) · 'borrar'
-//    alumno: 'mias' (sus tareas vigentes, con su variante) · 'marcar' ({id, hecha: true|false})
+//    alumno: 'mias' (sus tareas vigentes, con su variante y su estado) ·
+//            'marcar' ({id, estado: 'hecha'|'entregada'|'pendiente', texto?}) — también acepta {id, hecha: bool}
 //  eduMapa (profe)
 //    'curso' (alumnos demo sin nombres + disposición guardada) · 'proponer' (IA, ~USD 0,003) · 'guardar'
 //
@@ -97,14 +98,20 @@ exports.eduTareas = onCall({ ...OPC, secrets: [GEMINI_API_KEY] }, async (request
     if (accion === 'marcar') {
       const t = await datos.obtenerTarea(curso, String(d.id || ''));
       if (!t) return { ok: false, error: 'Esa tarea ya no está.' };
-      await datos.marcarTarea(curso, String(d.id), alumno.alumnoId, d.hecha === false ? null : 'hecha');
-      return { ok: true };
+      const estado = ['hecha', 'entregada', 'pendiente'].includes(d.estado) ? d.estado : d.hecha === false ? 'pendiente' : 'hecha';
+      // Texto de la entrega (sin fotos ni archivos por ahora: datos de menores, falta Storage y permisos).
+      const textoEntrega = typeof d.texto === 'string' ? d.texto.slice(0, 2000) : '';
+      await datos.marcarTarea(curso, String(d.id), alumno.alumnoId, estado === 'pendiente' ? null : estado, textoEntrega);
+      return { ok: true, estado };
     }
     const [tareas, estados] = await Promise.all([datos.listarTareas(curso), datos.estadosTareas(curso)]);
     return {
       ok: true,
       hoy: fechaBolivia(),
-      tareas: tareas.map((t) => ({ ...T.tareaParaAlumno(t.id, t, t.asignacion?.[alumno.alumnoId] || t.varianteResto || 'base'), hecha: estados?.[t.id]?.[alumno.alumnoId]?.estado === 'hecha' })),
+      tareas: tareas.map((t) => {
+        const e = estados?.[t.id]?.[alumno.alumnoId]?.estado || 'pendiente';
+        return { ...T.tareaParaAlumno(t.id, t, t.asignacion?.[alumno.alumnoId] || t.varianteResto || 'base'), estado: e, hecha: e !== 'pendiente' };
+      }),
     };
   }
 

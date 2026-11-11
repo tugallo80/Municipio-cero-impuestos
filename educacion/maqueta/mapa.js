@@ -27,7 +27,7 @@
   let mapa = null;        // { grupos, atencion, resumen, objetivo, tema }
   let propuesta = null;
   let objetivo = 'parejas';
-  let tema = 'Fracciones';
+  let tema = 'Números racionales';
   let pidiendo = false;
   let guardado = true;
   let cargado = false;
@@ -180,7 +180,7 @@
     <div class="tarjeta pila">
       <b>✨ Pedile una propuesta a la mentora</b>
       <div class="mp-obj">${Object.entries(OBJ).map(([k, o]) => `<button class="${k === objetivo ? 'activo' : ''}" onclick="Mapa.objetivo('${k}')">${o.ico} ${o.txt}</button>`).join('')}</div>
-      <label class="campo" style="margin:0"><span>Tema a trabajar</span><input value="${esc(tema)}" oninput="Mapa.tema(this.value)" placeholder="Ej. Fracciones"></label>
+      <label class="campo" style="margin:0"><span>Tema a trabajar</span><input value="${esc(tema)}" oninput="Mapa.tema(this.value)" placeholder="Ej. Números racionales"></label>
       <button class="btn ancho" ${pidiendo ? 'disabled' : ''} onclick="Mapa.pedir()">${pidiendo ? 'La mentora está pensando…' : '✨ Pedir propuesta'}</button>
       <p class="ter">A la mentora le llegan solo códigos (A01, A02…) y cómo viene cada uno, nunca los nombres.</p>
     </div>

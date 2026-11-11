@@ -1,11 +1,11 @@
 // GENERADO por tools/datos/armar-curso-demo.mjs (no editar a mano). Alumnos FICTICIOS.
 window.CURSO_DEMO = {
- "_nota": "Curso de DEMOSTRACIÓN (4.º A, 12 alumnos FICTICIOS) para el mapa del curso (EDU.04f). Los nombres son inventados y solo van a la pantalla; al servidor y a la IA va el archivo sin nombres (ver armar-curso-demo.mjs). A01–A04 son los mismos de la maqueta (datos-demo.js).",
- "curso": "4to_primaria",
- "maqueta": "4A",
+ "_nota": "Curso de DEMOSTRACIÓN (2.º de secundaria A, 12 alumnos FICTICIOS de 13–14 años) para el mapa del curso y las tareas (EDU.04f). Los nombres son inventados y solo van a la pantalla; al servidor y a la IA va el archivo sin nombres (ver armar-curso-demo.mjs).",
+ "curso": "2do_secundaria",
+ "maqueta": "2.º de secundaria A",
  "alumnos": [
   {
-   "id": "A01",
+   "id": "S01",
    "nombre": "Mateo Rojas",
    "avatar": "🦊",
    "avance": 78,
@@ -19,31 +19,31 @@ window.CURSO_DEMO = {
     "ayuda a sus compañeros"
    ],
    "practicando": [
-    "sumar fracciones con distinto denominador",
-    "mayúscula al empezar una oración"
+    "operaciones con números racionales",
+    "puntuación en textos largos"
    ],
    "intereses": [
     "fútbol",
-    "animales",
+    "música",
     "construir"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Multiplicación": "logrado",
-    "Texto descriptivo": "en camino"
+    "Números racionales": "en camino",
+    "Simple present": "logrado",
+    "Género narrativo": "en camino"
    },
    "ultimas": [
-    "El mercado de las fracciones (en curso)",
-    "Tablas en carrera (hecha)"
+    "Racionales en la feria (en curso)",
+    "My daily routine (hecha)"
    ],
    "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
    "atencion": ""
   },
   {
-   "id": "A02",
+   "id": "S02",
    "nombre": "Valentina Suárez",
    "avatar": "🦉",
-   "avance": 85,
+   "avance": 86,
    "tendencia": "estable",
    "misiones": 15,
    "aprende": "leyendo y ordenando por escrito",
@@ -62,24 +62,25 @@ window.CURSO_DEMO = {
     "dibujo"
    ],
    "temas": {
-    "Fracciones": "logrado",
-    "Texto descriptivo": "logrado"
+    "Números racionales": "logrado",
+    "Género narrativo": "logrado",
+    "Tawantinsuyu": "logrado"
    },
    "ultimas": [
-    "Describí tu barrio (hecha)",
-    "El mercado de las fracciones (hecha)"
+    "Leyendas del Abya Yala (hecha)",
+    "Racionales en la feria (hecha)"
    ],
    "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
    "atencion": ""
   },
   {
-   "id": "A03",
+   "id": "S03",
    "nombre": "Thiago Vargas",
    "avatar": "🐢",
    "avance": 58,
    "tendencia": "baja",
    "misiones": 6,
-   "aprende": "con imágenes y consignas cortas leídas en voz alta",
+   "aprende": "con imágenes y consignas cortas",
    "ritmo": "necesita más tiempo",
    "fortalezas": [
     "trabajo en equipo",
@@ -87,7 +88,7 @@ window.CURSO_DEMO = {
     "memoria visual"
    ],
    "practicando": [
-    "numerador y denominador",
+    "números racionales",
     "leer consignas largas"
    ],
    "intereses": [
@@ -96,22 +97,22 @@ window.CURSO_DEMO = {
     "música"
    ],
    "temas": {
-    "Fracciones": "inicio",
-    "Multiplicación": "en camino",
-    "Texto descriptivo": "inicio"
+    "Números racionales": "inicio",
+    "Simple present": "en camino",
+    "Género narrativo": "inicio"
    },
    "ultimas": [
-    "El mercado de las fracciones (a la mitad)",
-    "Tablas en carrera (a la mitad)"
+    "Racionales en la feria (a la mitad)",
+    "My daily routine (a la mitad)"
    ],
-   "mentora": "Avanza mejor con un compañero paciente y misiones cortas.",
+   "mentora": "Avanza mejor con un compañero paciente y tareas cortas.",
    "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
   },
   {
-   "id": "A04",
+   "id": "S04",
    "nombre": "Camila Justiniano",
    "avatar": "🐬",
-   "avance": 72,
+   "avance": 74,
    "tendencia": "sube",
    "misiones": 10,
    "aprende": "escuchando y hablando (voz de los profes)",
@@ -122,26 +123,26 @@ window.CURSO_DEMO = {
     "curiosidad"
    ],
    "practicando": [
-    "b/v y s/c al escribir"
+    "ortografía (b/v, s/c)"
    ],
    "intereses": [
     "música",
-    "animales del agua"
+    "series en inglés"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Ortografía": "inicio",
-    "Daily routines": "logrado"
+    "Simple present": "logrado",
+    "Género narrativo": "en camino",
+    "Números racionales": "en camino"
    },
    "ultimas": [
-    "My morning (hecha)",
-    "Describí tu barrio (en curso)"
+    "My daily routine (hecha)",
+    "Leyendas del Abya Yala (en curso)"
    ],
-   "mentora": "Mejoró mucho con las misiones de voz.",
+   "mentora": "Mejoró mucho con las tareas de voz y en inglés ayuda a sus compañeros.",
    "atencion": ""
   },
   {
-   "id": "A09",
+   "id": "S05",
    "nombre": "Lucía Paz",
    "avatar": "🐞",
    "avance": 90,
@@ -154,26 +155,26 @@ window.CURSO_DEMO = {
     "paciencia para explicar"
    ],
    "practicando": [
-    "escribir textos largos"
+    "escribir textos argumentativos"
    ],
    "intereses": [
     "plantas",
     "rompecabezas"
    ],
    "temas": {
-    "Fracciones": "logrado",
-    "Multiplicación": "logrado",
-    "Texto descriptivo": "en camino"
+    "Números racionales": "logrado",
+    "Expresiones algebraicas": "logrado",
+    "Género narrativo": "en camino"
    },
    "ultimas": [
-    "El mercado de las fracciones (hecha)",
-    "Plantas que beben (hecha)"
+    "Racionales en la feria (hecha)",
+    "El sistema solar (hecha)"
    ],
-   "mentora": "Explica fracciones con dibujos muy claros: puede ayudar en parejas.",
+   "mentora": "Explica racionales con dibujos muy claros: puede acompañar en parejas.",
    "atencion": ""
   },
   {
-   "id": "A10",
+   "id": "S06",
    "nombre": "Joaquín Ribera",
    "avatar": "🐿️",
    "avance": 64,
@@ -184,32 +185,32 @@ window.CURSO_DEMO = {
    "fortalezas": [
     "energía",
     "manualidades",
-    "juegos en grupo"
+    "trabajo en grupo"
    ],
    "practicando": [
-    "quedarse en una tarea hasta terminarla",
-    "fracciones equivalentes"
+    "terminar una tarea antes de empezar otra",
+    "vocabulario en inglés"
    ],
    "intereses": [
     "autos",
     "construir"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Multiplicación": "en camino"
+    "Números racionales": "en camino",
+    "Simple present": "en camino"
    },
    "ultimas": [
-    "Tablas en carrera (hecha)",
-    "El mercado de las fracciones (en curso)"
+    "My daily routine (hecha)",
+    "Racionales en la feria (en curso)"
    ],
-   "mentora": "Rinde más con material concreto (tiras de papel, tapitas).",
+   "mentora": "Rinde más con material concreto y consignas paso a paso.",
    "atencion": ""
   },
   {
-   "id": "A11",
+   "id": "S07",
    "nombre": "Emma Saucedo",
    "avatar": "🐱",
-   "avance": 76,
+   "avance": 77,
    "tendencia": "sube",
    "misiones": 11,
    "aprende": "en silencio y con ejemplos resueltos",
@@ -220,32 +221,33 @@ window.CURSO_DEMO = {
     "ortografía"
    ],
    "practicando": [
-    "hablar frente al grupo"
+    "hablar frente al grupo",
+    "speaking en inglés"
    ],
    "intereses": [
     "dibujo",
     "música"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Texto descriptivo": "logrado",
-    "Ortografía": "logrado"
+    "Género narrativo": "logrado",
+    "Simple present": "en camino",
+    "Tawantinsuyu": "logrado"
    },
    "ultimas": [
-    "Describí tu barrio (hecha)",
-    "Collage de colores cálidos (hecha)"
+    "Leyendas del Abya Yala (hecha)",
+    "Mapa del Tawantinsuyu (hecha)"
    ],
    "mentora": "Participa más en grupos chicos que frente a todo el curso.",
    "atencion": ""
   },
   {
-   "id": "A12",
+   "id": "S08",
    "nombre": "Santiago Vaca",
    "avatar": "🦁",
    "avance": 69,
    "tendencia": "sube",
    "misiones": 9,
-   "aprende": "compitiendo con juegos y desafíos",
+   "aprende": "con desafíos y juegos",
    "ritmo": "rápido pero se apura",
    "fortalezas": [
     "liderazgo",
@@ -253,26 +255,26 @@ window.CURSO_DEMO = {
    ],
    "practicando": [
     "revisar antes de entregar",
-    "texto descriptivo"
+    "redacción"
    ],
    "intereses": [
     "fútbol",
     "videojuegos"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Multiplicación": "logrado",
-    "Texto descriptivo": "inicio"
+    "Números racionales": "en camino",
+    "Expresiones algebraicas": "en camino",
+    "Género narrativo": "inicio"
    },
    "ultimas": [
-    "Tablas en carrera (hecha)",
-    "Describí tu barrio (a la mitad)"
+    "Racionales en la feria (hecha)",
+    "Leyendas del Abya Yala (a la mitad)"
    ],
-   "mentora": "Le motiva ser 'capitán' de un grupo con una tarea clara.",
+   "mentora": "Le motiva coordinar un grupo con una tarea clara.",
    "atencion": ""
   },
   {
-   "id": "A13",
+   "id": "S09",
    "nombre": "Martina Flores",
    "avatar": "🦩",
    "avance": 55,
@@ -282,11 +284,11 @@ window.CURSO_DEMO = {
    "ritmo": "necesita más tiempo",
    "fortalezas": [
     "creatividad",
-    "cuentos",
+    "escritura de cuentos",
     "empatía"
    ],
    "practicando": [
-    "tablas de multiplicar",
+    "números racionales",
     "confianza para preguntar"
    ],
    "intereses": [
@@ -294,22 +296,22 @@ window.CURSO_DEMO = {
     "animales"
    ],
    "temas": {
-    "Fracciones": "inicio",
-    "Multiplicación": "inicio",
-    "Texto descriptivo": "en camino"
+    "Números racionales": "inicio",
+    "Género narrativo": "logrado",
+    "Simple present": "en camino"
    },
    "ultimas": [
-    "Describí tu barrio (hecha)",
-    "Tablas en carrera (a la mitad)"
+    "Leyendas del Abya Yala (hecha)",
+    "Racionales en la feria (a la mitad)"
    ],
-   "mentora": "Escribe cuentos muy lindos; en matemática necesita más práctica guiada.",
+   "mentora": "Escribe relatos muy lindos; en matemática necesita más práctica guiada.",
    "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
   },
   {
-   "id": "A14",
+   "id": "S10",
    "nombre": "Gael Peña",
    "avatar": "🐸",
-   "avance": 80,
+   "avance": 81,
    "tendencia": "sube",
    "misiones": 13,
    "aprende": "preguntando y experimentando",
@@ -323,23 +325,23 @@ window.CURSO_DEMO = {
     "orden en el cuaderno"
    ],
    "intereses": [
-    "experimentos",
-    "dinosaurios"
+    "astronomía",
+    "experimentos"
    ],
    "temas": {
-    "Fracciones": "logrado",
-    "Ciclo del agua": "logrado",
-    "Texto descriptivo": "en camino"
+    "Números racionales": "logrado",
+    "Sistema solar": "logrado",
+    "Género narrativo": "en camino"
    },
    "ultimas": [
-    "Plantas que beben (hecha)",
-    "El mercado de las fracciones (hecha)"
+    "El sistema solar (hecha)",
+    "Racionales en la feria (hecha)"
    ],
    "mentora": "Sus preguntas en clase ayudan a todo el curso.",
    "atencion": ""
   },
   {
-   "id": "A15",
+   "id": "S11",
    "nombre": "Renata Chávez",
    "avatar": "🐼",
    "avance": 70,
@@ -352,27 +354,27 @@ window.CURSO_DEMO = {
     "lectura en voz alta"
    ],
    "practicando": [
-    "fracciones equivalentes",
-    "cálculo mental"
+    "expresiones algebraicas",
+    "listening en inglés"
    ],
    "intereses": [
     "baile",
     "música"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Multiplicación": "en camino",
-    "Texto descriptivo": "logrado"
+    "Expresiones algebraicas": "en camino",
+    "Simple present": "en camino",
+    "Género narrativo": "logrado"
    },
    "ultimas": [
-    "Describí tu barrio (hecha)",
-    "El mercado de las fracciones (en curso)"
+    "Leyendas del Abya Yala (hecha)",
+    "Racionales en la feria (en curso)"
    ],
    "mentora": "Trabaja mejor en pareja que sola.",
    "atencion": ""
   },
   {
-   "id": "A16",
+   "id": "S12",
    "nombre": "Dylan Arteaga",
    "avatar": "🐺",
    "avance": 61,
@@ -386,20 +388,20 @@ window.CURSO_DEMO = {
    ],
    "practicando": [
     "leer con fluidez",
-    "multiplicación de dos cifras"
+    "expresiones algebraicas"
    ],
    "intereses": [
     "videojuegos",
     "robots"
    ],
    "temas": {
-    "Fracciones": "en camino",
-    "Multiplicación": "en camino",
-    "Texto descriptivo": "inicio"
+    "Números racionales": "en camino",
+    "Simple present": "logrado",
+    "Género narrativo": "inicio"
    },
    "ultimas": [
-    "Tablas en carrera (hecha)",
-    "My morning (en curso)"
+    "My daily routine (hecha)",
+    "Racionales en la feria (en curso)"
    ],
    "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
    "atencion": ""

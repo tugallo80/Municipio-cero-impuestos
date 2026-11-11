@@ -22,6 +22,7 @@ const CURSO_VALIDO = /^[0-9]{1,2}(ro|do|to|vo|no|mo)_(primaria|secundaria)$/;
 // (EDU.03), nunca del navegador.
 const NOMBRES_DEMO = {
   '4to_primaria': ['Mateo Rojas', 'Valentina Suárez', 'Thiago Vargas', 'Camila Justiniano', 'Lucía Paz', 'Joaquín Ribera', 'Emma Saucedo', 'Santiago Vaca', 'Martina Flores', 'Gael Peña', 'Renata Chávez', 'Dylan Arteaga'],
+  '2do_secundaria': ['Mateo Rojas', 'Valentina Suárez', 'Thiago Vargas', 'Camila Justiniano', 'Lucía Paz', 'Joaquín Ribera', 'Emma Saucedo', 'Santiago Vaca', 'Martina Flores', 'Gael Peña', 'Renata Chávez', 'Dylan Arteaga'],
   '5to_primaria': ['Sofía Rojas', 'Benjamín Céspedes', 'Isabella Añez', 'Lucas Montaño'],
 };
 

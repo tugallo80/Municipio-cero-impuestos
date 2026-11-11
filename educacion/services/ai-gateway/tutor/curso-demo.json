@@ -1,9 +1,9 @@
 {
  "_nota": "GENERADO por tools/datos/armar-curso-demo.mjs. Curso demo SIN nombres: solo IDs opacos y rasgos pedagógicos.",
  "cursos": {
-  "4to_primaria": [
+  "2do_secundaria": [
    {
-    "id": "A01",
+    "id": "S01",
     "avance": 78,
     "tendencia": "sube",
     "misiones": 12,
@@ -15,29 +15,29 @@
      "ayuda a sus compañeros"
     ],
     "practicando": [
-     "sumar fracciones con distinto denominador",
-     "mayúscula al empezar una oración"
+     "operaciones con números racionales",
+     "puntuación en textos largos"
     ],
     "intereses": [
      "fútbol",
-     "animales",
+     "música",
      "construir"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Multiplicación": "logrado",
-     "Texto descriptivo": "en camino"
+     "Números racionales": "en camino",
+     "Simple present": "logrado",
+     "Género narrativo": "en camino"
     },
     "ultimas": [
-     "El mercado de las fracciones (en curso)",
-     "Tablas en carrera (hecha)"
+     "Racionales en la feria (en curso)",
+     "My daily routine (hecha)"
     ],
     "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
     "atencion": ""
    },
    {
-    "id": "A02",
-    "avance": 85,
+    "id": "S02",
+    "avance": 86,
     "tendencia": "estable",
     "misiones": 15,
     "aprende": "leyendo y ordenando por escrito",
@@ -56,22 +56,23 @@
      "dibujo"
     ],
     "temas": {
-     "Fracciones": "logrado",
-     "Texto descriptivo": "logrado"
+     "Números racionales": "logrado",
+     "Género narrativo": "logrado",
+     "Tawantinsuyu": "logrado"
     },
     "ultimas": [
-     "Describí tu barrio (hecha)",
-     "El mercado de las fracciones (hecha)"
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (hecha)"
     ],
     "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
     "atencion": ""
    },
    {
-    "id": "A03",
+    "id": "S03",
     "avance": 58,
     "tendencia": "baja",
     "misiones": 6,
-    "aprende": "con imágenes y consignas cortas leídas en voz alta",
+    "aprende": "con imágenes y consignas cortas",
     "ritmo": "necesita más tiempo",
     "fortalezas": [
      "trabajo en equipo",
@@ -79,7 +80,7 @@
      "memoria visual"
     ],
     "practicando": [
-     "numerador y denominador",
+     "números racionales",
      "leer consignas largas"
     ],
     "intereses": [
@@ -88,20 +89,20 @@
      "música"
     ],
     "temas": {
-     "Fracciones": "inicio",
-     "Multiplicación": "en camino",
-     "Texto descriptivo": "inicio"
+     "Números racionales": "inicio",
+     "Simple present": "en camino",
+     "Género narrativo": "inicio"
     },
     "ultimas": [
-     "El mercado de las fracciones (a la mitad)",
-     "Tablas en carrera (a la mitad)"
+     "Racionales en la feria (a la mitad)",
+     "My daily routine (a la mitad)"
     ],
-    "mentora": "Avanza mejor con un compañero paciente y misiones cortas.",
+    "mentora": "Avanza mejor con un compañero paciente y tareas cortas.",
     "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
    },
    {
-    "id": "A04",
-    "avance": 72,
+    "id": "S04",
+    "avance": 74,
     "tendencia": "sube",
     "misiones": 10,
     "aprende": "escuchando y hablando (voz de los profes)",
@@ -112,26 +113,26 @@
      "curiosidad"
     ],
     "practicando": [
-     "b/v y s/c al escribir"
+     "ortografía (b/v, s/c)"
     ],
     "intereses": [
      "música",
-     "animales del agua"
+     "series en inglés"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Ortografía": "inicio",
-     "Daily routines": "logrado"
+     "Simple present": "logrado",
+     "Género narrativo": "en camino",
+     "Números racionales": "en camino"
     },
     "ultimas": [
-     "My morning (hecha)",
-     "Describí tu barrio (en curso)"
+     "My daily routine (hecha)",
+     "Leyendas del Abya Yala (en curso)"
     ],
-    "mentora": "Mejoró mucho con las misiones de voz.",
+    "mentora": "Mejoró mucho con las tareas de voz y en inglés ayuda a sus compañeros.",
     "atencion": ""
    },
    {
-    "id": "A09",
+    "id": "S05",
     "avance": 90,
     "tendencia": "estable",
     "misiones": 16,
@@ -142,26 +143,26 @@
      "paciencia para explicar"
     ],
     "practicando": [
-     "escribir textos largos"
+     "escribir textos argumentativos"
     ],
     "intereses": [
      "plantas",
      "rompecabezas"
     ],
     "temas": {
-     "Fracciones": "logrado",
-     "Multiplicación": "logrado",
-     "Texto descriptivo": "en camino"
+     "Números racionales": "logrado",
+     "Expresiones algebraicas": "logrado",
+     "Género narrativo": "en camino"
     },
     "ultimas": [
-     "El mercado de las fracciones (hecha)",
-     "Plantas que beben (hecha)"
+     "Racionales en la feria (hecha)",
+     "El sistema solar (hecha)"
     ],
-    "mentora": "Explica fracciones con dibujos muy claros: puede ayudar en parejas.",
+    "mentora": "Explica racionales con dibujos muy claros: puede acompañar en parejas.",
     "atencion": ""
    },
    {
-    "id": "A10",
+    "id": "S06",
     "avance": 64,
     "tendencia": "estable",
     "misiones": 8,
@@ -170,30 +171,30 @@
     "fortalezas": [
      "energía",
      "manualidades",
-     "juegos en grupo"
+     "trabajo en grupo"
     ],
     "practicando": [
-     "quedarse en una tarea hasta terminarla",
-     "fracciones equivalentes"
+     "terminar una tarea antes de empezar otra",
+     "vocabulario en inglés"
     ],
     "intereses": [
      "autos",
      "construir"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Multiplicación": "en camino"
+     "Números racionales": "en camino",
+     "Simple present": "en camino"
     },
     "ultimas": [
-     "Tablas en carrera (hecha)",
-     "El mercado de las fracciones (en curso)"
+     "My daily routine (hecha)",
+     "Racionales en la feria (en curso)"
     ],
-    "mentora": "Rinde más con material concreto (tiras de papel, tapitas).",
+    "mentora": "Rinde más con material concreto y consignas paso a paso.",
     "atencion": ""
    },
    {
-    "id": "A11",
-    "avance": 76,
+    "id": "S07",
+    "avance": 77,
     "tendencia": "sube",
     "misiones": 11,
     "aprende": "en silencio y con ejemplos resueltos",
@@ -204,30 +205,31 @@
      "ortografía"
     ],
     "practicando": [
-     "hablar frente al grupo"
+     "hablar frente al grupo",
+     "speaking en inglés"
     ],
     "intereses": [
      "dibujo",
      "música"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Texto descriptivo": "logrado",
-     "Ortografía": "logrado"
+     "Género narrativo": "logrado",
+     "Simple present": "en camino",
+     "Tawantinsuyu": "logrado"
     },
     "ultimas": [
-     "Describí tu barrio (hecha)",
-     "Collage de colores cálidos (hecha)"
+     "Leyendas del Abya Yala (hecha)",
+     "Mapa del Tawantinsuyu (hecha)"
     ],
     "mentora": "Participa más en grupos chicos que frente a todo el curso.",
     "atencion": ""
    },
    {
-    "id": "A12",
+    "id": "S08",
     "avance": 69,
     "tendencia": "sube",
     "misiones": 9,
-    "aprende": "compitiendo con juegos y desafíos",
+    "aprende": "con desafíos y juegos",
     "ritmo": "rápido pero se apura",
     "fortalezas": [
      "liderazgo",
@@ -235,26 +237,26 @@
     ],
     "practicando": [
      "revisar antes de entregar",
-     "texto descriptivo"
+     "redacción"
     ],
     "intereses": [
      "fútbol",
      "videojuegos"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Multiplicación": "logrado",
-     "Texto descriptivo": "inicio"
+     "Números racionales": "en camino",
+     "Expresiones algebraicas": "en camino",
+     "Género narrativo": "inicio"
     },
     "ultimas": [
-     "Tablas en carrera (hecha)",
-     "Describí tu barrio (a la mitad)"
+     "Racionales en la feria (hecha)",
+     "Leyendas del Abya Yala (a la mitad)"
     ],
-    "mentora": "Le motiva ser 'capitán' de un grupo con una tarea clara.",
+    "mentora": "Le motiva coordinar un grupo con una tarea clara.",
     "atencion": ""
    },
    {
-    "id": "A13",
+    "id": "S09",
     "avance": 55,
     "tendencia": "estable",
     "misiones": 5,
@@ -262,11 +264,11 @@
     "ritmo": "necesita más tiempo",
     "fortalezas": [
      "creatividad",
-     "cuentos",
+     "escritura de cuentos",
      "empatía"
     ],
     "practicando": [
-     "tablas de multiplicar",
+     "números racionales",
      "confianza para preguntar"
     ],
     "intereses": [
@@ -274,20 +276,20 @@
      "animales"
     ],
     "temas": {
-     "Fracciones": "inicio",
-     "Multiplicación": "inicio",
-     "Texto descriptivo": "en camino"
+     "Números racionales": "inicio",
+     "Género narrativo": "logrado",
+     "Simple present": "en camino"
     },
     "ultimas": [
-     "Describí tu barrio (hecha)",
-     "Tablas en carrera (a la mitad)"
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (a la mitad)"
     ],
-    "mentora": "Escribe cuentos muy lindos; en matemática necesita más práctica guiada.",
+    "mentora": "Escribe relatos muy lindos; en matemática necesita más práctica guiada.",
     "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
    },
    {
-    "id": "A14",
-    "avance": 80,
+    "id": "S10",
+    "avance": 81,
     "tendencia": "sube",
     "misiones": 13,
     "aprende": "preguntando y experimentando",
@@ -301,23 +303,23 @@
      "orden en el cuaderno"
     ],
     "intereses": [
-     "experimentos",
-     "dinosaurios"
+     "astronomía",
+     "experimentos"
     ],
     "temas": {
-     "Fracciones": "logrado",
-     "Ciclo del agua": "logrado",
-     "Texto descriptivo": "en camino"
+     "Números racionales": "logrado",
+     "Sistema solar": "logrado",
+     "Género narrativo": "en camino"
     },
     "ultimas": [
-     "Plantas que beben (hecha)",
-     "El mercado de las fracciones (hecha)"
+     "El sistema solar (hecha)",
+     "Racionales en la feria (hecha)"
     ],
     "mentora": "Sus preguntas en clase ayudan a todo el curso.",
     "atencion": ""
    },
    {
-    "id": "A15",
+    "id": "S11",
     "avance": 70,
     "tendencia": "estable",
     "misiones": 10,
@@ -328,27 +330,27 @@
      "lectura en voz alta"
     ],
     "practicando": [
-     "fracciones equivalentes",
-     "cálculo mental"
+     "expresiones algebraicas",
+     "listening en inglés"
     ],
     "intereses": [
      "baile",
      "música"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Multiplicación": "en camino",
-     "Texto descriptivo": "logrado"
+     "Expresiones algebraicas": "en camino",
+     "Simple present": "en camino",
+     "Género narrativo": "logrado"
     },
     "ultimas": [
-     "Describí tu barrio (hecha)",
-     "El mercado de las fracciones (en curso)"
+     "Leyendas del Abya Yala (hecha)",
+     "Racionales en la feria (en curso)"
     ],
     "mentora": "Trabaja mejor en pareja que sola.",
     "atencion": ""
    },
    {
-    "id": "A16",
+    "id": "S12",
     "avance": 61,
     "tendencia": "sube",
     "misiones": 7,
@@ -360,20 +362,20 @@
     ],
     "practicando": [
      "leer con fluidez",
-     "multiplicación de dos cifras"
+     "expresiones algebraicas"
     ],
     "intereses": [
      "videojuegos",
      "robots"
     ],
     "temas": {
-     "Fracciones": "en camino",
-     "Multiplicación": "en camino",
-     "Texto descriptivo": "inicio"
+     "Números racionales": "en camino",
+     "Simple present": "logrado",
+     "Género narrativo": "inicio"
     },
     "ultimas": [
-     "Tablas en carrera (hecha)",
-     "My morning (en curso)"
+     "My daily routine (hecha)",
+     "Racionales en la feria (en curso)"
     ],
     "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
     "atencion": ""

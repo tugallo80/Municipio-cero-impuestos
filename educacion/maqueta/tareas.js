@@ -57,7 +57,8 @@
       curso: c.curso, materia: c.materia || 'mat', titulo, tipo, consigna, entrega: e, ejemplo: true,
       criterios: { ser: 'Trabaja con cuidado y comparte lo que hizo.', saber: 'Explica con sus palabras qué representa una fracción.', hacer: 'Representa fracciones con objetos de la casa.', autoevaluacion: 'Marca con el semáforo cómo le fue.' },
       puntos: { ser: 10, saber: 45, hacer: 40, autoevaluacion: 5 }, autoevaluacion: '¿Pudiste explicarle a alguien de tu casa lo que hiciste? 🟢 🟡 🔴',
-      variantes: { apoyo, base: consigna, desafio }, origen: { tipo: c.origen, tema: c.tema },
+      variantes: { apoyo, base: consigna, desafio }, origen: { tipo: c.origen, tema: c.tema }, como: tipo === 'practica' ? 'texto' : 'texto',
+      pistas: ['¿En cuántas partes iguales quedó partido?', 'El número de abajo dice en cuántas partes se partió; el de arriba, cuántas tomaste.', 'Ejemplo: una tableta de 6 cuadritos, comés 2 → dos sextos (2/6).'],
     });
     return [
       base('Fracciones en la cocina', 'practica', 'Con ayuda de alguien de tu casa, partí una naranja o un pan en partes iguales. Dibujá cómo quedó y escribí la fracción de cada parte.', 'Partí una naranja en 2 y después en 4. Dibujá las partes y escribí "un medio" y "un cuarto". Mirá el ejemplo del cuaderno.', 'Partí algo en 8 partes, comé (¡o guardá!) 3 y escribí qué fracción queda. ¿Es más o menos que un medio?'),
@@ -104,6 +105,10 @@
       <details><summary class="chica" style="cursor:pointer"><b>Cómo se evalúa</b> <span class="ter">· Ser 10 · Saber 45 · Hacer 40 · Autoev. 5</span></summary>
         ${[['ser', 'Ser (10)'], ['saber', 'Saber (45)'], ['hacer', 'Hacer (40)'], ['autoevaluacion', 'Autoevaluación (5)']].map(([k, n]) => `<label class="campo" style="margin-top:8px"><span>${n}</span><input value="${esc(t.criterios?.[k])}" oninput="Tareas.editarCriterio(${i}, '${k}', this.value)"></label>`).join('')}
         <label class="campo"><span>Pregunta de autoevaluación para el alumno</span><input value="${esc(t.autoevaluacion)}" ${campo('autoevaluacion')}></label></details>
+      <details><summary class="chica" style="cursor:pointer"><b>Cómo entrega y pistas</b> <span class="ter">· ${esc({ texto: 'escribe', foto: 'foto de su trabajo', nada: 'marca que la hizo', opciones: 'responde opciones' }[t.como] || 'escribe')}${t.pistas?.length ? ` · ${t.pistas.length} pistas` : ''}</span></summary>
+        <label class="campo" style="margin-top:8px"><span>Cómo entrega el alumno</span><select onchange="Tareas.editar(${i}, 'como', this.value)">${[['texto', '✍️ Escribe la respuesta'], ['foto', '📷 Foto de su trabajo (por ahora: marca que la hizo)'], ['nada', '✅ Solo marca que la hizo']].map(([k, n]) => `<option value="${k}" ${k === (t.como || 'texto') ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+        ${[0, 1, 2].map((k) => `<label class="campo"><span>${['1 · Pregunta guía', '2 · Pista', '3 · Ejemplo resuelto (con otros datos)'][k]}</span><input value="${esc(t.pistas?.[k])}" oninput="Tareas.editarPista(${i}, ${k}, this.value)"></label>`).join('')}
+        <p class="ter">Las pistas ayudan sin dar la respuesta; el alumno las abre de a una.</p></details>
       <div class="fila-accion"><div class="crece ter">${t.enviada ? '✅ Enviada' : 'La ven tus alumnos en su modo directo, con la versión de su nivel.'}</div>
         <div class="acciones"><button class="btn sec2" onclick="Tareas.descartar(${i})">Descartar</button><button class="btn" ${t.enviada || t.enviando ? 'disabled' : ''} onclick="Tareas.enviar(${i})">${t.enviando ? 'Enviando…' : t.enviada ? '✅ Enviada' : '📤 Enviar a mis alumnos'}</button></div></div>
     </div>`;
@@ -112,7 +117,7 @@
   function vista(tipo, id) {
     const n = (tipo === 'clase' || tipo === 'tema') ? contextoDe(tipo, id) : null;
     if (n && (!ctx || ctx.claseId !== n.claseId || ctx.temaId !== n.temaId || ctx.tema !== n.tema)) { if (ctx?.curso !== n.curso) enviadas = null; ctx = n; sugeridas = null; error = ''; setTimeout(pedir, 0); }
-    const curso = ctx?.curso || (window.Cronograma?.cursoServidor?.() || '4to_primaria');
+    const curso = ctx?.curso || (window.Cronograma?.cursoServidor?.() || '2do_secundaria');
     if (!enviadas) setTimeout(() => cargarEnviadas(curso), 0);
     const cab = `<div class="encab"><div><h1>📝 Tareas</h1><p>La mentora propone tareas con lo que pasó en tu clase o con el tema del cronograma. Vos las editás y decidís cuáles mandar.</p></div></div>`;
     const sinCuenta = !conCuenta() ? `<div class="cr-aviso ambar" style="margin-bottom:12px;padding:10px 12px;border-radius:12px;border:1px solid var(--ambar);font-size:13px">Sin cuenta: se muestran tareas de ejemplo y lo enviado queda solo en este equipo.${api() ? ' <button class="btn chico sec2" onclick="Clase.login()">Entrar</button>' : ''}</div>` : '';
@@ -142,6 +147,7 @@
     editar(i, k, v) { if (sugeridas?.[i]) sugeridas[i][k] = v; },
     editarVariante(i, k, v) { if (sugeridas?.[i]) (sugeridas[i].variantes ||= {})[k] = v; },
     editarCriterio(i, k, v) { if (sugeridas?.[i]) (sugeridas[i].criterios ||= {})[k] = v; },
+    editarPista(i, k, v) { if (sugeridas?.[i]) { const p = (sugeridas[i].pistas ||= ['', '', '']); p[k] = v; } },
     descartar(i) { sugeridas.splice(i, 1); repintar(); },
     async enviar(i) {
       const t = sugeridas[i];
