@@ -124,7 +124,7 @@ en blanco) y también cierra con Esc o con el botón "atrás" del celular.
 
 | Lámina | Botones |
 |---|---|
-| 5 · Lema | El mundo y sus evoluciones (`/estilos/`, con "abrir aparte") |
+| 5 · Lema | El mundo (`/estilos/escena/?estilo=PROMO&vista=colegio`) y Pasar de curso (`/estilos/transicion/?de=VIVO&a=PROMO`), con "abrir aparte". No se usa `/estilos/` porque es una nota interna para el dueño |
 | 7 · Hoy en el demo | Juego (`/maqueta/alumno/?demo=1`, con "abrir aparte"), Mis tareas (`/maqueta/tareas/`) |
 | 8 · Mentora | Clase grabada (`#clase`), Cronograma y PDC (`#cronograma`), Tareas sugeridas (`#tareas`) en `/maqueta/tutor.html` |
 | 9 · Mapa del curso | Mapa del curso (`/maqueta/tutor.html#mapa`) |
@@ -136,3 +136,22 @@ en blanco) y también cierra con Esc o con el botón "atrás" del celular.
 - Probado con Playwright (servidor local con URLs limpias como Firebase) en 390×844, 844×390 y
   1280×800: cada botón abre su parte y "Volver" deja en la misma lámina. En celular acostado, la
   lámina 8 oculta su captura y pone las 4 funciones en dos columnas.
+
+## Demo en vivo desde PC o proyector (pedido del dueño)
+
+- **Marco de dispositivo** (pantallas ≥ 900×560): la demo corre al tamaño real del aparato
+  (celular 390×844 o 844×390, tablet 1180×820) dentro de un marco sobrio, escalado para entrar
+  (máx. ×1,5), con la lámina detrás oscurecida. Selector arriba: Celular · Horizontal · Tablet ·
+  Completa. Cada demo arranca en su aparato (`data-disp` del botón): juego en horizontal, Mis tareas
+  en celular, panel del profe y mundo en completa. En el celular real se abre directo, sin marco.
+- **Teclado**: flechas, Esc cierra la demo (también con el foco dentro de la demo), F pantalla completa,
+  **P o botón "Notas"** abre el **modo presentador** (`?presentador`) en otra ventana: notas por
+  lámina (`<template class="notas">` en cada lámina), lámina siguiente, reloj, botones de las demos
+  de esa lámina y "Cerrar la demo". Sincronizado en las dos direcciones con `BroadcastChannel`.
+- **Sin fricción**: "Cargando la demo…" hasta que carga; si tarda más de 8 s, "Abrir aparte" (nunca
+  un error). Se precargan (`prefetch`) las demos de la lámina actual y la siguiente.
+- **Llave de demo (EDU.15)**: `?llave=…` en el link de la presentación → se guarda en el equipo
+  (`localStorage`), se borra del link y se agrega a cada demo. Si EDU.15 usa otro nombre, cambiar
+  `PARAM_LLAVE` en el script.
+- Probado en 1920×1080 y 1280×720 (marco, selector, Esc, presentador ida y vuelta) y en 390×844 /
+  844×390 (sin marco). El 3D del mundo no se ve desde la sesión (CDN bloqueado): revisar en el canal.
