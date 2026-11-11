@@ -136,9 +136,16 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balance; }
 .globo { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: calc(var(--f) * 1.12); background: var(--sup2);
   border: 1px solid var(--borde); border-radius: 18px 18px 18px 4px; padding: 10px 16px; max-width: 34ch; color: #e5e5e5; }
+.contraste { display: flex; flex-direction: column; gap: calc(var(--gap) * .8); }
+.tarjeta.gris { opacity: .8; }
+.tarjeta.gris h3 { color: var(--sec); }
+.tarjeta.verde-borde { border-color: rgba(16,185,129,.6); background: rgba(16,185,129,.07); }
+.tarjeta.verde-borde b { font-weight: 600; }
+.frase.chica { font-size: calc(var(--grande) * .8); }
 .tarjeta.app { border-color: rgba(16,185,129,.5); gap: 10px; }
 .hero .marca b { color: #fff; }
 @media screen and (orientation: landscape) and (max-height: 520px), screen and (orientation: portrait) and (max-height: 780px) { .sello-rep { display: none; } }
+@media screen and (orientation: portrait) and (max-height: 780px) { .sin-chico { display: none; } }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -270,17 +277,17 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
         <p><span class="sello">Lo que viene</span></p>
         <h2 class="grande">Un tutor en el bolsillo, <span class="verde">las 24 horas.</span></h2>
-        <p class="globo">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
+        <p class="globo sin-chico">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
         <ul class="lista">
-          <li><b>Recuerda la clase de hoy</b>, porque la clase se escucha y se resume.</li>
-          <li><b>Le recuerda</b> sus tareas, horarios y qué tiene que llevar.</li>
+          <li><b>Recuerda la clase de hoy</b>: la clase se escucha y se resume.</li>
+          <li><b>Le recuerda</b> tareas, horarios y qué llevar.</li>
           <li><b>Le avisa</b> lo que el profe pidió decir en casa.</li>
         </ul>
       </div>
-      <div class="tarjeta app">
-        <p class="antetitulo">La app del alumno</p>
-        <p>Agenda · Calendario · Textos · Su tutor IA · Un mundo para aprender jugando</p>
-        <p class="frase">El juego es una parte. <span>El centro es el alumno.</span></p>
+      <div class="contraste">
+        <div class="tarjeta gris"><h3>Un buscador o un chat cualquiera</h3><p class="sec">Responde cualquier cosa. No sabe dónde estás.</p></div>
+        <div class="tarjeta verde-borde"><h3 class="verde">Su tutor</h3><p>Conoce los textos oficiales y el plan del profe: sabe <b>en qué tema va</b>, <b>qué dijo su profe</b> y <b>qué le cuesta</b>.</p></div>
+        <p class="frase chica">Ayuda a aprender y a ordenarse, <span>no a copiar.</span></p>
       </div>
     </div>
   </section>
@@ -303,7 +310,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
       <h1>Bachilleres que salen <span class="verde">sabiendo de verdad.</span></h1>
       <div class="lineas">
         <p>Enseñados a su ritmo y como aprende su cerebro, no como una manada.</p>
-        <p>Profe, alumno y familia conectados por lo mismo: que cada chico aprenda.</p>
+        <p>La app del alumno es agenda, textos, su tutor y un mundo para aprender jugando. <b>El juego es una parte; el centro es el alumno.</b></p>
       </div>
       <p class="frase">Queremos bajar los aplazos, <span>y lo vamos a medir en el piloto.</span></p>
     </div>

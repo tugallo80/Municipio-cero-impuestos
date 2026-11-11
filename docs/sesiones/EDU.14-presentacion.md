@@ -73,7 +73,10 @@ a la educación como respuesta a la pobreza y a la falta de alcance.
    referenciales 2026 pero no un total).
 4. **Un tutor en el bolsillo, las 24 horas** — sello "Lo que viene": recuerda la clase, tareas,
    horarios y qué llevar, avisos para la casa; la app del alumno es agenda, calendario, textos,
-   tutor y el mundo. "El juego es una parte. El centro es el alumno."
+   tutor y el mundo. Agregado del dueño: contraste "un buscador o un chat cualquiera" (no sabe dónde
+   estás) vs "su tutor" (conoce los textos oficiales y el plan del profe: en qué tema va, qué dijo su
+   profe, qué le cuesta). "Ayuda a aprender y a ordenarse, no a copiar." La frase "el centro es el
+   alumno" pasó a la lámina 6.
 5. **"Acá no vale lo que tenés, sino lo que sabés."** Semillas de conocimiento, construir su Santa
    Cruz, colegios que se encuentran en un mundo seguro. (foto zoológico)
 6. **Bachilleres que salen sabiendo de verdad.** "Queremos bajar los aplazos, y lo vamos a medir en el piloto."
