@@ -59,16 +59,31 @@ ni debajo de los botones. PDF de 10 páginas. Capturas en `docs/sesiones/captura
 Pedido del dueño: "es muy técnica, le falta alma". Se agrega una **apertura con propósito** y se
 acorta lo práctico. Rama `sesion/pantalla-edu-14b`.
 
-## Nuevo orden (11 láminas)
+## Nuevo orden (13 láminas) — segunda vuelta: "cambio de paradigma"
 
-1. **¿Y si la nueva forma de educar empieza acá?** — escuela rural de Santa Cruz, el profe y los chicos como pioneros. Foto: el colegio (evolución Promo).
-2. **La IA ya llegó** — darle la espalda o ponerla a trabajar para nuestros chicos; no reemplaza al profe, le devuelve tiempo y le ayuda a ver a cada chico.
-3. **"Acá no vale lo que tenés, sino lo que sabés."** — la moneda es el conocimiento; fiscales, rurales y particulares por portales; compiten por mejora y por alumno. Foto: portal.
-4. **Aprender jugando, con sentido** — tareas → misiones; los cursos construyen su Santa Cruz (zoológico); mundo cerrado, sin ranking de alumnos, frases predefinidas. Foto: zoológico en obra.
-5. Para el alumno (profes IA + modo directo) · 6. Mentora del profe (incluye "lo que gana el profe") ·
-7. Mapa del curso · 8. Evidencia · 9. Cuidado de los chicos · 10. Piloto · 11. Próximos pasos y contacto.
+El dueño pidió más fondo: no es un juego ni "tareas más bonitas", es integrar la tecnología y la IA
+a la educación como respuesta a la pobreza y a la falta de alcance.
 
-Salieron "El aula de hoy" (quedó dentro de la 2) y "Qué gana el profe" (dentro de la 6).
+**Apertura (6):**
+1. **Seguimos enseñando como hace 100 años.** ¿Y si el cambio empieza en una escuela rural? Pioneros. (foto colegio)
+2. **La IA ya llegó.** ¿Espalda o ponerla a trabajar? No es una app más; no reemplaza al profe.
+3. **Una tablet por alumno, con todo adentro** — sello "La visión": alcaldía, textos oficiales del
+   Ministerio (gratuitos), ahorro en útiles. Cifra: lista básica ≈ Bs 1.000 al año sin libros; libros
+   Bs 80–180 c/u (El Deber, feb-2025, **a verificar**; Defensa del Consumidor publicó precios
+   referenciales 2026 pero no un total).
+4. **Un tutor en el bolsillo, las 24 horas** — sello "Lo que viene": recuerda la clase, tareas,
+   horarios y qué llevar, avisos para la casa; la app del alumno es agenda, calendario, textos,
+   tutor y el mundo. "El juego es una parte. El centro es el alumno."
+5. **"Acá no vale lo que tenés, sino lo que sabés."** Semillas de conocimiento, construir su Santa
+   Cruz, colegios que se encuentran en un mundo seguro. (foto zoológico)
+6. **Bachilleres que salen sabiendo de verdad.** "Queremos bajar los aplazos, y lo vamos a medir en el piloto."
+
+**Lo práctico (7):** hoy en el demo (profes IA + modo directo) · mentora del profe · mapa del curso ·
+evidencia · cuidado de los chicos · piloto · próximos pasos y contacto.
+
+Fuentes del costo de útiles:
+- https://eldeber.com.bo/santa-cruz/la-lista-de-utiles-escolares-demanda-un-gasto-de-unos-bs-1000-y-sube-el-precio-de-los-materiales_502810/
+- https://eldeber.com.bo/pais/establecen-lista-precios-referenciales-utiles-escolares_1769814838
 
 ## Nombres
 
@@ -89,4 +104,5 @@ Salieron "El aula de hoy" (quedó dentro de la 2) y "Qué gana el profe" (dentro
 ## Probado
 
 Playwright en 390×844, 844×390, 1280×800, 360×740 y 1920×1080: sin desbordes. En celular vertical
-la imagen de la lámina 6 se oculta (no entraba). PDF de 11 páginas.
+la imagen de la mentora se oculta (no entraba). PDF de 13 páginas. `img/mundo-portal.jpg` y
+`img/profe-pdc.jpg` quedaron sin usar (se pueden borrar con OK del dueño).

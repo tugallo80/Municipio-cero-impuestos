@@ -130,6 +130,15 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   .hero::before { background: linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.82) 38%, rgba(0,0,0,.2) 72%, rgba(0,0,0,.05) 100%); }
   .hero .cuerpo { justify-content: center; max-width: 60%; }
 }
+
+.sello { display: inline-block; font-size: var(--chico); font-weight: 600; color: var(--verde); border: 1px solid rgba(16,185,129,.55);
+  background: rgba(16,185,129,.1); border-radius: 999px; padding: 2px 12px; letter-spacing: .03em; }
+h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balance; }
+.globo { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: calc(var(--f) * 1.12); background: var(--sup2);
+  border: 1px solid var(--borde); border-radius: 18px 18px 18px 4px; padding: 10px 16px; max-width: 34ch; color: #e5e5e5; }
+.tarjeta.app { border-color: rgba(16,185,129,.5); gap: 10px; }
+.hero .marca b { color: #fff; }
+@media screen and (orientation: landscape) and (max-height: 520px), screen and (orientation: portrait) and (max-height: 780px) { .sello-rep { display: none; } }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -149,7 +158,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .acciones { position: fixed; top: calc(10px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); display: flex; gap: 8px; z-index: 5; }
 .acciones .btn { height: 38px; min-width: 38px; padding: 0 10px; font-size: 13px; background: rgba(17,17,17,.9); }
 
-@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 19vh; --gap: 9px; } }
+@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 19vh; --gap: 9px; } .tarjeta { padding: 9px 14px; gap: 2px; } }
 /* ── Celular horizontal (alto bajo) ─────── */
 @media (orientation: landscape) and (max-height: 520px) {
   :root { --f: 13.5px; --chico: 11.5px; --h1: 28px; --h2: 21px; --grande: 18px; --pad-x: 28px; --pad-y: 12px; --gap: 9px; --barra: 46px; --img-alto: calc(100vh - 120px); }
@@ -214,14 +223,14 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 <body>
 <main class="deck" id="deck" aria-live="polite">
 
-  <!-- Soñar en grande desde acá -->
+  <!-- Seguimos enseñando como hace 100 años -->
   <section class="lam hero" style="--pos: 62% 55%">
     <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
     <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
       <p class="antetitulo">Propuesta de piloto · U.E. Nuevo Horizonte</p>
-      <h1>¿Y si la nueva forma de educar <span class="verde">empieza acá?</span></h1>
-      <p class="bajada">No en una capital lejana: en una escuela rural de Santa Cruz. Este profe y estos chicos pueden ser los primeros.</p>
+      <h1>Seguimos enseñando como hace <span class="verde">100 años.</span></h1>
+      <p class="bajada">Pizarrón, cuaderno y la misma clase para todos, aunque el mundo ya cambió. ¿Y si el cambio empieza en una escuela rural de Santa Cruz? Este profe y estos chicos pueden ser los pioneros.</p>
       <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
     </div>
   </section>
@@ -230,42 +239,78 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   <section class="lam declaracion">
     <div class="marca"><b class="n"></b> La IA ya llegó</div>
     <div class="cuerpo">
-      <h1>La IA ya llegó. Podemos darle la espalda… <span class="verde">o ponerla a trabajar para nuestros chicos.</span></h1>
+      <h1>La IA ya llegó. ¿Le damos la espalda <span class="verde">o la ponemos a trabajar para nuestros chicos?</span></h1>
       <div class="lineas">
-        <p>Un profe, muchos chicos, cada uno con su ritmo.</p>
-        <p>Acá la IA no reemplaza al profe: <b>le devuelve tiempo</b> y le ayuda a <b>ver a cada chico</b>.</p>
+        <p>No traemos una app más: traemos la tecnología a la escuela, como respuesta a la pobreza y a la educación que no llega a todos.</p>
+        <p>La IA no reemplaza al profe: <b>le devuelve tiempo</b> y le ayuda a <b>ver a cada chico</b>.</p>
       </div>
-      <p class="frase">El que enseña <span>sigue siendo el profe.</span></p>
+    </div>
+  </section>
+
+  <!-- Una tablet por alumno -->
+  <section class="lam declaracion">
+    <div class="marca"><b class="n"></b> La visión</div>
+    <div class="cuerpo">
+      <p class="sello-rep"><span class="sello">La visión</span></p>
+      <h2 class="grande">Una tablet por alumno, <span class="verde">con todo adentro.</span></h2>
+      <p class="bajada">Que la alcaldía entregue a cada alumno una tablet con la plataforma y los textos oficiales del Ministerio, que ya son gratuitos.</p>
+      <div class="tarjetas">
+        <div class="tarjeta"><h3>Textos oficiales</h3><p class="sec">Los del Ministerio, en la tablet y sin internet.</p></div>
+        <div class="tarjeta"><h3>Menos gasto</h3><p class="sec">Una lista básica de útiles ronda Bs 1.000 al año, sin libros.*</p></div>
+        <div class="tarjeta"><h3>Mochila liviana</h3><p class="sec">Textos y cuadernos en un solo aparato.</p></div>
+      </div>
+      <p class="nota">* El Deber, 2025; cada libro, Bs 80 a 180. Cifras a verificar. Es una visión a construir con la alcaldía, no un acuerdo firmado.</p>
+    </div>
+  </section>
+
+  <!-- Un tutor en el bolsillo -->
+  <section class="lam declaracion">
+    <div class="marca"><b class="n"></b> Para el alumno</div>
+    <div class="cuerpo lado">
+      <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
+        <p><span class="sello">Lo que viene</span></p>
+        <h2 class="grande">Un tutor en el bolsillo, <span class="verde">las 24 horas.</span></h2>
+        <p class="globo">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
+        <ul class="lista">
+          <li><b>Recuerda la clase de hoy</b>, porque la clase se escucha y se resume.</li>
+          <li><b>Le recuerda</b> sus tareas, horarios y qué tiene que llevar.</li>
+          <li><b>Le avisa</b> lo que el profe pidió decir en casa.</li>
+        </ul>
+      </div>
+      <div class="tarjeta app">
+        <p class="antetitulo">La app del alumno</p>
+        <p>Agenda · Calendario · Textos · Su tutor IA · Un mundo para aprender jugando</p>
+        <p class="frase">El juego es una parte. <span>El centro es el alumno.</span></p>
+      </div>
     </div>
   </section>
 
   <!-- Lo que sabés -->
-  <section class="lam hero" style="--pos: 50% 50%">
-    <img class="fondo" src="img/mundo-portal.jpg" alt="" width="1600" height="925">
+  <section class="lam hero" style="--pos: 70% 50%">
+    <img class="fondo" src="img/mundo-zoologico.jpg" alt="" width="1600" height="963">
     <div class="marca"><b class="n"></b> Nuestro lema</div>
     <div class="cuerpo">
       <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
-      <p class="bajada">Acá se gana con <b>semillas de conocimiento</b>: se ganan al aprender y cada curso las planta para hacer crecer su ciudad. Colegios fiscales, rurales y particulares se encuentran por portales y compiten limpio: por mejora y por alumno, no por plata.</p>
-    </div>
-  </section>
-
-  <!-- Aprender jugando, con sentido -->
-  <section class="lam hero" style="--pos: 70% 50%">
-    <img class="fondo" src="img/mundo-zoologico.jpg" alt="" width="1600" height="963">
-    <div class="marca"><b class="n"></b> Aprender jugando</div>
-    <div class="cuerpo">
-      <h1>Aprender jugando, <span class="verde">con sentido.</span></h1>
-      <ul class="lista">
-        <li>Las tareas dejan de ser un castigo: son <b>misiones</b> que premian lo aprendido.</li>
-        <li>Con las semillas que ganan, los cursos <b>construyen juntos su Santa Cruz</b>: un zoológico, un parque.</li>
-        <li><b>Mundo cerrado y seguro</b>: sin desconocidos, sin ranking de alumnos, con frases amables predefinidas.</li>
-      </ul>
+      <p class="bajada">Al aprender se ganan <b>semillas de conocimiento</b>, y cada curso las planta para hacer crecer su Santa Cruz: un zoológico, un parque. Colegios fiscales, rurales y particulares se encuentran en un mundo cerrado y seguro, y compiten por mejora, no por plata.</p>
       <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
     </div>
   </section>
 
+  <!-- La meta -->
+  <section class="lam declaracion">
+    <div class="marca"><b class="n"></b> La meta</div>
+    <div class="cuerpo">
+      <h1>Bachilleres que salen <span class="verde">sabiendo de verdad.</span></h1>
+      <div class="lineas">
+        <p>Enseñados a su ritmo y como aprende su cerebro, no como una manada.</p>
+        <p>Profe, alumno y familia conectados por lo mismo: que cada chico aprenda.</p>
+      </div>
+      <p class="frase">Queremos bajar los aplazos, <span>y lo vamos a medir en el piloto.</span></p>
+    </div>
+  </section>
+
   <section class="lam">
-    <div class="marca"><b class="n"></b> Para el alumno</div>
+    <div class="marca"><b class="n"></b> Hoy en el demo</div>
     <div class="cuerpo dos img-grande">
       <div class="texto">
         <h2><span class="verde">Dos profes IA</span> para cada alumno</h2>
