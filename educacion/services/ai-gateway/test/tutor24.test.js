@@ -103,7 +103,8 @@ test('fechas: días hábiles desde hoy, como la app', () => {
 
 test('instrucción: es IA, no hace la tarea, deriva lo emocional, usa {PROFE}', () => {
   const s = T24.instruccionTutor({ curso: '2do_secundaria', profe: 'el_profe' });
-  assert.match(s, /el profe Jochi/);
+  assert.match(s, /el profe Tomatao/);
+  assert.ok(!/taji|jochi/i.test(s));
   assert.match(s, /inteligencia artificial/);
   assert.match(s, /no la hacés/);
   assert.match(s, /adulto de confianza/);
@@ -167,4 +168,24 @@ test('reconoce la materia nombrada en la pregunta', () => {
 test('los pedacitos del streaming conservan los espacios', () => {
   const partes = ['Hola, ', 'como dijo { profe }', ' vos ', 'podés.'];
   assert.equal(partes.map((x) => T24.limpiarPedazo(x, '2do_secundaria')).join(''), 'Hola, como dijo {PROFE} vos podés.');
+});
+
+test('EDU.16b: nombres de los profes IA configurables y validados', () => {
+  const IA = require('../tutor/nombres-ia');
+  const profesMod = require('../tutor/profes');
+  assert.deepEqual(IA.nombresIA(), { varon: 'Tomatao', mujer: 'Tomatina' });
+  assert.deepEqual(IA.nombresIA({ varon: 'Pepe', mujer: '<script>' }), { varon: 'Pepe', mujer: 'Tomatina' });
+  assert.equal(IA.nombresIA({ varon: 'x'.repeat(21) }).varon, 'Tomatao');
+  const v = profesMod.construirInstruccionProfe('el_profe', { curso: '2do_secundaria' }, { ia: { varon: 'Pepe', mujer: 'Ana' }, cursoLegible });
+  assert.match(v, /Sos \*\*el profe Pepe\*\*/);
+  assert.match(v, /la profe Ana/);
+  assert.ok(!/\bTaji\b|\bJochi\b/.test(v));
+  const t = T24.instruccionTutor({ curso: '2do_secundaria', profe: 'la_profe', ia: { varon: 'Pepe', mujer: 'Ana' } });
+  assert.match(t, /Soy la profe Ana/);
+  assert.deepEqual(profesMod.profesPublicos().map((p) => p.titulo), ['la profe Tomatina', 'el profe Tomatao']);
+  const est = T24.datosDelCurso('2do_secundaria');
+  assert.equal(T24.profeDeMateria(est, 'ing'), 'el_profe');
+  assert.equal(T24.profeDeMateria(est, 'mat'), 'la_profe');
+  const voz = T24.contextoParaVoz({ curso: '2do_secundaria', est, tareas: [], clases: [] }, { varon: 'Pepe', mujer: 'Ana' });
+  assert.ok(!/\{IA_/.test(voz));
 });

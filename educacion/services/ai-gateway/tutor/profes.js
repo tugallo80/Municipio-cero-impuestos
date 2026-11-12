@@ -13,6 +13,7 @@ const path = require('path');
 const { profes: PROFES } = require('./profes.json');
 const MISIONES_DEMO = require('./misiones-demo');
 const { textoClasesParaTutor } = require('./clase');
+const IA = require('./nombres-ia');
 
 const leer = (archivo) =>
   fs.readFileSync(path.join(__dirname, 'profes', archivo), 'utf8').replace(/<!--[\s\S]*?-->/g, '').trim();
@@ -23,9 +24,10 @@ const PERSONALIDADES = Object.fromEntries(PROFES.map((p) => [p.id, leer(p.archiv
 const profePorId = (id) => PROFES.find((p) => p.id === id) || null;
 const otroProfe = (id) => PROFES.find((p) => p.id !== id);
 
-/** Lo que el navegador puede saber de los profes (sin instrucciones). */
-function profesPublicos() {
-  return PROFES.map(({ id, nombre, titulo, color }) => ({ id, nombre, titulo, color }));
+/** Lo que el navegador puede saber de los profes (sin instrucciones). Nombres: EDU.16b (configurables). */
+function profesPublicos(ia) {
+  const n = IA.nombresIA(ia);
+  return PROFES.map(({ id, color }) => ({ id, nombre: IA.nombreDe(id, n), titulo: IA.tituloDe(id, n), color }));
 }
 
 const entero = (v, min, max) => {
@@ -94,11 +96,11 @@ ${c.pasos.map((p, i) => textoPaso(p, i + 1, c.pasos.length)).join('\n\n')}
 ${ahora}`;
 }
 
-function textoMemoria(memoria) {
+function textoMemoria(memoria, n) {
   const u = memoria?.ultima;
   if (!u || !MISIONES_DEMO.MISIONES[u.misionId]) return '';
   const info = MISIONES_DEMO.MISIONES[u.misionId];
-  const quien = profePorId(u.profe)?.titulo || 'un profe';
+  const quien = profePorId(u.profe) ? IA.tituloDe(u.profe, n) : 'un profe';
   const como = u.completa
     ? 'y la terminó'
     : `y llegó al paso ${(u.paso || 0) + 1}${u.peldanoMax ? `, usando hasta el peldaño ${u.peldanoMax} de la escalera` : ''}`;
@@ -112,6 +114,7 @@ function textoMemoria(memoria) {
  * @param {object} perfil { curso } — cualquier otro campo se ignora
  * @param {{mision?: object, memoria?: object, clases?: object[], relevo?: boolean, cursoLegible: (c:string)=>string}} extra
  *   `clases`: contexto del día de las últimas clases grabadas del curso (EDU.04a, sin nombres)
+ *   `ia`: (EDU.16b) { varon, mujer } nombres de los profes IA (validados; por defecto los de la demo)
  *   `tutor`: (EDU.16) bloque "tutor 24/7" con su vida escolar (tareas, horario, avisos, texto); si viene,
  *            reemplaza al de las clases (ya las incluye)
  */
@@ -119,15 +122,18 @@ function construirInstruccionProfe(profeId, perfil = {}, extra = {}) {
   const yo = profePorId(profeId);
   if (!yo) throw new Error(`Profe desconocido: ${profeId}`);
   const otro = otroProfe(profeId);
-  const comun = COMUN.replaceAll('{{YO}}', yo.titulo).replaceAll('{{OTRO}}', otro.titulo);
-  const propia = PERSONALIDADES[profeId].replaceAll('{{NOMBRE}}', yo.nombre);
+  const n = IA.nombresIA(extra.ia);
+  const yoTitulo = IA.tituloDe(yo.id, n);
+  const otroTitulo = IA.tituloDe(otro.id, n);
+  const comun = COMUN.replaceAll('{{YO}}', yoTitulo).replaceAll('{{OTRO}}', otroTitulo);
+  const propia = PERSONALIDADES[profeId].replaceAll('{{NOMBRE}}', IA.nombreDe(yo.id, n));
   const curso = extra.cursoLegible ? extra.cursoLegible(perfil.curso) : 'primaria';
 
   const relevo = extra.relevo
     ? `# Relevo
 
-El alumno te acaba de llamar: venía con ${otro.titulo} en esta misma charla. Saludá en UNA frase
-("¡Acá ${yo.titulo}! Seguimoj, ¿ya?") y seguí desde donde estaban. No te presentes largo.`
+El alumno te acaba de llamar: venía con ${otroTitulo} en esta misma charla. Saludá en UNA frase
+("¡Acá ${yoTitulo}! Seguimoj, ¿ya?") y seguí desde donde estaban. No te presentes largo.`
     : '';
 
   return [
@@ -136,7 +142,7 @@ El alumno te acaba de llamar: venía con ${otro.titulo} en esta misma charla. Sa
     `# Con quién estás hablando
 
 - Un alumno o alumna de ${curso}. No sabés su nombre y no hace falta: tratalo con cariño sin nombrarlo.`,
-    textoMemoria(extra.memoria),
+    textoMemoria(extra.memoria, n),
     extra.tutor || textoClasesParaTutor(extra.clases),
     textoMision(extra.mision),
     relevo,

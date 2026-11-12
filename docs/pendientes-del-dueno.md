@@ -9,7 +9,7 @@
 |---|---|---|---|
 | 1 | **Maqueta base para Blender** | Seguir `docs/educacion/guia-maqueta-3d.md`; exportar en **GLB** (o FBX/OBJ) y subirla a Google Drive (pasar el link) o adjuntarla en el chat de la MAESTRA | Prueba EDU.07: Claude toma la maqueta, deja **un edificio terminado y un personaje**, y medimos tiempo y calidad antes de decidir si conviene el plan de USD 200 |
 | 2 | **Guion de los 2 minijuegos** (y lugares secretos) | Cómo te los imaginás: qué hace el chico, qué aprende, cómo gana | EDU.08 Minijuegos |
-| 3 | **Nombres de los profes** | Elegir Taji / Jochi u otros | Los dos profes de voz |
+| 3 | **Nombres de los profes IA** | Elegir los definitivos (investigación de naming pendiente). **Los de la demo, "Tomatao" (el profe IA) y "Tomatina" (la profe IA), son TEMPORALES** (EDU.16b, 12-nov). Se cambian en un solo lugar: `educacion/tools/datos/demo-piloto.json` → `ia`, o por link `?iaVaron=…&iaMujer=…` | Los dos profes de voz y el tutor |
 | 4 | **Marco o franja de la voz** | Elegir cómo se ve el profe cuando habla | App del alumno |
 | 5 | **Talleres con niños** | Hacerlos con las láminas de `/educacion/talleres/` (incluida la E) | Validar el diseño con chicos reales |
 | 7 | **Cartas del piloto (U.E. Nuevo Horizonte)** | Completar y hacer firmar `docs/piloto/carta-intencion-UE-Nuevo-Horizonte.docx` (director/a) y, si se puede, la de la Alcaldía. Preguntas para la visita en `docs/piloto/README.md` | Respaldo para Google y otros financiadores; arrancar el piloto |

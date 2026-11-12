@@ -21,6 +21,7 @@ const { textoClasesParaTutor, anonimizar, NOMBRES_DEMO } = require('./clase');
 const { cursoLegible } = require('./instruccion');
 const INTENCIONES = require('./tutor24-intenciones.json');
 const ESTUDIANTE = require('./estudiante-demo.json');
+const IA = require('./nombres-ia');
 
 const MAX_FRAGMENTO = 3000;
 const MAX_PREGUNTA = 500;
@@ -114,9 +115,9 @@ function datosDelCurso(curso, ahora = Date.now()) {
   };
 }
 const nombreMateria = (est, m) => est?.materias?.[m]?.corto || est?.materias?.[m]?.nombre || m;
-/** El profe IA de cada materia ('la_profe' Taji / 'el_profe' Jochi). */
+/** El profe IA de cada materia ('la_profe' / 'el_profe'): en los datos va "el profe {IA_VARON}". */
 function profeDeMateria(est, m) {
-  return /jochi/i.test(est?.materias?.[m]?.profe || '') ? 'el_profe' : 'la_profe';
+  return /IA_VARON|\bel profe\b/i.test(est?.materias?.[m]?.profe || '') ? 'el_profe' : 'la_profe';
 }
 
 function clasesDelDia(est, fecha) {
@@ -373,11 +374,11 @@ ${[f.materia && `Materia: ${nombreMateria(est, f.materia)}`, f.tema && `Unidad d
   return partes.join('\n\n');
 }
 
-const NOMBRES_PROFES = { la_profe: 'la profe Taji', el_profe: 'el profe Jochi' };
-
-/** Instrucción de sistema del tutor por texto. */
-function instruccionTutor({ curso, profe = 'la_profe' } = {}) {
-  const yo = NOMBRES_PROFES[profe] || NOMBRES_PROFES.la_profe;
+/** Instrucción de sistema del tutor por texto. `ia`: nombres de los profes IA (EDU.16b, validados). */
+function instruccionTutor({ curso, profe = 'la_profe', ia } = {}) {
+  const n = IA.nombresIA(ia);
+  const yo = IA.tituloDe(profe === 'el_profe' ? 'el_profe' : 'la_profe', n);
+  const otro = IA.tituloDe(profe === 'el_profe' ? 'la_profe' : 'el_profe', n);
   return `Sos ${yo}, una tutora o tutor de inteligencia artificial de la app educativa ÑANDÉ (Santa Cruz, Bolivia).
 Estás "en el celular del alumno" a cualquier hora, todos los días, para acompañarlo en su vida escolar.
 Si hablás de cuándo estás disponible, decí "a cualquier hora" (nunca "24/7"). Hablás con un alumno o
@@ -389,7 +390,7 @@ Reglas que no se rompen:
 2. Usá SOLO lo que está en "Lo que sabés de su vida escolar". Si no está, decí con sinceridad que no lo sabés y
    que le pregunte a {PROFE}. Nunca inventes tareas, fechas, páginas, avisos ni lo que dijo el profe.
 3. Al profe de carne y hueso del curso nombralo SIEMPRE exactamente así: {PROFE} (es un marcador; se cambia solo).
-   A vos y al otro profe IA ("la profe Taji", "el profe Jochi") sí los podés nombrar.
+   A vos (${yo}) y al otro profe IA (${otro}) sí los podés nombrar. Solo si te preguntan quién sos o cómo te llamás, decí "Soy ${yo}"; si no, no te presentes.
 4. TAREAS: guiás, no la hacés. Escalera, de a UN peldaño por mensaje, mirando el historial para saber en cuál van:
    1.º una pregunta que lo haga pensar; 2.º una pista concreta; 3.º un ejemplo PARECIDO resuelto (con otros datos,
    nunca uno de su tarea). Si te pide la respuesta, decile con cariño que no se la vas a dar y dale el peldaño que sigue.
@@ -430,15 +431,15 @@ function limpiarPedazo(t, curso) {
   return anonimizar(String(t || ''), NOMBRES_DEMO[curso] || []).replace(/\{\s*profe\s*\}/gi, '{PROFE}');
 }
 
-/** Bloque compacto para la voz (Taji / Jochi por la Live API): sin el pedazo largo de texto. */
-function contextoParaVoz(c) {
+/** Bloque compacto para la voz (los profes IA por la Live API): sin el pedazo largo de texto. */
+function contextoParaVoz(c, ia) {
   const fr = c.fragmento && c.fragmento.texto ? { ...c.fragmento, texto: c.fragmento.texto.slice(0, 1500) } : c.fragmento;
   return `# Lo que sabés de su vida escolar (modo tutor a cualquier hora)
 
 Usalo si pregunta qué tiene para mañana, qué llevar, qué decir en casa, qué dijo su profe o una parte del texto.
 Al profe de carne y hueso decile "tu profe" (no sabés su nombre). Si algo no está acá, no lo inventes.
 
-${armarContexto({ ...c, fragmento: fr })}`.replaceAll('{PROFE}', 'tu profe');
+${IA.conNombres(armarContexto({ ...c, fragmento: fr }), IA.nombresIA(ia))}`.replaceAll('{PROFE}', 'tu profe');
 }
 
 module.exports = {
@@ -459,5 +460,4 @@ module.exports = {
   contextoParaVoz,
   clasesDelDia,
   habil,
-  NOMBRES_PROFES,
 };

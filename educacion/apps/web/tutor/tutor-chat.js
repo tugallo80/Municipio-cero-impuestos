@@ -18,14 +18,16 @@ import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebas
 import { getFunctions, httpsCallable } from 'firebase/functions'
 import { entrarDemo, esDemo } from '../comun/demo.js'
 import { respuestaEjemplo, intencion } from './ejemplos.js'
+import { nombresIA, nombreIA, tituloIA, conNombresIA } from '../comun/nombres-ia.js'
 
 const DOMINIO_CUENTAS = 'alumnos.nande-educacion.local'
 const ESPERA_DEMO_MS = 3000
 const ESPERA_MAX_MS = 30000
 const CLAVE_CHARLA = 'nande-tutor-charla'
 const PROFES = {
-  la_profe: { nombre: 'la profe Taji', corto: 'Taji', color: '#FBBF24', emoji: '🌸' },
-  el_profe: { nombre: 'el profe Jochi', corto: 'Jochi', color: '#8B5CF6', emoji: '🌿' },
+  // EDU.16b: los nombres (temporales de la demo) salen de nombres-ia.js: configurables por link.
+  la_profe: { get nombre() { return tituloIA('la_profe') }, get corto() { return nombreIA('la_profe') }, color: '#FBBF24', emoji: '🌸' },
+  el_profe: { get nombre() { return tituloIA('el_profe') }, get corto() { return nombreIA('el_profe') }, color: '#8B5CF6', emoji: '🌿' },
 }
 // Los 4 primeros son los de la presentación (pedido de la MAESTRA): se muestra sin tipear.
 const SUGERENCIAS = [
@@ -68,7 +70,7 @@ function apodoProfe() {
     return x ? (/^profe\b/i.test(x) ? `el ${x}` : x) : 'tu profe'
   } catch { return 'tu profe' }
 }
-const conProfe = (t) => String(t || '').replace(/\{\s*profe\s*\}/gi, apodoProfe())
+const conProfe = (t) => conNombresIA(String(t || '').replace(/\{\s*profe\s*\}/gi, apodoProfe()))
 /** Texto del tutor → HTML seguro: **negrita**, *cursiva*, viñetas "• " y párrafos. */
 function formato(t) {
   return esc(conProfe(t))
@@ -245,7 +247,7 @@ function montar(el, opciones = {}) {
     ocupado = true
     const historial = mensajes.filter((m) => !m.pensando && !m.bienvenida).slice(-8).map((m) => ({ rol: m.rol, texto: conProfe(m.texto).slice(0, 600) }))
     mensajes.push({ rol: 'alumno', texto: q })
-    if (!profeElegido && foco.materia && E()?.materias?.[foco.materia]) profe = /jochi/i.test(E().materias[foco.materia].profeIA || E().materias[foco.materia].profe || '') ? 'el_profe' : 'la_profe'
+    if (!profeElegido && foco.materia && E()?.materias?.[foco.materia]) profe = /IA_VARON|\bel profe\b/i.test(E().materias[foco.materia].profeIA || E().materias[foco.materia].profe || '') ? 'el_profe' : 'la_profe'
     const resp = { rol: 'tutor', texto: '', pensando: true }
     mensajes.push(resp)
     pintarMensajes(); pintarCabecera()
@@ -269,7 +271,7 @@ function montar(el, opciones = {}) {
     const reloj = cuenta.demo ? setTimeout(() => { if (!llegoAlgo) ponerEjemplo('tardó más de 3 s') }, ESPERA_DEMO_MS) : null
     const reemplazar = (txt) => { Object.assign(resp, { texto: txt, pensando: false, ejemplo: false }) }
     try {
-      const datos = { pregunta: q, foco: focoParaServidor(), historial, profe: profeElegido ? profe : null }
+      const datos = { pregunta: q, foco: focoParaServidor(), historial, profe: profeElegido ? profe : null, ia: nombresIA() }
       let final
       if (typeof fnTutor.stream === 'function') {
         const { stream, data } = await fnTutor.stream(datos)

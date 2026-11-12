@@ -48,6 +48,7 @@
   .hecho .grande { font-size: 56px; }
   .materia-ico { width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; flex: none; }
 </style>
+<script src="nombres-ia.js?v=edu16b-1"></script>
 <script src="salida.js?v=edu17b-1"></script>
 </head>
 <body>
@@ -151,7 +152,7 @@ function ayudaHtml() {
   return `<div class="peldanos" id="peldanos">${(esc3 || []).slice(0, R.peldano).map((x, k) => `<div class="peldano"><span>${PELDANOS[k][0]}</span><span><b>${PELDANOS[k][1]}:</b> ${esc(x.replace(/^Ejemplo resuelto: /, ''))}</span></div>`).join('')}</div>
     <div class="ayuda-fila">
       ${esc3 && R.peldano < 3 ? `<button class="btn sec2" onclick="subir()">${['🤔 No entiendo', '💡 Darme una pista', '📝 Mostrarme un ejemplo'][R.peldano]}</button>` : ''}
-      ${window.ProfesVoz ? `<button class="btn sec2" onclick="hablar()">🎙️ Preguntarle a ${profeDe() === 'la_profe' ? 'la profe Taji' : 'el profe Jochi'}</button>` : ''}
+      ${window.ProfesVoz ? `<button class="btn sec2" onclick="hablar()">🎙️ Preguntarle a ${window.NandeIA ? NandeIA.titulo(profeDe()) : 'tu profe IA'}</button>` : ''}
       <a class="btn sec2" href="/maqueta/mi-tutor/?tarea=${encodeURIComponent(T.id)}">🧑‍🏫 Preguntale a tu tutor</a>
     </div>
     ${!esc3 && !window.ProfesVoz ? '<div class="ter" style="margin-top:10px">Si te trabás, escribile a tu tutor o pedile ayuda al profe en la clase 🎮.</div>' : ''}`;

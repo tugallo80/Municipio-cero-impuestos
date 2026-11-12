@@ -5,6 +5,7 @@
 //  generado desde tools/datos/demo-piloto.json): nunca inventan algo que la app no muestre.
 // ══════════════════════════════════════════════════
 import INTENCIONES from '@tutor/tutor24-intenciones.json'
+import { tituloIA } from '../comun/nombres-ia.js'
 
 const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado']
 const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
@@ -73,7 +74,7 @@ const corto = (D, m) => D.materias[m]?.corto || D.materias[m]?.nombre || m
 export function respuestaEjemplo(pregunta, foco = {}, E, op = {}) {
   const hoy = op.hoy || iso(new Date())
   const D = datos(E)
-  const yo = op.profe === 'el_profe' ? 'el profe Jochi' : 'la profe Taji'
+  const yo = tituloIA(op.profe === 'el_profe' ? 'el_profe' : 'la_profe')
   const tipo = intencion(pregunta)
   const prox = proximoDia(hoy)
   const fut = (xs) => xs.filter((x) => (x.fecha || '') >= hoy).sort((a, b) => (a.fecha < b.fecha ? -1 : 1))
