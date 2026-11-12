@@ -27,12 +27,13 @@ const PROFES = {
   la_profe: { nombre: 'la profe Taji', corto: 'Taji', color: '#FBBF24', emoji: '🌸' },
   el_profe: { nombre: 'el profe Jochi', corto: 'Jochi', color: '#8B5CF6', emoji: '🌿' },
 }
+// Los 4 primeros son los de la presentación (pedido de la MAESTRA): se muestra sin tipear.
 const SUGERENCIAS = [
+  '¿Qué dijo el profe hoy?',
   '¿Qué tengo para mañana?',
-  '¿Qué tengo que llevar?',
-  '¿Qué tenía que decir en casa?',
-  '¿Qué dijo el profe hoy sobre el present continuous?',
+  '¿Qué llevo?',
   'No entiendo la pág. 58 de Inglés',
+  '¿Qué tenía que decir en casa?',
   'Ayudame con mi tarea de Inglés',
 ]
 const diag = /[?&]diag=1/.test(location.search)
@@ -202,9 +203,9 @@ function montar(el, opciones = {}) {
     const est = E()
     const th = est?.temasHoy || {}
     const xs = [...SUGERENCIAS]
-    if (foco.pagina && foco.materia) xs.unshift(`No entiendo esta parte de la pág. ${foco.pagina}`)
+    if (foco.pagina && foco.materia) xs[3] = 'No entiendo esta página'
+    else if (foco.materia && th[foco.materia] && foco.materia !== 'ing') xs[3] = `No entiendo la pág. ${th[foco.materia].pagina} de ${est.materias[foco.materia]?.corto || 'esta materia'}`
     if (foco.tarea && typeof foco.tarea === 'object' && foco.tarea.titulo) xs.unshift(`Ayudame con "${foco.tarea.titulo}"`)
-    if (foco.materia && th[foco.materia] && foco.materia !== 'ing') xs.splice(3, 2, `¿Qué dijo el profe sobre ${th[foco.materia].enCurso}?`, `No entiendo la pág. ${th[foco.materia].pagina} de ${est.materias[foco.materia]?.corto || 'esta materia'}`)
     return [...new Set(xs)].slice(0, 6)
   }
   function pintarChips() {
@@ -356,6 +357,7 @@ function montar(el, opciones = {}) {
     preguntar,
     pintarCabecera,
     desmontar() { montados.delete(yo); el.innerHTML = '' },
+    cerrar() { yo.desmontar() },
   }
   montados.add(yo)
   actualizar(opciones)

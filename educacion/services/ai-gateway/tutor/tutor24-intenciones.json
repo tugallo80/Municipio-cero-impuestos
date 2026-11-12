@@ -43,6 +43,7 @@
       "\\bpag(ina)?\\.? ?\\d+",
       "\\b(texto|libro|lectura)\\b",
       "no entiendo (esta|esa|la) parte",
+      "\\b(esta|esa) (pagina|hoja|unidad)\\b",
       "que significa|que quiere decir"
     ],
     "manana": [

@@ -18,6 +18,10 @@ test('reconoce los 6 casos y las señales de riesgo', () => {
   assert.equal(T24.intencion('en mi casa me pegan'), 'riesgo');
   assert.equal(T24.intencion('ya no quiero vivir'), 'riesgo');
   assert.equal(T24.intencion('hola'), 'otro');
+  // Botones de la presentación
+  assert.equal(T24.intencion('¿Qué dijo el profe hoy?'), 'clase');
+  assert.equal(T24.intencion('¿Qué llevo?'), 'llevar');
+  assert.equal(T24.intencion('No entiendo esta página'), 'texto');
 });
 
 test('la respuesta de riesgo deriva a un adulto, dice que es IA y no usa nombres', () => {
