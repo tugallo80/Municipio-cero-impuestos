@@ -65,6 +65,14 @@
   .deporte-acc .bc.b3 { width: 52px; height: 52px; right: 18px; bottom: 108px; }
   .deporte-acc .bc.b4 { width: 44px; height: 44px; right: 138px; bottom: 112px; font-size: 18px; background: rgba(253,224,71,.25); border-color: rgba(253,224,71,.9); }
   body.deporte .joy { opacity: .75; }
+  /* EDU.06e: teclas en los botones cuando hay teclado */
+  kbd.tk { display: none; font: 700 10px/14px Inter, sans-serif; background: rgba(0,0,0,.6); color: #fff; border: 1px solid rgba(255,255,255,.55); border-radius: 4px; padding: 0 4px; margin-left: 8px; vertical-align: middle; }
+  body.con-teclado kbd.tk { display: inline-block; }
+  .deporte-acc .bc kbd.tk { position: absolute; top: -6px; right: -6px; margin: 0; }
+  .teclas-lista { display: grid; grid-template-columns: auto 1fr; gap: 8px 14px; align-items: center; font-size: 14px; margin: 8px 0 14px; }
+  .teclas-lista kbd { font: 700 12px Inter, sans-serif; background: #F1F5F9; color: #0F172A; border: 1px solid #CBD5E1; border-bottom-width: 3px; border-radius: 6px; padding: 3px 7px; white-space: nowrap; }
+  .mira-centro { position: fixed; left: 50%; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; border: 2px solid rgba(255,255,255,.85); border-radius: 50%; z-index: 9; pointer-events: none; display: none; box-shadow: 0 0 4px rgba(0,0,0,.6); }
+  body.mirando .mira-centro { display: block; }
   body.dibujando .acciones, body.dibujando .ayuda, body.dibujando .aviso-ayuda, body.dibujando .cartel { display: none !important; }
   .aviso-ayuda b { font-family: 'Space Grotesk'; }
   .aviso-ayuda .bj { min-height: 40px; padding: 0 12px; font-size: 14px; }
@@ -1125,8 +1133,19 @@ function abrirAyuda() {
     <button class="mision" onclick="ayudar()"><span style="font-size:22px">🐢</span><span><b>Tortuga Verde 9</b><small>pide ayuda con “Tablas en carrera”</small></span><span class="derecha">🤝</span></button>
     ${yaInstalada() ? '' : `<div class="tit">Jugar como app</div>
     <button class="mision" onclick="instalarApp()"><span style="font-size:22px">📲</span><span><b>Instalar en el celular</b><small>Se abre a pantalla completa y acostada</small></span></button>`}
+    <div class="tit">Jugar en la compu</div>
+    <button class="mision" onclick="verTeclas()"><span style="font-size:22px">⌨️</span><span><b>Teclado y mouse</b><small>Caminar, girar la cámara, saltar, usar</small></span></button>
     <div class="tit">¿Algo no está bien?</div>
     <button class="mision" style="border-color:rgba(252,165,165,.35)" onclick="avisarProfe()"><span style="font-size:22px">🚩</span><span><b>Avisar a la profe</b><small>Llega solo a tu profe, en secreto</small></span></button>`);
+}
+// ---------------- Teclado y mouse (EDU.06e) ----------------
+function verTeclas() {
+  const T = [['W A S D', 'Caminar'], ['↑ ↓', 'Caminar adelante / atrás'], ['← →', 'Girar la cámara'], ['Clic derecho + arrastrar', 'Girar la cámara (y mirar arriba o abajo)'],
+    ['M', 'Modo mirar: el mouse gira libre (Esc lo suelta)'], ['Rueda del mouse', 'Acercar / alejar'], ['Shift', 'Correr'], ['Espacio', 'Saltar'],
+    ['E', 'Usar: entrar, sentarse, patear… (lo que dice el cartel)'], ['Clic en el mundo', 'Ir caminando hasta ahí'], ['J · K · L · Shift', 'En la cancha: patear/tirar · pasar · quitar/robar · regate/finta'], ['P', 'En la cancha: empezar partido']];
+  abrir(cab('⌨️', 'rgba(16,185,129,.2)', 'Teclado y mouse', 'Para jugar en la compu', 'abrirAyuda()') +
+    `<div class="teclas-lista">${T.map(([k, t]) => `<span>${k.split(' + ').map(x => `<kbd>${x}</kbd>`).join(' + ')}</span><span>${t}</span>`).join('')}</div>` +
+    `<p style="font-size:13px;opacity:.8">En el celular o la tablet: el círculo para caminar, deslizá a la derecha para mirar y pellizcá para acercar.</p>`);
 }
 // ---------------- Instalar la app (EDU.06a) ----------------
 // Instalada y abierta desde el ícono, arranca a pantalla completa y acostada (manifest), sin el
@@ -2374,10 +2393,18 @@ function iniciar(THREE) {
   document.body.appendChild(hudDep);
   const BOTONES = { futbol: [['pasar', '🤝', 'Pasar'], ['tirar', '⚽', 'Patear'], ['quitar', '🦶', 'Quitar'], ['regate', '💨', 'Regate']], basquet: [['pasar', '🤝', 'Pasar'], ['tirar', '🏀', 'Tirar'], ['quitar', '✋', 'Robar'], ['regate', '💨', 'Finta']] };
   let enCancha = null, partido = null, zoomAntes = null;
+  // EDU.06e: en la cancha, teclas para los botones (J patear/tirar · K pasar · L quitar/robar · Shift regate/finta · P partido)
+  const TECLA_DEP = { tirar: 'J', pasar: 'K', quitar: 'L', regate: 'Shift' };
+  addEventListener('keydown', e => {
+    if (!enCancha || window.__pausa || e.repeat || (e.target.closest && e.target.closest('input, textarea'))) return;
+    const k = { j: 'tirar', k: 'pasar', l: 'quitar', shift: 'regate', p: 'partido' }[e.key.toLowerCase()];
+    if (!k || (k === 'regate' && !partido)) return;   // sin partido, Shift solo corre
+    const b = uiDep.querySelector(`[data-dep="${k}"]`); if (b) { b.click(); b.style.transform = 'scale(.9)'; setTimeout(() => { b.style.transform = ''; }, 120); }
+  });
   function pintarBotones(dep) {
     const lugar = { tirar: 'grande', pasar: 'b1', quitar: 'b2', regate: 'b3' };   // en arco alrededor del botón grande
-    uiDep.innerHTML = (partido ? '' : `<button class="bc b4" data-dep="partido" aria-label="Empezar partido">▶<small>Partido</small></button>`) +
-      BOTONES[dep].map(([k, ic, n]) => `<button class="bc ${lugar[k]}" data-dep="${k}" aria-label="${n}">${ic}<small>${n}</small></button>`).join('');
+    uiDep.innerHTML = (partido ? '' : `<button class="bc b4" data-dep="partido" aria-label="Empezar partido">▶<small>Partido</small><kbd class="tk">P</kbd></button>`) +
+      BOTONES[dep].map(([k, ic, n]) => `<button class="bc ${lugar[k]}" data-dep="${k}" aria-label="${n}">${ic}<small>${n}</small><kbd class="tk">${TECLA_DEP[k]}</kbd></button>`).join('');
   }
   uiDep.addEventListener('click', e => {
     const b = e.target.closest('[data-dep]'); if (!b || !enCancha) return;
@@ -2819,9 +2846,31 @@ function iniciar(THREE) {
   joy.addEventListener('pointermove', e => { if (e.pointerId === joyId) moverJoy(e); });
   const soltar = () => { joyId = null; dir.x = dir.z = 0; perilla.style.transform = ''; };
   joy.addEventListener('pointerup', soltar); joy.addEventListener('pointercancel', soltar);
-  addEventListener('keydown', e => { teclas[e.key.toLowerCase()] = true; ocultarAyuda(); });
+  // EDU.06e — Controles de compu (convenciones de los juegos de mundo abierto):
+  // WASD / ↑↓ caminar · ← → girar la cámara · clic derecho + arrastrar girar · M modo mirar (pointer lock)
+  // rueda zoom · Shift correr · Espacio saltar · E usar · clic izquierdo "tocar para ir" · en la cancha J K L Shift P
+  const esTexto = e => e.target && e.target.closest && e.target.closest('input, textarea, select, [contenteditable]');
+  const conMouse = matchMedia('(pointer: fine)').matches;
+  if (conMouse) document.body.classList.add('con-teclado');
+  addEventListener('keydown', e => {
+    if (esTexto(e)) return;
+    const k = e.key.toLowerCase(); teclas[k] = true;
+    if (!document.body.classList.contains('con-teclado')) document.body.classList.add('con-teclado');
+    if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault();   // que la página no se mueva
+    ocultarAyuda();
+  });
   addEventListener('keyup', e => { teclas[e.key.toLowerCase()] = false; });
-  function ocultarAyuda() { document.getElementById('ayuda').style.opacity = 0; }
+  addEventListener('blur', () => { for (const k in teclas) teclas[k] = false; });   // al cambiar de ventana no queda caminando
+  let ayudaPCvista = false; try { ayudaPCvista = localStorage.getItem('alumno-ayuda-pc') === '1'; } catch (_) {}
+  if (conMouse) {
+    const a = document.getElementById('ayuda');
+    if (ayudaPCvista) a.style.display = 'none';
+    else a.innerHTML = '<b>WASD</b> caminar · <b>clic derecho</b> girar · <b>rueda</b> zoom · <b>E</b> usar · <b>Espacio</b> saltar · <b>Shift</b> correr';
+  }
+  function ocultarAyuda() {
+    document.getElementById('ayuda').style.opacity = 0;
+    if (conMouse && !ayudaPCvista) { ayudaPCvista = true; try { localStorage.setItem('alumno-ayuda-pc', '1'); } catch (_) {} }
+  }
 
   // Tocar cosas del mundo (toque corto) y girar la cámara (arrastrar con el pulgar derecho).
   // Cada dedo se sigue por separado: el izquierdo puede caminar con el círculo mientras
@@ -2853,7 +2902,11 @@ function iniciar(THREE) {
   const distDedos = () => { const [a, b] = [...dedos.values()]; return Math.hypot(a.x - b.x, a.y - b.y) || 1; };
   canvas.addEventListener('pointerdown', e => {
     if (enfoque) { pizarraPuntero(e, 'down'); return; }   // dibujando en la pizarra
-    dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: e.clientX > innerWidth / 2 });
+    if (document.pointerLockElement === canvas) return;   // en modo mirar el mouse solo gira
+    try { window.focus(); } catch (_) {}   // dentro del iframe de la presentación, para que lleguen las teclas
+    const derecho = e.pointerType === 'mouse' && e.button === 2;
+    if (e.pointerType === 'mouse' && e.button === 1) return;
+    dedos.set(e.pointerId, { x: e.clientX, y: e.clientY, x0: e.clientX, y0: e.clientY, t0: performance.now(), mirar: derecho || e.clientX > innerWidth / 2, derecho });
     try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
     // Dos dedos sobre el mundo (el círculo de caminar no cuenta: es otro elemento) = pellizco para zoom
     if (dedos.size === 2) { pellizco = { d0: distDedos(), z0: CAM.zoomObj }; dedos.forEach(d => { d.pellizco = true; }); ocultarPistaMirar(); }
@@ -2864,7 +2917,7 @@ function iniciar(THREE) {
     const dx = e.clientX - d.x, dy = e.clientY - d.y; d.x = e.clientX; d.y = e.clientY;
     if (pellizco && dedos.size >= 2) { if (!window.__pausa) zoomA(pellizco.z0 * pellizco.d0 / distDedos()); return; }
     if (d.pellizco || !d.mirar || window.__pausa) return;
-    if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 10) return;   // todavía puede ser un toque
+    if (!d.derecho && Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 10) return;   // todavía puede ser un toque
     CAM.yawObj -= dx * SENS;
     CAM.pitchObj = Math.min(CAM.max, Math.max(CAM.min, CAM.pitchObj + dy * SENS * .7));
     ocultarPistaMirar();
@@ -2872,7 +2925,7 @@ function iniciar(THREE) {
   const soltarDedo = e => {
     if (enfoque) { pizarraPuntero(e, 'up'); return; }
     const d = dedos.get(e.pointerId); dedos.delete(e.pointerId); if (dedos.size < 2) pellizco = null;
-    if (!d || e.type === 'pointercancel' || d.pellizco) return;
+    if (!d || e.type === 'pointercancel' || d.pellizco || d.derecho) return;
     const corto = Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 12 && performance.now() - d.t0 < 400;
     if (!corto) return;
     if (piloto) { pararPiloto(); return; }   // tocar durante la caminata la cancela
@@ -2887,6 +2940,30 @@ function iniciar(THREE) {
   canvas.addEventListener('wheel', e => { e.preventDefault(); zoomA(CAM.zoomObj * Math.exp(e.deltaY * .0015)); }, { passive: false });
   addEventListener('keydown', e => { if (e.key === '+' || e.key === '=') zoomA(CAM.zoomObj / 1.15); if (e.key === '-' || e.key === '_') zoomA(CAM.zoomObj * 1.15); });
   canvas.addEventListener('pointercancel', soltarDedo);
+  canvas.addEventListener('contextmenu', e => e.preventDefault());   // el clic derecho es para girar
+  // Modo mirar (M): el mouse queda capturado y gira libre; Esc lo suelta (lo hace el navegador)
+  const miraCentro = document.createElement('div'); miraCentro.className = 'mira-centro'; document.body.appendChild(miraCentro);
+  function modoMirar(on) {
+    if (on && document.pointerLockElement !== canvas) { try { const r = canvas.requestPointerLock(); if (r && r.catch) r.catch(() => toast('Este navegador no deja capturar el mouse: usá clic derecho para girar')); } catch (_) {} }
+    else if (!on && document.pointerLockElement) document.exitPointerLock();
+  }
+  document.addEventListener('pointerlockchange', () => {
+    const on = document.pointerLockElement === canvas; document.body.classList.toggle('mirando', on);
+    if (on) toast('🖱️ Modo mirar: mové el mouse para girar · Esc para salir', 2600);
+  });
+  document.addEventListener('mousemove', e => {
+    if (document.pointerLockElement !== canvas || window.__pausa) return;
+    CAM.yawObj -= e.movementX * SENS * .6;
+    CAM.pitchObj = Math.min(CAM.max, Math.max(CAM.min, CAM.pitchObj + e.movementY * SENS * .45));
+  });
+  window.__modoMirar = modoMirar;
+  addEventListener('keydown', e => {
+    if (esTexto(e) || e.repeat) return;
+    const k = e.key.toLowerCase();
+    if (k === 'm' && !window.__pausa) modoMirar(document.pointerLockElement !== canvas);
+    if (k === ' ' && !window.__pausa) saltar();
+    if (k === 'e' && !window.__pausa) { if (usando) bajarse(); else if (cercano) entrarEn(cercano); }
+  });
   // Pista la primera vez
   const pistaMirar = document.getElementById('pista-mirar');
   let pistaVista = false; try { pistaVista = localStorage.getItem('alumno-pista-mirar') === '1'; } catch (_) {}
@@ -2907,7 +2984,7 @@ function iniciar(THREE) {
   btnMas.onclick = () => { if (cerca.length < 2) return; const i = cerca.indexOf(cercano); elegidoCartel = cerca[(i + 1) % cerca.length]; window.sonar('clic'); };
   const entrarEn = p => { pararPiloto(); window.sonar('pop'); p.accion(); };
   btnEntrar.onclick = () => cercano && entrarEn(cercano);
-  addEventListener('keydown', e => { if ((e.key === 'Enter' || e.key === ' ') && cercano && !window.__pausa && !e.target.closest('input,button,textarea')) { e.preventDefault(); entrarEn(cercano); } });
+  addEventListener('keydown', e => { if (e.key === 'Enter' && cercano && !window.__pausa && !e.target.closest('input,button,textarea')) { e.preventDefault(); entrarEn(cercano); } });
   // marca en el piso adonde va caminando
   const marca = new THREE.Mesh(new THREE.RingGeometry(.45, .7, 28), new THREE.MeshBasicMaterial({ color: '#10B981', transparent: true, opacity: .9, depthWrite: false }));
   marca.rotation.x = -Math.PI / 2; marca.position.y = .08; marca.visible = false; escena.add(marca);
@@ -2960,15 +3037,17 @@ function iniciar(THREE) {
   let adentro = 0;
   const punto = new THREE.Vector3();
   const choca = (x, z) => { punto.set(x, 1, z); return solidos.some(b => b.distanceToPoint(punto) < .35) || (x < 200 && (Math.abs(x) > LIM || Math.abs(z) > LIM)); };   // (las salas por dentro están en x ≥ 300)
+  let vY = 0;
+  function saltar() { if (usando || enfoque || yo.position.y > 0.01) return; vY = 7; window.sonar && window.sonar('pop'); }
+  window.__saltando = () => yo.position.y;
   function bucle() {
     const dt = Math.min(reloj.getDelta(), .05), t = reloj.elapsedTime;
     let mx = dir.x, mz = dir.z;
-    if (teclas['arrowleft'] || teclas['a']) mx -= 1;
-    if (teclas['arrowright'] || teclas['d']) mx += 1;
+    if (teclas['a']) mx -= 1;
+    if (teclas['d']) mx += 1;
     if (teclas['arrowup'] || teclas['w']) mz -= 1;
     if (teclas['arrowdown'] || teclas['s']) mz += 1;
-    if (teclas['q']) CAM.yawObj += dt * 2;
-    if (teclas['e']) CAM.yawObj -= dt * 2;
+    if (!window.__pausa) { if (teclas['arrowleft']) CAM.yawObj += dt * 2.2; if (teclas['arrowright']) CAM.yawObj -= dt * 2.2; }
     // caminar relativo a la cámara: arriba en el círculo = hacia adonde mira la cámara
     { const c = Math.cos(CAM.yaw), sn = Math.sin(CAM.yaw); const wx = c * mx + sn * mz, wz = -sn * mx + c * mz; mx = wx; mz = wz; }
     if (piloto && (Math.hypot(mx, mz) > .1 || window.__pausa)) pararPiloto();   // el círculo manda: se cancela
@@ -2992,7 +3071,7 @@ function iniciar(THREE) {
     }
     const largo = Math.hypot(mx, mz), moviendo = largo > .1 && !window.__pausa;
     if (moviendo) {
-      const v = 6 * Math.min(1, largo);
+      const v = (teclas['shift'] && !usando ? 10 : 6) * Math.min(1, largo);   // Shift: correr
       const nx = yo.position.x + mx / largo * v * dt, nz = yo.position.z + mz / largo * v * dt;
       if (!choca(nx, yo.position.z)) yo.position.x = nx;
       if (!choca(yo.position.x, nz)) yo.position.z = nz;
@@ -3000,6 +3079,8 @@ function iniciar(THREE) {
       yo.rotation.y += dA * Math.min(1, dt * 12);
     }
     if (!usando) animar(YOP, moviendo, dt, t);
+    // salto (Espacio): sube y baja con gravedad; los choques se miden igual que en el piso
+    if (vY || yo.position.y > 0) { vY -= 22 * dt; yo.position.y = Math.max(0, yo.position.y + vY * dt); if (yo.position.y === 0) vY = 0; }
     for (const f of alCuadro) f(dt, t);   // zonas y compañeros (EDU.06b)
 
     // compañeros caminando
@@ -3022,7 +3103,7 @@ function iniciar(THREE) {
     btnMas.classList.toggle('ver', cerca.length > 1);
     const verCartel = cercano && !window.__pausa && !piloto && !enfoque && !usando;
     if (verCartel) {
-      if (cartelDe !== cercano) { btnEntrar.textContent = (cercano.bloq && cercano.bloq() ? '🔒 ' : '') + cercano.texto; cartelDe = cercano; cartelPuerta.classList.add('ver'); }
+      if (cartelDe !== cercano) { btnEntrar.textContent = (cercano.bloq && cercano.bloq() ? '🔒 ' : '') + cercano.texto; { const kb = document.createElement('kbd'); kb.className = 'tk'; kb.textContent = 'E'; btnEntrar.appendChild(kb); } cartelDe = cercano; cartelPuerta.classList.add('ver'); }
       const ad = window.__adentro || 0;   // a la altura de los ojos el cartel va más bajo, para que no lo tape la barra de arriba
       proy.set(cercano.pos.x, (cercano.alto || 3) * (1 - ad * .45), cercano.pos.z).project(camara);
       const W = innerWidth, H = innerHeight, cw = cartelPuerta.offsetWidth, ch = cartelPuerta.offsetHeight;
