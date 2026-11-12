@@ -32,6 +32,9 @@
   .perfil.alumno { background: linear-gradient(135deg, #0b2a20, #111111 60%); border-color: rgba(16,185,129,.4); }
   .pie { margin-top: auto; padding-top: 30px; }
 </style>
+<script src="salida.js?v=edu17b-1"></script>
+<script>// dentro de la presentación nunca se queda en el selector: vuelve a la app del alumno
+if (window.NandeSalida && NandeSalida.enMarco) location.replace(NandeSalida.volverAlumno());</script>
 </head>
 <body>
 <div class="entrada">
@@ -49,7 +52,7 @@
       <div><b>Alumno</b><small>Hoy · agenda · mis textos · tareas · tutor · mundo</small></div>
       <span class="flecha">›</span>
     </a>
-    <a class="perfil" href="alumno/" style="padding-top:10px;padding-bottom:10px">
+    <a class="perfil" href="alumno/?desde=selector" style="padding-top:10px;padding-bottom:10px">
       <div class="ico-caja">🌎</div>
       <div><b>Ir directo al mundo</b><small>El juego 3D del colegio (demo rápida)</small></div>
       <span class="flecha">›</span>
@@ -72,8 +75,8 @@
   </div>
 
   <div class="pie">
-    <a class="btn sec2 ancho" href="../../index.html">← Volver al Hub ÑANDÉ</a>
-    <p class="aviso-demo">Maqueta EDU.01b · colegio y nombres inventados · sin datos reales</p>
+    <a class="btn sec2 ancho" data-hub href="../../index.html">← Volver al Hub ÑANDÉ</a>
+    <p class="aviso-demo">Curso del piloto · alumnos ficticios</p>
   </div>
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>

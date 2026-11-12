@@ -68,7 +68,7 @@
     ['textos', '📖', 'Mis textos', '/maqueta/textos/'],
     ['tareas', '📋', 'Mis tareas', '/maqueta/tareas/'],
     ['tutor', '🧑‍🏫', 'Mi tutor', '/maqueta/mi-tutor/'],
-    ['mundo', '🌎', 'Mundo', '/maqueta/alumno/']
+    ['mundo', '🌎', 'Mundo', '/maqueta/alumno/?desde=app']
   ];
   const css = `
     .nav-est { position: fixed; z-index: 40; background: rgba(10,10,10,.97); backdrop-filter: blur(10px); display: flex; }

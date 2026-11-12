@@ -290,7 +290,7 @@ async function guardarClase(curso, registro) {
     informe: { ...resto, contexto },
     transcripcion: transcripcion || '',
   });
-  if (informe.huboClase && (contexto.temas.length || contexto.tareas.length)) {
+  if (informe.huboClase && (contexto.temas.length || contexto.tareas.length || contexto.avisosCasa?.length || contexto.llevar?.length)) {
     await base()
       .ref(`edu/contexto_dia/${curso}/${ref.key}`)
       .set({ fecha: meta.fecha, materia: meta.materia, tema: meta.tema || '', contexto, creado: ahora, vence: ahora + VENCE.contexto });
@@ -345,7 +345,7 @@ async function obtenerClasesRecientes(curso, max = 3) {
   const arr = (v) => (Array.isArray(v) ? v : []);
   return Object.values(ctx)
     .filter((c) => (c.vence || 0) > ahora)
-    .map((c) => ({ ...c, contexto: { temas: arr(c.contexto?.temas), explicaciones: arr(c.contexto?.explicaciones), tareas: arr(c.contexto?.tareas), dudas: arr(c.contexto?.dudas) } }))
+    .map((c) => ({ ...c, contexto: { temas: arr(c.contexto?.temas), explicaciones: arr(c.contexto?.explicaciones), tareas: arr(c.contexto?.tareas), dudas: arr(c.contexto?.dudas), avisosCasa: arr(c.contexto?.avisosCasa), llevar: arr(c.contexto?.llevar) } }))
     .sort((a, b) => b.creado - a.creado)
     .slice(0, max);
 }

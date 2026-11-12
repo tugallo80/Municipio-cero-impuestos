@@ -139,3 +139,53 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
 - **Profe**: el alumno ve el **apodo** (`?profeApodo=` → `nande-profe-apodo`, ej. "el Profe …"); si no hay,
   el nombre formal (`?profe=` → `nande-profe`); si no hay nada, "tu profe".
 - **Alumno**: si la presentación guardó un apodo en `nande-apodo`, se usa en vez de "Jaguar Azul 7".
+
+## EDU.17b — Salidas sin caer en el selector (rama `sesion/pantalla-edu-17b`)
+
+Problema que encontró el dueño en la presentación: al salir del mundo (✕ / Salir) iba a "¿Quién sos?".
+
+- Nuevo `maqueta/salida.js` (en todas las páginas de la maqueta):
+  - la app del alumno recuerda su última página (`sessionStorage 'nande-volver-alumno'`);
+  - **✕ del mundo** → vuelve a esa página de la app (o a Hoy). Vuelve al selector **solo** si se
+    entró con "🌎 Ir directo al mundo" (`?desde=selector`) y no está dentro de la presentación;
+  - **dentro de la presentación (iframe)**: el "←" de Hoy y del panel del profe, padres y dirección
+    se oculta; si algo llega al selector, vuelve solo a la app del alumno;
+  - en la presentación o en modo demo se oculta "← Volver al Hub ÑANDÉ".
+- Mis tareas: "←" ahora vuelve a Hoy (es parte de la app).
+- Pie del selector: "Curso del piloto · alumnos ficticios".
+- Probado en 390×844, 844×390 y 1280×800: app → mundo → ✕ vuelve a la página de la app; selector →
+  mundo → ✕ vuelve al selector; dentro de un iframe en `/presentacion/`, el juego vuelve a Hoy, el
+  selector redirige a Hoy y ningún "←" lleva al selector.
+
+### EDU.17b — Mis textos como libro real (pedido del dueño)
+
+- **Libros de área (Inglés, Filosofía, Artes, Música, Valores): las páginas reales del PDF** en
+  imagen (`datos/textos-oficiales/2do-secundaria/paginas/<área>/NNN.webp`, traídas de `maestra-2`;
+  el build las copia a `/maqueta/textos/paginas/`). Se ve el libro tal cual, con sus dibujos y tablas.
+  Por qué: es fiel al texto que usa el profe y evita las columnas mezcladas de la extracción.
+- **Texto general (Lengua, Mate, Bio-Geo, Sociales)**: no hay PDF → el texto extraído, maquetado en
+  hojas (letra Literata, márgenes, título del tema arriba, número de página, portada del área).
+  A−/A+ vuelve a repartir el texto sin perder el lugar.
+- `maqueta/libro.js`: hojas con **vuelta de página en CSS 3D** (curvatura, luz y sombra) que sigue al
+  dedo o al mouse; tocar el borde, flechas del teclado y botones ‹ › chicos. **Doble página** si
+  entra a lo ancho (tablet acostada, PC), una en celular parado. Con "reducir movimiento" o equipo
+  lento: deslizamiento simple.
+- **📍 El curso va acá**: cinta verde en la primera hoja de esa unidad y botón 📍 para ir. **☰** lista
+  de unidades por trimestre. **🔎** buscador: salta a la hoja (en las páginas reales avisa "está en
+  esta página"; en el texto, la palabra queda resaltada). **Seguir leyendo** guarda la hoja.
+  **🌙** modo noche. **🧑‍🏫** "Preguntale a tu tutor sobre esta página" →
+  `/maqueta/mi-tutor/?materia=<área>&tema=<temaId>&pagina=<n>` (acordado con EDU.16).
+- `armar-textos.mjs` ahora guarda, en los libros de área, la hoja de inicio de cada unidad y la hoja
+  de cada párrafo (`hoja`, `hojaFin`, `ph`), para el buscador y la cinta.
+- Probado en 820×1180, 1180×820, 390×844 y 1280×800, y dentro del marco tablet de la presentación:
+  sin desbordes, ninguna hoja de texto cortada, sin errores.
+- **Pantalla completa** (botón ⛶): solo el libro, ocupando todo (usa la pantalla completa del equipo
+  si se puede). Un toque al centro muestra ✕, 📍, ‹ ›, 🌙 y el tema; se esconden solos a los 3 s.
+  Esc o ✕ vuelve.
+- **Más realismo**: tapa detrás de las hojas (color del área, un poco más grande, lomo al centro y
+  sombra sobre la mesa); canto de las hojas a cada lado, más grueso del lado con más páginas; sombra
+  hacia el lomo; textura sutil de papel; fondo de escritorio oscuro.
+- Celular acostado: mientras se lee se esconden el encabezado y la barra de abajo (la barra del libro
+  trae "←"), para que el libro abierto se vea más grande.
+- Probado en 820×1180, 1180×820, 844×390, 390×844, 1280×800 y 1920×1080, y en la presentación con
+  los 4 marcos (celular, horizontal, tablet, completa): sin desbordes ni errores.

@@ -21,6 +21,8 @@ const LIBROS = [
   ['mus', 'Educación Musical', 'educacion-musical.txt'],
   ['val', 'Valores, Espiritualidades y Religiones', 'valores-espiritualidad-religiones.txt'],
 ]
+// carpetas de las páginas reales en imagen (datos/textos-oficiales/2do-secundaria/paginas/<carpeta>/NNN.webp)
+const CARPETA = { ing: 'ingles', fil: 'filosofia', art: 'artes', mus: 'musica', val: 'valores' }
 const TRIM = { primer: 1, segundo: 2, tercer: 3 }
 const limpiarTitulo = (s) => s.replace(/\.{3,}\s*\d*\s*$/, '').replace(/\s+\d+\s*$/, '').replace(/\s+/g, ' ').trim()
 const norm = (s) => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9ñ ]+/g, ' ').replace(/\s+/g, ' ').trim()
@@ -74,10 +76,11 @@ for (const [id, nombre, archivo] of LIBROS) {
   const desfase = hoja >= 0 ? hoja - unidades[0].pagina : 0
   const temas = unidades.map((u, i) => {
     const desde = u.pagina + desfase, hasta = (unidades[i + 1] ? unidades[i + 1].pagina + desfase : paginas.length) - 1
-    const ps = []; for (let k = desde; k <= hasta && k < paginas.length; k++) ps.push(...parrafos(paginas[k]))
-    return { id: `${id}-${i + 1}`, titulo: u.titulo, trimestre: u.trimestre, pagina: u.pagina, subtemas: u.subtemas, parrafos: ps }
+    const ps = [], ph = []; for (let k = desde; k <= hasta && k < paginas.length; k++) { const pp = parrafos(paginas[k]); ps.push(...pp); pp.forEach(() => ph.push(k + 1)) }
+    // hoja = número de hoja del PDF (001 = portada), el de las imágenes de paginas/<carpeta>/NNN.webp
+    return { id: `${id}-${i + 1}`, titulo: u.titulo, trimestre: u.trimestre, pagina: u.pagina, hoja: desde + 1, hojaFin: hasta + 1, subtemas: u.subtemas, parrafos: ps, ph }
   })
-  writeFileSync(resolve(sal, `${id}.json`), JSON.stringify({ id, nombre, fuente: 'Texto de aprendizaje 2025, 2.º año de escolaridad, Educación Secundaria Comunitaria Productiva. Ministerio de Educación de Bolivia (distribución gratuita).', completo: true, temas }))
+  writeFileSync(resolve(sal, `${id}.json`), JSON.stringify({ id, nombre, carpeta: CARPETA[id], hojas: paginas.length, fuente: 'Texto de aprendizaje 2025, 2.º año de escolaridad, Educación Secundaria Comunitaria Productiva. Ministerio de Educación de Bolivia (distribución gratuita).', completo: true, temas }))
   resumen.push({ id, nombre, completo: true, temas: temas.map(({ id, titulo, trimestre, subtemas, parrafos }) => ({ id, titulo, trimestre, subtemas, conTexto: parrafos.length > 0 })) })
   console.log(id, temas.length, 'unidades', 'desfase', desfase, 'párrafos', temas.reduce((a, t) => a + t.parrafos.length, 0))
 }
@@ -132,3 +135,4 @@ const orden = ['len', 'mat', 'bio', 'csoc', 'ing', 'fil', 'art', 'mus', 'val']
 resumen.sort((a, b) => orden.indexOf(a.id) - orden.indexOf(b.id))
 writeFileSync(resolve(sal, 'indice.json'), JSON.stringify({ curso: '2do_secundaria', areas: resumen }))
 console.log('listo:', sal)
+await import('./copiar-textos-tutor.mjs')

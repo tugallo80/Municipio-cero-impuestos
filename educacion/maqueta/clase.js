@@ -314,6 +314,8 @@
           <div class="cg-bloque"><h4>Cómo lo explicó</h4>${lis(x.explicaciones, '—')}</div>
           <div class="cg-bloque"><h4>Tareas</h4>${lis(x.tareas, 'Sin tareas')}</div>
           <div class="cg-bloque"><h4>Dudas de la clase</h4>${lis(x.dudas, '—')}</div>
+          ${(x.avisosCasa || []).length ? `<div class="cg-bloque"><h4>🏠 Avisar en casa</h4>${lis(x.avisosCasa, '—')}</div>` : ''}
+          ${(x.llevar || []).length ? `<div class="cg-bloque"><h4>🎒 Traer</h4>${lis(x.llevar, '—')}</div>` : ''}
         </div>
       </div>
     </div>
@@ -444,6 +446,8 @@
         explicaciones: ['Una pizza cortada en 2 y otra en 4: medio pizza es lo mismo que dos cuartos', 'Con tiras de papel dobladas se ve que un medio tapa lo mismo que cuatro octavos'],
         tareas: ['Página 42 del cuaderno, ejercicios 1 al 5, para el jueves'],
         dudas: ['Por qué si los números son más grandes la fracción vale lo mismo'],
+        avisosCasa: ['Avisar en casa que el viernes hay reunión de madres y padres a las 18:00'],
+        llevar: ['Para el jueves: tiras de papel de colores y tijera'],
       },
     },
     transcripcion: 'Profe: Buenos días. Hoy vamos a ver fracciones equivalentes. ¿Quién se acuerda qué es un medio?\nAlumno: La mitad, profe.\nProfe: ¡Muy bien! Imaginen una pizza cortada en dos…\n(ejemplo inventado)',

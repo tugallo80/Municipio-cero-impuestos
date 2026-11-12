@@ -28,6 +28,7 @@
   .btn[disabled] { opacity: .4; cursor: default; background: var(--sup3); color: var(--texto3); }
   .reglas li { margin: 6px 0 0 18px; line-height: 1.45; font-size: 14px; }
 </style>
+<script src="salida.js?v=edu17b-1"></script>
 </head>
 <body>
 <div class="app">
@@ -66,7 +67,10 @@ const NOMBRES = { la_profe: 'la profe Taji', el_profe: 'el profe Jochi' };
 // Tema elegido: una tarea pendiente o una materia (por defecto, la clase que viene hoy).
 const pendientes = (window.tareasDelAlumno ? window.tareasDelAlumno() : []).filter(t => t.estado !== 'hecha');
 const deUrl = new URLSearchParams(location.search);
-let elegido = deUrl.get('tarea') ? { tarea: deUrl.get('tarea') } : { materia: deUrl.get('materia') || (clasesDe(hoy)[0] || {}).materia || 'mat' };
+let elegido = deUrl.get('tarea') ? { tarea: deUrl.get('tarea') } : { materia: deUrl.get('materia') || (deUrl.get('tema') || '').split('-')[0] || (clasesDe(hoy)[0] || {}).materia || 'mat' };
+// EDU.16: "Preguntale a tu tutor sobre esta página" (desde Mis textos): ?materia=ing&tema=ing-9&pagina=58[&q=…]
+const desdeTexto = { tema: /^[a-z]{2,5}-\d{1,2}$/.test(deUrl.get('tema') || '') ? deUrl.get('tema') : null, pagina: Number(deUrl.get('pagina')) || null };
+const preguntaInicial = (deUrl.get('q') || '').slice(0, 300);
 function pintarTemas() {
   const mats = [...new Set(Object.values(E.horario).flat())];
   $('#temas').innerHTML = pendientes.slice(0, 4).map(t => `<button class="${elegido.tarea === t.id ? 'activo' : ''}" onclick="elegir({tarea:'${t.id}'})">📋 ${esc(t.titulo)}</button>`).join('') +
@@ -74,7 +78,8 @@ function pintarTemas() {
 }
 function contexto() {
   const t = elegido.tarea && pendientes.find(x => x.id === elegido.tarea);
-  return { curso: E.curso, materia: t ? t.materia : elegido.materia, tarea: t ? { id: t.id, titulo: t.titulo, consigna: t.consigna } : null };
+  const deTexto = !t && desdeTexto.tema && desdeTexto.tema.startsWith(elegido.materia + '-') ? desdeTexto : {};
+  return { curso: E.curso, materia: t ? t.materia : elegido.materia, tarea: t ? { id: t.id, titulo: t.titulo, consigna: t.consigna, materia: t.materia, vence: t.vence } : null, tema: deTexto.tema || null, pagina: deTexto.pagina || null };
 }
 function elegir(x) { elegido = x; pintarTemas(); actualizar(); }
 
@@ -83,7 +88,7 @@ let tutor = null;
 function montarTutor() {
   const NT = window.NandeTutor; if (!NT || tutor) return false;
   const el = $('#tutor-montaje'); el.innerHTML = ''; el.classList.add('montado');
-  try { tutor = NT.montar(el, contexto()) || {}; return true; } catch (e) { console.warn('[mi-tutor] no se pudo montar', e); el.classList.remove('montado'); return false; }
+  try { tutor = NT.montar(el, { ...contexto(), q: preguntaInicial || undefined }) || {}; return true; } catch (e) { console.warn('[mi-tutor] no se pudo montar', e); el.classList.remove('montado'); return false; }
 }
 // ---------- 2) Mientras tanto: los profes de voz que ya existen (EDU.02b), y si no hay servidor, un aviso honesto ----------
 function pintarEspera() {
@@ -110,7 +115,7 @@ addEventListener('profes-voz-listo', () => {
   pintarEspera();
 }, { once: true });
 addEventListener('load', () => setTimeout(() => {
-  import('/voz/tutor.js').then(() => montarTutor()).catch(() => { /* EDU.16 todavía no publicado */ });
+  import('/voz/tutor.js?v=edu16-1').then(() => montarTutor()).catch(() => { /* EDU.16 todavía no publicado */ });
   import('/voz/profes.js?v=edu02d-2').catch(() => { /* sin servidor de voz */ });
 }, 300));
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
