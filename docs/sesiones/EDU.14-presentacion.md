@@ -155,3 +155,25 @@ en blanco) y también cierra con Esc o con el botón "atrás" del celular.
   `PARAM_LLAVE` en el script.
 - Probado en 1920×1080 y 1280×720 (marco, selector, Esc, presentador ida y vuelta) y en 390×844 /
   844×390 (sin marco). El 3D del mundo no se ve desde la sesión (CDN bloqueado): revisar en el canal.
+
+## Versión "para el profe" (enfoque del dueño)
+
+La presentación habla **al profe del piloto** (segunda persona: "tu curso", "tus textos", "vos decidís"),
+y las notas del presentador dicen qué decirle y qué mostrarle.
+
+- **A quién se presenta** (un solo lugar, al principio del `<script>`):
+  `const PARA = { profe: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' }`.
+  El nombre del profe también va en el link: `?profe=Nombre` (se recuerda en el equipo y se borra del link).
+  Portada: "Para vos, profe · U.E. Nuevo Horizonte · 2.º de secundaria" (o "Para {nombre}").
+- **Lámina "La IA ya leyó tus textos de 2.º de secundaria"** (3): índice real de los textos de
+  aprendizaje 2025 (`/maqueta/plan-ejemplo-2do-secundaria.js`), 9 áreas y 64 temas por trimestre.
+  Botones en vivo **"Tu cronograma"** y **"Tu PDC"**: antes de abrir, si el equipo no tiene cronograma
+  guardado (`localStorage nande-crono-S2`), la presentación deja uno armado con esos temas → se ve el año
+  día por día y el PDC **sin cuenta y sin pasos**. Si ya hay uno, no lo pisa.
+- **Variantes** listas: `?para=profe` (por defecto) `| director | municipio`. Una lámina con
+  `data-para="director municipio"` solo sale en esas variantes. Hoy solo está la del profe.
+- "Cuidado de los chicos" pasó a una franja dentro de "La propuesta para tu curso" (13 láminas en total).
+
+**Pendiente para EDU.15 (modo demo):** el panel del profe muestra el profe y colegio de ejemplo
+("Prof. Daniela Méndez · U.E. Arcoíris del Sur"). Para que la demo diga "U.E. Nuevo Horizonte" y su
+nombre, el modo demo debería aceptar colegio y nombre del profe (la presentación ya los tiene en `PARA`).

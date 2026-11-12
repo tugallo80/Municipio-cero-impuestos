@@ -237,6 +237,22 @@ figure .envivo { justify-content: center; margin-top: 4px; }
 @media (max-width: 700px) { .p-cuerpo { grid-template-columns: 1fr; } .p-notas { font-size: 19px; } }
 body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador .acciones { display: none !important; }
 @media print { .envivo, .vivo, .presentador, .solo-pc { display: none !important; } }
+
+/* Lámina "La IA ya leyó tus textos" */
+.indice { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.indice .area { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 7px 12px; border: 1px solid var(--borde); border-radius: 10px; background: var(--sup2); }
+.indice .area b { font-weight: 600; font-size: calc(var(--f) * .95); }
+.indice .area small { display: block; color: var(--sec); font-size: var(--chico); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.indice .tri { display: flex; gap: 4px; }
+.indice .tri span { min-width: 30px; text-align: center; font: 600 var(--chico) 'Space Grotesk', sans-serif; border-radius: 6px; padding: 2px 6px; background: rgba(16,185,129,.14); color: #a7f3d0; }
+.indice .tri span.vacio { background: #151515; color: #555; }
+.indice .tri span::before { content: attr(data-t); color: var(--sec); font-weight: 500; margin-right: 3px; }
+@media (orientation: landscape), print { .indice { grid-template-columns: 1fr 1fr 1fr; } }
+@media (orientation: landscape) and (max-height: 520px) { .indice .area { padding: 3px 8px; } .indice { gap: 4px; } .indice .area small { display: none; } .wow .bajada { display: none; } .wow .cuerpo { gap: 8px; } }
+@media screen and (orientation: portrait) { .indice .area small { display: none; } .indice .area { padding: 5px 10px; } .indice { gap: 4px; } }
+@media screen and (orientation: portrait) and (max-height: 780px) { .wow .bajada { display: none; } }
+.cuidado { font-size: var(--chico); color: #d4d4d4; border: 1px solid rgba(16,185,129,.4); border-radius: 12px; padding: 10px 14px; background: rgba(16,185,129,.06); }
+.cuidado b { color: var(--verde); font-weight: 600; }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -323,43 +339,56 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Seguimos enseñando como hace 100 años -->
   <section class="lam hero" style="--pos: 62% 55%">
-    <template class="notas">Arrancar despacio, con la pregunta. La escuela casi no cambió en 100 años. Acá pueden ser los primeros: el profe y sus chicos.</template>
+    <template class="notas">Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
     <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
     <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
-      <p class="antetitulo">Propuesta de piloto · U.E. Nuevo Horizonte</p>
+      <p class="antetitulo"><span id="saludo">Para vos, profe</span> · <span data-n="colegio">U.E. Nuevo Horizonte</span> · <span data-n="curso">2.º de secundaria</span></p>
       <h1>Seguimos enseñando como hace <span class="verde">100 años.</span></h1>
-      <p class="bajada">Pizarrón, cuaderno y la misma clase para todos, aunque el mundo ya cambió. ¿Y si el cambio empieza en una escuela rural de Santa Cruz? Este profe y estos chicos pueden ser los pioneros.</p>
+      <p class="bajada">Pizarrón, cuaderno y la misma clase para todos, aunque el mundo ya cambió. ¿Y si el cambio empieza en tu aula? Vos y tus chicos pueden ser los pioneros.</p>
       <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
     </div>
   </section>
 
   <!-- La IA como aliada -->
   <section class="lam declaracion">
-    <template class="notas">El problema que el profe ya vive: la IA hace la tarea. Nuestra respuesta: la IA enseña a hacerla y el profe ve el proceso. Preguntarle: ¿le pasa con sus alumnos?</template>
+    <template class="notas">Preguntale: ¿te pasa que tus alumnos te traen tareas hechas con ChatGPT? Escuchalo. Después: acá la IA enseña a hacerla y vos ves el proceso.</template>
     <div class="marca"><b class="n"></b> La IA ya llegó</div>
     <div class="cuerpo">
       <h2 class="grande">La IA ya llegó. ¿Le damos la espalda <span class="verde">o la ponemos a trabajar para nuestros chicos?</span></h2>
       <div class="tarjetas dos-col">
-        <div class="tarjeta gris"><h3>Hoy</h3><p class="sec">La IA ya está en las casas y muchas veces hace la tarea por el chico. El profe no sabe qué hizo el alumno y qué copió.</p></div>
-        <div class="tarjeta verde-borde"><h3 class="verde">Acá</h3><p>El tutor <b>guía con preguntas y pistas</b>, sin dar la respuesta. La tarea se hace paso a paso y <b>el profe ve el proceso</b>: el avance real y dónde pidió ayuda.</p></div>
+        <div class="tarjeta gris"><h3>Hoy</h3><p class="sec">La IA ya está en las casas y muchas veces hace la tarea por tus alumnos. No sabés qué hicieron ellos y qué copiaron.</p></div>
+        <div class="tarjeta verde-borde"><h3 class="verde">Acá</h3><p>El tutor <b>guía con preguntas y pistas</b>, sin dar la respuesta. La tarea se hace paso a paso y <b>vos ves el proceso</b>: el avance real y dónde pidieron ayuda.</p></div>
       </div>
       <p class="frase">Hoy la IA le hace la tarea al chico. <span>Acá le enseña a hacerla.</span></p>
-      <p class="nota">Pensada para aprender, no para copiar. La IA trabaja del lado del profe: le devuelve tiempo y le ayuda a ver a cada chico.</p>
+      <p class="nota">Pensada para aprender, no para copiar. La IA trabaja de tu lado: te devuelve tiempo y te ayuda a ver a cada chico.</p>
+    </div>
+  </section>
+
+  <!-- La IA ya leyó tus textos -->
+  <section class="lam declaracion wow">
+    <template class="notas">El momento «wow». Decile: «Con los textos que nos pasaste, la IA ya armó tu año». Mostrale el índice y abrí «Tu cronograma» y después «Tu PDC». Aclarale que es un borrador que él revisa.</template>
+    <div class="marca"><b class="n"></b> Tu curso</div>
+    <div class="cuerpo">
+      <h2 class="grande">La IA ya leyó tus textos de <span class="verde" data-n="curso">2.º de secundaria</span>.</h2>
+      <p class="bajada" id="wow-resumen">Con tus textos oficiales arma tu año: cada tema, en su trimestre y en su día.</p>
+      <div class="indice" id="wow-indice" aria-label="Índice de tus textos por trimestre"></div>
+      <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-disp="completa" data-sembrar="crono" data-titulo="Tu cronograma">Tu cronograma</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma/pdc" data-disp="completa" data-sembrar="crono" data-titulo="Tu PDC">Tu PDC</button></div>
+      <p class="nota" id="wow-fuente">Índices de los textos de aprendizaje 2025 del Ministerio. Borrador para que lo revises.</p>
     </div>
   </section>
 
   <!-- Una tablet por alumno -->
   <section class="lam declaracion">
-    <template class="notas">Es una visión, no un acuerdo firmado: tablet con los textos oficiales. Cifra de útiles a verificar; preguntarle cuánto gastan las familias de la comunidad.</template>
+    <template class="notas">Es una visión, no un acuerdo firmado. Preguntale cuánto gastan las familias de su curso en útiles y textos: su número vale más que el nuestro.</template>
     <div class="marca"><b class="n"></b> La visión</div>
     <div class="cuerpo">
       <p class="sello-rep"><span class="sello">La visión</span></p>
       <h2 class="grande">Una tablet por alumno, <span class="verde">con todo adentro.</span></h2>
-      <p class="bajada">Que la alcaldía entregue a cada alumno una tablet con la plataforma y los textos oficiales del Ministerio, que ya son gratuitos.</p>
+      <p class="bajada">Que la alcaldía entregue a cada uno de tus alumnos una tablet con la plataforma y los textos oficiales del Ministerio, que ya son gratuitos.</p>
       <div class="tarjetas">
         <div class="tarjeta"><h3>Textos oficiales</h3><p class="sec">Los del Ministerio, en la tablet y sin internet.</p></div>
-        <div class="tarjeta"><h3>Menos gasto</h3><p class="sec">Una lista básica de útiles ronda Bs 1.000 al año, sin libros.*</p></div>
+        <div class="tarjeta"><h3>Menos gasto en casa</h3><p class="sec">Una lista básica de útiles ronda Bs 1.000 al año, sin libros.*</p></div>
         <div class="tarjeta"><h3>Mochila liviana</h3><p class="sec">Textos y cuadernos en un solo aparato.</p></div>
       </div>
       <p class="nota">* El Deber, 2025; cada libro, Bs 80 a 180. Cifras a verificar. Es una visión a construir con la alcaldía, no un acuerdo firmado.</p>
@@ -368,22 +397,22 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Un tutor en el bolsillo -->
   <section class="lam declaracion">
-    <template class="notas">Lo que viene: un tutor que conoce los textos y el plan del profe. Contraste con un chat cualquiera: ayuda a aprender y a ordenarse, no a copiar.</template>
+    <template class="notas">Lo que viene. Decile: el tutor de tus alumnos conoce tus textos y tu plan, y sabe qué dijiste en clase. No es un chat cualquiera: ayuda a aprender y a ordenarse, no a copiar.</template>
     <div class="marca"><b class="n"></b> Para el alumno</div>
     <div class="cuerpo lado">
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
         <p><span class="sello">Lo que viene</span></p>
-        <h2 class="grande">Un tutor en el bolsillo, <span class="verde">las 24 horas.</span></h2>
+        <h2 class="grande">Un tutor en el bolsillo de cada alumno, <span class="verde">las 24 horas.</span></h2>
         <p class="globo sin-chico">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
         <ul class="lista">
-          <li><b>Recuerda la clase de hoy</b>: la clase se escucha y se resume.</li>
+          <li><b>Recuerda tu clase de hoy</b>: se escucha y se resume.</li>
           <li><b>Le recuerda</b> tareas, horarios y qué llevar.</li>
-          <li><b>Le avisa</b> lo que el profe pidió decir en casa.</li>
+          <li><b>Le avisa</b> lo que vos pediste decir en casa.</li>
         </ul>
       </div>
       <div class="contraste">
         <div class="tarjeta gris"><h3>Un buscador o un chat cualquiera</h3><p class="sec">Responde cualquier cosa. No sabe dónde estás.</p></div>
-        <div class="tarjeta verde-borde"><h3 class="verde">Su tutor</h3><p>Conoce los textos oficiales y el plan del profe: sabe <b>en qué tema va</b>, <b>qué dijo su profe</b> y <b>qué le cuesta</b>.</p></div>
+        <div class="tarjeta verde-borde"><h3 class="verde">Su tutor</h3><p>Conoce tus textos y tu plan: sabe <b>en qué tema va</b>, <b>qué dijiste en clase</b> y <b>qué le cuesta</b>.</p></div>
         <p class="frase chica">Ayuda a aprender y a ordenarse, <span>no a copiar.</span></p>
       </div>
     </div>
@@ -391,12 +420,12 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Lo que sabés -->
   <section class="lam hero" style="--pos: 70% 50%">
-    <template class="notas">El lema. Semillas de conocimiento, construir su Santa Cruz, mundo cerrado y seguro. Mostrar: «El mundo» (el colegio en 3D) y «Pasar de curso» (cómo el mundo se transforma al subir de curso).</template>
+    <template class="notas">El lema. Contale: tus alumnos ganan semillas al aprender y tu curso construye su parte de Santa Cruz, en un mundo cerrado y seguro. Mostrar: «El mundo» (el colegio en 3D) y «Pasar de curso» (cómo el mundo se transforma al subir de curso).</template>
     <img class="fondo" src="img/mundo-zoologico.jpg" alt="" width="1600" height="963">
     <div class="marca"><b class="n"></b> Nuestro lema</div>
     <div class="cuerpo">
       <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
-      <p class="bajada">Al aprender se ganan <b>semillas de conocimiento</b>, y cada curso las planta para hacer crecer su Santa Cruz: un zoológico, un parque. Colegios fiscales, rurales y particulares se encuentran en un mundo cerrado y seguro, y compiten por mejora, no por plata.</p>
+      <p class="bajada">Al aprender, tus alumnos ganan <b>semillas de conocimiento</b>, y tu curso las planta para hacer crecer su Santa Cruz: un zoológico, un parque. Tu colegio se encuentra con fiscales, rurales y particulares en un mundo cerrado y seguro, y compiten por mejora, no por plata.</p>
       <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
       <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/estilos/escena/?estilo=PROMO&amp;vista=colegio" data-titulo="El mundo" data-disp="completa" data-aparte>El mundo</button><button class="btn vivo-btn" type="button" data-vivo="/estilos/transicion/?de=VIVO&amp;a=PROMO" data-titulo="Pasar de curso" data-disp="completa" data-aparte>Pasar de curso</button></div>
     </div>
@@ -404,25 +433,25 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- La meta -->
   <section class="lam declaracion">
-    <template class="notas">La meta: bachilleres que salen sabiendo. Bajar los aplazos y medirlo en el piloto. No prometer resultados.</template>
+    <template class="notas">La meta, dicha con humildad: queremos bajar los aplazos de su curso y medirlo juntos. No prometas resultados.</template>
     <div class="marca"><b class="n"></b> La meta</div>
     <div class="cuerpo">
       <h1>Bachilleres que salen <span class="verde">sabiendo de verdad.</span></h1>
       <div class="lineas">
         <p>No es una app más: es llevar la tecnología a la escuela, frente a la pobreza y a la educación que no llega a todos.</p>
-        <p>Enseñados a su ritmo y como aprende su cerebro, no como una manada.</p>
-        <p>La app del alumno es agenda, textos, su tutor y un mundo para aprender jugando. <b>El juego es una parte; el centro es el alumno.</b></p>
+        <p>Tus alumnos, cada uno a su ritmo y como aprende su cerebro, no como una manada.</p>
+        <p>Su app es agenda, textos, su tutor y un mundo para aprender jugando. <b>El juego es una parte; el centro es el alumno.</b></p>
       </div>
-      <p class="frase">Queremos bajar los aplazos, <span>y lo vamos a medir en el piloto.</span></p>
+      <p class="frase">Queremos bajar los aplazos de tu curso, <span>y lo vamos a medir juntos.</span></p>
     </div>
   </section>
 
   <section class="lam">
-    <template class="notas">Mostrar «Juego» (celular horizontal): entrar a un aula y abrir una misión con pistas. Después «Mis tareas»: el modo directo, sin juego.</template>
-    <div class="marca"><b class="n"></b> Hoy en el demo</div>
+    <template class="notas">Mostrá «Juego» (celular horizontal): entrá a un aula y abrí una misión con pistas. Después «Mis tareas»: el modo directo, sin juego. Decile: así lo van a vivir tus alumnos.</template>
+    <div class="marca"><b class="n"></b> Tus alumnos</div>
     <div class="cuerpo dos img-grande">
       <div class="texto">
-        <h2><span class="verde">Dos profes IA</span> para cada alumno</h2>
+        <h2><span class="verde">Dos profes IA</span> para cada uno de tus alumnos</h2>
         <ul class="lista">
           <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
           <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
@@ -436,39 +465,39 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   </section>
 
   <section class="lam">
-    <template class="notas">Mostrar «Clase grabada» → «Ver un ejemplo»: resumen contra el pensum. Después «Cronograma y PDC» y «Tareas sugeridas». Remarcar: la IA propone, el profe decide.</template>
-    <div class="marca"><b class="n"></b> Para el profe</div>
+    <template class="notas">Mostrá «Clase grabada» → «Ver un ejemplo»: el resumen contra el pensum. Después «Tareas sugeridas». Remarcá: la IA propone, vos decidís.</template>
+    <div class="marca"><b class="n"></b> Para vos</div>
     <div class="cuerpo dos img-chica">
       <div class="texto">
-        <h2>Una <span class="verde">mentora IA</span> para el profe</h2>
+        <h2>Una <span class="verde">mentora IA</span> para vos</h2>
         <div class="filas">
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
-            <p><b>Escucha la clase</b> y arma el resumen contra el pensum: qué se vio y qué quedó pendiente.</p></div>
+            <p><b>Escucha tu clase</b> y arma el resumen contra tu pensum: qué se vio y qué quedó pendiente.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-            <p><b>Arma el cronograma</b> día a día con el calendario oficial, y el PDC listo para imprimir.</p></div>
+            <p><b>Arma tu cronograma</b> día a día con el calendario oficial, y tu PDC listo para imprimir.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></span>
-            <p><b>Sugiere tareas</b> según lo que pasó en la clase de hoy.</p></div>
+            <p><b>Te sugiere tareas</b> según lo que pasó en tu clase de hoy.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-            <p><b>Mapa del curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
+            <p><b>El mapa de tu curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
         </div>
-        <p class="frase">La IA propone. <span>El profe decide.</span></p>
-        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#clase" data-disp="completa" data-titulo="Clase grabada">Clase grabada</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-disp="completa" data-titulo="Cronograma y PDC">Cronograma y PDC</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#tareas" data-disp="completa" data-titulo="Tareas sugeridas">Tareas sugeridas</button></div>
-        <p class="nota">Lo que gana el profe: <b style="color:var(--txt)">tiempo</b> (cronograma, PDC y resúmenes salen como borrador para revisar) y <b style="color:var(--txt)">ver a cada alumno</b>.</p>
+        <p class="frase">La IA propone. <span>Vos decidís.</span></p>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#clase" data-disp="completa" data-titulo="Clase grabada">Clase grabada</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-disp="completa" data-sembrar="crono" data-titulo="Cronograma y PDC">Cronograma y PDC</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#tareas" data-disp="completa" data-titulo="Tareas sugeridas">Tareas sugeridas</button></div>
+        <p class="nota">Lo que ganás: <b style="color:var(--txt)">tiempo</b> (cronograma, PDC y resúmenes salen como borrador para revisar) y <b style="color:var(--txt)">ver a cada alumno</b>.</p>
       </div>
       <figure class="sin-vertical"><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
     </div>
   </section>
 
   <section class="lam">
-    <template class="notas">Mostrar «Mapa del curso»: «Pedir propuesta» (sin cuenta muestra un ejemplo) y mover un alumno de mesa. Los alumnos son ficticios.</template>
-    <div class="marca"><b class="n"></b> Mapa del curso</div>
+    <template class="notas">Mostrá «Mapa del curso»: «Pedir propuesta» (sin cuenta muestra un ejemplo) y mové un alumno de mesa. Aclarale que los alumnos son ficticios; en el piloto serían los suyos.</template>
+    <div class="marca"><b class="n"></b> Tu curso</div>
     <div class="cuerpo dos">
       <div class="texto">
         <h2>Ver a cada alumno, <span class="verde">no al promedio</span></h2>
-        <p class="sec">El aula con cada alumno y cómo viene. Tocar uno abre su ficha: fortalezas, temas y ritmo.</p>
+        <p class="sec">Tu aula con cada alumno y cómo viene. Tocás uno y ves su ficha: fortalezas, temas y ritmo.</p>
         <ul class="lista">
-          <li><b>La mentora propone</b>: parejas que se complementan, grupos por nivel o a quién acompañar esta semana.</li>
-          <li><b>El profe acepta, cambia o descarta.</b> Nada se aplica solo.</li>
+          <li><b>La mentora te propone</b>: parejas que se complementan, grupos por nivel o a quién acompañar esta semana.</li>
+          <li><b>Vos aceptás, cambiás o descartás.</b> Nada se aplica solo.</li>
           <li>A la mentora le llegan códigos, nunca nombres.</li>
         </ul>
         <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#mapa" data-disp="completa" data-titulo="Mapa del curso">Mapa del curso</button></div>
@@ -478,7 +507,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   </section>
 
   <section class="lam">
-    <template class="notas">Honestidad: son estudios de otros países. Lo que funciona es el uso guiado; repartir aparatos solo no alcanza. Por eso medimos.</template>
+    <template class="notas">Honestidad: son estudios de otros países. Lo que funciona es el uso guiado por el profe; repartir aparatos no alcanza. Por eso lo medimos en su curso.</template>
     <div class="marca"><b class="n"></b> Evidencia</div>
     <div class="cuerpo">
       <h2>Lo que dice la evidencia</h2>
@@ -488,36 +517,23 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
         <div class="ev"><span class="num">−31 %</span><div><p>Tiempo de planificación de docentes que usaron IA con una guía, sin bajar la calidad.</p><p class="fuente">EEF, Inglaterra, 2024 · ensayo con sorteo</p></div></div>
         <div class="ev"><span class="num gris">Sin efecto</span><div><p>Repartir computadoras sin uso guiado no mejoró matemática ni lenguaje.</p><p class="fuente">BID, Perú 2012 · sorteo en 319 escuelas</p></div></div>
       </div>
-      <p class="nota">DE = desviación estándar, la medida que usan estos estudios. Son resultados de otros países: este piloto tiene que medir los suyos.</p>
+      <p class="nota">DE = desviación estándar, la medida que usan estos estudios. Son resultados de otros países: en tu curso lo vamos a medir.</p>
     </div>
   </section>
 
   <section class="lam">
-    <template class="notas">Sin nombres hacia la IA, el audio no se guarda, todo con consentimiento de las familias y del profe.</template>
-    <div class="marca"><b class="n"></b> Cuidado de los chicos</div>
-    <div class="cuerpo">
-      <h2>Cuidado de los chicos</h2>
-      <div class="tarjetas">
-        <div class="tarjeta"><h3>Sin nombres hacia la IA</h3><p class="sec">Cada alumno es un código (ej. A01). Nombres, fotos y ubicación no salen.</p></div>
-        <div class="tarjeta"><h3>El audio no se guarda</h3><p class="sec">Se usa para armar el resumen y se descarta. El resumen se borra solo.</p></div>
-        <div class="tarjeta"><h3>Con consentimiento</h3><p class="sec">De las familias y del profe, explicando para qué se usa todo antes de empezar.</p></div>
-      </div>
-      <p class="nota">Bolivia todavía no tiene una ley general de datos personales: por eso aplicamos la regla más estricta.</p>
-    </div>
-  </section>
-
-  <section class="lam">
-    <template class="notas">Gratis, un curso, 8 a 12 semanas, medido con un curso de comparación. El profe es co-diseñador.</template>
+    <template class="notas">Gratis, su curso, 8 a 12 semanas, medido con un curso de comparación. Él es co-diseñador. Repasá el cuidado de sus alumnos: sin nombres a la IA, el audio no se guarda, todo con consentimiento.</template>
     <div class="marca"><b class="n"></b> Propuesta</div>
     <div class="cuerpo">
-      <h2>La propuesta de piloto</h2>
+      <h2>La propuesta para <span class="verde">tu curso</span></h2>
       <div class="tarjetas t4">
-        <div class="tarjeta"><span class="num">Gratis</span><p class="sec">Para la escuela y las familias.</p></div>
-        <div class="tarjeta"><span class="num">Un curso</span><p class="sec">Durante 8 a 12 semanas.</p></div>
+        <div class="tarjeta"><span class="num">Gratis</span><p class="sec">Para tu escuela y las familias.</p></div>
+        <div class="tarjeta"><span class="num">Tu curso</span><p class="sec">Durante 8 a 12 semanas.</p></div>
         <div class="tarjeta"><span class="num">Medido</span><p class="sec">Antes y después, comparado con otro curso parecido.</p></div>
-        <div class="tarjeta"><span class="num">Con el profe</span><p class="sec">Co-diseñador: lo que no sirve, se cambia.</p></div>
+        <div class="tarjeta"><span class="num">Con vos</span><p class="sec">Sos co-diseñador: lo que no sirve, se cambia.</p></div>
       </div>
-      <p class="nota">Qué medimos: lectura y matemática, minutos de uso, tiempo que ahorra el profe y qué opinan profe y alumnos.</p>
+      <p class="cuidado"><b>Cuidado de tus alumnos:</b> sin nombres hacia la IA (cada uno es un código) · el audio de la clase no se guarda · todo con consentimiento de las familias y tuyo.</p>
+      <p class="nota">Qué medimos: lectura, matemática y aplazos, minutos de uso, el tiempo que ahorrás y qué opinan vos y tus alumnos.</p>
     </div>
   </section>
 
@@ -528,9 +544,9 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
         <h2>Próximos pasos</h2>
         <ol class="pasos">
-          <li><span>Probar el demo juntos.</span></li>
+          <li><span>Probar el demo juntos, con tus textos.</span></li>
           <li><span>Carta de intención del colegio y permiso de la Dirección Distrital.</span></li>
-          <li><span>Elegir el curso del piloto y uno de comparación; revisar luz, internet y carga de tablets.</span></li>
+          <li><span>Elegir tu curso del piloto y uno de comparación; revisar luz, internet y carga de tablets.</span></li>
           <li><span>Consentimientos, medición inicial y arranque.</span></li>
         </ol>
       </div>
@@ -601,13 +617,49 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   <button class="btn primario" id="b-sig" type="button" aria-label="Lámina siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
 </nav>
 
+<!-- Índices reales de los textos de 2.º de secundaria (los usa la lámina "La IA ya leyó tus textos") -->
+<script src="/maqueta/plan-ejemplo-2do-secundaria.js"></script>
 <script>
 (() => {
   // Nombres en un solo lugar: si cambian la marca o los profes IA, se cambia acá.
   // Los profes IA no se nombran en las láminas (nombres en revisión; los eligen los chicos en los talleres).
-  const NOMBRES = { marca: 'ÑANDÉ' };
+  // A QUIÉN SE PRESENTA: el nombre del profe, el colegio y el curso, en un solo lugar.
+  // También se pueden pasar en el link: ?profe=Nombre (se recuerda en este equipo).
+  const q = new URLSearchParams(location.search);
+  const PARA = { profe: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' };
+  try { if (q.get('profe')) localStorage.setItem('nande-pres-profe', q.get('profe')); PARA.profe = q.get('profe') || localStorage.getItem('nande-pres-profe') || PARA.profe; } catch (e) { PARA.profe = q.get('profe') || PARA.profe; }
+  const NOMBRES = { marca: 'ÑANDÉ', colegio: PARA.colegio, curso: PARA.curso };
   document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
+  if (PARA.profe) document.getElementById('saludo').textContent = 'Para ' + PARA.profe;
   document.title = NOMBRES.marca + ' Educación · Presentación';
+
+  // VARIANTES: ?para=profe (por defecto) | director | municipio. Una lámina con data-para="director municipio"
+  // solo sale en esas variantes; sin data-para sale en todas. Hoy solo está armada la del profe.
+  const VARIANTE = q.get('para') || 'profe';
+  document.querySelectorAll('.lam[data-para]').forEach((l) => { if (!l.dataset.para.split(/\s+/).includes(VARIANTE)) l.remove(); });
+
+  // "La IA ya leyó tus textos": el índice real por área y trimestre (si el archivo no carga, queda el texto fijo)
+  const PLAN = window.PLAN_EJEMPLO_2SEC;
+  const CORTO = { len: 'Lengua', mat: 'Matemática', bio: 'Biología', csoc: 'Sociales', ing: 'Inglés', fil: 'Filosofía', art: 'Artes', mus: 'Música', val: 'Valores' };
+  if (PLAN && document.getElementById('wow-indice')) {
+    const total = PLAN.areas.reduce((n, a) => n + a.temas.length, 0);
+    document.getElementById('wow-resumen').textContent = PLAN.areas.length + ' áreas y ' + total + ' temas, ordenados por trimestre. Con eso arma tu año, día por día.';
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    document.getElementById('wow-indice').innerHTML = PLAN.areas.map((a) => {
+      const n = [1, 2, 3].map((t) => a.temas.filter((x) => x.trimestre === t).length);
+      return `<div class="area"><div style="min-width:0"><b title="${esc(a.nombre)}">${esc(CORTO[a.id] || a.nombre)}</b><small>${esc(a.temas[0] ? a.temas[0].titulo : '')}</small></div>`
+        + `<div class="tri">${n.map((k, j) => `<span data-t="T${j + 1}" class="${k ? '' : 'vacio'}">${k || '–'}</span>`).join('')}</div></div>`;
+    }).join('');
+    if (PLAN.fuente) document.getElementById('wow-fuente').textContent = 'Textos de aprendizaje 2025 del Ministerio (T = trimestre; en 4 áreas el texto trae solo el 1.er). Borrador para que lo revises.';
+  }
+  // Deja listo tu cronograma en la demo (si este equipo todavía no tiene uno): sin cuenta, sin pasos.
+  function sembrarCrono() {
+    if (!PLAN) return;
+    try {
+      if (localStorage.getItem('nande-crono-S2')) return;
+      localStorage.setItem('nande-crono-S2', JSON.stringify({ plan: { titulo: PLAN.titulo, areas: PLAN.areas, advertencias: ['Armado con los índices de los textos oficiales 2025: a verificar con el profe.'] }, hechos: {}, perdidos: [] }));
+    } catch (e) {}
+  }
 
   const lams = [...document.querySelectorAll('.lam')];
   lams.forEach((l, k) => { l.setAttribute('aria-label', 'Lámina ' + (k + 1)); const n = l.querySelector('.marca .n'); if (n) n.textContent = String(k + 1).padStart(2, '0'); });
@@ -616,7 +668,6 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   let i = 0;
 
   // Contacto: se completa con ?nombre=…&tel=… (sin tocar el código). Si no viene, queda la línea para escribir.
-  const q = new URLSearchParams(location.search);
   if (q.get('nombre')) $('c-nombre').textContent = q.get('nombre');
   if (q.get('tel')) $('c-tel').textContent = q.get('tel');
 
@@ -656,7 +707,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   const PARAM_LLAVE = 'llave';
   let llave = q.get(PARAM_LLAVE) || '';
   try { if (llave) localStorage.setItem('nande-demo-llave', llave); else llave = localStorage.getItem('nande-demo-llave') || ''; } catch (e) {}
-  if (q.has(PARAM_LLAVE)) { q.delete(PARAM_LLAVE); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
+  if (q.has(PARAM_LLAVE) || q.has('profe')) { q.delete(PARAM_LLAVE); q.delete('profe'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
   function conLlave(url) {
     if (!llave) return url;
     const u = new URL(url, location.origin);
@@ -710,6 +761,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   function abrirVivo(b) {
     if (vivoAbierto) cerrarVivo(true);
     const url = conLlave(b.dataset.vivo);
+    if (b.dataset.sembrar === 'crono') sembrarCrono();
     vivoAbierto = true; demoActual = b;
     disp = b.dataset.disp || 'completa';
     $('vivo-titulo').textContent = 'En vivo · ' + b.dataset.titulo;
