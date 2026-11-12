@@ -31,7 +31,7 @@ const bloques = []; for (let b = 0; b < 15; b++) { const n = 2400, buf = Buffer.
   await page.route(/cloudfunctions\.net\/(\w+)/, r => {
     const fn = r.request().url().match(/net\/(\w+)/)[1];
     if (fn === 'eduKayToken') return r.fulfill({ json: { result: { ok: true, token: 'auth_tokens/falso', modelo: 'gemini-falso', sesionId: 'ses1', segundosMax: 600 } } });
-    if (fn === 'eduProfes') return r.fulfill({ json: { result: { ok: true, profes: [{ id: 'la_profe', nombre: 'Taji', titulo: 'la profe Taji', color: '#FBBF24' }, { id: 'el_profe', nombre: 'Jochi', titulo: 'el profe Jochi', color: '#8B5CF6' }], preferencias: {} } } });
+    if (fn === 'eduProfes') return r.fulfill({ json: { result: { ok: true, profes: [{ id: 'la_profe', nombre: 'Tomatina', titulo: 'la profe Tomatina', color: '#FBBF24' }, { id: 'el_profe', nombre: 'Tomatao', titulo: 'el profe Tomatao', color: '#8B5CF6' }], preferencias: {} } } });
     return r.fulfill({ json: { result: { ok: true } } });
   });
   let wsMensajes = 0;

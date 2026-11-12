@@ -17,6 +17,7 @@ const profes = require('../tutor/profes');
 const { resumirUso, PRECIOS_USD_POR_MILLON } = require('./costos');
 const datos = require('./datos');
 const T24 = require('../tutor/tutor24');
+const IA = require('../tutor/nombres-ia');
 
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const OPCIONES = { region: 'us-central1', secrets: [GEMINI_API_KEY], timeoutSeconds: 30, memory: '256MiB', maxInstances: 10 };
@@ -48,6 +49,8 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
   const voz = profe ? profe.voz : VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;
   const mision = profe ? profes.validarMision(request.data?.mision) : null;
   const relevoDe = profe ? String(request.data?.relevoDe || '') || null : null;
+  // EDU.16b: nombres de los profes IA que muestra la pantalla (validados; si no, los de la demo).
+  const ia = IA.nombresIA(request.data?.ia);
 
   const reserva = await datos.reservarSesion(
     alumnoId,
@@ -71,10 +74,10 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
       const p = T24.validarPedido({ pregunta: String(request.data.tutor.pregunta || 'contexto'), foco: request.data.tutor });
       if (p.ok) {
         const { contextoAlumno } = require('./tutor');
-        tutor = T24.contextoParaVoz(await contextoAlumno({ alumnoId, perfil }, p));
+        tutor = T24.contextoParaVoz(await contextoAlumno({ alumnoId, perfil }, p), ia);
       }
     }
-    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, clases, tutor, relevo: reserva.relevo, cursoLegible });
+    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, clases, tutor, ia, relevo: reserva.relevo, cursoLegible });
     herramientas = profes.HERRAMIENTAS_PROFES;
     if (mision && !reserva.relevo) await datos.anotarEleccion(alumnoId, mision.materia, profe.id);
   } else {
@@ -148,7 +151,7 @@ exports.eduProfes = onCall({ ...OPCIONES, secrets: [] }, async (request) => {
   const memoria = await datos.obtenerMemoria(alumnoId);
   const preferencias = {};
   for (const [materia, m] of Object.entries(memoria.materias || {})) if (profes.profePorId(m?.ultimo)) preferencias[materia] = m.ultimo;
-  return { ok: true, profes: profes.profesPublicos(), preferencias };
+  return { ok: true, profes: profes.profesPublicos(request.data?.ia), preferencias };
 });
 
 exports.eduKayUso = onCall({ ...OPCIONES, secrets: [] }, async (request) => {

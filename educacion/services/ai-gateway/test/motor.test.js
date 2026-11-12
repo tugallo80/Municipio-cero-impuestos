@@ -99,7 +99,8 @@ test('cada profe se presenta con su nombre, conoce al otro, dice que es IA y hab
   for (const p of profes.PROFES) {
     const otro = profes.PROFES.find((x) => x.id !== p.id);
     const txt = profes.construirInstruccionProfe(p.id, { curso: '4to_primaria' }, { cursoLegible });
-    assert.ok(txt.includes(p.titulo) && txt.includes(otro.titulo));
+    const IA = require('../tutor/nombres-ia');
+    assert.ok(txt.includes(IA.tituloDe(p.id)) && txt.includes(IA.tituloDe(otro.id)));
     assert.match(txt, /inteligencia artificial/);
     for (const palabra of ['Belleza', 'la tuti', 'mucha dosis', 'otro level', 'ejtá']) assert.ok(txt.includes(palabra), palabra);
     assert.match(txt, /Nunca le das la respuesta/);
@@ -129,7 +130,7 @@ test('la misión va por ID desde el catálogo del servidor; el texto del navegad
 test('memoria compartida y relevo: solo datos pedagógicos', () => {
   const memoria = { ultima: { profe: 'la_profe', misionId: 'M3', paso: 1, peldanoMax: 2, completa: false, fecha: '2026-11-08' }, nombre: 'Juanita' };
   const txt = profes.construirInstruccionProfe('el_profe', { curso: '4to_primaria', nombre: 'Juanita' }, { memoria, relevo: true, cursoLegible });
-  assert.match(txt, /la profe Taji en "Describí tu barrio"/);
+  assert.match(txt, /la profe Tomatina en "Describí tu barrio"/);
   assert.match(txt, /# Relevo/);
   assert.ok(!txt.includes('Juanita'));
 });

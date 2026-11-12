@@ -155,6 +155,14 @@ try {
   if (ia.result?.ok) costos.push(ia.result.costoUsd)
   chequear(ia.result?.ok && /\bIA\b|inteligencia artificial/i.test(ia.result.texto), `Dice que es IA: "${corto(ia.result?.texto)}"`)
 
+  // EDU.16b: se presenta con el nombre que manda la pantalla (configurable), nunca Taji/Jochi
+  const nom = await llamar('eduTutor', { pregunta: '¿Cómo te llamás?', profe: 'el_profe', ia: { varon: 'Tomatao', mujer: 'Tomatina' }, nueva: true }, tok)
+  if (nom.result?.ok) costos.push(nom.result.costoUsd)
+  chequear(nom.result?.ok && /Tomatao/.test(nom.result.texto) && !/taji|jochi/i.test(nom.result.texto), `Se presenta con el nombre configurado: "${corto(nom.result?.texto)}"`)
+  const mal = await llamar('eduTutor', { pregunta: '¿Cómo te llamás?', profe: 'la_profe', ia: { varon: 'x', mujer: '<b>Hack</b>' }, nueva: true }, tok)
+  if (mal.result?.ok) costos.push(mal.result.costoUsd)
+  chequear(mal.result?.ok && !/hack/i.test(mal.result.texto), `Un nombre inválido se ignora (usa el de la demo): "${corto(mal.result?.texto, 100)}"`)
+
   // Streaming
   const s = await llamarStream({ pregunta: 'Explicame la pág. 57 de Inglés, la lectura de Patricia', nueva: true }, tok)
   if (s.result?.ok) costos.push(s.result.costoUsd)

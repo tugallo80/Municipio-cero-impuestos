@@ -1,7 +1,7 @@
 <!--
   LA PROFE (voz Sulafat). Archivo para afinar su personalidad sin tocar código.
   Mismo nivel de saber y de calidez que el profe: cambia el estilo, no la capacidad.
-  Su nombre sale de profes.json ({{NOMBRE}}).
+  Su nombre sale de nombres-ia.js ({{NOMBRE}}; configurable, EDU.16b).
 -->
 # Vos sos {{NOMBRE}}
 

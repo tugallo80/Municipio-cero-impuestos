@@ -3,7 +3,7 @@
 //   1. Una "clase" corta hablada con espeak-ng (con nombres INVENTADOS) → webm/opus
 //      y m4a (Safari) → eduClase → informe.
 //   2. El informe no tiene nombres, trae la tarea, no inventa alertas y no guarda audio.
-//   3. La profe Taji (voz en vivo) responde "¿qué tarea dejó el profe?" con lo de la clase.
+//   3. La profe IA (voz en vivo) responde "¿qué tarea dejó el profe?" con lo de la clase.
 //   4. Se borra todo lo de la prueba (eduClases borrar) para no ensuciar el contexto del curso.
 //  Necesita espeak-ng y ffmpeg. Cuentas propias con clave al azar en cada corrida.
 // ══════════════════════════════════════════════════
@@ -82,7 +82,7 @@ function audioClase() {
   return { webm: readFileSync(webm), m4a: readFileSync(m4a), segundos: seg }
 }
 
-// ── Voz en vivo mínima (texto → audio de Taji, con transcripción) ──
+// ── Voz en vivo mínima (texto → audio de la profe IA, con transcripción) ──
 async function preguntarATaji(token, pregunta) {
   const estado = { kay: '', usos: [], turnos: 0 }
   let fin = null
@@ -182,13 +182,13 @@ try {
     const enLista = lista.result?.clases?.find((x) => x.id === c.id)
     chequear(enLista && JSON.stringify(enLista.informe) === JSON.stringify(c.informe), 'eduClases devuelve el mismo informe')
 
-    // Taji responde con lo de la clase
+    // La profe IA responde con lo de la clase
     const tk = await llamar('eduKayToken', { profe: 'la_profe' }, tokenAlu)
-    chequear(tk.result?.ok === true, 'La profe Taji da token al alumno del mismo curso')
+    chequear(tk.result?.ok === true, 'La profe IA da token al alumno del mismo curso')
     if (tk.result?.ok) {
       const ch = await preguntarATaji(tk.result, 'Profe, ¿qué tarea dejó el profe en la clase de ciencias?')
       await llamar('eduKayUso', { sesionId: tk.result.sesionId, usos: ch.usos, segundos: ch.segundos, motivoFin: 'e2e-clase' }, tokenAlu)
-      chequear(/dibuj/i.test(ch.kay) && /agua/i.test(ch.kay), `Taji contesta con la tarea de la clase real: "${ch.kay.trim().slice(0, 300)}"`)
+      chequear(/dibuj/i.test(ch.kay) && /agua/i.test(ch.kay), `La profe IA contesta con la tarea de la clase real: "${ch.kay.trim().slice(0, 300)}"`)
     }
   }
 

@@ -18,13 +18,16 @@ import { getFunctions, httpsCallable } from 'firebase/functions'
 import { entrarDemo } from '../comun/demo.js'
 import { iniciarSesionKay } from '@voz-kay/kaySession.js'
 import config from '@tutor/profes.json'
+import { nombresIA, nombreIA, tituloIA } from '../comun/nombres-ia.js'
 
 const DOMINIO_CUENTAS = 'alumnos.nande-educacion.local'
 const DESPEDIDA = /\b(chau|chao|adi[oó]s|nos vemos|hasta (luego|mañana)|ya termin[eé])/i
 const leer = (k, d) => { try { return localStorage.getItem(k) ?? d } catch { return d } }
 const guardar = (k, v) => { try { localStorage.setItem(k, v) } catch {} }
 
-let PROFES = config.profes.map(({ id, nombre, titulo, color }) => ({ id, nombre, titulo, color }))
+// EDU.16b: los nombres salen de nombres-ia.js (configurables por link), no del servidor.
+const conNombre = ({ id, color }) => ({ id, nombre: nombreIA(id), titulo: tituloIA(id), color })
+let PROFES = config.profes.map(conNombre)
 const profe = (id) => PROFES.find((p) => p.id === id)
 
 // ── Estado ────────────────────────────────────────
@@ -208,7 +211,7 @@ async function cargarProfes() {
   try {
     const { data } = await fnProfes({})
     if (data?.ok) {
-      PROFES = data.profes
+      PROFES = data.profes.map(conNombre)
       preferencias = data.preferencias || {}
       pintar(charla ? 'escuchando' : 'libre')
     }
@@ -286,7 +289,7 @@ async function empezar(profeId, relevoDe = null) {
       obtenerToken: async () => {
         try {
           // EDU.16: desde "Mi tutor" la voz recibe el mismo foco que el chat (materia, tema, página, tarea).
-          const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe, ...(ctx.tutor && !ctx.mision ? { tutor: ctx.tutor } : {}) })
+          const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe, ia: nombresIA(), ...(ctx.tutor && !ctx.mision ? { tutor: ctx.tutor } : {}) })
           if (data?.ok) esta.sesionId = data.sesionId
           return data
         } catch (err) {

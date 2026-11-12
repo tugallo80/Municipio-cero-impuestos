@@ -58,7 +58,7 @@ const { tareasDemo } = require('../seed/datos-demo.js')
 const hoy = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
 const habilesHasta = (f) => { let n = 0; const d = new Date(hoy + 'T12:00:00Z'); while (d.toISOString().slice(0, 10) < f) { d.setUTCDate(d.getUTCDate() + 1); if (d.getUTCDay() % 6) n++; } return n }
 const tareas = tareasDemo().map((t) => { const { entrega, enviada, ...x } = T.tareaParaAlumno(t.id, t, t.asignacion?.alu_demo01 || 'base'); return { ...x, dias: habilesHasta(entrega), estado: 'pendiente', hecha: false } })
-const est = { curso: D.curso.id, cursoNombre: D.curso.nombre, colegio: D.colegio.nombre, gestion: D.gestion, distrito: D.distrito, recreo: E.recreo, materias: E.materias, horario: E.horario, avisos: E.avisos, eventos: E.eventos, llevar: E.llevar, tareas, temasHoy: piloto.temasHoy }
+const est = { ia: D.ia, curso: D.curso.id, cursoNombre: D.curso.nombre, colegio: D.colegio.nombre, gestion: D.gestion, distrito: D.distrito, recreo: E.recreo, materias: E.materias, horario: E.horario, avisos: E.avisos, eventos: E.eventos, llevar: E.llevar, tareas, temasHoy: piloto.temasHoy }
 escribir('maqueta/estudiante-demo.js', `${CAB}// Alumno demo FICTICIO. Las fechas se calculan al abrir (días hábiles desde hoy, hora de Bolivia).
 (function () {
   const D = ${JSON.stringify({ apodo: yo.nombre, avatar: yo.avatar, ...est }, null, 1)};
@@ -70,4 +70,26 @@ escribir('maqueta/estudiante-demo.js', `${CAB}// Alumno demo FICTICIO. Las fecha
 })();
 `)
 escribir('services/ai-gateway/tutor/estudiante-demo.json', JSON.stringify({ _nota: 'GENERADO por tools/datos/armar-demo.mjs (sin apodo ni avatar). Fechas en días hábiles desde hoy.', ...est, temasHoy: D.temasHoy }, null, 1) + '\n')
+// EDU.16b: nombres de los profes IA (uno solo lugar: demo-piloto.json → 'ia').
+escribir('maqueta/nombres-ia.js', `${CAB}// Nombres de los dos profes IA (TEMPORALES de la demo; los definitivos salen de la investigación de naming).
+// Prioridad: link (?iaVaron=…&iaMujer=…, también en el #) → equipo (localStorage nande-ia-varon / nande-ia-mujer) → demo-piloto.json.
+// window.NandeIA = { varon, mujer, nombre(id), titulo(id), Titulo(id), texto(s) }   id: 'la_profe' | 'el_profe'
+(function () {
+  const DEF = ${JSON.stringify(D.ia)};
+  const OK = /^[\\p{L}][\\p{L} ]{0,19}$/u;
+  const limpio = (v) => { const s = String(v || '').replace(/\\s+/g, ' ').trim(); return OK.test(s) ? s : ''; };
+  const ls = (k, v) => { try { if (v === undefined) return localStorage.getItem(k) || ''; localStorage.setItem(k, v); } catch (e) {} return ''; };
+  try {
+    const q = new URLSearchParams(location.search + '&' + location.hash.replace(/^#/, ''));
+    const v = limpio(q.get('iaVaron')), m = limpio(q.get('iaMujer'));
+    if (v) ls('nande-ia-varon', v);
+    if (m) ls('nande-ia-mujer', m);
+  } catch (e) {}
+  const varon = limpio(ls('nande-ia-varon')) || DEF.varon, mujer = limpio(ls('nande-ia-mujer')) || DEF.mujer;
+  const nombre = (id) => (id === 'el_profe' ? varon : mujer);
+  const titulo = (id) => (id === 'el_profe' ? 'el profe ' : 'la profe ') + nombre(id);
+  const texto = (s) => String(s == null ? '' : s).replace(/\\{IA_VARON\\}/g, varon).replace(/\\{IA_MUJER\\}/g, mujer);
+  window.NandeIA = { varon, mujer, nombre, titulo, Titulo: (id) => titulo(id).replace(/^./, (c) => c.toUpperCase()), texto, def: DEF };
+})();
+`)
 console.log(`✅ Demo de ${D.colegio.nombre} · ${D.curso.nombre} · ${D.alumnos.length} alumnos ficticios → maqueta/{demo-piloto,curso-demo,estudiante-demo}.js y tutor/{curso-demo,estudiante-demo}.json`)

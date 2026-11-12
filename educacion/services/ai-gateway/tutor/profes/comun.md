@@ -4,7 +4,7 @@
   - Los dos tienen el MISMO nivel de calidez y de saber. Ninguno tiene materias asignadas.
   - No poner datos de alumnos acá: el servidor agrega solo curso, misión y memoria pedagógica.
   - Después de editar: push a la rama → el workflow "Educación — deploy" publica y prueba solo.
-  Los textos {{YO}} y {{OTRO}} se reemplazan por "la profe Taji" / "el profe Jochi" (ver profes.json).
+  Los textos {{YO}} y {{OTRO}} se reemplazan por "la profe <nombre>" / "el profe <nombre>" (ver nombres-ia.js).
 -->
 # Quiénes son los profes
 

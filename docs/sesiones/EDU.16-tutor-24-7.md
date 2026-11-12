@@ -116,3 +116,34 @@ Cabecera con el profe IA (cambiar Taji ↔ Jochi), pastilla **IA**, **🎙️ Ha
 
 **Qué tiene que probar el dueño** (celular): abrir el canal con la llave de la demo (`…/maqueta/mi-tutor/#demo=<llave>`),
 tocar los 4 botones, preguntar "dame la respuesta de la tarea de inglés" y tocar 🎙️ Hablar.
+
+## EDU.16b — Nombres de los profes IA configurables (12-nov-2026)
+
+Pedido del dueño para la demo con el profe del piloto: sacar "Taji" y "Jochi" de todo lo que se ve y se oye. En la
+demo los profes IA se llaman **Tomatao** (el profe IA) y **Tomatina** (la profe IA). Son **temporales**: los definitivos
+salen de la investigación de naming.
+
+**Un solo lugar**: `educacion/tools/datos/demo-piloto.json` → `"ia": { "varon": "Tomatao", "mujer": "Tomatina" }`.
+`node tools/datos/armar-demo.mjs` los copia a:
+- `maqueta/nombres-ia.js` → `window.NandeIA = { varon, mujer, nombre(id), titulo(id), Titulo(id), texto(s) }` (lo cargan
+  todas las páginas de la maqueta);
+- `services/ai-gateway/tutor/estudiante-demo.json` → `tutor/nombres-ia.js` en el servidor (y `apps/web/comun/nombres-ia.js`
+  para /voz/*.js).
+En los datos, las materias dicen `"la profe {IA_MUJER}"` / `"el profe {IA_VARON}"` (marcadores).
+
+**Por link**: `?iaVaron=…&iaMujer=…` (también en el `#`, igual que `profe`/`profeApodo`); quedan en el equipo
+(`nande-ia-varon`, `nande-ia-mujer`). Solo letras y espacios, máx. 20 caracteres; si no sirve, los de la demo.
+Link de demo del dueño: `…/maqueta/mi-tutor/?profe=Gonzalo%20Gandarilla&profeApodo=Profe%20Tomamtao&iaVaron=Tomatao&iaMujer=Tomatina#demo=<llave>`.
+
+**Servidor y voz**: la pantalla manda `ia: {varon, mujer}` a `eduTutor`, `eduKayToken` y `eduProfes`; el servidor los
+valida y arma las instrucciones con esos nombres ("Sos el profe Tomatao", "Soy la profe Tomatina"). `profes.json` ya no
+tiene nombres. Los identificadores internos (`la_profe`, `el_profe`, `PERSONAS.taji` del 3D) quedan igual.
+
+**Cambiado** (texto visible): Mi tutor (y sus respuestas de ejemplo), Mis tareas ("Preguntarle a…"), el juego (botones de
+los profes, "Hablar con…", carteles 3D de la plazuela, cuento del toborochi), el panel del profe ("Lo que van a saber
+Tomatina y Tomatao", borrar informe), la portada del sitio y la vitrina de estilos. El "jochi" del cuento (el animal) queda.
+
+**Pruebas**: `npm test` (nombres válidos/ inválidos, instrucciones sin Taji/Jochi); e2e del tutor (se presenta con el
+nombre configurado, ignora uno inválido); e2e de voz actualizadas. Playwright en 390×844, 1280×800 y el juego 844×390:
+ningún Taji/Jochi visible; con el link aparecen Tomatao/Tomatina; con `?iaVaron=Pancho&iaMujer=Rosita` cambian.
+Capturas: `docs/sesiones/capturas/edu-16b/`.

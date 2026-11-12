@@ -1,7 +1,7 @@
 // ══════════════════════════════════════════════════
 //  Tutor 24/7 del alumno (EDU.16): Cloud Function eduTutor (texto, con streaming).
 //
-//  El alumno pregunta y el tutor (la profe Taji o el profe Jochi, IA) responde con el contexto
+//  El alumno pregunta y el tutor (la profe o el profe IA; nombres configurables, EDU.16b) responde con el contexto
 //  de SU vida escolar: clases grabadas recientes, tareas, horario, avisos, qué llevar y un pedazo
 //  del texto oficial. La lógica pura (qué se manda y cómo) está en tutor/tutor24.js.
 //
@@ -17,6 +17,7 @@ const { GoogleGenAI } = require('@google/genai');
 const crypto = require('node:crypto');
 
 const T24 = require('../tutor/tutor24');
+const IA = require('../tutor/nombres-ia');
 const T = require('../tutor/tareas');
 const { LIMITES } = require('../tutor/config');
 const { costoClase } = require('./costos');
@@ -124,7 +125,7 @@ exports.eduTutor = onCall(OPC, async (request, response) => {
 
   // Demo: la primera pregunta de una charla, igual y del mismo día, sale del caché (al instante, sin costo).
   const cacheable = alumno.prueba === 'demo' && !p.historial.length && request.data?.nueva !== true;
-  const clave = cacheable ? claveCache({ c: ctx.curso, f: fechaBolivia(), q: p.pregunta.toLowerCase(), foco: p.foco, profe }) : null;
+  const clave = cacheable ? claveCache({ c: ctx.curso, f: fechaBolivia(), q: p.pregunta.toLowerCase(), foco: p.foco, profe, ia: IA.nombresIA(request.data?.ia) }) : null;
   if (clave) {
     const enCache = await datos.leerCacheDemo(clave);
     if (enCache) return { ...enCache, costoUsd: 0, cache: true, ms: Date.now() - t0 };
@@ -139,7 +140,7 @@ exports.eduTutor = onCall(OPC, async (request, response) => {
     return { ok: false, motivo: reserva.motivo, error: msj };
   }
 
-  const sistema = `${T24.instruccionTutor({ curso: ctx.curso, profe })}\n\n# Lo que sabés de su vida escolar\n\n${T24.armarContexto(ctx)}`;
+  const sistema = `${T24.instruccionTutor({ curso: ctx.curso, profe, ia: request.data?.ia })}\n\n# Lo que sabés de su vida escolar\n\n${T24.armarContexto(ctx)}`;
   const contenidos = T24.armarConversacion(p.historial, p.pregunta);
   let r;
   let primerPedazoMs = null;

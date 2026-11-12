@@ -308,7 +308,7 @@
           </div>
         </div>` : ''}
         <div class="tarjeta">
-          <h3>🦜 Lo que van a saber Taji y Jochi</h3>
+          <h3>🦜 Lo que van a saber ${window.NandeIA ? `${esc(NandeIA.mujer)} y ${esc(NandeIA.varon)}` : 'los profes IA'}</h3>
           <p class="ter" style="margin-top:4px">Si un alumno pregunta "¿qué tarea dejó el profe?" o "no entendí lo de hoy", los profes IA responden con esto (sin nombres). Se borra a los 14 días.</p>
           <div class="cg-bloque"><h4>Temas</h4>${lis(x.temas, '—')}</div>
           <div class="cg-bloque"><h4>Cómo lo explicó</h4>${lis(x.explicaciones, '—')}</div>
@@ -420,7 +420,7 @@
   }
 
   async function borrar(curso, id) {
-    if (!confirm('¿Borrar este informe ahora? También se borra lo que sabían Taji y Jochi de esta clase.')) return;
+    if (!confirm(`¿Borrar este informe ahora? También se borra lo que sabían ${window.NandeIA ? `${NandeIA.mujer} y ${NandeIA.varon}` : 'los profes IA'} de esta clase.`)) return;
     const r = await api()?.borrar(curso, id);
     if (r?.ok) { delete informes[id]; listado = null; U.toast('🗑 Informe borrado'); location.hash = location.hash.startsWith('#clases') ? 'clases' : 'clase'; }
     else U.toast(r?.error || 'No se pudo borrar');
