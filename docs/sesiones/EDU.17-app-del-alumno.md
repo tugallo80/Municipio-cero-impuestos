@@ -139,3 +139,20 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
 - **Profe**: el alumno ve el **apodo** (`?profeApodo=` → `nande-profe-apodo`, ej. "el Profe …"); si no hay,
   el nombre formal (`?profe=` → `nande-profe`); si no hay nada, "tu profe".
 - **Alumno**: si la presentación guardó un apodo en `nande-apodo`, se usa en vez de "Jaguar Azul 7".
+
+## EDU.17b — Salidas sin caer en el selector (rama `sesion/pantalla-edu-17b`)
+
+Problema que encontró el dueño en la presentación: al salir del mundo (✕ / Salir) iba a "¿Quién sos?".
+
+- Nuevo `maqueta/salida.js` (en todas las páginas de la maqueta):
+  - la app del alumno recuerda su última página (`sessionStorage 'nande-volver-alumno'`);
+  - **✕ del mundo** → vuelve a esa página de la app (o a Hoy). Vuelve al selector **solo** si se
+    entró con "🌎 Ir directo al mundo" (`?desde=selector`) y no está dentro de la presentación;
+  - **dentro de la presentación (iframe)**: el "←" de Hoy y del panel del profe, padres y dirección
+    se oculta; si algo llega al selector, vuelve solo a la app del alumno;
+  - en la presentación o en modo demo se oculta "← Volver al Hub ÑANDÉ".
+- Mis tareas: "←" ahora vuelve a Hoy (es parte de la app).
+- Pie del selector: "Curso del piloto · alumnos ficticios".
+- Probado en 390×844, 844×390 y 1280×800: app → mundo → ✕ vuelve a la página de la app; selector →
+  mundo → ✕ vuelve al selector; dentro de un iframe en `/presentacion/`, el juego vuelve a Hoy, el
+  selector redirige a Hoy y ningún "←" lleva al selector.
