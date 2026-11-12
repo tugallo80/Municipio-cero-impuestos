@@ -177,3 +177,13 @@ y las notas del presentador dicen qué decirle y qué mostrarle.
 **Pendiente para EDU.15 (modo demo):** el panel del profe muestra el profe y colegio de ejemplo
 ("Prof. Daniela Méndez · U.E. Arcoíris del Sur"). Para que la demo diga "U.E. Nuevo Horizonte" y su
 nombre, el modo demo debería aceptar colegio y nombre del profe (la presentación ya los tiene en `PARA`).
+
+### Nombre del profe y llave de demo (actualización)
+
+- El nombre real del profe **no va en el repo ni en el sitio** (repo público). Entra por el link:
+  `?profe=<nombre>&apodo=<apodo>`; se guarda en el equipo (`localStorage nande-pres-profe/apodo`), se borra
+  del link y se usa en la portada ("Hola, <apodo>"; sin parámetro, "Hola, Profe"), en las notas del
+  presentador (`{profe}`, `{apodo}`) y se pasa a cada demo como `?profe=…&apodo=…`.
+- Llave de la demo (EDU.15): la presentación la acepta como `?llave=…` o `#demo=…`, la recuerda y la pasa a
+  cada demo. Falta confirmar con EDU.15 el formato exacto para las páginas con rutas `#` (pregunta enviada).
+- Colegio y curso salen de `/maqueta/demo-piloto.js` (EDU.15) cuando exista; si no, del texto fijo.

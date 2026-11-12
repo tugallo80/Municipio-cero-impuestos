@@ -339,11 +339,11 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Seguimos enseñando como hace 100 años -->
   <section class="lam hero" style="--pos: 62% 55%">
-    <template class="notas">Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
+    <template class="notas">Saludalo: «Hola, {apodo}». Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
     <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
     <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
-      <p class="antetitulo"><span id="saludo">Para vos, profe</span> · <span data-n="colegio">U.E. Nuevo Horizonte</span> · <span data-n="curso">2.º de secundaria</span></p>
+      <p class="antetitulo"><span id="saludo">Hola, Profe</span> · <span data-n="colegio">U.E. Nuevo Horizonte</span> · <span data-n="curso">2.º de secundaria</span></p>
       <h1>Seguimos enseñando como hace <span class="verde">100 años.</span></h1>
       <p class="bajada">Pizarrón, cuaderno y la misma clase para todos, aunque el mundo ya cambió. ¿Y si el cambio empieza en tu aula? Vos y tus chicos pueden ser los pioneros.</p>
       <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
@@ -619,6 +619,8 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
 <!-- Índices reales de los textos de 2.º de secundaria (los usa la lámina "La IA ya leyó tus textos") -->
 <script src="/maqueta/plan-ejemplo-2do-secundaria.js"></script>
+<!-- Datos únicos de la demo del piloto (EDU.15): colegio, curso, gestión. Si no existe todavía, quedan los textos fijos. -->
+<script src="/maqueta/demo-piloto.js" onerror="void 0"></script>
 <script>
 (() => {
   // Nombres en un solo lugar: si cambian la marca o los profes IA, se cambia acá.
@@ -626,11 +628,19 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   // A QUIÉN SE PRESENTA: el nombre del profe, el colegio y el curso, en un solo lugar.
   // También se pueden pasar en el link: ?profe=Nombre (se recuerda en este equipo).
   const q = new URLSearchParams(location.search);
-  const PARA = { profe: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' };
-  try { if (q.get('profe')) localStorage.setItem('nande-pres-profe', q.get('profe')); PARA.profe = q.get('profe') || localStorage.getItem('nande-pres-profe') || PARA.profe; } catch (e) { PARA.profe = q.get('profe') || PARA.profe; }
+  // El nombre real del profe NO va en el repo: entra por el link (?profe=…&apodo=…) y se recuerda en el equipo.
+  const PARA = { profe: '', apodo: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' };
+  const DP = window.DEMO_PILOTO;
+  if (DP) { if (DP.colegio && DP.colegio.nombre) PARA.colegio = DP.colegio.nombre; if (DP.curso && DP.curso.nombre) PARA.curso = DP.curso.nombre; }
+  for (const k of ['profe', 'apodo']) {
+    try { if (q.get(k)) localStorage.setItem('nande-pres-' + k, q.get(k)); PARA[k] = q.get(k) || localStorage.getItem('nande-pres-' + k) || ''; } catch (e) { PARA[k] = q.get(k) || ''; }
+  }
+  const llamar = PARA.apodo || PARA.profe || 'Profe';   // cómo se lo saluda
   const NOMBRES = { marca: 'ÑANDÉ', colegio: PARA.colegio, curso: PARA.curso };
   document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
-  if (PARA.profe) document.getElementById('saludo').textContent = 'Para ' + PARA.profe;
+  document.getElementById('saludo').textContent = 'Hola, ' + llamar;
+  // En las notas del presentador: {profe} = nombre (o "el profe"), {apodo} = cómo lo llaman (o "Profe")
+  const personalizar = (t) => t.replace(/\{profe\}/g, PARA.profe || 'el profe').replace(/\{apodo\}/g, llamar);
   document.title = NOMBRES.marca + ' Educación · Presentación';
 
   // VARIANTES: ?para=profe (por defecto) | director | municipio. Una lámina con data-para="director municipio"
@@ -705,13 +715,16 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   // ── Llave de demo (EDU.15): se pasa una vez en el link (?llave=…), se recuerda en este equipo y
   //    se agrega a cada demo. El nombre del parámetro se ajusta cuando EDU.15 publique el formato.
   const PARAM_LLAVE = 'llave';
-  let llave = q.get(PARAM_LLAVE) || '';
+  const llaveHash = (location.hash.match(/(?:^#|&)demo=([^&]+)/) || [])[1];
+  let llave = q.get(PARAM_LLAVE) || (llaveHash ? decodeURIComponent(llaveHash) : '');
   try { if (llave) localStorage.setItem('nande-demo-llave', llave); else llave = localStorage.getItem('nande-demo-llave') || ''; } catch (e) {}
-  if (q.has(PARAM_LLAVE) || q.has('profe')) { q.delete(PARAM_LLAVE); q.delete('profe'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
+  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
+  // Cada demo recibe la llave y a quién saluda (profe / apodo), sin escribirlo en el repo.
   function conLlave(url) {
-    if (!llave) return url;
     const u = new URL(url, location.origin);
-    u.searchParams.set(PARAM_LLAVE, llave);
+    if (llave) u.searchParams.set(PARAM_LLAVE, llave);
+    if (PARA.profe) u.searchParams.set('profe', PARA.profe);
+    if (PARA.apodo) u.searchParams.set('apodo', PARA.apodo);
     return u.pathname + u.search + u.hash;
   }
 
@@ -818,7 +831,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
     const k = Math.max(0, Math.min(N - 1, d.i)), l = lams[k], n = lams[k + 1];
     $('p-num').textContent = 'Lámina ' + (k + 1) + ' de ' + N + (d.vivo ? ' · demo abierta: ' + d.vivo : '');
     $('p-titulo').textContent = titulo(l);
-    const t = l.querySelector('template.notas'); $('p-notas').textContent = t ? t.content.textContent.trim() : '';
+    const t = l.querySelector('template.notas'); $('p-notas').textContent = t ? personalizar(t.content.textContent.trim()) : '';
     $('p-sig').textContent = n ? titulo(n) : 'Fin';
     const cont = $('p-demos'); cont.innerHTML = '';
     l.querySelectorAll('.vivo-btn').forEach((b, kk) => {
