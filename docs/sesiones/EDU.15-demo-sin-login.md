@@ -29,7 +29,7 @@ Fuente única **`tools/datos/demo-piloto.json`** → `node tools/datos/armar-dem
 (`window.DEMO_PILOTO`), `maqueta/curso-demo.js`, `maqueta/estudiante-demo.js` y las copias del servidor sin apodos;
 el seed lo lee directo. Lo usan el panel del profe, la app del alumno (EDU.17), el tutor (EDU.16) y la presentación (EDU.14b).
 - **U.E. Nuevo Horizonte** (rural, Santa Cruz) · **2.º de secundaria** · gestión 2026 · 3.er trimestre.
-- **Profe:** el nombre REAL no va en el repo, la base ni la IA. Llega por el link (`?profe=…` o `#…&profe=…`,
+- **Profe:** el nombre REAL no va en el repo, la base ni la IA. Llega por el link (`?profe=…&profeApodo=…`, también `apodo` o en el `#`,
   lo arma la presentación), se guarda solo en el equipo (`localStorage` `nande-profe`) y se borra de la barra.
   Sin valor: "Profe" (`demo-piloto.json`). `U.nombreProfe()` en la maqueta.
 - **Materias del profe:** las de los textos que pasó él: Inglés, Cosmovisiones-Filosofía-Psicología, Artes Plásticas,

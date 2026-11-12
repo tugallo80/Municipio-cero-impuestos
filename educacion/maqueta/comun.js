@@ -102,20 +102,37 @@
   };
 
   // ── Nombre del profe real (EDU.15) ──
-  // Es un dato real: NO va en el repo, la base ni la IA. Llega por el link (?profe=… o #…&profe=…),
-  // se guarda solo en este equipo (localStorage 'nande-profe') y se borra de la barra de direcciones.
+  // Son datos reales: NO van en el repo, la base ni la IA. Llegan por el link (?profe=…&profeApodo=…, también
+  // en el #), se guardan solo en este equipo y se borran de la barra de direcciones.
+  // nande-profe = nombre formal · nande-profe-apodo = cómo lo llaman sus alumnos · nande-apodo = apodo del ALUMNO.
   U.nombreProfe = () => { try { return localStorage.getItem('nande-profe') || ''; } catch { return ''; } };
+  U.apodoProfe = () => { try { return localStorage.getItem('nande-profe-apodo') || ''; } catch { return ''; } };
+  // Parámetros del link → equipo: ?profe= (nombre formal) · ?profeApodo= o ?apodo= (cómo lo llaman sus alumnos).
   (function leerProfeDelLink() {
     try {
       const url = new URL(location.href);
       const partes = url.hash.slice(1).split('&');
-      const enHash = partes.find((x) => x.startsWith('profe='));
-      const v = url.searchParams.get('profe') ?? (enHash ? decodeURIComponent(enHash.slice(6).replace(/\+/g, ' ')) : null);
-      if (v === null) return;
-      const limpio = v.replace(/[<>"'`]/g, '').trim().slice(0, 60);
-      limpio ? localStorage.setItem('nande-profe', limpio) : localStorage.removeItem('nande-profe');
-      url.searchParams.delete('profe');
-      url.hash = partes.filter((x) => !x.startsWith('profe=')).join('&');
+      const leer = (k) => {
+        const h = partes.find((x) => x.startsWith(k + '='));
+        return url.searchParams.get(k) ?? (h ? decodeURIComponent(h.slice(k.length + 1).replace(/\+/g, ' ')) : null);
+      };
+      const guardar = (clave, v) => {
+        if (v === null) return;
+        const limpio = v.replace(/[<>"'`]/g, '').trim().slice(0, 60);
+        limpio ? localStorage.setItem(clave, limpio) : localStorage.removeItem(clave);
+      };
+      const CLAVES = { profe: 'nande-profe', profeApodo: 'nande-profe-apodo', apodo: 'nande-profe-apodo' };
+      let hubo = false;
+      const conProfeApodo = leer('profeApodo') !== null; // si vienen los dos, manda profeApodo
+      for (const [k, clave] of Object.entries(CLAVES)) {
+        const v = leer(k);
+        if (v === null) continue;
+        hubo = true;
+        if (!(k === 'apodo' && conProfeApodo)) guardar(clave, v);
+        url.searchParams.delete(k);
+      }
+      if (!hubo) return;
+      url.hash = partes.filter((x) => !Object.keys(CLAVES).some((k) => x.startsWith(k + '='))).join('&');
       history.replaceState(history.state, '', url.pathname + url.search + (url.hash.length > 1 ? url.hash : ''));
     } catch {}
   })();
