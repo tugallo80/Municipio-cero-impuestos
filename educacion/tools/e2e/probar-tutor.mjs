@@ -134,7 +134,7 @@ try {
     const r = await llamar('eduTutor', { ...data, nueva: true }, tok)
     const t = r.result?.texto || ''
     if (r.result?.ok) costos.push(r.result.costoUsd)
-    chequear(r.result?.ok && ok(t, r.result) && sinNombres(t), `${nombre} (${(r.ms / 1000).toFixed(1)} s, USD ${r.result?.costoUsd ?? '—'}, ${r.result?.tokens ?? '—'} tokens): "${corto(t)}"${r.error ? ` — ${r.error.status}: ${r.error.message}` : ''}`)
+    chequear(r.result?.ok && ok(t, r.result) && sinNombres(t) && !/24\/7/.test(t), `${nombre} (${(r.ms / 1000).toFixed(1)} s, USD ${r.result?.costoUsd ?? '—'}, ${r.result?.tokens ?? '—'} tokens): "${corto(t)}"${r.error ? ` — ${r.error.status}: ${r.error.message}` : ''}`)
   }
 
   // Escalera: si insiste, da el peldaño siguiente, sin la respuesta.

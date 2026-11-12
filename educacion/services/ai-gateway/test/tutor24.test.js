@@ -128,9 +128,9 @@ test('la voz recibe el mismo contexto, sin el marcador y con el texto más corto
   const est = T24.datosDelCurso('2do_secundaria');
   const v = T24.contextoParaVoz({ curso: '2do_secundaria', est, tareas: est.tareasDemo, clases: [], fragmento: T24.buscarFragmento({ materia: 'ing', pagina: 58 }) });
   assert.ok(!v.includes('{PROFE}'));
-  assert.match(v, /modo tutor 24\/7/);
+  assert.match(v, /modo tutor a cualquier hora/);
   const i = profes.construirInstruccionProfe('la_profe', { curso: '2do_secundaria' }, { tutor: v, cursoLegible });
-  assert.match(i, /modo tutor 24\/7/);
+  assert.match(i, /modo tutor a cualquier hora/);
   assert.ok(i.length < 20000);
 });
 

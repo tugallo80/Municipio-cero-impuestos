@@ -124,7 +124,7 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
     modelo: MODELO_KAY,
     caracteresInstruccion: instruccion.length,
     clasesEnContexto: instruccion.includes('# Lo que pasó en las últimas clases'),
-    tutor247: instruccion.includes('modo tutor 24/7'),
+    tutor247: instruccion.includes('modo tutor a cualquier hora'),
   });
 
   return {
