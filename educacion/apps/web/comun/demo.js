@@ -24,7 +24,8 @@ export function llaveDemo() {
     const deQuery = url.searchParams.get('demo')
     const deHash = /(?:^#|[#&])demo=([^&]+)/.exec(url.hash)?.[1]
     llave = decodeURIComponent(deQuery || deHash || '')
-    if (llave) {
+    // Solo una llave de verdad (16+ caracteres): "?demo=1" es otra cosa (selector de curso de EDU.06a) y no se toca.
+    if (LLAVE_OK.test(llave)) {
       // Las dos partes (clase y profes) leen la llave: la segunda ya no la ve en el link.
       try { sessionStorage.setItem('nande-demo-link', '1') } catch {}
       url.searchParams.delete('demo')
@@ -45,7 +46,7 @@ export const esDemo = (usuario) => usuario?.uid === UID_DEMO
  * @returns {Promise<{ok:boolean, demo:boolean, error?:string}>}
  */
 export async function entrarDemo(auth, funciones) {
-  let delLink = /[?&#]demo=/.test(location.href)
+  let delLink = /[?&#]demo=[A-Za-z0-9_-]{16,80}/.test(location.href)
   try { delLink = delLink || sessionStorage.getItem('nande-demo-link') === '1' } catch {}
   const llave = llaveDemo()
   if (!llave) return { ok: false, demo: false }
