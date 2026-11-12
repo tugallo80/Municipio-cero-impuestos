@@ -18,3 +18,9 @@ Son de distribución gratuita ("la venta de este documento está prohibida"); se
 
 Cada texto trae un **índice por trimestre** (unidades y temas): sirve para armar el cronograma.
 El texto general (25 MB) está en el Drive del dueño; aquí va lo que Drive dejó extraer.
+
+## Páginas reales (para el lector tipo libro)
+
+`2do-secundaria/paginas/<area>/NNN.webp` — cada página de los 5 libros de área, en imagen (≈760 px de ancho,
+WebP): `ingles` (68), `filosofia` (58), `artes` (46), `musica` (64), `valores` (46). NNN = número de hoja del PDF
+(001 = portada). El texto general (Lengua, Matemática, Biología-Geografía, Sociales) no está: su PDF pesa 25 MB y no se pudo bajar.

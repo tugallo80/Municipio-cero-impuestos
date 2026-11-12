@@ -12,6 +12,9 @@ const dist = resolve(web, 'dist')
 
 cpSync(resolve(edu, 'packages/voz-kay/audioWorklets'), resolve(dist, 'audioWorklets'), { recursive: true })
 if (existsSync(resolve(edu, 'maqueta'))) cpSync(resolve(edu, 'maqueta'), resolve(dist, 'maqueta'), { recursive: true })
+// EDU.17b: páginas reales (imagen) de los libros de área de 2.º de secundaria para el lector "Mis textos"
+const paginas = resolve(edu, 'datos/textos-oficiales/2do-secundaria/paginas')
+if (existsSync(paginas)) cpSync(paginas, resolve(dist, 'maqueta/textos/paginas'), { recursive: true })
 // EDU.14: presentación del proyecto para el profe del piloto (/presentacion/)
 if (existsSync(resolve(edu, 'presentacion'))) cpSync(resolve(edu, 'presentacion'), resolve(dist, 'presentacion'), { recursive: true })
 // EDU.06a: los estilos (evoluciones del mundo, transición de curso) que usa la maqueta del alumno

@@ -34,6 +34,7 @@
   .atajo b { font-family: 'Space Grotesk'; font-size: 16px; }
   .atajo small { color: var(--texto3); font-size: 12px; }
 </style>
+<script src="salida.js?v=edu17b-1"></script>
 </head>
 <body>
 <div class="app">
@@ -119,7 +120,7 @@ function pintar() {
       </div>
       <div class="atajos ancha">
         <a class="atajo" href="textos/${seguir ? '#' + encodeURIComponent(seguir.area) + '/' + seguir.parte : ''}"><span class="grande">📖</span><b>${seguir ? 'Seguir leyendo' : 'Mis textos'}</b><small>${seguir ? esc(seguir.titulo) : 'Los textos oficiales de tu curso'}</small></a>
-        <a class="atajo" href="alumno/"><span class="grande">🌎</span><b>Ir al mundo</b><small>Tu colegio 3D, el parque y las canchas</small></a>
+        <a class="atajo" href="alumno/?desde=app"><span class="grande">🌎</span><b>Ir al mundo</b><small>Tu colegio 3D, el parque y las canchas</small></a>
       </div>
     </div>`;
 }
