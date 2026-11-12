@@ -1,4 +1,4 @@
-# EDU.16 — Tutor 24/7 del alumno
+# EDU.16 — Tutor 24/7 del alumno (en pantalla: "tu tutor, a cualquier hora")
 
 **Rama:** `sesion/canal-edu-16` (publica el sitio en su canal de vista previa + Functions y pruebas) ·
 **Pedido por:** MAESTRA (con OK del dueño para publicar en `municipio-ia`).
@@ -95,5 +95,24 @@ Cabecera con el profe IA (cambiar Taji ↔ Jochi), pastilla **IA**, **🎙️ Ha
 - Cursos reales (EDU.03): horario, avisos y "qué llevar" hoy salen del curso del piloto (`estudiante-demo.json`).
 - Biología, Sociales y parte de Matemática solo tienen índice (EDU.17): el tutor lo dice.
 
-## Cierre
-(se completa al cerrar)
+## Texto visible
+- Pedido del dueño: nunca "24/7" en pantalla ni en las voces (se leyó como "24 de julio"). Se dice **"a cualquier
+  hora"** o "todos los días, a toda hora". La instrucción se lo prohíbe a la IA y la prueba e2e lo revisa.
+- Botones de la presentación (para mostrarlo sin tipear): "¿Qué dijo el profe hoy?", "¿Qué tengo para mañana?",
+  "¿Qué llevo?" y "No entiendo esta página" (o "la pág. 58 de Inglés" si no hay página abierta).
+
+## Cierre (12-nov-2026)
+**Hecho** — PR #40, rama `sesion/canal-edu-16`, canal https://nande-educacion--canal-edu-16-xs8ywax4.web.app/maqueta/mi-tutor/
+- Function `eduTutor` publicada; `eduKayToken` con `tutor` (voz con el mismo contexto). Kay, la clase grabada y la demo
+  siguen andando (sus pruebas pasaron en el mismo deploy).
+- e2e contra lo publicado ✅: los 6 casos, escalera, riesgo (sin IA, costo 0), emocional, "sos IA", streaming
+  (primer pedazo a 1,3 s), caché demo (0,1 s, sin costo), bolsa demo vs. general.
+- **Costo medido: USD 0,00093 por consulta** (10 consultas, 0,00077–0,00105; ~2.600–3.500 tokens) → 1.000 consultas ≈
+  USD 0,93. Respuesta completa en 1–3,6 s.
+- Playwright local (servidor simulado) en 390×844, 820×1180 y 1280×800 ✅. No se pudo abrir el canal desde la sesión
+  (la red de la sesión no llega a web.app): lo prueba el dueño.
+- Un deploy falló porque Gemini tardó 5,5 min en resumir la clase de prueba de EDU.04a (la prueba corta a los 5 min);
+  no es del tutor. Si se repite, subir el tiempo de espera de `probar-clase.mjs`.
+
+**Qué tiene que probar el dueño** (celular): abrir el canal con la llave de la demo (`…/maqueta/mi-tutor/#demo=<llave>`),
+tocar los 4 botones, preguntar "dame la respuesta de la tarea de inglés" y tocar 🎙️ Hablar.
