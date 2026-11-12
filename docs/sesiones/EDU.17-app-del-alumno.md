@@ -89,3 +89,15 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
 ### Pendiente
 - Volver a extraer Biología, Sociales y el resto de Matemática cuando haya un PDF mejor del texto
   general.
+
+## Parte 4 — Mi tutor (`/maqueta/mi-tutor/`)
+
+- **Lugar fijo** para el tutor de EDU.16: la página carga `/voz/tutor.js` y, si existe, llama a
+  `NandeTutor.montar(elemento, { curso, materia, tarea })`. Si el objeto que devuelve tiene
+  `actualizar(contexto)`, se lo llama cuando el alumno cambia de tema.
+- **"¿De qué querés hablar?"**: las tareas pendientes y las materias del alumno (por defecto, la
+  primera clase de hoy). También acepta `?tarea=<id>` o `?materia=<id>` en el enlace.
+- **Mientras EDU.16 no está**: los profes de voz que ya existen (`/voz/profes.js`, EDU.02b), con el
+  tema elegido como contexto. Sin servidor de voz, los botones dicen "Todavía no disponible" y se
+  avisa que el chat del tutor llega pronto.
+- **Probado** en 390, 820 y 1280, sin tutor y con un tutor simulado; sin desbordes ni errores.
