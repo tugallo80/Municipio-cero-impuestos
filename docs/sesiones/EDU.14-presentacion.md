@@ -178,12 +178,21 @@ y las notas del presentador dicen qué decirle y qué mostrarle.
 ("Prof. Daniela Méndez · U.E. Arcoíris del Sur"). Para que la demo diga "U.E. Nuevo Horizonte" y su
 nombre, el modo demo debería aceptar colegio y nombre del profe (la presentación ya los tiene en `PARA`).
 
-### Nombre del profe y llave de demo (actualización)
+### Nombre del profe y llave de demo (acordado con EDU.15)
 
 - El nombre real del profe **no va en el repo ni en el sitio** (repo público). Entra por el link:
-  `?profe=<nombre>&apodo=<apodo>`; se guarda en el equipo (`localStorage nande-pres-profe/apodo`), se borra
-  del link y se usa en la portada ("Hola, <apodo>"; sin parámetro, "Hola, Profe"), en las notas del
-  presentador (`{profe}`, `{apodo}`) y se pasa a cada demo como `?profe=…&apodo=…`.
-- Llave de la demo (EDU.15): la presentación la acepta como `?llave=…` o `#demo=…`, la recuerda y la pasa a
-  cada demo. Falta confirmar con EDU.15 el formato exacto para las páginas con rutas `#` (pregunta enviada).
-- Colegio y curso salen de `/maqueta/demo-piloto.js` (EDU.15) cuando exista; si no, del texto fijo.
+  `?profe=<nombre>&apodo=<apodo>`. La presentación lo usa en la portada ("Hola, <apodo>"; sin
+  parámetro, "Hola, Profe") y en las notas del presentador (`{profe}`, `{apodo}`), y lo guarda en el equipo.
+- Llave de la demo: `?llave=…` o `#demo=…` en el link de la presentación.
+- Todo se guarda en `localStorage` del mismo sitio y se borra del link. Las páginas de la demo lo leen
+  solas (acordado con EDU.15):
+  - `nande-demo`: la llave (la tiene la MAESTRA; nunca en el repo).
+  - `nande-profe`: nombre que muestra el panel.
+  - `nande-profe-apodo`: cómo lo llaman sus alumnos, para que EDU.17 lo use en la app del alumno.
+  - Ojo: `nande-apodo` es el apodo **del alumno** (EDU.15); la presentación no lo toca.
+- Con la llave, el panel usa el cronograma de la cuenta demo del servidor (2026, las 5 materias del profe).
+  Sin llave o sin internet, la presentación siembra `nande-crono-S2` como respaldo.
+- Colegio y curso salen de `/maqueta/demo-piloto.js` (EDU.15, PR #37) cuando esté en `main`; si no, del texto fijo.
+
+**Link para presentar** (lo arma la MAESTRA con los valores reales, fuera del repo):
+`…/presentacion/?profe=<nombre>&apodo=<apodo>#demo=<llave>` — se abre una vez en el equipo de la reunión.

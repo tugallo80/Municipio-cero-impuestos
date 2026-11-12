@@ -712,21 +712,22 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   $('b-full').addEventListener('click', pantallaCompleta);
   if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('b-full').hidden = true;
 
-  // ── Llave de demo (EDU.15): se pasa una vez en el link (?llave=…), se recuerda en este equipo y
-  //    se agrega a cada demo. El nombre del parámetro se ajusta cuando EDU.15 publique el formato.
+  // ── Llave de demo y nombre del profe (EDU.15) ──
+  //    Llegan una vez por el link (?llave=… o #demo=…, ?profe=…&apodo=…), se guardan en este equipo y se
+  //    borran del link. Como la demo es del mismo sitio, sus páginas los leen solas de localStorage:
+  //    'nande-demo' (llave), 'nande-profe' (nombre en el panel), 'nande-profe-apodo' (cómo lo llaman sus alumnos).
+  //    Nada de esto va en el repo.
   const PARAM_LLAVE = 'llave';
   const llaveHash = (location.hash.match(/(?:^#|&)demo=([^&]+)/) || [])[1];
-  let llave = q.get(PARAM_LLAVE) || (llaveHash ? decodeURIComponent(llaveHash) : '');
-  try { if (llave) localStorage.setItem('nande-demo-llave', llave); else llave = localStorage.getItem('nande-demo-llave') || ''; } catch (e) {}
-  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + location.hash); }
-  // Cada demo recibe la llave y a quién saluda (profe / apodo), sin escribirlo en el repo.
-  function conLlave(url) {
-    const u = new URL(url, location.origin);
-    if (llave) u.searchParams.set(PARAM_LLAVE, llave);
-    if (PARA.profe) u.searchParams.set('profe', PARA.profe);
-    if (PARA.apodo) u.searchParams.set('apodo', PARA.apodo);
-    return u.pathname + u.search + u.hash;
-  }
+  const llaveNueva = q.get(PARAM_LLAVE) || (llaveHash ? decodeURIComponent(llaveHash) : '');
+  try {
+    if (llaveNueva) localStorage.setItem('nande-demo', llaveNueva);
+    if (PARA.profe || PARA.apodo) localStorage.setItem('nande-profe', PARA.profe || PARA.apodo);
+    if (PARA.apodo) localStorage.setItem('nande-profe-apodo', PARA.apodo);
+  } catch (e) {}
+  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + (llaveHash ? '' : location.hash)); }
+  // Las demos toman llave y nombre del equipo: la URL va tal cual.
+  const conLlave = (url) => url;
 
   // ── Verlo en vivo: la demo en una capa; en PC/proyector, dentro de un aparato simulado ──
   const vivo = $('vivo'), marco = $('vivo-marco'), aparato = $('aparato'), caja = $('vivo-caja'), escena = $('vivo-escena');
