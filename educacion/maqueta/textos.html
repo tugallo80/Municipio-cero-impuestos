@@ -8,10 +8,11 @@
 <title>Mis textos · Mi colegio ÑANDÉ</title>
 <link rel="manifest" href="/maqueta/manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=Literata:opsz,wght@7..72,400;7..72,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="estilos.css?v=edu17-1">
 <style>
   .principal { max-width: 980px; }
+  body.leyendo .principal, body.est-app.leyendo .principal { max-width: none; padding-top: 8px; padding-bottom: 0; }
   .areas { display: grid; gap: 12px; }
   @media (min-width: 640px) { .areas { grid-template-columns: 1fr 1fr; } }
   @media (min-width: 1100px) { .areas { grid-template-columns: 1fr 1fr 1fr; } }
@@ -21,28 +22,46 @@
   .area small { color: var(--texto3); font-size: 13px; display: block; margin-top: 4px; }
   .aqui { display: inline-flex; gap: 6px; align-items: center; margin-top: 8px; font-size: 13px; color: var(--verde); font-weight: 600; }
   .buscar { display: flex; gap: 8px; margin: 12px 0 16px; }
-  .buscar input { flex: 1; min-height: 50px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 16px; padding: 0 14px; }
-  .unidad { display: flex; gap: 12px; align-items: center; padding: 14px; border-radius: 16px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); }
-  .unidad + .unidad { margin-top: 8px; }
-  .unidad.aqui-u { border-color: var(--verde); box-shadow: 0 0 0 1px var(--verde) inset; }
-  .unidad .n { width: 36px; height: 36px; border-radius: 12px; background: var(--sup3); display: grid; place-items: center; font-weight: 700; flex: none; }
-  .unidad .t { flex: 1; min-width: 0; line-height: 1.35; }
-  .aviso { padding: 12px 14px; border-radius: 14px; background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.35); font-size: 14px; line-height: 1.45; margin-bottom: 14px; }
-  /* lector */
-  .lector { --tam: 19px; }
-  .lector .hoja { background: var(--sup2); border: 1px solid var(--borde); border-radius: 20px; padding: 22px 20px; }
-  .lector.claro .hoja { background: #FBF7EE; color: #1F1A12; border-color: #E8DFCB; }
-  .lector.claro .hoja .ter { color: #6B6150; }
-  .lector .hoja h1 { font-family: 'Space Grotesk'; font-size: calc(var(--tam) + 7px); line-height: 1.25; margin-bottom: 10px; }
-  .lector .hoja p { font-size: var(--tam); line-height: 1.7; margin: 0 0 14px; max-width: 70ch; overflow-wrap: anywhere; }
-  .lector mark { background: #FDE047; color: #1F1A12; border-radius: 4px; padding: 0 2px; }
-  .herr { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
-  .herr button { min-width: 48px; min-height: 46px; border-radius: 12px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-weight: 700; font-size: 15px; padding: 0 12px; }
-  .pasar { display: flex; gap: 10px; margin-top: 14px; }
-  .pasar .btn { flex: 1; }
-  .sub { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+  .buscar input { flex: 1; min-width: 0; min-height: 50px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 16px; padding: 0 14px; }
   .res { display: block; padding: 12px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 14px; line-height: 1.45; }
   .res + .res { margin-top: 8px; }
+  mark { background: #FDE047; color: #1F1A12; border-radius: 3px; padding: 0 2px; }
+  /* barra del libro */
+  .barra-libro { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+  .barra-libro button, .barra-libro a { flex: none; min-width: 44px; height: 44px; border-radius: 12px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 18px; font-weight: 700; display: grid; place-items: center; padding: 0 8px; }
+  .barra-libro .tema { flex: 1; min-width: 0; font-size: 13px; color: var(--texto3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
+  .barra-libro .tema b { color: var(--texto); }
+  .barra-libro .txt { font-size: 14px; }
+  @media (max-width: 560px) { .barra-libro .tema { display: none; } .barra-libro { justify-content: space-between; } }
+  #lienzo { width: 100%; }
+  /* páginas de texto maquetado */
+  .tx { position: absolute; inset: 0; display: flex; flex-direction: column; font-family: 'Literata', Georgia, serif; }
+  .tx .cab { font: 600 10.5px Inter, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #8A7F6A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 18px; flex: none; }
+  .tx .cuerpo { flex: 1; overflow: hidden; }
+  .tx .pie { font: 500 11px Inter, sans-serif; color: #8A7F6A; text-align: center; height: 18px; line-height: 18px; flex: none; }
+  .tx h2 { font-family: 'Space Grotesk'; font-weight: 700; line-height: 1.2; margin: 0 0 .6em; }
+  .tx .trim { font: 700 11px Inter, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #0E9F6E; margin-bottom: 6px; }
+  .tx p { margin: 0 0 .7em; line-height: 1.55; overflow-wrap: anywhere; hyphens: auto; }
+  .tx .subs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: .8em; }
+  .tx .subs span { font: 500 .62em Inter, sans-serif; background: rgba(0,0,0,.06); border-radius: 999px; padding: 3px 9px; }
+  .tx .nota { font: 500 .72em/1.45 Inter, sans-serif; background: rgba(245,158,11,.14); border-radius: 10px; padding: 10px 12px; }
+  .noche .tx .cab, .noche .tx .pie { color: #A39A86; } .noche .tx .subs span { background: rgba(255,255,255,.08); }
+  .portada { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 9% 10%; color: #fff; font-family: 'Space Grotesk'; }
+  .portada .cole { font: 600 12px Inter, sans-serif; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+  .portada .ico { font-size: 64px; }
+  .portada h1 { font-size: 30px; line-height: 1.1; margin: 8px 0; }
+  .portada .nota { font: 500 12px/1.45 Inter, sans-serif; background: rgba(0,0,0,.25); border-radius: 10px; padding: 10px 12px; }
+  /* hojas laterales (unidades, buscador) */
+  .velo-l { position: fixed; inset: 0; z-index: 60; background: rgba(0,0,0,.6); display: flex; justify-content: flex-end; }
+  .panel-l { width: min(440px, 100%); height: 100%; overflow: auto; background: #0A0A0A; border-left: 1px solid var(--borde); padding: 16px 16px 120px; }
+  .panel-l h3 { font-family: 'Space Grotesk'; font-size: 18px; margin: 4px 0 12px; display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+  .panel-l h4 { font: 700 12px Inter, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: var(--texto3); margin: 16px 0 8px; }
+  .uni { display: flex; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 12px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); font-size: 14px; line-height: 1.35; }
+  .uni + .uni { margin-top: 6px; }
+  .uni.aqui-u { border-color: var(--verde); }
+  .uni .n { width: 30px; height: 30px; border-radius: 10px; background: var(--sup3); display: grid; place-items: center; font-weight: 700; flex: none; }
+  .aviso-libro { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); z-index: 50; background: #111; border: 1px solid var(--borde); color: var(--texto); padding: 10px 14px; border-radius: 999px; font-size: 14px; max-width: calc(100% - 32px); }
+  @media (min-width: 1000px) { .aviso-libro { bottom: 24px; } }
 </style>
 <script src="salida.js?v=edu17b-1"></script>
 </head>
@@ -61,21 +80,27 @@
 <script src="estudiante-demo.js?v=edu17-2"></script>
 <script src="tareas-curso-demo.js?v=edu17-2"></script>
 <script src="estudiante.js?v=edu17-2"></script>
+<script src="libro.js?v=edu17b-1"></script>
 <script>
-const { E, hoy, materia, esc } = EST;
+const { E, materia, esc } = EST;
 EST.nav('textos');
 const $ = s => document.querySelector(s);
 let INDICE = null; const AREAS = {};
 const traer = async id => AREAS[id] || (AREAS[id] = await (await fetch(`textos/${id}.json`, { cache: 'no-cache' })).json());
-const normal = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const normal = s => String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 const pref = (() => { try { return JSON.parse(localStorage.getItem('textos-pref') || '{}'); } catch (e) { return {}; } })();
 const guardarPref = () => { try { localStorage.setItem('textos-pref', JSON.stringify(pref)); } catch (e) {} };
+let VA = {};   // área → índice de la unidad que toca hoy (EST.dondeVa: cronograma de EDU.04b)
+let LIBRO = null, B = null, Q = '';   // el libro abierto, sus datos y la palabra buscada
 
-let VA = {};   // area → índice de la unidad que toca hoy (EST.dondeVa: cronograma de EDU.04b)
-
-// ---------- Vistas ----------
 function cab(t, s, volver) { $('#tit').textContent = t; $('#subt').textContent = s || ''; $('#volver').href = volver || 'hoy/'; }
+function cerrarLibro() { if (B && B.limpiar) B.limpiar(); if (LIBRO) { LIBRO.cerrar(); LIBRO = null; } B = null; document.body.classList.remove('leyendo'); }
+function aviso(t) { const a = document.createElement('div'); a.className = 'aviso-libro'; a.textContent = t; document.body.appendChild(a); setTimeout(() => a.remove(), 2600); }
+
+// ---------- Inicio: las áreas ----------
 function inicio() {
+  cerrarLibro();
   cab('Mis textos', E.cursoNombre);
   const seguir = (() => { try { return JSON.parse(localStorage.getItem('textos-seguir') || 'null'); } catch (e) { return null; } })();
   $('#principal').innerHTML = `
@@ -84,67 +109,217 @@ function inicio() {
     <div class="areas">${INDICE.areas.map(a => {
       const m = materia(a.id), k = VA[a.id], u = k !== undefined ? a.temas[k] : null;
       return `<a class="area" href="textos/#${a.id}"><div class="ico" style="background:${m.color}22">${m.icono}</div><div style="min-width:0"><b>${esc(a.nombre)}</b>
-        <small>${a.temas.length} unidades${a.completo ? '' : ' · ⚠️ texto incompleto'}</small>
+        <small>${a.temas.length} unidades · ${a.completo ? '📄 páginas del libro' : '⚠️ texto incompleto'}</small>
         ${u ? `<span class="aqui">📍 El curso va acá: ${esc(u.titulo.length > 46 ? u.titulo.slice(0, 44) + '…' : u.titulo)}</span>` : ''}</div></a>`;
     }).join('')}</div>
-    <p class="ter" style="margin-top:16px">Textos de aprendizaje 2025 del Ministerio de Educación de Bolivia (distribución gratuita). El texto se extrajo de los PDF: algunas columnas o ejercicios pueden verse simples.</p>`;
+    <p class="ter" style="margin-top:16px">Textos de aprendizaje 2025 del Ministerio de Educación de Bolivia (distribución gratuita). Inglés, Filosofía, Artes, Música y Valores: las páginas del libro. Lengua, Mate, Biología y Sociales: el texto extraído del PDF general, que vino incompleto.</p>`;
 }
-async function area(id) {
+
+// ---------- Armado del libro ----------
+// Libros de área: una página = una hoja del PDF (imagen). Texto general: hojas maquetadas a medida.
+function armarImagen(d) {
+  const n = d.hojas, ini = d.temas.map(t => t.hoja);
+  const src = p => `textos/paginas/${d.carpeta}/${String(p).padStart(3, '0')}.webp`;
+  return {
+    n, ratio: 0.737, inicioUnidad: ini,
+    unidadDe: p => { let u = -1; ini.forEach((h, i) => { if (h <= p) u = i; }); return u; },
+    paginaDe: (u, k) => (k !== undefined && d.temas[u].ph && d.temas[u].ph[k] ? d.temas[u].ph[k] : ini[u]),
+    impresa: p => p - 2,   // hoja 8 = página impresa 6 (portada + desfase)
+    pintar: p => `<img src="${src(p)}" alt="Página ${p > 2 ? p - 2 : ''} del libro" draggable="false">${cinta(p)}`,
+    precargar: p => { const i = new Image(); i.src = src(p); }
+  };
+}
+function trozos(p) {   // párrafos largos, en partes que entren en una hoja
+  if (p.length <= 650) return [p];
+  const fr = p.match(/[^.!?]+[.!?]+["”»)]*\s*|[^.!?]+$/g) || [p], out = []; let cur = '';
+  for (const f of fr) { if ((cur + f).length > 480 && cur) { out.push(cur.trim()); cur = ''; } cur += f; }
+  if (cur.trim()) out.push(cur.trim());
+  return out.flatMap(x => x.length > 900 ? x.match(/.{1,500}(\s|$)/g) : [x]);
+}
+function armarTexto(d, pw, ph) {
+  const tam = Math.round(Math.max(13, Math.min(22, pw / 27)) * (pref.esc || 1));
+  const pad = Math.round(Math.max(18, pw * 0.08));
+  const estilo = `font-size:${tam}px;padding:${Math.round(pad * .7)}px ${pad}px ${Math.round(pad * .55)}px`;
+  // hoja de medir, igual a la real
+  const m = document.createElement('div');
+  m.style.cssText = `position:absolute;left:-9999px;top:0;width:${pw}px;height:${ph}px;visibility:hidden`;
+  m.innerHTML = `<div class="tx" style="${estilo}"><div class="cab">x</div><div class="cuerpo"></div><div class="pie">1</div></div>`;
+  document.body.appendChild(m);
+  const cuerpo = m.querySelector('.cuerpo'), alto = cuerpo.clientHeight - 4;
+  const paginas = [{ tipo: 'portada' }], inicioUnidad = [], pagDe = [];
+  d.temas.forEach((t, u) => {
+    inicioUnidad[u] = paginas.length + 1; pagDe[u] = [];
+    const titulo = `<div class="trim">${t.trimestre}.º trimestre · unidad ${u + 1}</div><h2 style="font-size:${Math.round(tam * 1.35)}px">${esc(t.titulo)}</h2>` +
+      (t.subtemas && t.subtemas.length ? `<div class="subs">${t.subtemas.slice(0, 8).map(s => `<span>${esc(s)}</span>`).join('')}</div>` : '');
+    if (!t.parrafos.length) { paginas.push({ tipo: 'texto', u, html: titulo + `<p class="nota">Esta unidad figura en el índice del texto oficial, pero su contenido no vino en el PDF.</p>` }); return; }
+    // se mide todo junto (una sola pasada) y se reparte en hojas
+    const piezas = []; t.parrafos.forEach((p, k) => trozos(p).forEach(x => piezas.push({ k, x })));
+    cuerpo.innerHTML = `<div>${titulo}</div>` + piezas.map(z => `<p>${esc(z.x)}</p>`).join('');
+    const hijos = [...cuerpo.children], hT = hijos[0].offsetHeight;
+    const alturas = hijos.slice(1).map(e => e.offsetHeight + parseFloat(getComputedStyle(e).marginBottom));
+    let html = titulo, usado = hT;
+    const cerrar = () => { paginas.push({ tipo: 'texto', u, html }); html = ''; usado = 0; };
+    piezas.forEach((z, i) => {
+      if (usado + alturas[i] > alto && html) cerrar();
+      html += `<p data-k="${z.k}">${esc(z.x)}</p>`; usado += alturas[i];
+      if (pagDe[u][z.k] === undefined) pagDe[u][z.k] = paginas.length + 1;
+    });
+    if (html) cerrar();
+  });
+  m.remove();
+  if (paginas.length % 2 === 0) paginas.push({ tipo: 'fin' });   // contratapa
+  const mat = materia(d.id);
+  return {
+    n: paginas.length, ratio: 0.72, inicioUnidad,
+    unidadDe: p => { let u = -1; inicioUnidad.forEach((h, i) => { if (h <= p) u = i; }); return u; },
+    paginaDe: (u, k) => (k !== undefined && pagDe[u][k] ? pagDe[u][k] : inicioUnidad[u]),
+    impresa: p => p,
+    pintar: p => {
+      const pg = paginas[p - 1]; if (!pg) return '';
+      if (pg.tipo === 'portada') return `<div class="portada" style="background:linear-gradient(160deg, ${mat.color}, #0A0A0A 120%)"><div><div class="cole">${esc(E.colegio || '')} · ${esc(E.cursoNombre || '')}</div><div class="ico">${mat.icono}</div><h1>${esc(d.nombre)}</h1><div style="font:500 14px Inter, sans-serif">Texto de aprendizaje 2025 · 2.º de secundaria</div></div>${d.completo ? '' : `<div class="nota">⚠️ ${esc(d.aviso || 'Texto incompleto.')} El texto sale del PDF: algunas columnas o ejercicios pueden verse mezclados.</div>`}</div>`;
+      if (pg.tipo === 'fin') return `<div class="tx" style="padding:${pad}px;justify-content:center;align-items:center;font:500 13px Inter, sans-serif;color:#8A7F6A">Fin del texto · ${esc(d.nombre)}</div>`;
+      const t = d.temas[pg.u];
+      let html = pg.html;
+      if (Q) { const re = new RegExp(reEsc(Q), 'gi'); html = html.replace(/(<p[^>]*>)([^<]*)/g, (a, b, c) => b + c.replace(re, x => `<mark>${x}</mark>`)); }
+      return `<div class="tx" style="${estilo}"><div class="cab">${inicioUnidad[pg.u] === p ? '' : esc(mat.corto) + ' · ' + esc(t.titulo)}</div><div class="cuerpo">${html}</div><div class="pie">${p}</div></div>${cinta(p)}`;
+    }
+  };
+}
+// Señalador "📍 El curso va acá" en la primera hoja de la unidad que toca hoy
+function cinta(p) { if (!B || !B.arm || VA[B.id] === undefined || B.arm.inicioUnidad[VA[B.id]] !== p) return ''; return '<div class="cinta" title="El curso va acá"></div><div class="cinta-txt">📍 El curso va acá</div>'; }
+
+// ---------- Abrir un área como libro ----------
+async function abrirLibro(id, destino) {
   const a = INDICE.areas.find(x => x.id === id); if (!a) return inicio();
   const d = await traer(id), m = materia(id);
+  Q = destino.q || '';
+  if (B && B.id === id && LIBRO) { if (!B.imagen) LIBRO.repintar(); irA(destino); return; }
+  cerrarLibro();
+  document.body.classList.add('leyendo');
   cab(a.nombre, m.corto, 'textos/');
-  const porT = [1, 2, 3].map(t => d.temas.map((u, i) => [u, i]).filter(([u]) => u.trimestre === t));
+  const imagen = !!d.carpeta;
   $('#principal').innerHTML = `
-    ${d.completo ? '' : `<div class="aviso">⚠️ ${esc(d.aviso)}</div>`}
-    <form class="buscar" onsubmit="event.preventDefault();location.hash='buscar='+encodeURIComponent(this.q.value)+'&area=${id}'"><input name="q" placeholder="🔎 Buscar en ${esc(m.corto)}" aria-label="Buscar"><button class="btn">Buscar</button></form>
-    ${porT.map((lista, t) => lista.length ? `<section class="seccion"><h3>${t + 1}.º trimestre</h3>${lista.map(([u, i]) => `
-      <a class="unidad ${VA[id] === i ? 'aqui-u' : ''}" href="textos/#${id}/${i}"><span class="n">${i + 1}</span><span class="t"><b>${esc(u.titulo)}</b>
-        ${VA[id] === i ? '<br><span class="aqui">📍 El curso va acá (según el cronograma)</span>' : ''}
-        ${u.parrafos.length ? '' : '<br><span class="pildora gris">Solo en el índice</span>'}</span><span class="ter">›</span></a>`).join('')}</section>` : '').join('')}`;
+    <div class="barra-libro">
+      <button onclick="verUnidades()" title="Unidades" aria-label="Unidades">☰</button>
+      ${VA[id] !== undefined ? `<button onclick="irVaAca()" title="Ir a donde va el curso" aria-label="Ir a donde va el curso">📍</button>` : ''}
+      <button onclick="verBuscar()" title="Buscar en este libro" aria-label="Buscar">🔎</button>
+      <span class="tema" id="tema-actual"></span>
+      ${imagen ? '' : '<button class="txt" onclick="tamLetra(-1)" aria-label="Letra más chica">A−</button><button class="txt" onclick="tamLetra(1)" aria-label="Letra más grande">A+</button>'}
+      <button id="b-noche" onclick="pref.noche=!pref.noche;guardarPref();LIBRO.noche(pref.noche);this.textContent=pref.noche?'☀️':'🌙'" title="Modo noche" aria-label="Modo noche">${pref.noche ? '☀️' : '🌙'}</button>
+      <a id="al-tutor" href="mi-tutor/" title="Preguntale a tu tutor sobre esta página" aria-label="Preguntale a tu tutor sobre esta página">🧑‍🏫</a>
+    </div>
+    <div id="lienzo"></div>`;
+  B = { id, d, imagen, arm: null };
+  const lienzo = $('#lienzo');
+  const altoLienzo = () => {   // lo que queda de pantalla, sin la barra de abajo
+    const nav = document.querySelector('.nav-est'), abajo = nav && innerWidth < 1000 ? nav.offsetHeight : 0;
+    lienzo.style.height = Math.max(240, innerHeight - lienzo.getBoundingClientRect().top - abajo - 10) + 'px';
+  };
+  altoLienzo(); addEventListener('resize', altoLienzo);   // va antes que el del libro: mide con el alto nuevo
+  B.limpiar = () => removeEventListener('resize', altoLienzo);
+  const medidaHoja = () => { const H = lienzo.clientHeight, W = lienzo.clientWidth; let h = H, w = Math.round(h * 0.72); if (!(2 * w <= W && W > H * 1.05) && w > W) { w = W; h = Math.round(w / 0.72); } return [w, h]; };
+  // el texto se reparte midiendo con la letra del libro: se espera a que cargue (máx. 2,5 s)
+  if (!imagen) try { await Promise.race([Promise.all([document.fonts.load('16px Literata'), document.fonts.load('700 16px "Space Grotesk"')]), new Promise(r => setTimeout(r, 2500))]); } catch (e) {}
+  if (!B || B.id !== id) return;
+  if (imagen) B.arm = armarImagen(d); else { [B.pw, B.ph] = medidaHoja(); B.arm = armarTexto(d, B.pw, B.ph); }
+  LIBRO = Libro.abrir(lienzo, {
+    paginas: B.arm.n, ratio: B.arm.ratio, pagina: 1, noche: pref.noche,
+    pintar: p => B.arm.pintar(p), precargar: B.arm.precargar,
+    alCambiar: (p, visibles) => alCambiar(p, visibles),
+    alRedimensionar: (pw, ph) => {   // el texto se vuelve a repartir si cambió el tamaño de la hoja
+      if (imagen || !B || (Math.abs(pw - B.pw) < 2 && Math.abs(ph - B.ph) < 2)) return;
+      const ancla = LIBRO ? anclaDe() : null;
+      B.pw = pw; B.ph = ph; B.arm = armarTexto(d, pw, ph);
+      if (LIBRO) { LIBRO.n = B.arm.n; LIBRO.actual = ancla ? B.arm.paginaDe(ancla.u, ancla.k) : Math.min(LIBRO.actual, B.arm.n); }
+    }
+  });
+  irA(destino, true);
 }
-async function leer(id, i, buscar, foco) {
-  const d = await traer(id), u = d.temas[i]; if (!u) return area(id);
-  const m = materia(id);
-  cab(m.corto, `${u.trimestre}.º trimestre · unidad ${i + 1} de ${d.temas.length}`, `textos/#${id}`);
-  if (u.parrafos.length) try { localStorage.setItem('textos-seguir', JSON.stringify({ area: id, parte: i, titulo: `${m.corto}: ${u.titulo}` })); } catch (e) {}
-  const re = buscar ? new RegExp(buscar.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi') : null;
-  const resaltar = p => re ? esc(p).replace(re, x => `<mark>${x}</mark>`) : esc(p);
-  $('#principal').innerHTML = `<div class="lector ${pref.claro ? 'claro' : ''}" style="--tam:${pref.tam || 19}px">
-    <div class="herr"><button onclick="tam(-2)" aria-label="Letra más chica">A−</button><button onclick="tam(2)" aria-label="Letra más grande">A+</button>
-      <button onclick="pref.claro=!pref.claro;guardarPref();ruta()">${pref.claro ? '🌙 Oscuro' : '☀️ Claro'}</button>
-      ${VA[id] === i ? '<span class="aqui" style="margin:0 0 0 auto">📍 El curso va acá</span>' : ''}</div>
-    <article class="hoja"><h1>${esc(u.titulo)}</h1>
-      ${u.subtemas && u.subtemas.length ? `<div class="sub">${u.subtemas.map(s => `<span class="pildora gris">${esc(s)}</span>`).join('')}</div>` : ''}
-      ${u.parrafos.length ? u.parrafos.map((p, k) => `<p id="p${k}">${resaltar(p)}</p>`).join('') : `<p>Esta unidad figura en el índice del texto oficial, pero su contenido todavía no está cargado. ${esc(d.aviso || '')}</p>`}
-      <p class="ter" style="font-size:13px">Fuente: ${esc(d.fuente)}</p></article>
-    <div class="pasar">${i > 0 ? `<a class="btn sec2" href="textos/#${id}/${i - 1}">‹ Anterior</a>` : ''}${i < d.temas.length - 1 ? `<a class="btn" href="textos/#${id}/${i + 1}">Siguiente ›</a>` : ''}</div></div>`;
-  if (foco !== undefined) { const el = document.getElementById('p' + foco); if (el) el.scrollIntoView({ block: 'center' }); } else scrollTo(0, 0);
+function anclaDe() {   // qué párrafo está arriba de la hoja visible (para no perder el lugar al cambiar la letra)
+  const u = B.arm.unidadDe(LIBRO.actual); if (u < 0) return null;
+  const el = document.querySelector('.lb-pag [data-k]'); return { u, k: el ? +el.dataset.k : undefined };
 }
-function tam(n) { pref.tam = Math.max(15, Math.min(30, (pref.tam || 19) + n)); guardarPref(); document.querySelector('.lector').style.setProperty('--tam', pref.tam + 'px'); }
-async function buscarEn(q, soloArea) {
-  cab('Buscar', `“${q}”`, soloArea ? `textos/#${soloArea}` : 'textos/');
-  $('#principal').innerHTML = '<p class="sec">Buscando…</p>';
-  const nq = normal(q.trim()); if (nq.length < 3) { $('#principal').innerHTML = '<p class="sec">Escribí al menos 3 letras.</p>'; return; }
+function alCambiar(p, visibles) {
+  const ult = visibles[visibles.length - 1] || p, u = B.arm.unidadDe(ult), t = u >= 0 ? B.d.temas[u] : null, m = materia(B.id);
+  $('#tema-actual').innerHTML = t ? `<b>${u + 1}. ${esc(t.titulo)}</b>${VA[B.id] === u ? ' · 📍 el curso va acá' : ''}` : esc(B.d.nombre);
+  const imp = visibles.map(B.arm.impresa).filter(x => x > 0);
+  cab(B.d.nombre, t ? `${t.trimestre}.º trim. · unidad ${u + 1} de ${B.d.temas.length}${imp.length ? ' · pág. ' + imp.join('–') : ''}` : 'Portada', 'textos/');
+  const pagImp = B.arm.impresa(ult);
+  $('#al-tutor').href = `mi-tutor/?materia=${B.id}${t ? `&tema=${encodeURIComponent(t.id)}` : ''}${pagImp > 0 ? `&pagina=${pagImp}` : ''}`;
+  if (t) try { localStorage.setItem('textos-seguir', JSON.stringify({ area: B.id, parte: 'p' + p, titulo: `${m.corto}: ${t.titulo}` })); } catch (e) {}
+  ultimaRuta = `#${B.id}/p${p}${Q ? '?q=' + encodeURIComponent(Q) : ''}`;
+  history.replaceState(null, '', ultimaRuta);
+}
+function irA(dest, sinAnim) {
+  let p = 1;
+  if (dest.pagina) p = dest.pagina;
+  else if (dest.unidad !== undefined && B.arm.inicioUnidad[dest.unidad]) p = B.arm.paginaDe(dest.unidad, dest.parrafo);
+  LIBRO.ir(p, sinAnim);
+  if (Q && B.imagen && dest.parrafo !== undefined) aviso(`🔎 “${Q}” está en esta página`);
+}
+function irVaAca() { if (VA[B.id] !== undefined) LIBRO.ir(B.arm.inicioUnidad[VA[B.id]]); }
+function tamLetra(d) {
+  pref.esc = Math.max(0.75, Math.min(1.6, Math.round(((pref.esc || 1) + d * 0.12) * 100) / 100)); guardarPref();
+  const anc = anclaDe(); B.arm = armarTexto(B.d, B.pw, B.ph); LIBRO.n = B.arm.n;
+  LIBRO.actual = anc ? B.arm.paginaDe(anc.u, anc.k) : Math.min(LIBRO.actual, B.arm.n); LIBRO.repintar();
+}
+
+// ---------- Hojas laterales: unidades y buscador ----------
+function hojaLateral(html) {
+  const v = document.createElement('div'); v.className = 'velo-l';
+  v.innerHTML = `<div class="panel-l">${html}</div>`;
+  v.addEventListener('click', e => { if (e.target === v || e.target.closest('[data-cerrar]')) v.remove(); });
+  document.body.appendChild(v); return v;
+}
+function verUnidades() {
+  const d = B.d;
+  hojaLateral(`<h3>☰ ${esc(d.nombre)} <button class="btn sec2" data-cerrar style="min-height:40px">✕</button></h3>
+    ${d.completo ? '' : `<p class="ter" style="font-size:13px">⚠️ ${esc(d.aviso || '')}</p>`}
+    ${[1, 2, 3].map(tr => { const l = d.temas.map((t, i) => [t, i]).filter(([t]) => t.trimestre === tr); return l.length ? `<h4>${tr}.º trimestre</h4>` + l.map(([t, i]) => `
+      <button class="uni ${VA[B.id] === i ? 'aqui-u' : ''}" data-cerrar onclick="LIBRO.ir(B.arm.inicioUnidad[${i}])"><span class="n">${i + 1}</span><span style="flex:1">${esc(t.titulo)}${VA[B.id] === i ? '<br><span class="aqui" style="margin-top:4px">📍 El curso va acá</span>' : ''}${t.parrafos.length ? '' : '<br><span class="pildora gris">Solo en el índice</span>'}</span><span class="ter">${B.imagen ? 'pág. ' + t.pagina : ''}</span></button>`).join('') : ''; }).join('')}`);
+}
+function verBuscar() {
+  const v = hojaLateral(`<h3>🔎 Buscar en ${esc(materia(B.id).corto)} <button class="btn sec2" data-cerrar style="min-height:40px">✕</button></h3>
+    <form class="buscar"><input name="q" placeholder="Una palabra…" value="${esc(Q)}" aria-label="Buscar"><button class="btn">Buscar</button></form><div id="res-libro"></div>`);
+  const f = v.querySelector('form'); f.q.focus();
+  f.onsubmit = e => { e.preventDefault(); v.querySelector('#res-libro').innerHTML = buscar(f.q.value, B.id); };
+  if (Q) f.onsubmit(new Event('submit'));
+}
+function buscar(q, soloArea) {
+  const nq = normal(q.trim()); if (nq.length < 3) return '<p class="sec">Escribí al menos 3 letras.</p>';
   const res = [];
   for (const a of INDICE.areas.filter(a => !soloArea || a.id === soloArea)) {
-    const d = await traer(a.id);
+    const d = AREAS[a.id]; if (!d) continue;
     d.temas.forEach((u, i) => {
       if (normal(u.titulo).includes(nq)) res.push({ a, i, k: undefined, txt: u.titulo, u });
       u.parrafos.forEach((p, k) => { const j = normal(p).indexOf(nq); if (j >= 0 && res.length < 60) res.push({ a, i, k, txt: p.slice(Math.max(0, j - 60), j + 100), u }); });
     });
   }
-  const re = new RegExp(q.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-  $('#principal').innerHTML = `<p class="sec" style="margin-bottom:10px">${res.length ? `${res.length}${res.length >= 60 ? '+' : ''} resultados` : 'No encontramos nada con esa palabra.'}</p>` +
-    res.map(r => `<a class="res" href="textos/#${r.a.id}/${r.i}${r.k !== undefined ? '/' + r.k : ''}?q=${encodeURIComponent(q)}"><b>${materia(r.a.id).icono} ${esc(materia(r.a.id).corto)} · ${esc(r.u.titulo.slice(0, 60))}</b><br>…${esc(r.txt).replace(re, x => `<mark>${x}</mark>`)}…</a>`).join('');
+  const re = new RegExp(reEsc(q.trim()), 'gi');
+  return `<p class="sec" style="margin-bottom:10px">${res.length ? `${res.length}${res.length >= 60 ? '+' : ''} resultados` : 'No encontramos nada con esa palabra.'}</p>` +
+    res.map(r => `<a class="res" data-cerrar href="textos/#${r.a.id}/${r.i}${r.k !== undefined ? '/' + r.k : ''}?q=${encodeURIComponent(q.trim())}"><b>${materia(r.a.id).icono} ${esc(materia(r.a.id).corto)} · ${esc(r.u.titulo.slice(0, 60))}${AREAS[r.a.id].carpeta && r.k !== undefined && r.u.ph ? ' · pág. ' + (r.u.ph[r.k] - 2) : ''}</b><br>…${esc(r.txt).replace(re, x => `<mark>${x}</mark>`)}…</a>`).join('');
 }
-// rutas: #  · #ing · #ing/3 · #ing/3/12?q=palabra · #buscar=palabra&area=ing
+async function buscarEnTodo(q) {
+  cerrarLibro();
+  cab('Buscar', `“${q}”`, 'textos/');
+  $('#principal').innerHTML = '<p class="sec">Buscando…</p>';
+  await Promise.all(INDICE.areas.map(a => traer(a.id)));
+  $('#principal').innerHTML = buscar(q);
+}
+
+// rutas: #  · #ing (portada) · #ing/p12 (hoja 12) · #ing/3 (unidad 4) · #ing/3/12 (párrafo 12) · ?q=palabra · #buscar=palabra
+let ultimaRuta = null;
 function ruta() {
+  if (location.hash === ultimaRuta && LIBRO) return;
+  ultimaRuta = location.hash;
   const h = decodeURIComponent(location.hash.slice(1));
-  if (h.startsWith('buscar=')) { const [q, ar] = h.slice(7).split('&area='); return buscarEn(q, ar); }
-  const [camino, query] = h.split('?q='); const [id, i, k] = camino.split('/');
+  if (h.startsWith('buscar=')) return buscarEnTodo(h.slice(7));
+  const [camino, q] = h.split('?q='); const [id, a, b] = camino.split('/');
   if (!id) return inicio();
-  if (i === undefined) return area(id);
-  return leer(id, +i, query, k !== undefined ? +k : undefined);
+  const dest = { q: q || '' };
+  if (a && a[0] === 'p') dest.pagina = +a.slice(1);
+  else if (a !== undefined && a !== '') { dest.unidad = +a; if (b !== undefined) dest.parrafo = +b; }
+  return abrirLibro(id, dest);
 }
 (async () => {
   ({ VA, INDICE } = await EST.dondeVa());

@@ -156,3 +156,26 @@ Problema que encontró el dueño en la presentación: al salir del mundo (✕ / 
 - Probado en 390×844, 844×390 y 1280×800: app → mundo → ✕ vuelve a la página de la app; selector →
   mundo → ✕ vuelve al selector; dentro de un iframe en `/presentacion/`, el juego vuelve a Hoy, el
   selector redirige a Hoy y ningún "←" lleva al selector.
+
+### EDU.17b — Mis textos como libro real (pedido del dueño)
+
+- **Libros de área (Inglés, Filosofía, Artes, Música, Valores): las páginas reales del PDF** en
+  imagen (`datos/textos-oficiales/2do-secundaria/paginas/<área>/NNN.webp`, traídas de `maestra-2`;
+  el build las copia a `/maqueta/textos/paginas/`). Se ve el libro tal cual, con sus dibujos y tablas.
+  Por qué: es fiel al texto que usa el profe y evita las columnas mezcladas de la extracción.
+- **Texto general (Lengua, Mate, Bio-Geo, Sociales)**: no hay PDF → el texto extraído, maquetado en
+  hojas (letra Literata, márgenes, título del tema arriba, número de página, portada del área).
+  A−/A+ vuelve a repartir el texto sin perder el lugar.
+- `maqueta/libro.js`: hojas con **vuelta de página en CSS 3D** (curvatura, luz y sombra) que sigue al
+  dedo o al mouse; tocar el borde, flechas del teclado y botones ‹ › chicos. **Doble página** si
+  entra a lo ancho (tablet acostada, PC), una en celular parado. Con "reducir movimiento" o equipo
+  lento: deslizamiento simple.
+- **📍 El curso va acá**: cinta verde en la primera hoja de esa unidad y botón 📍 para ir. **☰** lista
+  de unidades por trimestre. **🔎** buscador: salta a la hoja (en las páginas reales avisa "está en
+  esta página"; en el texto, la palabra queda resaltada). **Seguir leyendo** guarda la hoja.
+  **🌙** modo noche. **🧑‍🏫** "Preguntale a tu tutor sobre esta página" →
+  `/maqueta/mi-tutor/?materia=<área>&tema=<temaId>&pagina=<n>` (acordado con EDU.16).
+- `armar-textos.mjs` ahora guarda, en los libros de área, la hoja de inicio de cada unidad y la hoja
+  de cada párrafo (`hoja`, `hojaFin`, `ph`), para el buscador y la cinta.
+- Probado en 820×1180, 1180×820, 390×844 y 1280×800, y dentro del marco tablet de la presentación:
+  sin desbordes, ninguna hoja de texto cortada, sin errores.
