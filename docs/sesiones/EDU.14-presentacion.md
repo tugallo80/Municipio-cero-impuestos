@@ -181,18 +181,19 @@ nombre, el modo demo debería aceptar colegio y nombre del profe (la presentaci�
 ### Nombre del profe y llave de demo (acordado con EDU.15)
 
 - El nombre real del profe **no va en el repo ni en el sitio** (repo público). Entra por el link:
-  `?profe=<nombre>&apodo=<apodo>`. La presentación lo usa en la portada ("Hola, <apodo>"; sin
-  parámetro, "Hola, Profe") y en las notas del presentador (`{profe}`, `{apodo}`), y lo guarda en el equipo.
+  `?profe=<nombre formal>&profeApodo=<apodo>` (claves unificadas por la MAESTRA). La presentación usa el
+  nombre formal en la portada ("Para el profe <nombre>"; sin parámetro, "Hola, Profe") y en las notas
+  (`{profe}`; `{apodo}` también disponible), lo guarda en el equipo y pasa `profe` y `profeApodo` a cada demo.
 - Llave de la demo: `?llave=…` o `#demo=…` en el link de la presentación.
 - Todo se guarda en `localStorage` del mismo sitio y se borra del link. Las páginas de la demo lo leen
   solas (acordado con EDU.15):
   - `nande-demo`: la llave (la tiene la MAESTRA; nunca en el repo).
-  - `nande-profe`: nombre que muestra el panel.
-  - `nande-profe-apodo`: cómo lo llaman sus alumnos, para que EDU.17 lo use en la app del alumno.
+  - `nande-profe`: nombre formal (portada, notas, panel del profe).
+  - `nande-profe-apodo`: apodo del profe (app del alumno y tutor).
   - Ojo: `nande-apodo` es el apodo **del alumno** (EDU.15); la presentación no lo toca.
 - Con la llave, el panel usa el cronograma de la cuenta demo del servidor (2026, las 5 materias del profe).
   Sin llave o sin internet, la presentación siembra `nande-crono-S2` como respaldo.
 - Colegio y curso salen de `/maqueta/demo-piloto.js` (EDU.15, PR #37) cuando esté en `main`; si no, del texto fijo.
 
 **Link para presentar** (lo arma la MAESTRA con los valores reales, fuera del repo):
-`…/presentacion/?profe=<nombre>&apodo=<apodo>#demo=<llave>` — se abre una vez en el equipo de la reunión.
+`…/presentacion/?profe=<nombre>&profeApodo=<apodo>#demo=<llave>` — se abre una vez en el equipo de la reunión.

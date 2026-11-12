@@ -339,7 +339,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Seguimos enseñando como hace 100 años -->
   <section class="lam hero" style="--pos: 62% 55%">
-    <template class="notas">Saludalo: «Hola, {apodo}». Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
+    <template class="notas">Saludalo por su nombre: «Hola, profe {profe}». Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
     <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
     <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
@@ -632,15 +632,16 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   const PARA = { profe: '', apodo: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' };
   const DP = window.DEMO_PILOTO;
   if (DP) { if (DP.colegio && DP.colegio.nombre) PARA.colegio = DP.colegio.nombre; if (DP.curso && DP.curso.nombre) PARA.curso = DP.curso.nombre; }
-  for (const k of ['profe', 'apodo']) {
-    try { if (q.get(k)) localStorage.setItem('nande-pres-' + k, q.get(k)); PARA[k] = q.get(k) || localStorage.getItem('nande-pres-' + k) || ''; } catch (e) { PARA[k] = q.get(k) || ''; }
-  }
-  const llamar = PARA.apodo || PARA.profe || 'Profe';   // cómo se lo saluda
+  // Claves unificadas: 'nande-profe' (nombre formal: portada, notas, panel) y 'nande-profe-apodo' (app del alumno, tutor).
+  const leer = (k) => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } };
+  PARA.profe = q.get('profe') || leer('nande-profe');
+  PARA.apodo = q.get('profeApodo') || q.get('apodo') || leer('nande-profe-apodo');
+  const llamar = PARA.profe || 'Profe';   // en la presentación se lo nombra formal
   const NOMBRES = { marca: 'ÑANDÉ', colegio: PARA.colegio, curso: PARA.curso };
   document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
-  document.getElementById('saludo').textContent = 'Hola, ' + llamar;
+  document.getElementById('saludo').textContent = PARA.profe ? 'Para el profe ' + PARA.profe : 'Hola, Profe';
   // En las notas del presentador: {profe} = nombre (o "el profe"), {apodo} = cómo lo llaman (o "Profe")
-  const personalizar = (t) => t.replace(/\{profe\}/g, PARA.profe || 'el profe').replace(/\{apodo\}/g, llamar);
+  const personalizar = (t) => t.replace(/\{profe\}/g, PARA.profe || 'el profe').replace(/\{apodo\}/g, PARA.apodo || 'Profe');
   document.title = NOMBRES.marca + ' Educación · Presentación';
 
   // VARIANTES: ?para=profe (por defecto) | director | municipio. Una lámina con data-para="director municipio"
@@ -722,12 +723,18 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
   const llaveNueva = q.get(PARAM_LLAVE) || (llaveHash ? decodeURIComponent(llaveHash) : '');
   try {
     if (llaveNueva) localStorage.setItem('nande-demo', llaveNueva);
-    if (PARA.profe || PARA.apodo) localStorage.setItem('nande-profe', PARA.profe || PARA.apodo);
+    if (PARA.profe) localStorage.setItem('nande-profe', PARA.profe);
     if (PARA.apodo) localStorage.setItem('nande-profe-apodo', PARA.apodo);
   } catch (e) {}
-  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + (llaveHash ? '' : location.hash)); }
-  // Las demos toman llave y nombre del equipo: la URL va tal cual.
-  const conLlave = (url) => url;
+  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || q.has('profeApodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); q.delete('profeApodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + (llaveHash ? '' : location.hash)); }
+  // Las demos leen llave y nombres del equipo; además se les pasan profe y profeApodo en el link.
+  function conLlave(url) {
+    if (!PARA.profe && !PARA.apodo) return url;
+    const u = new URL(url, location.origin);
+    if (PARA.profe) u.searchParams.set('profe', PARA.profe);
+    if (PARA.apodo) u.searchParams.set('profeApodo', PARA.apodo);
+    return u.pathname + u.search + u.hash;
+  }
 
   // ── Verlo en vivo: la demo en una capa; en PC/proyector, dentro de un aparato simulado ──
   const vivo = $('vivo'), marco = $('vivo-marco'), aparato = $('aparato'), caja = $('vivo-caja'), escena = $('vivo-escena');
