@@ -40,8 +40,8 @@ async function alumnoDeLaCuenta(request) {
 //  - Sin `profe`: Kay con la voz elegida (página técnica /prueba-motor/, EDU.02).
 exports.eduKayToken = onCall(OPCIONES, async (request) => {
   const { alumnoId, perfil, limites: propios, prueba } = await alumnoDeLaCuenta(request);
-  // Los topes de costo diario (general y de pruebas) no se pueden cambiar por cuenta.
-  const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd, costoPruebasDiaUsd: LIMITES.costoPruebasDiaUsd };
+  // Los topes de costo diario (general, pruebas y demo) no se pueden cambiar por cuenta.
+  const limites = { ...LIMITES, ...propios, costoGlobalDiaUsd: LIMITES.costoGlobalDiaUsd, costoPruebasDiaUsd: LIMITES.costoPruebasDiaUsd, costoDemoDiaUsd: LIMITES.costoDemoDiaUsd };
   const profe = profes.profePorId(String(request.data?.profe || ''));
   const pedida = String(request.data?.voz || '');
   const voz = profe ? profe.voz : VOCES.some((v) => v.id === pedida) ? pedida : VOZ_POR_DEFECTO;

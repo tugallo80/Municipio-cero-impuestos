@@ -221,7 +221,7 @@ function avisarProfes(tipo, datos) {
 }
 function hablar() { const PV = window.ProfesVoz; if (!PV) return; avisarProfes(); PV.llamar(profeDe()); }
 addEventListener('profes-voz-listo', () => { const PV = window.ProfesVoz; PV.al('pista', n => { while (T && R && R.peldano < n) subir(); }); if (T) pintarTarea(); }, { once: true });
-addEventListener('load', () => setTimeout(() => import('/voz/profes.js?v=edu02d-2').catch(() => {}), 800));
+addEventListener('load', () => setTimeout(() => import('/voz/profes.js?v=edu15-1').catch(() => {}), 800));
 
 // ---------- Tareas reales del profe (EDU.04f): misma cuenta y módulo que el panel del profe ----------
 const NC = () => window.NandeClase && typeof window.NandeClase.tareas === 'function' ? window.NandeClase : null;
@@ -257,7 +257,7 @@ async function marcarEnServidor(t, extra) {
   await nc.tareas({ accion: 'marcar', id: t.id, estado: extra && extra.texto ? 'entregada' : 'hecha', ...(extra || {}) });
 }
 addEventListener('nande-clase-listo', cargarDelServidor);
-addEventListener('load', () => setTimeout(() => import('/voz/clase.js').catch(() => {}), 300));
+addEventListener('load', () => setTimeout(() => import('/voz/clase.js?v=edu15-1').catch(() => {}), 300));
 
 // ---------- Rutas ----------
 function ruta() { const m = /t=([^&]+)/.exec(location.hash); if (m) abrirTarea(decodeURIComponent(m[1])); else { T = null; lista(); } }

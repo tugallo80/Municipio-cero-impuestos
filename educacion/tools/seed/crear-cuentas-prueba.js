@@ -14,6 +14,7 @@ const { getDatabase } = require('firebase-admin/database');
 const { cuentas, dominio } = require('./cuentas-prueba.json');
 const contenido = require('./contenido-demo.json');
 const reglas = require('../../database.rules.json');
+const { cargarDemo } = require('./datos-demo');
 
 initializeApp({
   projectId: process.env.PROYECTO || 'municipio-ia',
@@ -65,6 +66,8 @@ const db = getDatabase();
     await db.ref(`edu/contenido/${curso}`).set(datos);
     console.log(`✅ Contenido demo de ${curso}`);
   }
+  // EDU.15: cuenta y datos de la demo sin login.
+  await cargarDemo(db);
   process.exit(0);
 })().catch((err) => {
   console.error('❌', err.message);

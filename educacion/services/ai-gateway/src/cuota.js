@@ -9,17 +9,23 @@ function fechaBolivia(ahora = Date.now()) {
 }
 
 /**
- * Las dos bolsas de gasto del día (EDU.04e):
- *  - general: chicos, profes y la cuenta demo del dueño (tope EDU_TOPE_COSTO_GLOBAL_DIA_USD, USD 5)
+ * Las bolsas de gasto del día (EDU.04e, EDU.15):
+ *  - general: chicos, profes y la cuenta del dueño (tope EDU_TOPE_COSTO_GLOBAL_DIA_USD, USD 5)
  *  - pruebas: las cuentas de prueba automática del workflow (tope EDU_TOPE_COSTO_PRUEBAS_DIA_USD, USD 1)
- * Las pruebas NUNCA gastan de la bolsa general: si la suya se agota, se saltean.
- * Las dos se reinician a la medianoche de Bolivia (fechaBolivia).
+ *  - demo: la cuenta de la demo sin login (tope EDU_TOPE_COSTO_DEMO_DIA_USD, USD 2)
+ * Ninguna gasta de la bolsa de otra: si la suya se agota, esa cuenta usa ejemplos o espera a mañana.
+ * Se reinician a la medianoche de Bolivia (fechaBolivia).
+ * @param {boolean|'demo'} tipo true = pruebas · 'demo' = demo · false = general
  */
-function bolsa(esPrueba, limites) {
-  return esPrueba
+function bolsa(tipo, limites) {
+  if (tipo === 'demo') return { ruta: 'edu/uso_demo', tope: limites.costoDemoDiaUsd ?? 2, motivo: 'tope_demo', mensaje: 'La demo ya usó su presupuesto de IA de hoy: te mostramos un ejemplo.' };
+  return tipo === true
     ? { ruta: 'edu/uso_pruebas', tope: limites.costoPruebasDiaUsd, motivo: 'tope_pruebas', mensaje: 'Las pruebas automáticas ya usaron su presupuesto de IA de hoy.' }
     : { ruta: 'edu/uso_global', tope: limites.costoGlobalDiaUsd, motivo: 'tope_global', mensaje: 'Kay ya habló mucho hoy con todos los chicos. ¡Mañana seguimos!' };
 }
+
+/** Qué bolsa usa un perfil (edu/alumnos/… o edu/personal/…). */
+const tipoDeBolsa = (perfil) => (perfil?.pruebaAuto === true ? true : perfil?.demo === true ? 'demo' : false);
 
 /**
  * ¿Puede este alumno abrir otra charla hoy?
@@ -49,4 +55,4 @@ function evaluarCuota(usoAlumno = {}, usoGlobal = {}, limites, esPrueba = false)
   return { ok: true };
 }
 
-module.exports = { fechaBolivia, evaluarCuota, bolsa };
+module.exports = { fechaBolivia, evaluarCuota, bolsa, tipoDeBolsa };

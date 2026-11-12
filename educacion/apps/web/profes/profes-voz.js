@@ -15,6 +15,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'firebase/auth'
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { entrarDemo } from '../comun/demo.js'
 import { iniciarSesionKay } from '@voz-kay/kaySession.js'
 import config from '@tutor/profes.json'
 
@@ -197,6 +198,8 @@ const listo = (async () => {
   fnUso = httpsCallable(f, 'eduKayUso')
   fnProfes = httpsCallable(f, 'eduProfes')
   await new Promise((res) => onAuthStateChanged(auth, (u) => { usuario = u; res() }))
+  // EDU.15: con la llave de la demo se entra solo (sin pedir usuario ni clave).
+  if ((await entrarDemo(auth, f)).ok) usuario = auth.currentUser
   if (usuario) cargarProfes()
 })()
 listo.catch((e) => console.warn('[profes] sin conexión:', e))

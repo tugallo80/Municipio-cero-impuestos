@@ -85,6 +85,22 @@
     ejemplo: true,
   };
 
+  // EDU.15: tarjeta lista para la demo cuando la mentora tarda (con el tema que se pidió).
+  const tarjetaRapida = (tm) => ({
+    objetivo: `Comprender ${tm.titulo} relacionándolo con la vida del curso y de la comunidad.`,
+    inicio: `Pregunta de arranque: "¿Dónde vieron algo de ${tm.titulo} esta semana?". Anotá 3 respuestas en el pizarrón.`,
+    actividad: `En parejas, buscan un ejemplo de ${tm.titulo} en su barrio o en su casa, lo explican en 3 líneas y lo comparten con otra pareja.`,
+    cierre: 'Pregunta de salida: cada uno escribe una idea clave en un papelito y lo pega en la pared antes de salir.',
+    comunidad: `Preguntar en casa cómo se vivía ${tm.titulo} cuando sus familias eran chicas, y traer una respuesta.`,
+    materiales: ['cuaderno', 'papelitos', 'marcadores'],
+    criterios: [`Explica ${tm.titulo} con sus palabras`, 'Da un ejemplo real', 'Escucha y aporta a la pareja'],
+    evaluacion: { ser: 'Escucha con respeto y comparte su ejemplo.', saber: `Explica las ideas principales de ${tm.titulo}.`, hacer: 'Relaciona el tema con un ejemplo de su entorno.', autoevaluacion: 'Semáforo: verde "lo puedo explicar", amarillo "con ayuda", rojo "todavía no".' },
+    repaso: [`¿Qué es lo más importante de ${tm.titulo}?`, '¿Qué ejemplo encontraste?', '¿Qué te sorprendió?', '¿Qué te gustaría saber más?', '¿Cómo se lo explicarías a alguien de tu casa?'],
+    multigrado: '',
+    ejemplo: true,
+    rapida: true,
+  });
+
   // ── Estado ─────────────────────────────────────────
   let curso = 'S2';
   let estado = null;      // { config, plan, hechos, perdidos }
@@ -400,7 +416,7 @@
     return `<a href="javascript:history.back()" class="chica">← Volver</a>
     <div class="encab" style="margin-top:10px"><div><h1>💡 ${esc(tm.titulo)}</h1><p>${a.icono} ${esc(a.nombre)} · ideas de la mentora${tm.contenidos?.length ? `<br><span class="ter">${tm.contenidos.map(esc).join(' · ')}</span>` : ''}</p></div></div>
     ${!tarjeta ? `<div class="tarjeta" style="text-align:center;padding:30px"><div style="width:46px;height:46px;border-radius:50%;border:5px solid var(--sup3);border-top-color:var(--verde);margin:0 auto 14px;animation:cg-gira 1s linear infinite"></div><b>La mentora está pensando una clase…</b><p class="ter">Unos segundos.</p></div>` : `
-    ${tarjeta.ejemplo ? '<div class="cr-aviso ambar">Ejemplo sin conexión (fracciones). Entrá con tu cuenta para que la mentora arme la tarjeta de este tema.</div>' : ''}
+    ${tarjeta.rapida ? '<div class="cr-aviso ambar">Tarjeta lista mientras la mentora termina la suya: aparece acá sola en unos segundos.</div>' : tarjeta.ejemplo ? '<div class="cr-aviso ambar">Ejemplo sin conexión (fracciones). Entrá con tu cuenta para que la mentora arme la tarjeta de este tema.</div>' : ''}
     ${tarjeta.error ? `<div class="cr-aviso rojo">${esc(tarjeta.error)}</div>` : `
     <div class="tarjeta cr-tarjeta">
       <p><b>Objetivo:</b> ${esc(tarjeta.objetivo)}</p>
@@ -526,9 +542,14 @@
   async function pedirIdea(tm, nueva = false) {
     if (pedirIdea.en === tm.id) return;
     pedirIdea.en = tm.id;
-    const r = await api().mentora({ curso: CURSO_SERVIDOR[curso], area: tm.area, tema: tm.titulo, objetivo: tm.objetivo || '', contenidos: tm.contenidos || [], multigrado: estado.config.multigrado, nueva });
+    const promesa = api().mentora({ curso: CURSO_SERVIDOR[curso], area: tm.area, tema: tm.titulo, objetivo: tm.objetivo || '', contenidos: tm.contenidos || [], multigrado: estado.config.multigrado, nueva });
+    // EDU.15: en la demo, a los 3 s se muestra una tarjeta lista y la de la mentora la reemplaza al llegar.
+    const r = U.esDemo() ? await U.aTiempo(promesa, 2500) : await promesa;
     pedirIdea.en = null;
-    ideas[tm.id] = r.ok ? { ...r.tarjeta, costoUsd: r.costoUsd } : { error: r.error };
+    if (!r?.ok && U.esDemo()) {
+      ideas[tm.id] = tarjetaRapida(tm);
+      if (!r) promesa.then((x) => { if (x?.ok && ideas[tm.id]?.rapida) { ideas[tm.id] = { ...x.tarjeta, costoUsd: x.costoUsd }; repintar(); } });
+    } else ideas[tm.id] = r.ok ? { ...r.tarjeta, costoUsd: r.costoUsd } : { error: r.error };
     repintar();
   }
 

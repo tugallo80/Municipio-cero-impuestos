@@ -101,5 +101,32 @@
     </div>`;
   };
 
+  // ── Demo sin login (EDU.15) ──
+  U.esDemo = () => !!window.NandeClase?.esDemo?.();
+  // Espera la respuesta de la IA hasta `ms`; si tarda más, devuelve null (la promesa sigue viva).
+  U.aTiempo = (promesa, ms = 2500) => Promise.race([promesa, new Promise((r) => setTimeout(() => r(null), ms))]);
+
+  // Pastilla "Demo" en la barra de arriba (con "Salir de la demo"), cuando la cuenta es la demo.
+  function marcarDemo() {
+    const top = document.querySelector('header.top');
+    if (!top) return;
+    let p = top.querySelector('.pildora-demo');
+    if (!U.esDemo()) { p?.remove(); return; }
+    if (p) return;
+    p = document.createElement('button');
+    p.className = 'pildora pildora-demo';
+    p.title = 'Salir de la demo';
+    p.textContent = '✨ Demo';
+    p.style.cssText = 'border:0;cursor:pointer;margin-left:auto';
+    p.onclick = async () => {
+      if (!confirm('¿Salir de la demo? En este equipo se olvida el link de la demo.')) return;
+      await window.NandeClase?.salirDemo?.();
+      U.toast('Saliste de la demo');
+    };
+    top.appendChild(p);
+  }
+  window.addEventListener('nande-cuenta', marcarDemo);
+  window.addEventListener('nande-clase-listo', marcarDemo);
+
   window.U = U;
 })();
