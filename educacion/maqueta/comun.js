@@ -56,7 +56,7 @@
       const fn = rutas[ruta] || rutas[porDefecto];
       document.querySelectorAll('[data-ruta]').forEach(a => a.classList.toggle('activo', a.dataset.ruta === ruta));
       const main = U.$('#principal');
-      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta EDU.01b · datos inventados de un colegio ficticio</p>';
+      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta · alumnos y datos inventados (el colegio y sus textos son los del curso del piloto)</p>';
       window.scrollTo(0, 0);
       if (rutas._despues) rutas._despues(ruta, param);
     };

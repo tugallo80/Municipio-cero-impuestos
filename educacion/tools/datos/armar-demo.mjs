@@ -24,7 +24,23 @@ const piloto = {
   materiasProfe: D.materiasProfe,
   temasHoy: Object.fromEntries(Object.entries(D.temasHoy).map(([k, { texto, ...t }]) => [k, t])),
 }
-escribir('maqueta/demo-piloto.js', `${CAB}// Curso REAL del profe del piloto; alumnos ficticios. El nombre del profe se cambia en demo-piloto.json.\nwindow.DEMO_PILOTO = ${JSON.stringify(piloto, null, 1)};\n`)
+escribir('maqueta/demo-piloto.js', `${CAB}// Curso REAL del profe del piloto; alumnos ficticios. El nombre REAL del profe NO va acá:
+// llega por el link y queda en el equipo (localStorage 'nande-profe'; 'nande-apodo' = cómo lo llaman sus alumnos).
+window.DEMO_PILOTO = ${JSON.stringify(piloto, null, 1)};
+// Las pantallas de la maqueta (selector, profe, padres, dirección) muestran el colegio del piloto.
+(function () {
+  const P = window.DEMO_PILOTO, D = window.DEMO;
+  if (!D || !D.colegio) return;
+  let profe = ''; try { profe = localStorage.getItem('nande-profe') || ''; } catch {}
+  const hoy = new Date(Date.now() - 4 * 3600e3).toLocaleDateString('es-BO', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+  D.colegio.nombre = P.colegio.nombre;
+  D.colegio.nota = P.curso.nombre + ' · curso del piloto (alumnos ficticios)';
+  D.colegio.gestion = P.gestion;
+  D.colegio.trimestre = P.trimestre;
+  D.colegio.hoy = hoy.charAt(0).toUpperCase() + hoy.slice(1);
+  if (D.tutor) D.tutor.nombre = profe || P.profe.nombre;
+})();
+`)
 
 const curso = { curso: D.curso.id, maqueta: D.curso.nombre, colegio: D.colegio.nombre, temaMapa: D.temaMapa, alumnos: D.alumnos }
 escribir('maqueta/curso-demo.js', `${CAB}// Alumnos FICTICIOS (apodos).\nwindow.CURSO_DEMO = ${JSON.stringify(curso, null, 1)};\n`)
