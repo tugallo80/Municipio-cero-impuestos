@@ -197,3 +197,10 @@ nombre, el modo demo debería aceptar colegio y nombre del profe (la presentaci�
 
 **Link para presentar** (lo arma la MAESTRA con los valores reales, fuera del repo):
 `…/presentacion/?profe=<nombre>&profeApodo=<apodo>#demo=<llave>` — se abre una vez en el equipo de la reunión.
+
+### App del alumno (EDU.17, PR #36)
+
+- Botones nuevos: lámina 4 (la tablet) **Mis textos** (`/maqueta/textos/`, tablet); lámina 8 (tus alumnos)
+  **Hoy** (`/maqueta/hoy/`), **Agenda** (`/maqueta/agenda/`), **Mis textos**, además de Juego y Mis tareas.
+- La agenda y los textos ya no van como "Lo que viene". El **tutor 24 h (EDU.16)** sigue con su sello.
+- Funcionan del todo cuando #36 y #37 estén en `main`; probados en local contra la rama `sesion/pantalla-edu-17`.
