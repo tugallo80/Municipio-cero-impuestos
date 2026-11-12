@@ -1,6 +1,9 @@
-// EDU.17 — Alumno demo de 2.º de secundaria (app completa del alumno). Datos ficticios, sin nombres reales.
+// EDU.17 — Alumno demo del curso piloto: U.E. Nuevo Horizonte, 2.º de secundaria, gestión 2026.
+// El curso y sus textos son reales (los pasó el profe del piloto); el alumno es ficticio (apodo, sin nombre real).
+// Tareas y exámenes van sobre las unidades del 3.er trimestre de sus textos oficiales.
 // Las fechas se arman desde HOY (en días hábiles relativos) para que la demo siempre se vea al día.
-// Si EDU.15 publica su alumno demo, este archivo se reemplaza por sus datos con los mismos campos.
+// Fuente única: EDU.15/EDU.04f van a generar este archivo desde tools/datos/estudiante-demo.json;
+// estudiante.js acepta también su formato (horario y llevar como listas).
 (function () {
   const dia = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
   // n días HÁBILES desde hoy (salta sábado y domingo)
@@ -10,7 +13,7 @@
 
   window.ESTUDIANTE_DEMO = {
     apodo: 'Jaguar Azul 7', avatar: '🐆', curso: '2do_secundaria', cursoNombre: '2.º de secundaria A',
-    colegio: 'U.E. Arcoíris del Sur', distrito: 'scz_capital',
+    colegio: 'U.E. Nuevo Horizonte', gestion: 2026, distrito: 'scz_capital',
     // Mismo horario que el cronograma del profe para 2.º de secundaria (EDU.04b)
     horario: {
       lun: ['len', 'len', 'mat', 'mat', 'ing', 'ing'],
@@ -36,37 +39,38 @@
     // Qué llevar según la materia del día (se suma lo de las tareas)
     llevar: { mus: 'Flauta o tu instrumento', efd: 'Buzo, zapatillas y una botella de agua', art: 'Lápices de colores y hoja bond', mat: 'Calculadora y regla', bio: 'Cuaderno de Biología', ing: 'Diccionario de inglés (si tenés)' },
     avisos: [
-      { fecha: dia(0), titulo: 'Feria de ciencias', texto: 'El viernes de la semana que viene es la feria de ciencias. Cada grupo trae su maqueta.' },
-      { fecha: dia(-1), titulo: 'Reunión de padres', texto: `El ${lindo(habil(3))} a las 18:00 hay reunión de padres de 2.º de secundaria en el salón.` },
-      { fecha: dia(-3), titulo: 'Uniforme de educación física', texto: 'Los jueves y viernes vienen con buzo del colegio.' }
+      { fecha: dia(0), titulo: 'Feria de ciencias', texto: `El ${lindo(habil(8))} es la feria de ciencias. Cada grupo trae su maqueta de un bioma de Bolivia.` },
+      { fecha: dia(-1), titulo: 'Reunión de padres', texto: `El ${lindo(habil(3))} a las 18:00 hay reunión de padres de 2.º de secundaria: entrega de notas del 3.er trimestre.` },
+      { fecha: dia(-3), titulo: 'Fin de gestión', texto: 'Las clases de la gestión 2026 terminan el 4 de diciembre. ¡Último empujón!' }
     ],
+    // Exámenes y actos del 3.er trimestre, sobre los temas reales de sus textos
     eventos: [
-      { fecha: habil(2), tipo: 'examen', materia: 'mat', titulo: 'Evaluación de Matemática: números enteros' },
-      { fecha: habil(4), tipo: 'examen', materia: 'bio', titulo: 'Evaluación de Biología: la célula' },
-      { fecha: habil(6), tipo: 'acto', titulo: 'Acto cívico (el curso lee el poema)' },
-      { fecha: habil(8), tipo: 'acto', titulo: 'Feria de ciencias' },
+      { fecha: habil(2), tipo: 'examen', materia: 'mat', titulo: 'Evaluación de Matemática: cuerpos geométricos' },
+      { fecha: habil(4), tipo: 'examen', materia: 'csoc', titulo: 'Evaluación de Sociales: las grandes rebeliones indígenas' },
+      { fecha: habil(6), tipo: 'acto', titulo: 'Acto cívico (el curso lee una crónica)' },
+      { fecha: habil(8), tipo: 'acto', titulo: 'Feria de ciencias: biomas de Bolivia' },
       { fecha: habil(3), tipo: 'casa', titulo: 'Reunión de padres 18:00' }
     ],
-    // Tareas del curso (formato común de EDU.06d/EDU.04f)
+    // Tareas del curso (formato común de EDU.06d/EDU.04f), sobre las unidades del 3.er trimestre de sus textos
     tareas: [
-      { id: 'S2-mat-enteros', curso: '2do_secundaria', materia: 'mat', titulo: 'Números enteros en la recta', consigna: 'Respondé estas preguntas de números enteros. Si te trabás, pedí una pista.', tipo: 'opciones', vence: dia(0), creada: habil(-1),
+      { id: 'S2-mat-cuerpos', curso: '2do_secundaria', materia: 'mat', titulo: 'Cuerpos geométricos', consigna: 'Respondé estas preguntas de las formas en el espacio. Si te trabás, pedí una pista.', tipo: 'opciones', vence: dia(0), creada: habil(-1),
         origen: { tipo: 'clase', texto: 'la dejó la profe en la clase de ayer' },
         preguntas: [
-          { q: '¿Cuál es mayor: −3 o −7?', ops: ['−3', '−7', 'Son iguales'], ok: 0, mal: { 1: 'En la recta, −7 está más a la izquierda: es menor.', 2: 'No son iguales: están en lugares distintos de la recta.' }, escalera: ['Dibujá una recta con el 0 al medio. ¿Dónde va el −3 y dónde el −7?', 'Más a la derecha en la recta = número mayor.', 'Ejemplo: −1 es mayor que −5 porque está más cerca del 0.'] },
-          { q: 'La temperatura era −2 °C y subió 5 grados. ¿Cuánto marca ahora?', ops: ['3 °C', '−7 °C', '7 °C'], ok: 0, mal: { 1: 'Subir es sumar: −2 + 5, no −2 − 5.', 2: 'Arrancás en −2, no en 2.' }, escalera: ['Subir 5 grados, ¿es sumar o restar?', 'Pará en −2 en la recta y avanzá 5 lugares a la derecha.', 'Ejemplo: −1 + 4 = 3.'] }
+          { q: '¿Cuántas caras tiene un cubo?', ops: ['6', '8', '12'], ok: 0, mal: { 1: '8 son los vértices (las esquinas), no las caras.', 2: '12 son las aristas (los bordes), no las caras.' }, escalera: ['Pensá en un dado: ¿cuántos números tiene?', 'Cada cara es un cuadrado. Contá arriba, abajo y los costados.', 'Ejemplo: una caja de fósforos también tiene 6 caras.'] },
+          { q: 'Un prisma triangular, ¿qué forma tienen sus dos bases?', ops: ['Triángulos', 'Cuadrados', 'Círculos'], ok: 0, mal: { 1: 'Las caras de los costados son rectángulos; las bases le dan el nombre.', 2: 'Las bases con círculos son del cilindro.' }, escalera: ['El nombre del prisma te da una pista.', 'Las bases son las dos caras iguales y paralelas.', 'Ejemplo: un prisma cuadrangular tiene bases cuadradas.'] }
         ] },
-      { id: 'S2-len-cuento', curso: '2do_secundaria', materia: 'len', titulo: 'Leer: el género narrativo', consigna: 'Leé en “Mis textos” el tema de Lengua sobre el género narrativo y anotá en tu cuaderno los elementos de un cuento.', tipo: 'texto', como: 'nada', soloMarcar: true, vence: dia(1), creada: habil(-1),
+      { id: 'S2-len-acentos', curso: '2do_secundaria', materia: 'len', titulo: 'Leer: diptongos e hiatos', consigna: 'Leé en “Mis textos” el taller ortográfico de Lengua (acentuación en diptongos, hiatos y casos especiales) y anotá 5 ejemplos de cada uno en tu cuaderno.', tipo: 'texto', como: 'nada', soloMarcar: true, vence: dia(1), creada: habil(-1),
         origen: { tipo: 'cronograma', texto: 'del cronograma de Lengua Castellana' } },
-      { id: 'S2-bio-celula', curso: '2do_secundaria', materia: 'bio', titulo: 'Dibujo de la célula', consigna: 'Dibujá una célula animal y una vegetal, marcá 3 partes de cada una y sacale una foto.', tipo: 'foto', vence: habil(2), creada: dia(0),
+      { id: 'S2-bio-bioma', curso: '2do_secundaria', materia: 'bio', titulo: 'Un bioma de Bolivia', consigna: 'Dibujá un bioma de Bolivia (por ejemplo, el Chaco o la Chiquitanía) con 3 animales y 3 plantas, y sacale una foto.', tipo: 'foto', vence: habil(2), creada: dia(0),
         origen: { tipo: 'clase', texto: 'la dejó el profe en la clase de hoy' },
-        escalera: ['¿Qué tienen todas las células?', 'Las vegetales tienen pared celular y cloroplastos.', 'Ejemplo: núcleo, membrana y citoplasma en las dos.'] },
-      { id: 'S2-ing-routine', curso: '2do_secundaria', materia: 'ing', titulo: 'My daily routine', consigna: 'Write 5 sentences about your daily routine (in English). Usá: wake up, have breakfast, go to school…', tipo: 'texto', minimo: 80, vence: habil(3), creada: dia(0),
+        escalera: ['¿Cómo es el clima en ese lugar: seco, húmedo, frío?', 'Los animales y plantas se adaptan al clima del bioma.', 'Ejemplo: en el Chaco hay quebracho, cactus y el tatú carreta.'] },
+      { id: 'S2-ing-music', curso: '2do_secundaria', materia: 'ing', titulo: 'My favorite music and sport', consigna: 'Write 5 sentences about the musical instruments and sports you like (in English). Usá: I like, I play, I can…', tipo: 'texto', minimo: 80, vence: habil(3), creada: dia(0),
         origen: { tipo: 'mentora', texto: 'sugerida por la mentora del profe para repasar' },
-        escalera: ['What do you do first in the morning?', 'Usá “I” + verbo: I wake up at 6.', 'Ejemplo: I wake up at 6. I have breakfast with my family.'] },
-      { id: 'S2-csoc-mapa', curso: '2do_secundaria', materia: 'csoc', titulo: 'Pisos ecológicos de Bolivia', consigna: 'Respondé sobre los pisos ecológicos.', tipo: 'opciones', vence: habil(5), creada: dia(0),
+        escalera: ['What sport do you play?', 'Usá “I play” + deporte o instrumento: I play football.', 'Ejemplo: I play the guitar. I like basketball because it is fun.'] },
+      { id: 'S2-csoc-rebeliones', curso: '2do_secundaria', materia: 'csoc', titulo: 'Las grandes rebeliones indígenas', consigna: 'Respondé sobre las rebeliones indígenas de la colonia.', tipo: 'opciones', vence: habil(4), creada: dia(0),
         origen: { tipo: 'cronograma', texto: 'del cronograma de Ciencias Sociales' },
-        preguntas: [{ q: '¿En qué región está Santa Cruz de la Sierra?', ops: ['Llanos (tierras bajas)', 'Altiplano', 'Valles'], ok: 0, mal: { 1: 'El Altiplano está al oeste, a más de 3.600 m.', 2: 'Los valles están entre la cordillera y los llanos.' }, escalera: ['¿Hace frío o calor en Santa Cruz?', 'Las tierras bajas son cálidas y están al este.', 'Ejemplo: Beni y Santa Cruz son llanos.'] }] },
-      { id: 'S2-mus-taquirari', curso: '2do_secundaria', materia: 'mus', titulo: 'Escuchar un taquirari', consigna: 'Escuchá un taquirari y escribí qué instrumentos reconocés.', tipo: 'texto', minimo: 40, vence: habil(-1), creada: habil(-4),
+        preguntas: [{ q: '¿Quién dirigió el cerco a la ciudad de La Paz en 1781?', ops: ['Túpac Katari', 'Simón Bolívar', 'Pedro Domingo Murillo'], ok: 0, mal: { 1: 'Bolívar llegó más de 40 años después, en la independencia.', 2: 'Murillo encabezó la revolución de 1809, no el cerco de 1781.' }, escalera: ['¿Fue antes o después de la independencia?', 'Fue un líder aymara, junto a Bartolina Sisa.', 'Ejemplo: Túpac Amaru se levantó en el Cusco en 1780.'] }] },
+      { id: 'S2-mus-coro', curso: '2do_secundaria', materia: 'mus', titulo: 'Calentamiento vocal', consigna: 'Hacé los ejercicios de calentamiento vocal del texto de Música y contá cuál te costó más.', tipo: 'texto', minimo: 40, vence: habil(-1), creada: habil(-4),
         origen: { tipo: 'clase', texto: 'la dejó la profe en la clase de música' }, estado: 'hecha' }
     ]
   };

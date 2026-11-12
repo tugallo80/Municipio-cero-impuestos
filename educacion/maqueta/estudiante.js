@@ -2,7 +2,24 @@
 // Secciones: Hoy · Agenda · Mis textos · Mis tareas · Mi tutor · Mundo (el juego).
 // Barra abajo en celular y tablet parada; a la izquierda en tablet acostada y PC (≥ 1000 px).
 (function () {
-  const E = window.ESTUDIANTE_DEMO;
+  const E = normalizar(window.ESTUDIANTE_DEMO);
+  // Acepta también el formato de la fuente única de EDU.15/EDU.04f (tools/datos/estudiante-demo.json):
+  // horario como lista [{dia, desde, hasta, materia}] y llevar como lista [{fecha?, materia?, texto}].
+  function normalizar(E) {
+    if (!E) return E;
+    if (Array.isArray(E.horario)) {
+      const lista = E.horario, horas = [...new Set(lista.map(h => h.desde + '|' + h.hasta))].sort().map(x => x.split('|'));
+      const mapa = {};
+      lista.forEach(h => { const d = String(h.dia).slice(0, 3).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); (mapa[d] = mapa[d] || Array(horas.length).fill(null))[horas.findIndex(x => x[0] === h.desde)] = h.materia; });
+      E.horario = mapa; E.horas = E.horas || horas;
+    }
+    if (Array.isArray(E.llevar)) {
+      E.llevarFechas = E.llevar.filter(x => x.fecha);
+      E.llevar = Object.fromEntries(E.llevar.filter(x => !x.fecha && x.materia).map(x => [x.materia, x.texto]));
+    }
+    E.llevar = E.llevar || {}; E.materias = E.materias || {}; E.eventos = E.eventos || []; E.avisos = E.avisos || [];
+    return E;
+  }
   const SECCIONES = [
     ['hoy', '🏠', 'Hoy', '/maqueta/hoy/'],
     ['agenda', '🗓️', 'Agenda', '/maqueta/agenda/'],
@@ -75,5 +92,40 @@
   const ahoraHHMM = () => { const d = new Date(); return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); };
   const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-  window.EST = { E, nav, hoy, sumar, largo, relativo, aFecha, infoDia, clasesDe, materia, ahoraHHMM, esc, DIAS, CLAVE, MESES, calendario };
+  // ---------- ¿En qué parte va el curso? (unidad de los textos oficiales que toca hoy, por área) ----------
+  // Reparto del cronograma (calendario.js de EDU.04b) sobre el plan de ejemplo de 2.º, si está cargado.
+  // Si el plan no cubre el trimestre de hoy, se estima por la fecha dentro del trimestre.
+  let vaCache = null;
+  const normal = s => String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  function dondeVa() {
+    return vaCache || (vaCache = fetch('/maqueta/textos/indice.json', { cache: 'no-cache' }).then(r => r.json()).then(INDICE => {
+      const VA = {}, cal = calendario(aFecha(hoy).getFullYear()); if (!cal) return { VA, INDICE };
+      const hoyTrim = (cal.dias.find(d => d.fecha >= hoy) || cal.dias[cal.dias.length - 1]).trimestre;
+      const ultimo = {};
+      try {
+        const P = window.PLAN_EJEMPLO_2SEC;
+        if (P && window.Calendario.repartir) {
+          const rep = window.Calendario.repartir(P, E.horario, cal, { colchon: 0.1, semanaEvaluacion: true, desde: cal.inicio });
+          Object.keys(rep.porFecha).filter(f => f <= hoy).sort().forEach(f => rep.porFecha[f].forEach(x => { if (x.tipo === 'tema') ultimo[x.area] = x.temaId; }));
+        }
+      } catch (e) { console.warn('[EST] sin reparto', e); }
+      for (const a of INDICE.areas) {
+        const plan = ((window.PLAN_EJEMPLO_2SEC || { areas: [] }).areas.find(p => p.id === a.id) || { temas: [] }).temas;
+        const tema = plan.find(t => t.id === ultimo[a.id]);
+        let k = -1;
+        if (tema && tema.trimestre === hoyTrim) { const c = normal(tema.titulo).slice(0, 18); k = a.temas.findIndex(u => normal(u.titulo).startsWith(c)); }
+        if (k < 0) {
+          const delTrim = a.temas.map((u, i) => [u, i]).filter(([u]) => u.trimestre === hoyTrim);
+          if (delTrim.length && cal.trimestres[hoyTrim - 1]) {
+            const [i0, f0] = cal.trimestres[hoyTrim - 1], frac = Math.min(.999, Math.max(0, (aFecha(hoy) - aFecha(i0)) / (aFecha(f0) - aFecha(i0))));
+            k = delTrim[Math.floor(frac * delTrim.length)][1];
+          }
+        }
+        if (k >= 0) VA[a.id] = k;
+      }
+      return { VA, INDICE, trimestre: hoyTrim };
+    }).catch(e => { console.warn('[EST] sin índice de textos', e); return { VA: {}, INDICE: { areas: [] } }; }));
+  }
+
+  window.EST = { E, nav, dondeVa, hoy, sumar, largo, relativo, aFecha, infoDia, clasesDe, materia, ahoraHHMM, esc, DIAS, CLAVE, MESES, calendario };
 })();

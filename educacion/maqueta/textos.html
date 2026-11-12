@@ -69,33 +69,7 @@ const normal = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
 const pref = (() => { try { return JSON.parse(localStorage.getItem('textos-pref') || '{}'); } catch (e) { return {}; } })();
 const guardarPref = () => { try { localStorage.setItem('textos-pref', JSON.stringify(pref)); } catch (e) {} };
 
-// ---------- ¿En qué parte va el curso? Reparto del cronograma (EDU.04b) sobre el plan de 2.º ----------
-let VA = {};   // area → índice de la unidad que toca hoy
-function calcularDondeVa() {
-  try {
-    const C = window.Calendario, cal = C.diasDelAnio({ anio: new Date().getFullYear(), distrito: E.distrito || 'scz_capital' });
-    const rep = C.repartir(window.PLAN_EJEMPLO_2SEC, E.horario, cal, { colchon: 0.1, semanaEvaluacion: true, desde: cal.inicio });
-    const fechas = Object.keys(rep.porFecha).filter(f => f <= hoy).sort();
-    const ultimo = {};   // area → temaId más reciente
-    for (const f of fechas) for (const x of rep.porFecha[f]) if (x.tipo === 'tema') ultimo[x.area] = x.temaId;
-    const hoyTrim = (cal.dias.find(d => d.fecha >= hoy) || cal.dias[cal.dias.length - 1]).trimestre;
-    for (const a of INDICE.areas) {
-      const plan = (window.PLAN_EJEMPLO_2SEC.areas.find(p => p.id === a.id) || { temas: [] }).temas;
-      const tema = plan.find(t => t.id === ultimo[a.id]);
-      let k = -1;   // el plan de ejemplo puede no cubrir el trimestre actual: entonces se estima por la fecha
-      if (tema && tema.trimestre === hoyTrim) { const clave = normal(tema.titulo).slice(0, 24); k = a.temas.findIndex(u => normal(u.titulo).startsWith(clave.slice(0, 18))); }
-      if (k < 0) {   // sin coincidencia exacta: la parte del trimestre que corresponde a hoy
-        const delTrim = a.temas.map((u, i) => [u, i]).filter(([u]) => u.trimestre === hoyTrim);
-        if (delTrim.length) {
-          const tr = cal.trimestres[hoyTrim - 1], ini = new Date(tr[0]), fin = new Date(tr[1]), ahora = new Date(hoy);
-          const frac = Math.min(.999, Math.max(0, (ahora - ini) / (fin - ini)));
-          k = delTrim[Math.floor(frac * delTrim.length)][1];
-        }
-      }
-      if (k >= 0) VA[a.id] = k;
-    }
-  } catch (e) { console.warn('[textos] sin cronograma', e); }
-}
+let VA = {};   // area → índice de la unidad que toca hoy (EST.dondeVa: cronograma de EDU.04b)
 
 // ---------- Vistas ----------
 function cab(t, s, volver) { $('#tit').textContent = t; $('#subt').textContent = s || ''; $('#volver').href = volver || 'hoy/'; }
@@ -171,8 +145,7 @@ function ruta() {
   return leer(id, +i, query, k !== undefined ? +k : undefined);
 }
 (async () => {
-  INDICE = await (await fetch('textos/indice.json', { cache: 'no-cache' })).json();
-  calcularDondeVa();
+  ({ VA, INDICE } = await EST.dondeVa());
   addEventListener('hashchange', ruta); ruta();
 })();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});

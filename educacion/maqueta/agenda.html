@@ -82,8 +82,8 @@ function cosasDe(f) {   // todo lo que pasa un día, por capa
   if (on.feriados && inf.menosHoras) out.push({ capa: 'feriados', ico: '⏱️', titulo: 'Menos horas: ' + inf.motivo });
   if (on.tareas) tareas().filter(t => t.vence === f).forEach(t => out.push({ capa: 'tareas', ico: t.estado === 'hecha' ? '✅' : '📋', titulo: t.titulo, sub: materia(t.materia).corto + (t.estado === 'hecha' ? ' · hecha' : ' · se entrega'), link: 'tareas/#t=' + encodeURIComponent(t.id) }));
   (E.eventos || []).filter(e => e.fecha === f).forEach(e => {
-    const capa = e.tipo === 'examen' ? 'examenes' : 'actos';
-    if (on[capa]) out.push({ capa, ico: e.tipo === 'examen' ? '📝' : e.tipo === 'casa' ? '🏠' : '🎉', titulo: e.titulo, sub: e.materia ? materia(e.materia).corto : '' });
+    const capa = e.tipo === 'examen' ? 'examenes' : e.tipo === 'entrega' ? 'tareas' : 'actos';
+    if (on[capa]) out.push({ capa, ico: e.tipo === 'examen' ? '📝' : e.tipo === 'entrega' ? '📎' : e.tipo === 'casa' ? '🏠' : '🎉', titulo: e.titulo, sub: e.materia ? materia(e.materia).corto : '' });
   });
   return out;
 }

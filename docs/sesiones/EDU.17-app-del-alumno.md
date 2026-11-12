@@ -101,3 +101,22 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
   tema elegido como contexto. Sin servidor de voz, los botones dicen "Todavía no disponible" y se
   avisa que el chat del tutor llega pronto.
 - **Probado** en 390, 820 y 1280, sin tutor y con un tutor simulado; sin desbordes ni errores.
+
+## Curso real del piloto (pedido del dueño)
+
+- La demo es **el curso real del profe del piloto**: U.E. Nuevo Horizonte, 2.º de secundaria,
+  gestión 2026 (hoy, 3.er trimestre). El alumno sigue ficticio ("Jaguar Azul 7").
+- **Tareas y exámenes** van sobre las unidades del 3.er trimestre de sus textos: cuerpos geométricos,
+  diptongos e hiatos, biomas de Bolivia, música y deportes en inglés, rebeliones indígenas,
+  calentamiento vocal.
+- **Hoy** muestra, debajo de cada clase, el tema real que toca ("📖 …"), con enlace al texto.
+  El cálculo de "dónde va el curso" ahora es común (`EST.dondeVa()` en `estudiante.js`).
+- **Fuente única con EDU.15/EDU.04f**: van a generar `estudiante-demo.js` desde
+  `tools/datos/estudiante-demo.json`. `estudiante.js` ya acepta su formato (horario y "qué llevar"
+  como listas, eventos `entrega`). Campos de más que usa la app: `materias` (nombre, icono, color,
+  profe), `colegio`, `cursoNombre`, `distrito`, `horas`, `recreo`, `tareas`.
+
+### Pendiente
+- Cambiar al `estudiante-demo.js` de EDU.15 cuando lo publique.
+- El selector de perfiles todavía dice "U.E. Arcoíris del Sur · colegio ficticio" (lo usan el profe y
+  la dirección): pasarlo al curso real junto con EDU.15.
