@@ -107,6 +107,152 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .pasos li::before { content: counter(p); font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #000; background: var(--verde);
   width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 14px; margin-top: 1px; }
 
+
+/* Apertura con imagen de fondo (EDU.14b) */
+.hero .fondo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 60% 50%); z-index: 0; }
+.hero::before { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.86) 42%, rgba(0,0,0,.25) 72%, rgba(0,0,0,.45) 100%); }
+.hero > :not(.fondo) { position: relative; z-index: 2; }
+.hero .cuerpo { justify-content: flex-end; }
+.hero h1, .declaracion h1 { font-size: calc(var(--h1) * 1.05); max-width: 16ch; text-wrap: balance; }
+.hero p, .hero li, .hero h1 { text-shadow: 0 1px 14px rgba(0,0,0,.7); }
+.hero .marca { text-shadow: 0 1px 8px rgba(0,0,0,.9); color: #e5e5e5; }
+@media screen and (orientation: portrait) { .sin-vertical { display: none; } }
+@media screen and (orientation: landscape) and (max-height: 520px) { .sin-vertical { display: none; } .dos.img-chica:has(> .sin-vertical) { grid-template-columns: 1fr; } .dos:has(> .sin-vertical) .filas { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; } }
+.bajada { font-size: calc(var(--f) * 1.12); color: #e5e5e5; max-width: 40ch; }
+.antetitulo { font-size: var(--chico); color: var(--verde); font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+.hero .lista { max-width: 46ch; }
+.bajada b { color: var(--verde); font-weight: 600; }
+.declaracion .cuerpo { gap: calc(var(--gap) * 1.6); }
+.declaracion h1 { max-width: 22ch; }
+.lineas { display: flex; flex-direction: column; gap: 8px; font-size: calc(var(--f) * 1.12); color: #d4d4d4; max-width: 44ch; border-left: 3px solid var(--verde); padding-left: 16px; }
+.lineas b { color: var(--txt); font-weight: 600; }
+@media (orientation: landscape), print {
+  .hero::before { background: linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.82) 38%, rgba(0,0,0,.2) 72%, rgba(0,0,0,.05) 100%); }
+  .hero .cuerpo { justify-content: center; max-width: 60%; }
+}
+
+.sello { display: inline-block; font-size: var(--chico); font-weight: 600; color: var(--verde); border: 1px solid rgba(16,185,129,.55);
+  background: rgba(16,185,129,.1); border-radius: 999px; padding: 2px 12px; letter-spacing: .03em; }
+h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balance; }
+.globo { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: calc(var(--f) * 1.12); background: var(--sup2);
+  border: 1px solid var(--borde); border-radius: 18px 18px 18px 4px; padding: 10px 16px; max-width: 34ch; color: #e5e5e5; }
+.tarjetas.dos-col { grid-template-columns: 1fr; }
+@media (orientation: landscape), print { .tarjetas.dos-col { grid-template-columns: 1fr 1fr; } }
+.contraste { display: flex; flex-direction: column; gap: calc(var(--gap) * .8); }
+.tarjeta.gris { opacity: .8; }
+.tarjeta.gris h3 { color: var(--sec); }
+.tarjeta.verde-borde { border-color: rgba(16,185,129,.6); background: rgba(16,185,129,.07); }
+.tarjeta.verde-borde b { font-weight: 600; }
+.frase.chica { font-size: calc(var(--grande) * .8); }
+.tarjeta.app { border-color: rgba(16,185,129,.5); gap: 10px; }
+.hero .marca b { color: #fff; }
+@media screen and (orientation: landscape) and (max-height: 520px), screen and (orientation: portrait) and (max-height: 780px) { .sello-rep { display: none; } }
+@media screen and (orientation: portrait) and (max-height: 780px) { .sin-chico { display: none; } }
+
+@media screen and (orientation: landscape) and (max-height: 520px) {
+  .declaracion h1, h2.grande { font-size: var(--h2); }
+  .lineas, .bajada, .globo { font-size: var(--f); }
+  .declaracion .cuerpo { gap: var(--gap); }
+}
+@media screen and (orientation: portrait) and (max-height: 780px) { h2.grande { font-size: var(--h2); } }
+
+/* Verlo en vivo: la demo dentro de la presentación (EDU.14b) */
+.envivo { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.envivo-tit { display: inline-flex; align-items: center; gap: 6px; font-size: var(--chico); font-weight: 600; color: var(--verde); }
+.envivo-tit svg { width: 14px; height: 14px; }
+.btn.vivo-btn { height: 34px; padding: 0 12px; font-size: 13px; border-color: rgba(16,185,129,.5); background: rgba(16,185,129,.1); color: #d1fae5; }
+.btn.vivo-btn:hover { background: rgba(16,185,129,.2); }
+figure .envivo { justify-content: center; margin-top: 4px; }
+.vivo { position: fixed; inset: 0; z-index: 50; background: #000; display: flex; flex-direction: column; animation: aparecer .22s ease; }
+.vivo[hidden] { display: none; }
+@keyframes aparecer { from { opacity: 0; } to { opacity: 1; } }
+.vivo-barra { flex: none; display: flex; align-items: center; gap: 12px; padding: calc(6px + env(safe-area-inset-top)) calc(10px + env(safe-area-inset-right)) 6px calc(10px + env(safe-area-inset-left));
+  background: #0A0A0A; border-bottom: 1px solid var(--borde); }
+.vivo-barra .btn { height: 38px; font-size: 14px; }
+.vivo-titulo { flex: 1; min-width: 0; color: var(--sec); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vivo-aparte { color: var(--sec); font-size: 12px; white-space: nowrap; }
+.vivo-aparte[hidden] { display: none; }
+.vivo-disp { display: none; }
+.vivo-escena { flex: 1; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; }
+.caja { width: 100%; height: 100%; position: relative; }
+.aparato { position: absolute; inset: 0; }
+.aparato iframe { display: block; width: 100%; height: 100%; border: 0; background: #000; }
+.vivo-cargando { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; background: #050505; color: var(--sec); font-size: 15px; text-align: center; padding: 20px; }
+.vivo-cargando[hidden], .tarda[hidden] { display: none; }
+.vivo-cargando a { color: var(--verde); }
+.giro { width: 34px; height: 34px; border-radius: 50%; border: 3px solid #1f2937; border-top-color: var(--verde); animation: girar .9s linear infinite; }
+@keyframes girar { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .vivo { animation: none; } .giro { animation-duration: 3s; } }
+
+/* PC y proyector: la demo dentro de un aparato simulado, con la lámina detrás oscurecida */
+.vivo.con-marco { background: rgba(0,0,0,.78); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+.vivo.con-marco .vivo-barra { padding: 10px 18px; gap: 16px; background: rgba(10,10,10,.92); }
+.vivo.con-marco .vivo-barra .btn { height: 46px; font-size: 16px; padding: 0 16px; }
+.vivo.con-marco .vivo-titulo { font-size: 16px; color: #d4d4d4; }
+.vivo.con-marco .vivo-aparte { font-size: 14px; }
+.vivo.con-marco .vivo-disp { display: flex; gap: 4px; background: #111; border: 1px solid var(--borde); border-radius: 12px; padding: 4px; }
+.vivo-disp button { appearance: none; border: 0; background: transparent; color: #a3a3a3; font: 600 15px Inter, sans-serif; height: 38px; padding: 0 12px; border-radius: 9px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+.vivo-disp button svg { width: 18px; height: 18px; }
+.vivo-disp button[aria-pressed="true"] { background: var(--verde); color: #000; }
+.vivo-disp button:focus-visible { outline: 2px solid var(--verde); outline-offset: 2px; }
+.vivo.con-marco .caja { position: absolute; width: auto; height: auto; transition: width .25s ease, height .25s ease; }
+.vivo.con-marco .aparato { inset: auto; left: 0; top: 0; transform-origin: 0 0; background: #0d0d0d; border: 1px solid #2c2c2c;
+  box-shadow: 0 0 0 1px #000, 0 30px 80px rgba(0,0,0,.65), inset 0 0 0 2px #1a1a1a; }
+.vivo.con-marco .aparato iframe { border-radius: inherit; }
+.vivo.con-marco .aparato[data-disp="cel-v"], .vivo.con-marco .aparato[data-disp="cel-h"] { border-radius: 52px; padding: 14px; }
+.vivo.con-marco .aparato[data-disp="cel-v"] iframe, .vivo.con-marco .aparato[data-disp="cel-h"] iframe { border-radius: 38px; }
+.vivo.con-marco .aparato[data-disp="tablet"] { border-radius: 30px; padding: 22px; }
+.vivo.con-marco .aparato[data-disp="tablet"] iframe { border-radius: 12px; }
+.vivo.con-marco .aparato[data-disp="completa"] { border-radius: 10px; padding: 0; border-color: #222; }
+.vivo.con-marco .aparato[data-disp="completa"] iframe { border-radius: 10px; }
+.vivo.con-marco .vivo-cargando { border-radius: inherit; margin: inherit; }
+
+/* Botones de demo más grandes en PC y proyector */
+@media (min-width: 900px) and (min-height: 560px) {
+  .btn.vivo-btn { height: clamp(40px, 3.6vh, 52px); padding: 0 clamp(14px, 1.1vw, 22px); font-size: clamp(15px, 1vw, 19px); }
+  .envivo-tit { font-size: clamp(14px, .9vw, 18px); }
+  .envivo-tit svg { width: 18px; height: 18px; }
+}
+.btn.solo-pc { display: none; }
+@media (min-width: 900px) and (min-height: 560px) { .btn.solo-pc { display: inline-flex; } }
+
+/* Modo presentador (otra ventana, sincronizada) */
+.presentador { position: fixed; inset: 0; z-index: 60; background: #000; display: flex; flex-direction: column; padding: 20px 28px; gap: 18px; }
+.presentador[hidden] { display: none; }
+.p-cab { display: flex; align-items: center; gap: 10px; color: var(--sec); font-size: 15px; }
+.p-cab b { color: var(--verde); font-family: 'Space Grotesk', sans-serif; }
+.p-reloj { margin-left: auto; font-family: 'Space Grotesk', sans-serif; font-size: 28px; color: #fff; font-variant-numeric: tabular-nums; }
+.p-cuerpo { flex: 1; min-height: 0; display: grid; grid-template-columns: 1.6fr 1fr; gap: 24px; }
+.p-actual { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; }
+.p-num { color: var(--verde); font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.p-actual h1 { font-size: 34px; }
+.p-notas { font-size: 24px; line-height: 1.45; color: #e5e5e5; background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 18px 22px; }
+.p-demos { display: flex; flex-wrap: wrap; gap: 10px; }
+.p-demos .btn { height: 48px; font-size: 17px; }
+.p-sig { background: var(--sup); border: 1px solid var(--borde); border-radius: 16px; padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+.p-sig h2 { font-size: 26px; color: #d4d4d4; }
+.p-pie { display: flex; gap: 12px; justify-content: space-between; }
+.p-pie .btn { height: 56px; font-size: 18px; padding: 0 22px; }
+@media (max-width: 700px) { .p-cuerpo { grid-template-columns: 1fr; } .p-notas { font-size: 19px; } }
+body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador .acciones { display: none !important; }
+@media print { .envivo, .vivo, .presentador, .solo-pc { display: none !important; } }
+
+/* Lámina "La IA ya leyó tus textos" */
+.indice { display: grid; grid-template-columns: 1fr; gap: 6px; }
+.indice .area { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; padding: 7px 12px; border: 1px solid var(--borde); border-radius: 10px; background: var(--sup2); }
+.indice .area b { font-weight: 600; font-size: calc(var(--f) * .95); }
+.indice .area small { display: block; color: var(--sec); font-size: var(--chico); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.indice .tri { display: flex; gap: 4px; }
+.indice .tri span { min-width: 30px; text-align: center; font: 600 var(--chico) 'Space Grotesk', sans-serif; border-radius: 6px; padding: 2px 6px; background: rgba(16,185,129,.14); color: #a7f3d0; }
+.indice .tri span.vacio { background: #151515; color: #555; }
+.indice .tri span::before { content: attr(data-t); color: var(--sec); font-weight: 500; margin-right: 3px; }
+@media (orientation: landscape), print { .indice { grid-template-columns: 1fr 1fr 1fr; } }
+@media (orientation: landscape) and (max-height: 520px) { .indice .area { padding: 3px 8px; } .indice { gap: 4px; } .indice .area small { display: none; } .wow .bajada { display: none; } .wow .cuerpo { gap: 8px; } }
+@media screen and (orientation: portrait) { .indice .area small { display: none; } .indice .area { padding: 5px 10px; } .indice { gap: 4px; } }
+@media screen and (orientation: portrait) and (max-height: 780px) { .wow .bajada { display: none; } }
+.cuidado { font-size: var(--chico); color: #d4d4d4; border: 1px solid rgba(16,185,129,.4); border-radius: 12px; padding: 10px 14px; background: rgba(16,185,129,.06); }
+.cuidado b { color: var(--verde); font-weight: 600; }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -126,7 +272,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 .acciones { position: fixed; top: calc(10px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right)); display: flex; gap: 8px; z-index: 5; }
 .acciones .btn { height: 38px; min-width: 38px; padding: 0 10px; font-size: 13px; background: rgba(17,17,17,.9); }
 
-@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 22vh; --gap: 9px; } }
+@media (orientation: portrait) and (max-height: 780px) { :root { --img-alto: 19vh; --gap: 9px; } .tarjeta { padding: 9px 14px; gap: 2px; } }
 /* ── Celular horizontal (alto bajo) ─────── */
 @media (orientation: landscape) and (max-height: 520px) {
   :root { --f: 13.5px; --chico: 11.5px; --h1: 28px; --h2: 21px; --grande: 18px; --pad-x: 28px; --pad-y: 12px; --gap: 9px; --barra: 46px; --img-alto: calc(100vh - 120px); }
@@ -191,104 +337,179 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
 <body>
 <main class="deck" id="deck" aria-live="polite">
 
-  <!-- 1 · Portada -->
-  <section class="lam portada" aria-label="Lámina 1">
-    <div class="marca"><b>ÑANDÉ</b> Educación</div>
+  <!-- Seguimos enseñando como hace 100 años -->
+  <section class="lam hero" style="--pos: 62% 55%">
+    <template class="notas">Saludalo por su nombre: «Hola, profe {profe}». Arrancá despacio, con la pregunta. Decile que la escuela casi no cambió en 100 años y que él y sus chicos pueden ser los primeros. Todo lo que sigue está pensado para su curso.</template>
+    <img class="fondo" src="img/mundo-colegio.jpg" alt="" width="1600" height="738">
+    <div class="marca"><b data-n="marca">ÑANDÉ</b> Educación</div>
     <div class="cuerpo">
-      <div class="raya"></div>
-      <h1>Cada alumno, <span class="verde">a su ritmo.</span></h1>
-      <p class="bajada">Educación individualizada gracias a la IA: potenciar la inteligencia y el potencial de cada chico, no enseñarles a todos igual.</p>
-      <p class="sec chico">Propuesta de piloto · U.E. Nuevo Horizonte · 2.º de secundaria</p>
+      <p class="antetitulo"><span id="saludo">Hola, Profe</span> · <span data-n="colegio">U.E. Nuevo Horizonte</span> · <span data-n="curso">2.º de secundaria</span></p>
+      <h1>Seguimos enseñando como hace <span class="verde">100 años.</span></h1>
+      <p class="bajada">Pizarrón, cuaderno y la misma clase para todos, aunque el mundo ya cambió. ¿Y si el cambio empieza en tu aula? Vos y tus chicos pueden ser los pioneros.</p>
       <p class="pista"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>Tocá, deslizá o usá las flechas</p>
     </div>
   </section>
 
-  <!-- 2 · El problema -->
-  <section class="lam" aria-label="Lámina 2">
-    <div class="marca"><b>02</b> El aula de hoy</div>
+  <!-- La IA como aliada -->
+  <section class="lam declaracion">
+    <template class="notas">Preguntale: ¿te pasa que tus alumnos te traen tareas hechas con ChatGPT? Escuchalo. Después: acá la IA enseña a hacerla y vos ves el proceso.</template>
+    <div class="marca"><b class="n"></b> La IA ya llegó</div>
     <div class="cuerpo">
-      <h2>Un profe. Muchos chicos. <span class="verde">Cada uno con su ritmo.</span></h2>
-      <div class="tarjetas">
-        <div class="tarjeta"><h3>Ritmos distintos</h3><p class="sec">Unos ya entendieron y se aburren; otros se quedan atrás y no preguntan.</p></div>
-        <div class="tarjeta"><h3>Varias materias</h3><p class="sec">El mismo profe prepara clases de varias áreas, todas las semanas.</p></div>
-        <div class="tarjeta"><h3>Poco tiempo</h3><p class="sec">Cronograma, PDC y papeles se comen horas que serían para los chicos.</p></div>
+      <h2 class="grande">La IA ya llegó. ¿Le damos la espalda <span class="verde">o la ponemos a trabajar para nuestros chicos?</span></h2>
+      <div class="tarjetas dos-col">
+        <div class="tarjeta gris"><h3>Hoy</h3><p class="sec">La IA ya está en las casas y muchas veces hace la tarea por tus alumnos. No sabés qué hicieron ellos y qué copiaron.</p></div>
+        <div class="tarjeta verde-borde"><h3 class="verde">Acá</h3><p>El tutor <b>guía con preguntas y pistas</b>, sin dar la respuesta. La tarea se hace paso a paso y <b>vos ves el proceso</b>: el avance real y dónde pidieron ayuda.</p></div>
       </div>
-      <p class="nota">No es falta de ganas: con un solo profe, el tiempo no alcanza para atender a cada uno.</p>
+      <p class="frase">Hoy la IA le hace la tarea al chico. <span>Acá le enseña a hacerla.</span></p>
+      <p class="nota">Pensada para aprender, no para copiar. La IA trabaja de tu lado: te devuelve tiempo y te ayuda a ver a cada chico.</p>
     </div>
   </section>
 
-  <!-- 3 · Para el alumno -->
-  <section class="lam" aria-label="Lámina 3">
-    <div class="marca"><b>03</b> Para el alumno</div>
+  <!-- La IA ya leyó tus textos -->
+  <section class="lam declaracion wow">
+    <template class="notas">El momento «wow». Decile: «Con los textos que nos pasaste, la IA ya armó tu año». Mostrale el índice y abrí «Tu cronograma» y después «Tu PDC». Aclarale que es un borrador que él revisa.</template>
+    <div class="marca"><b class="n"></b> Tu curso</div>
+    <div class="cuerpo">
+      <h2 class="grande">La IA ya leyó tus textos de <span class="verde" data-n="curso">2.º de secundaria</span>.</h2>
+      <p class="bajada" id="wow-resumen">Con tus textos oficiales arma tu año: cada tema, en su trimestre y en su día.</p>
+      <div class="indice" id="wow-indice" aria-label="Índice de tus textos por trimestre"></div>
+      <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-disp="completa" data-sembrar="crono" data-titulo="Tu cronograma">Tu cronograma</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma/pdc" data-disp="completa" data-sembrar="crono" data-titulo="Tu PDC">Tu PDC</button></div>
+      <p class="nota" id="wow-fuente">Índices de los textos de aprendizaje 2025 del Ministerio. Borrador para que lo revises.</p>
+    </div>
+  </section>
+
+  <!-- Una tablet por alumno -->
+  <section class="lam declaracion">
+    <template class="notas">Es una visión, no un acuerdo firmado. Mostrá «Mis textos»: sus textos de 2.º ya están adentro. Preguntale cuánto gastan las familias de su curso en útiles y textos: su número vale más que el nuestro.</template>
+    <div class="marca"><b class="n"></b> La visión</div>
+    <div class="cuerpo">
+      <p class="sello-rep"><span class="sello">La visión</span></p>
+      <h2 class="grande">Una tablet por alumno, <span class="verde">con todo adentro.</span></h2>
+      <p class="bajada">Que la alcaldía entregue a cada uno de tus alumnos una tablet con la plataforma y los textos oficiales del Ministerio, que ya son gratuitos.</p>
+      <div class="tarjetas">
+        <div class="tarjeta"><h3>Textos oficiales</h3><p class="sec">Los del Ministerio, en la tablet y sin internet.</p></div>
+        <div class="tarjeta"><h3>Menos gasto en casa</h3><p class="sec">Una lista básica de útiles ronda Bs 1.000 al año, sin libros.*</p></div>
+        <div class="tarjeta"><h3>Mochila liviana</h3><p class="sec">Textos y cuadernos en un solo aparato.</p></div>
+      </div>
+      <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/textos/" data-disp="tablet" data-titulo="Mis textos">Mis textos</button></div>
+      <p class="nota">* El Deber, 2025; cada libro, Bs 80 a 180. Cifras a verificar. Es una visión a construir con la alcaldía, no un acuerdo firmado.</p>
+    </div>
+  </section>
+
+  <!-- Un tutor en el bolsillo -->
+  <section class="lam declaracion">
+    <template class="notas">Lo que viene. Decile: el tutor de tus alumnos conoce tus textos y tu plan, y sabe qué dijiste en clase. No es un chat cualquiera: ayuda a aprender y a ordenarse, no a copiar.</template>
+    <div class="marca"><b class="n"></b> Para el alumno</div>
+    <div class="cuerpo lado">
+      <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
+        <p><span class="sello">Lo que viene</span></p>
+        <h2 class="grande">Un tutor en el bolsillo de cada alumno, <span class="verde">las 24 horas.</span></h2>
+        <p class="globo sin-chico">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
+        <ul class="lista">
+          <li><b>Recuerda tu clase de hoy</b>: se escucha y se resume.</li>
+          <li><b>Le recuerda</b> tareas, horarios y qué llevar.</li>
+          <li><b>Le avisa</b> lo que vos pediste decir en casa.</li>
+        </ul>
+      </div>
+      <div class="contraste">
+        <div class="tarjeta gris"><h3>Un buscador o un chat cualquiera</h3><p class="sec">Responde cualquier cosa. No sabe dónde estás.</p></div>
+        <div class="tarjeta verde-borde"><h3 class="verde">Su tutor</h3><p>Conoce tus textos y tu plan: sabe <b>en qué tema va</b>, <b>qué dijiste en clase</b> y <b>qué le cuesta</b>.</p></div>
+        <p class="frase chica">Ayuda a aprender y a ordenarse, <span>no a copiar.</span></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lo que sabés -->
+  <section class="lam hero" style="--pos: 70% 50%">
+    <template class="notas">El lema. Contale: tus alumnos ganan semillas al aprender y tu curso construye su parte de Santa Cruz, en un mundo cerrado y seguro. Mostrar: «El mundo» (el colegio en 3D) y «Pasar de curso» (cómo el mundo se transforma al subir de curso).</template>
+    <img class="fondo" src="img/mundo-zoologico.jpg" alt="" width="1600" height="963">
+    <div class="marca"><b class="n"></b> Nuestro lema</div>
+    <div class="cuerpo">
+      <h1>Acá no vale lo que tenés, <span class="verde">sino lo que sabés.</span></h1>
+      <p class="bajada">Al aprender, tus alumnos ganan <b>semillas de conocimiento</b>, y tu curso las planta para hacer crecer su Santa Cruz: un zoológico, un parque. Tu colegio se encuentra con fiscales, rurales y particulares en un mundo cerrado y seguro, y compiten por mejora, no por plata.</p>
+      <p class="chico sec">Maqueta del mundo: el zoológico de la ciudad, en obra.</p>
+      <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/estilos/escena/?estilo=PROMO&amp;vista=colegio" data-titulo="El mundo" data-disp="completa" data-aparte>El mundo</button><button class="btn vivo-btn" type="button" data-vivo="/estilos/transicion/?de=VIVO&amp;a=PROMO" data-titulo="Pasar de curso" data-disp="completa" data-aparte>Pasar de curso</button></div>
+    </div>
+  </section>
+
+  <!-- La meta -->
+  <section class="lam declaracion">
+    <template class="notas">La meta, dicha con humildad: queremos bajar los aplazos de su curso y medirlo juntos. No prometas resultados.</template>
+    <div class="marca"><b class="n"></b> La meta</div>
+    <div class="cuerpo">
+      <h1>Bachilleres que salen <span class="verde">sabiendo de verdad.</span></h1>
+      <div class="lineas">
+        <p>No es una app más: es llevar la tecnología a la escuela, frente a la pobreza y a la educación que no llega a todos.</p>
+        <p>Tus alumnos, cada uno a su ritmo y como aprende su cerebro, no como una manada.</p>
+        <p>Su app es agenda, textos, su tutor y un mundo para aprender jugando. <b>El juego es una parte; el centro es el alumno.</b></p>
+      </div>
+      <p class="frase">Queremos bajar los aplazos de tu curso, <span>y lo vamos a medir juntos.</span></p>
+    </div>
+  </section>
+
+  <section class="lam">
+    <template class="notas">Empezá por «Hoy»: lo primero que ve el alumno (sus clases, tareas y qué llevar). Después «Agenda» y «Mis textos» (sus textos oficiales en la tablet). Cerrá con «Juego»: entrá a un aula y abrí una misión con pistas. Decile: así lo van a vivir tus alumnos.</template>
+    <div class="marca"><b class="n"></b> Tus alumnos</div>
     <div class="cuerpo dos img-grande">
       <div class="texto">
-        <h2>Taji y Jochi: <span class="verde">dos profes IA</span> para cada alumno</h2>
+        <h2><span class="verde">Dos profes IA</span> para cada uno de tus alumnos</h2>
         <ul class="lista">
           <li><b>Explican a su manera</b>, con ejemplos de acá y las veces que haga falta.</li>
           <li><b>Guían con preguntas</b>: dan pistas, pero la respuesta la encuentra el alumno.</li>
           <li><b>Un mundo-juego</b>: cada materia es un aula y las tareas son misiones.</li>
-          <li><b>Modo directo</b> para cuando hay apuro: solo las tareas, sin el juego.</li>
+          <li><b>Su app</b>: hoy, agenda, tareas y sus textos; el juego es una parte, no lo único.</li>
         </ul>
+        <p class="chico sec">Los nombres de los profes son provisionales: los chicos van a ayudar a elegirlos en los talleres.</p>
       </div>
-      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · modo directo.</figcaption></figure>
+      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · tareas sin juego.</figcaption><div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/hoy/" data-disp="cel-v" data-titulo="Hoy">Hoy</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/agenda/" data-disp="cel-v" data-titulo="Agenda">Agenda</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/textos/" data-disp="tablet" data-titulo="Mis textos">Mis textos</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/alumno/?demo=1" data-titulo="Juego" data-disp="cel-h" data-aparte>Juego</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tareas/" data-titulo="Mis tareas" data-disp="cel-v">Mis tareas</button></div></figure>
     </div>
   </section>
 
-  <!-- 4 · Para el profe: mentora -->
-  <section class="lam" aria-label="Lámina 4">
-    <div class="marca"><b>04</b> Para el profe</div>
+  <section class="lam">
+    <template class="notas">Mostrá «Clase grabada» → «Ver un ejemplo»: el resumen contra el pensum. Después «Tareas sugeridas». Remarcá: la IA propone, vos decidís.</template>
+    <div class="marca"><b class="n"></b> Para vos</div>
     <div class="cuerpo dos img-chica">
       <div class="texto">
-        <h2>Una <span class="verde">mentora IA</span> para el profe</h2>
+        <h2>Una <span class="verde">mentora IA</span> para vos</h2>
         <div class="filas">
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></span>
-            <p><b>Escucha la clase</b> y arma el resumen contra el pensum: qué se vio y qué quedó pendiente.</p></div>
+            <p><b>Escucha tu clase</b> y arma el resumen contra tu pensum: qué se vio y qué quedó pendiente.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg></span>
-            <p><b>Arma el cronograma</b> día a día con el calendario oficial, y el PDC listo para imprimir.</p></div>
+            <p><b>Arma tu cronograma</b> día a día con el calendario oficial, y tu PDC listo para imprimir.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg></span>
-            <p><b>Sugiere tareas</b> según lo que pasó en la clase de hoy.</p></div>
+            <p><b>Te sugiere tareas</b> según lo que pasó en tu clase de hoy.</p></div>
           <div class="fila"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span>
-            <p><b>Mapa del curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
+            <p><b>El mapa de tu curso</b>: cómo viene cada alumno, con propuestas para cada uno.</p></div>
         </div>
-        <p class="frase">La IA propone. <span>El profe decide.</span></p>
+        <p class="frase">La IA propone. <span>Vos decidís.</span></p>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#clase" data-disp="completa" data-titulo="Clase grabada">Clase grabada</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#cronograma" data-disp="completa" data-sembrar="crono" data-titulo="Cronograma y PDC">Cronograma y PDC</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#tareas" data-disp="completa" data-titulo="Tareas sugeridas">Tareas sugeridas</button></div>
+        <p class="nota">Lo que ganás: <b style="color:var(--txt)">tiempo</b> (cronograma, PDC y resúmenes salen como borrador para revisar) y <b style="color:var(--txt)">ver a cada alumno</b>.</p>
       </div>
-      <figure><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
+      <figure class="sin-vertical"><img src="img/profe-resumen.jpg" alt="Resumen de una clase armado por la mentora" width="492" height="686"><figcaption>Demo: resumen de una clase (datos inventados).</figcaption></figure>
     </div>
   </section>
 
-  <!-- 5 · Mapa del curso -->
-  <section class="lam" aria-label="Lámina 5">
-    <div class="marca"><b>05</b> Mapa del curso</div>
+  <section class="lam">
+    <template class="notas">Mostrá «Mapa del curso»: «Pedir propuesta» (sin cuenta muestra un ejemplo) y mové un alumno de mesa. Aclarale que los alumnos son ficticios; en el piloto serían los suyos.</template>
+    <div class="marca"><b class="n"></b> Tu curso</div>
     <div class="cuerpo dos">
       <div class="texto">
         <h2>Ver a cada alumno, <span class="verde">no al promedio</span></h2>
-        <p class="sec">El aula con cada alumno y cómo viene. Tocar uno abre su ficha: fortalezas, temas y ritmo.</p>
+        <p class="sec">Tu aula con cada alumno y cómo viene. Tocás uno y ves su ficha: fortalezas, temas y ritmo.</p>
         <ul class="lista">
-          <li><b>La mentora propone</b>: parejas que se complementan, grupos por nivel o a quién acompañar esta semana.</li>
-          <li><b>El profe acepta, cambia o descarta.</b> Nada se aplica solo.</li>
+          <li><b>La mentora te propone</b>: parejas que se complementan, grupos por nivel o a quién acompañar esta semana.</li>
+          <li><b>Vos aceptás, cambiás o descartás.</b> Nada se aplica solo.</li>
           <li>A la mentora le llegan códigos, nunca nombres.</li>
         </ul>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tutor.html#mapa" data-disp="completa" data-titulo="Mapa del curso">Mapa del curso</button></div>
       </div>
       <figure><img src="img/profe-mapa.jpg" alt="Mapa del curso: propuesta de parejas de la mentora y el aula por mesas" width="1000" height="647"><figcaption>Demo: propuesta de parejas y el aula (alumnos ficticios).</figcaption></figure>
     </div>
   </section>
 
-  <!-- 6 · Qué gana el profe -->
-  <section class="lam" aria-label="Lámina 6">
-    <div class="marca"><b>06</b> Qué gana el profe</div>
-    <div class="cuerpo dos">
-      <div class="texto">
-        <h2>Qué gana el profe</h2>
-        <div class="tarjeta"><span class="num">Tiempo</span><p class="sec">Cronograma, PDC y resumen de cada clase salen como borrador. El profe revisa y ajusta; no empieza de cero.</p></div>
-        <div class="tarjeta"><span class="num">Ver a cada uno</span><p class="sec">Sabe quién necesita repaso y quién está listo para más, antes de la próxima clase.</p></div>
-      </div>
-      <figure><img src="img/profe-pdc.jpg" alt="PDC armado desde el cronograma" width="994" height="889"><figcaption>Demo: PDC armado desde el cronograma, para imprimir o en Word.</figcaption></figure>
-    </div>
-  </section>
-
-  <!-- 7 · Evidencia -->
-  <section class="lam" aria-label="Lámina 7">
-    <div class="marca"><b>07</b> Evidencia</div>
+  <section class="lam">
+    <template class="notas">Honestidad: son estudios de otros países. Lo que funciona es el uso guiado por el profe; repartir aparatos no alcanza. Por eso lo medimos en su curso.</template>
+    <div class="marca"><b class="n"></b> Evidencia</div>
     <div class="cuerpo">
       <h2>Lo que dice la evidencia</h2>
       <div class="evid">
@@ -297,49 +518,36 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
         <div class="ev"><span class="num">−31 %</span><div><p>Tiempo de planificación de docentes que usaron IA con una guía, sin bajar la calidad.</p><p class="fuente">EEF, Inglaterra, 2024 · ensayo con sorteo</p></div></div>
         <div class="ev"><span class="num gris">Sin efecto</span><div><p>Repartir computadoras sin uso guiado no mejoró matemática ni lenguaje.</p><p class="fuente">BID, Perú 2012 · sorteo en 319 escuelas</p></div></div>
       </div>
-      <p class="nota">DE = desviación estándar, la medida que usan estos estudios. Son resultados de otros países: este piloto tiene que medir los suyos.</p>
+      <p class="nota">DE = desviación estándar, la medida que usan estos estudios. Son resultados de otros países: en tu curso lo vamos a medir.</p>
     </div>
   </section>
 
-  <!-- 8 · Cuidado de los chicos -->
-  <section class="lam" aria-label="Lámina 8">
-    <div class="marca"><b>08</b> Cuidado de los chicos</div>
+  <section class="lam">
+    <template class="notas">Gratis, su curso, 8 a 12 semanas, medido con un curso de comparación. Él es co-diseñador. Repasá el cuidado de sus alumnos: sin nombres a la IA, el audio no se guarda, todo con consentimiento.</template>
+    <div class="marca"><b class="n"></b> Propuesta</div>
     <div class="cuerpo">
-      <h2>Cuidado de los chicos</h2>
-      <div class="tarjetas">
-        <div class="tarjeta"><h3>Sin nombres hacia la IA</h3><p class="sec">Cada alumno es un código (ej. A01). Nombres, fotos y ubicación no salen.</p></div>
-        <div class="tarjeta"><h3>El audio no se guarda</h3><p class="sec">Se usa para armar el resumen y se descarta. El resumen se borra solo.</p></div>
-        <div class="tarjeta"><h3>Con consentimiento</h3><p class="sec">De las familias y del profe, explicando para qué se usa todo antes de empezar.</p></div>
-      </div>
-      <p class="nota">Bolivia todavía no tiene una ley general de datos personales: por eso aplicamos la regla más estricta.</p>
-    </div>
-  </section>
-
-  <!-- 9 · Piloto -->
-  <section class="lam" aria-label="Lámina 9">
-    <div class="marca"><b>09</b> Propuesta</div>
-    <div class="cuerpo">
-      <h2>La propuesta de piloto</h2>
+      <h2>La propuesta para <span class="verde">tu curso</span></h2>
       <div class="tarjetas t4">
-        <div class="tarjeta"><span class="num">Gratis</span><p class="sec">Para la escuela y las familias.</p></div>
-        <div class="tarjeta"><span class="num">Un curso</span><p class="sec">Durante 8 a 12 semanas.</p></div>
+        <div class="tarjeta"><span class="num">Gratis</span><p class="sec">Para tu escuela y las familias.</p></div>
+        <div class="tarjeta"><span class="num">Tu curso</span><p class="sec">Durante 8 a 12 semanas.</p></div>
         <div class="tarjeta"><span class="num">Medido</span><p class="sec">Antes y después, comparado con otro curso parecido.</p></div>
-        <div class="tarjeta"><span class="num">Con el profe</span><p class="sec">Co-diseñador: lo que no sirve, se cambia.</p></div>
+        <div class="tarjeta"><span class="num">Con vos</span><p class="sec">Sos co-diseñador: lo que no sirve, se cambia.</p></div>
       </div>
-      <p class="nota">Qué medimos: lectura y matemática, minutos de uso, tiempo que ahorra el profe y qué opinan profe y alumnos.</p>
+      <p class="cuidado"><b>Cuidado de tus alumnos:</b> sin nombres hacia la IA (cada uno es un código) · el audio de la clase no se guarda · todo con consentimiento de las familias y tuyo.</p>
+      <p class="nota">Qué medimos: lectura, matemática y aplazos, minutos de uso, el tiempo que ahorrás y qué opinan vos y tus alumnos.</p>
     </div>
   </section>
 
-  <!-- 10 · Próximos pasos -->
-  <section class="lam" aria-label="Lámina 10">
-    <div class="marca"><b>10</b> Próximos pasos</div>
+  <section class="lam">
+    <template class="notas">Cerrar con un paso concreto: una fecha para probar juntos. Dejar el contacto.</template>
+    <div class="marca"><b class="n"></b> Próximos pasos</div>
     <div class="cuerpo lado">
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
         <h2>Próximos pasos</h2>
         <ol class="pasos">
-          <li><span>Probar el demo juntos.</span></li>
+          <li><span>Probar el demo juntos, con tus textos.</span></li>
           <li><span>Carta de intención del colegio y permiso de la Dirección Distrital.</span></li>
-          <li><span>Elegir el curso del piloto y uno de comparación; revisar luz, internet y carga de tablets.</span></li>
+          <li><span>Elegir tu curso del piloto y uno de comparación; revisar luz, internet y carga de tablets.</span></li>
           <li><span>Consentimientos, medición inicial y arranque.</span></li>
         </ol>
       </div>
@@ -347,32 +555,131 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
         <p class="frase">Hablemos.</p>
         <p class="campo"><span>Nombre</span><b id="c-nombre"></b></p>
         <p class="campo"><span>Teléfono</span><b id="c-tel"></b></p>
-        <p class="chico sec"><b class="verde" style="font-family:'Space Grotesk',sans-serif">ÑANDÉ</b> Educación · Santa Cruz</p>
+        <p class="chico sec"><b class="verde" style="font-family:'Space Grotesk',sans-serif" data-n="marca">ÑANDÉ</b> Educación · Santa Cruz</p>
       </div>
     </div>
   </section>
 
 </main>
 
+
+<div class="vivo" id="vivo" hidden>
+  <div class="vivo-barra">
+    <button class="btn primario" id="vivo-cerrar" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>Volver a la presentación</button>
+    <span class="vivo-titulo" id="vivo-titulo"></span>
+    <div class="vivo-disp" id="vivo-disp" role="group" aria-label="Ver en">
+      <button type="button" data-d="cel-v" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="7" y="2.5" width="10" height="19" rx="2.2"/></svg>Celular</button>
+      <button type="button" data-d="cel-h" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="7" width="19" height="10" rx="2.2"/></svg>Horizontal</button>
+      <button type="button" data-d="tablet" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2.5" y="4.5" width="19" height="15" rx="2.2"/></svg>Tablet</button>
+      <button type="button" data-d="completa" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3.5" width="20" height="13" rx="1.5"/><path d="M8 20.5h8M12 16.5v4"/></svg>Completa</button>
+    </div>
+    <a class="vivo-aparte" id="vivo-aparte" href="#" target="_blank" rel="noopener">abrir aparte ↗</a>
+  </div>
+  <div class="vivo-escena" id="vivo-escena">
+    <div class="caja" id="vivo-caja">
+      <div class="aparato" id="aparato" data-disp="completa">
+        <iframe id="vivo-marco" title="Demo en vivo" allow="fullscreen; microphone; autoplay; screen-wake-lock" allowfullscreen></iframe>
+        <div class="vivo-cargando" id="vivo-cargando" hidden>
+          <span class="giro" aria-hidden="true"></span>
+          <p>Cargando la demo…</p>
+          <p class="tarda" id="vivo-tarda" hidden>Está tardando. <a id="vivo-tarda-link" href="#" target="_blank" rel="noopener">Abrir aparte ↗</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="presentador" id="presentador" hidden>
+  <header class="p-cab"><b data-n="marca">ÑANDÉ</b> · Modo presentador <span class="p-reloj" id="p-reloj">00:00</span></header>
+  <div class="p-cuerpo">
+    <section class="p-actual">
+      <p class="p-num" id="p-num"></p>
+      <h1 id="p-titulo"></h1>
+      <div class="p-notas" id="p-notas"></div>
+      <div class="p-demos" id="p-demos"></div>
+    </section>
+    <aside class="p-sig"><p class="p-num">Lámina siguiente</p><h2 id="p-sig"></h2></aside>
+  </div>
+  <footer class="p-pie">
+    <button class="btn" id="p-ant" type="button">← Anterior</button>
+    <button class="btn" id="p-cerrar" type="button" hidden>✕ Cerrar la demo</button>
+    <button class="btn primario" id="p-sig-b" type="button">Siguiente →</button>
+  </footer>
+</div>
+
 <div class="acciones">
   <button class="btn" id="b-pdf" type="button" title="Descargar en PDF (una lámina por página)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>PDF</button>
+  <button class="btn solo-pc" id="b-pres" type="button" title="Modo presentador: notas en otra ventana (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M7 9h6M7 12h10"/></svg>Notas</button>
   <button class="btn" id="b-full" type="button" title="Pantalla completa (F)" aria-label="Pantalla completa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
 </div>
 <nav class="barra" aria-label="Navegación de láminas">
   <button class="btn" id="b-ant" type="button" aria-label="Lámina anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
-  <div class="progreso"><div class="riel"><i id="riel"></i></div><small id="cont">1 / 10</small></div>
+  <div class="progreso"><div class="riel"><i id="riel"></i></div><small id="cont"></small></div>
   <button class="btn primario" id="b-sig" type="button" aria-label="Lámina siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
 </nav>
 
+<!-- Índices reales de los textos de 2.º de secundaria (los usa la lámina "La IA ya leyó tus textos") -->
+<script src="/maqueta/plan-ejemplo-2do-secundaria.js"></script>
+<!-- Datos únicos de la demo del piloto (EDU.15): colegio, curso, gestión. Si no existe todavía, quedan los textos fijos. -->
+<script src="/maqueta/demo-piloto.js" onerror="void 0"></script>
 <script>
 (() => {
+  // Nombres en un solo lugar: si cambian la marca o los profes IA, se cambia acá.
+  // Los profes IA no se nombran en las láminas (nombres en revisión; los eligen los chicos en los talleres).
+  // A QUIÉN SE PRESENTA: el nombre del profe, el colegio y el curso, en un solo lugar.
+  // También se pueden pasar en el link: ?profe=Nombre (se recuerda en este equipo).
+  const q = new URLSearchParams(location.search);
+  // El nombre real del profe NO va en el repo: entra por el link (?profe=…&apodo=…) y se recuerda en el equipo.
+  const PARA = { profe: '', apodo: '', colegio: 'U.E. Nuevo Horizonte', curso: '2.º de secundaria' };
+  const DP = window.DEMO_PILOTO;
+  if (DP) { if (DP.colegio && DP.colegio.nombre) PARA.colegio = DP.colegio.nombre; if (DP.curso && DP.curso.nombre) PARA.curso = DP.curso.nombre; }
+  // Claves unificadas: 'nande-profe' (nombre formal: portada, notas, panel) y 'nande-profe-apodo' (app del alumno, tutor).
+  const leer = (k) => { try { return localStorage.getItem(k) || ''; } catch (e) { return ''; } };
+  PARA.profe = q.get('profe') || leer('nande-profe');
+  PARA.apodo = q.get('profeApodo') || q.get('apodo') || leer('nande-profe-apodo');
+  const llamar = PARA.profe || 'Profe';   // en la presentación se lo nombra formal
+  const NOMBRES = { marca: 'ÑANDÉ', colegio: PARA.colegio, curso: PARA.curso };
+  document.querySelectorAll('[data-n]').forEach((el) => { if (NOMBRES[el.dataset.n]) el.textContent = NOMBRES[el.dataset.n]; });
+  document.getElementById('saludo').textContent = PARA.profe ? 'Para el profe ' + PARA.profe : 'Hola, Profe';
+  // En las notas del presentador: {profe} = nombre (o "el profe"), {apodo} = cómo lo llaman (o "Profe")
+  const personalizar = (t) => t.replace(/\{profe\}/g, PARA.profe || 'el profe').replace(/\{apodo\}/g, PARA.apodo || 'Profe');
+  document.title = NOMBRES.marca + ' Educación · Presentación';
+
+  // VARIANTES: ?para=profe (por defecto) | director | municipio. Una lámina con data-para="director municipio"
+  // solo sale en esas variantes; sin data-para sale en todas. Hoy solo está armada la del profe.
+  const VARIANTE = q.get('para') || 'profe';
+  document.querySelectorAll('.lam[data-para]').forEach((l) => { if (!l.dataset.para.split(/\s+/).includes(VARIANTE)) l.remove(); });
+
+  // "La IA ya leyó tus textos": el índice real por área y trimestre (si el archivo no carga, queda el texto fijo)
+  const PLAN = window.PLAN_EJEMPLO_2SEC;
+  const CORTO = { len: 'Lengua', mat: 'Matemática', bio: 'Biología', csoc: 'Sociales', ing: 'Inglés', fil: 'Filosofía', art: 'Artes', mus: 'Música', val: 'Valores' };
+  if (PLAN && document.getElementById('wow-indice')) {
+    const total = PLAN.areas.reduce((n, a) => n + a.temas.length, 0);
+    document.getElementById('wow-resumen').textContent = PLAN.areas.length + ' áreas y ' + total + ' temas, ordenados por trimestre. Con eso arma tu año, día por día.';
+    const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+    document.getElementById('wow-indice').innerHTML = PLAN.areas.map((a) => {
+      const n = [1, 2, 3].map((t) => a.temas.filter((x) => x.trimestre === t).length);
+      return `<div class="area"><div style="min-width:0"><b title="${esc(a.nombre)}">${esc(CORTO[a.id] || a.nombre)}</b><small>${esc(a.temas[0] ? a.temas[0].titulo : '')}</small></div>`
+        + `<div class="tri">${n.map((k, j) => `<span data-t="T${j + 1}" class="${k ? '' : 'vacio'}">${k || '–'}</span>`).join('')}</div></div>`;
+    }).join('');
+    if (PLAN.fuente) document.getElementById('wow-fuente').textContent = 'Textos de aprendizaje 2025 del Ministerio (T = trimestre; en 4 áreas el texto trae solo el 1.er). Borrador para que lo revises.';
+  }
+  // Deja listo tu cronograma en la demo (si este equipo todavía no tiene uno): sin cuenta, sin pasos.
+  function sembrarCrono() {
+    if (!PLAN) return;
+    try {
+      if (localStorage.getItem('nande-crono-S2')) return;
+      localStorage.setItem('nande-crono-S2', JSON.stringify({ plan: { titulo: PLAN.titulo, areas: PLAN.areas, advertencias: ['Armado con los índices de los textos oficiales 2025: a verificar con el profe.'] }, hechos: {}, perdidos: [] }));
+    } catch (e) {}
+  }
+
   const lams = [...document.querySelectorAll('.lam')];
+  lams.forEach((l, k) => { l.setAttribute('aria-label', 'Lámina ' + (k + 1)); const n = l.querySelector('.marca .n'); if (n) n.textContent = String(k + 1).padStart(2, '0'); });
   const N = lams.length;
   const $ = (id) => document.getElementById(id);
   let i = 0;
 
   // Contacto: se completa con ?nombre=…&tel=… (sin tocar el código). Si no viene, queda la línea para escribir.
-  const q = new URLSearchParams(location.search);
   if (q.get('nombre')) $('c-nombre').textContent = q.get('nombre');
   if (q.get('tel')) $('c-tel').textContent = q.get('tel');
 
@@ -391,6 +698,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     $('b-ant').disabled = i === 0;
     $('b-sig').disabled = i === N - 1;
     history.replaceState(null, '', location.pathname + location.search + '#' + (i + 1));
+    if (typeof avisar === 'function') { avisar(); precargar(); }
   }
   const sig = () => ir(i + 1), ant = () => ir(i - 1);
 
@@ -406,7 +714,167 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
   $('b-full').addEventListener('click', pantallaCompleta);
   if (!(document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen)) $('b-full').hidden = true;
 
+  // ── Llave de demo y nombre del profe (EDU.15) ──
+  //    Llegan una vez por el link (?llave=… o #demo=…, ?profe=…&apodo=…), se guardan en este equipo y se
+  //    borran del link. Como la demo es del mismo sitio, sus páginas los leen solas de localStorage:
+  //    'nande-demo' (llave), 'nande-profe' (nombre en el panel), 'nande-profe-apodo' (cómo lo llaman sus alumnos).
+  //    Nada de esto va en el repo.
+  const PARAM_LLAVE = 'llave';
+  const llaveHash = (location.hash.match(/(?:^#|&)demo=([^&]+)/) || [])[1];
+  const llaveNueva = q.get(PARAM_LLAVE) || (llaveHash ? decodeURIComponent(llaveHash) : '');
+  try {
+    if (llaveNueva) localStorage.setItem('nande-demo', llaveNueva);
+    if (PARA.profe) localStorage.setItem('nande-profe', PARA.profe);
+    if (PARA.apodo) localStorage.setItem('nande-profe-apodo', PARA.apodo);
+  } catch (e) {}
+  if (q.has(PARAM_LLAVE) || q.has('profe') || q.has('apodo') || q.has('profeApodo') || llaveHash) { q.delete(PARAM_LLAVE); q.delete('profe'); q.delete('apodo'); q.delete('profeApodo'); history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : '') + (llaveHash ? '' : location.hash)); }
+  // Las demos leen llave y nombres del equipo; además se les pasan profe y profeApodo en el link.
+  function conLlave(url) {
+    if (!PARA.profe && !PARA.apodo) return url;
+    const u = new URL(url, location.origin);
+    if (PARA.profe) u.searchParams.set('profe', PARA.profe);
+    if (PARA.apodo) u.searchParams.set('profeApodo', PARA.apodo);
+    return u.pathname + u.search + u.hash;
+  }
+
+  // ── Verlo en vivo: la demo en una capa; en PC/proyector, dentro de un aparato simulado ──
+  const vivo = $('vivo'), marco = $('vivo-marco'), aparato = $('aparato'), caja = $('vivo-caja'), escena = $('vivo-escena');
+  const TAM = { 'cel-v': [390, 844, 14], 'cel-h': [844, 390, 14], tablet: [1180, 820, 22] };
+  const esPC = window.matchMedia('(min-width: 900px) and (min-height: 560px)');
+  const canal = ('BroadcastChannel' in window) ? new BroadcastChannel('nande-presentacion') : null;
+  let vivoAbierto = false, disp = 'completa', demoActual = null, tTarda = 0;
+
+  function ajustarAparato() {
+    const conMarco = esPC.matches;
+    vivo.classList.toggle('con-marco', conMarco);
+    aparato.dataset.disp = conMarco ? disp : 'completa';
+    $('vivo-disp').querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.d === disp)));
+    if (!conMarco) { aparato.style.cssText = ''; caja.style.cssText = ''; return; }
+    const W = escena.clientWidth, H = escena.clientHeight, m = 28;
+    if (disp === 'completa') {
+      const w = W - m * 2, h = H - m * 2;
+      aparato.style.cssText = `width:${w}px;height:${h}px;transform:none`;
+      caja.style.cssText = `width:${w}px;height:${h}px`;
+      return;
+    }
+    const [w, h, b] = TAM[disp], bw = w + b * 2, bh = h + b * 2;
+    const k = Math.min((W - m * 2) / bw, (H - m * 2) / bh, 1.5);
+    aparato.style.cssText = `width:${bw}px;height:${bh}px;transform:scale(${k})`;
+    caja.style.cssText = `width:${Math.round(bw * k)}px;height:${Math.round(bh * k)}px`;
+  }
+  window.addEventListener('resize', () => { if (vivoAbierto) ajustarAparato(); });
+  $('vivo-disp').addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-d]'); if (!b) return;
+    disp = b.dataset.d; ajustarAparato();
+  });
+
+  function cargando(si) {
+    clearTimeout(tTarda);
+    $('vivo-cargando').hidden = !si; $('vivo-tarda').hidden = true;
+    if (si) tTarda = setTimeout(() => { $('vivo-tarda').hidden = false; }, 8000);
+  }
+  marco.addEventListener('load', () => {
+    if (!vivoAbierto) return;
+    cargando(false);
+    // Esc dentro de la demo también vuelve a la presentación (mismo sitio)
+    try { marco.contentWindow.addEventListener('keydown', (e) => { if (e.key === 'Escape') cerrarVivo(false); }); } catch (e) {}
+  });
+
+  function abrirVivo(b) {
+    if (vivoAbierto) cerrarVivo(true);
+    const url = conLlave(b.dataset.vivo);
+    if (b.dataset.sembrar === 'crono') sembrarCrono();
+    vivoAbierto = true; demoActual = b;
+    disp = b.dataset.disp || 'completa';
+    $('vivo-titulo').textContent = 'En vivo · ' + b.dataset.titulo;
+    const ap = $('vivo-aparte'); ap.href = url; ap.hidden = !b.hasAttribute('data-aparte') && esPC.matches === false;
+    $('vivo-tarda-link').href = url;
+    vivo.hidden = false;
+    ajustarAparato();
+    cargando(true);
+    marco.src = url;
+    $('vivo-cerrar').focus();
+    try { history.pushState({ vivo: 1 }, ''); } catch (e) {}
+    avisar();
+  }
+  function cerrarVivo(desdeHistorial) {
+    if (!vivoAbierto) return;
+    vivoAbierto = false; demoActual = null;
+    cargando(false);
+    vivo.hidden = true;
+    marco.src = 'about:blank'; // corta audio y micrófono de la demo
+    if (!desdeHistorial) { try { if (history.state && history.state.vivo) history.back(); } catch (e) {} }
+    const b = lams[i].querySelector('.vivo-btn'); if (b) b.focus({ preventScroll: true });
+    avisar();
+  }
+  document.querySelectorAll('.vivo-btn').forEach((b) => b.addEventListener('click', (e) => { e.stopPropagation(); abrirVivo(b); }));
+  $('vivo-cerrar').addEventListener('click', () => cerrarVivo(false));
+  window.addEventListener('popstate', () => { if (vivoAbierto) cerrarVivo(true); });
+
+  // Precarga: las demos de esta lámina y de la siguiente quedan en caché para abrir al instante
+  const precargadas = new Set();
+  function precargar() {
+    [lams[i], lams[i + 1]].forEach((l) => l && l.querySelectorAll('.vivo-btn').forEach((b) => {
+      const u = conLlave(b.dataset.vivo).split('#')[0];
+      if (precargadas.has(u)) return; precargadas.add(u);
+      const ln = document.createElement('link'); ln.rel = 'prefetch'; ln.href = u; document.head.appendChild(ln);
+    }));
+  }
+
+  // ── Modo presentador: notas en otra ventana, sincronizado en las dos direcciones ──
+  const titulo = (l) => { const h = l.querySelector('h1, h2'); return h ? h.textContent.replace(/\s+/g, ' ').trim() : ''; };
+  function avisar() { if (canal) canal.postMessage({ t: 'estado', i, vivo: vivoAbierto ? demoActual && demoActual.dataset.titulo : null }); }
+  if (canal) canal.onmessage = (ev) => {
+    const d = ev.data || {};
+    if (esPresentador) { if (d.t === 'estado') pintarPresentador(d); return; }
+    if (d.t === 'hola') avisar();
+    else if (d.t === 'ir') { cerrarVivo(false); ir(d.i); }
+    else if (d.t === 'abrir') { const b = lams[i].querySelectorAll('.vivo-btn')[d.k]; if (b) abrirVivo(b); }
+    else if (d.t === 'cerrar') cerrarVivo(false);
+  };
+  const abrirPresentador = () => window.open(location.pathname + '?presentador#' + (i + 1), 'nande-presentador', 'width=1000,height=680');
+  $('b-pres').addEventListener('click', abrirPresentador);
+
+  const esPresentador = q.has('presentador');
+  function pintarPresentador(d) {
+    const k = Math.max(0, Math.min(N - 1, d.i)), l = lams[k], n = lams[k + 1];
+    $('p-num').textContent = 'Lámina ' + (k + 1) + ' de ' + N + (d.vivo ? ' · demo abierta: ' + d.vivo : '');
+    $('p-titulo').textContent = titulo(l);
+    const t = l.querySelector('template.notas'); $('p-notas').textContent = t ? personalizar(t.content.textContent.trim()) : '';
+    $('p-sig').textContent = n ? titulo(n) : 'Fin';
+    const cont = $('p-demos'); cont.innerHTML = '';
+    l.querySelectorAll('.vivo-btn').forEach((b, kk) => {
+      const x = document.createElement('button'); x.type = 'button'; x.className = 'btn vivo-btn'; x.textContent = '▶ ' + b.dataset.titulo;
+      x.addEventListener('click', () => canal.postMessage({ t: 'abrir', k: kk })); cont.appendChild(x);
+    });
+    $('p-cerrar').hidden = !d.vivo;
+    $('p-ant').disabled = k === 0; $('p-sig-b').disabled = k === N - 1;
+    estadoP = k;
+  }
+  let estadoP = 0;
+  if (esPresentador) {
+    document.body.classList.add('modo-presentador');
+    $('presentador').hidden = false;
+    document.title = 'Presentador · ' + document.title;
+    const t0 = Date.now();
+    setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('p-reloj').textContent = String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); }, 1000);
+    pintarPresentador({ i: (parseInt(location.hash.slice(1), 10) || 1) - 1 });
+    const mandar = (m) => canal && canal.postMessage(m);
+    $('p-sig-b').addEventListener('click', () => mandar({ t: 'ir', i: estadoP + 1 }));
+    $('p-ant').addEventListener('click', () => mandar({ t: 'ir', i: estadoP - 1 }));
+    $('p-cerrar').addEventListener('click', () => mandar({ t: 'cerrar' }));
+    document.addEventListener('keydown', (e) => {
+      if (['ArrowRight', 'PageDown', ' '].includes(e.key)) { e.preventDefault(); mandar({ t: 'ir', i: estadoP + 1 }); }
+      else if (['ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); mandar({ t: 'ir', i: estadoP - 1 }); }
+      else if (e.key === 'Escape') mandar({ t: 'cerrar' });
+    });
+    mandar({ t: 'hola' });
+    if (!canal) $('p-notas').textContent = 'Este navegador no permite sincronizar ventanas.';
+    return;
+  }
+
   document.addEventListener('keydown', (e) => {
+    if (vivoAbierto) { if (e.key === 'Escape') cerrarVivo(false); return; }
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const k = e.key;
     if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(k)) { if (k === 'Enter' && e.target.closest('button')) return; e.preventDefault(); sig(); }
@@ -414,6 +882,7 @@ figcaption { font-size: var(--chico); color: var(--sec); text-align: center; }
     else if (k === 'Home') { e.preventDefault(); ir(0); }
     else if (k === 'End') { e.preventDefault(); ir(N - 1); }
     else if (k === 'f' || k === 'F') pantallaCompleta();
+    else if ((k === 'p' || k === 'P') && esPC.matches) abrirPresentador();
   });
 
   // Toque y deslizamiento: deslizar a los lados cambia de lámina; un toque en el tercio izquierdo vuelve, en el resto avanza.
