@@ -178,3 +178,13 @@ Guardar aquí todo lo que sirva para presentar el demo (municipio, Google, finan
 - **La voz en vivo es lo más caro**: ~USD 0,04–0,05/min. Un curso de 30 chicos × 10 min/día ≈ USD 13/día.
   **Antes del piloto en aula: bajar el costo de la voz** (solo el paso actual de la misión, voz a pedido y
   texto el resto, modelo más barato). Acordado con el dueño: después de su reunión con el profe.
+
+## Plan hacia la reunión con el profe (11-nov-2026)
+
+- **Sin apuro**: la reunión se agenda cuando esté todo lo propuesto. La presentación es una **demo en vivo**
+  desde una PC proyectada, con la app dentro de un celular o tablet simulados.
+- En curso: **EDU.15** modo demo sin login (llave secreta, bolsa de USD 2/día, ejemplos si algo falla) ·
+  **EDU.16** tutor 24/7 del alumno (clases, tareas, horario, textos, avisos para casa) · **EDU.17** app del
+  alumno completa (Hoy, Agenda, Mis textos, Mis tareas, Mi tutor, Mundo) · **EDU.14b** presentación con
+  propósito, botones "Verlo en vivo" y marco de dispositivo.
+- Nombres: provisionales; síntesis en `docs/investigacion/nombres-sintesis.md` (decisión del dueño pendiente).
