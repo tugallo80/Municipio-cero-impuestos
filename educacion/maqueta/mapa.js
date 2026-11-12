@@ -27,7 +27,7 @@
   let mapa = null;        // { grupos, atencion, resumen, objetivo, tema }
   let propuesta = null;
   let objetivo = 'parejas';
-  let tema = 'Números racionales';
+  let tema = window.CURSO_DEMO?.temaMapa || 'Números racionales';
   let pidiendo = false;
   let guardado = true;
   let cargado = false;
@@ -91,11 +91,22 @@
   async function pedir() {
     pidiendo = true; error = ''; propuesta = null; repintar();
     if (!conCuenta()) { await new Promise((r) => setTimeout(r, 500)); propuesta = propuestaEjemplo(objetivo, tema); pidiendo = false; repintar(); return; }
-    const r = await api().mapa({ accion: 'proponer', curso: CURSO, objetivo, tema });
+    tardia = null;
+    const pedido = `${objetivo}|${tema}`;
+    const promesa = api().mapa({ accion: 'proponer', curso: CURSO, objetivo, tema, nueva: pedir.otra === true });
+    pedir.otra = false;
+    // EDU.15: en la demo, si la mentora tarda más de 3 s (o no hay presupuesto), propuesta de ejemplo
+    // al instante; la de la mentora se ofrece con un botón cuando llega.
+    const r = U.esDemo() ? await U.aTiempo(promesa, 2500) : await promesa;
     pidiendo = false;
-    if (r.ok) propuesta = { ...r.propuesta, costoUsd: r.costoUsd }; else error = r.error;
+    if (r?.ok) propuesta = { ...r.propuesta, costoUsd: r.costoUsd };
+    else if (U.esDemo()) {
+      propuesta = propuestaEjemplo(objetivo, tema);
+      if (!r) promesa.then((x) => { if (x?.ok && `${objetivo}|${tema}` === pedido) { tardia = { ...x.propuesta, costoUsd: x.costoUsd }; repintar(); } });
+    } else error = r.error;
     repintar();
   }
+  let tardia = null;
 
   // ── Mover alumnos ─────────────────────────────────
   function mover(id, destino) {
@@ -182,9 +193,10 @@
       <div class="mp-obj">${Object.entries(OBJ).map(([k, o]) => `<button class="${k === objetivo ? 'activo' : ''}" onclick="Mapa.objetivo('${k}')">${o.ico} ${o.txt}</button>`).join('')}</div>
       <label class="campo" style="margin:0"><span>Tema a trabajar</span><input value="${esc(tema)}" oninput="Mapa.tema(this.value)" placeholder="Ej. Números racionales"></label>
       <button class="btn ancho" ${pidiendo ? 'disabled' : ''} onclick="Mapa.pedir()">${pidiendo ? 'La mentora está pensando…' : '✨ Pedir propuesta'}</button>
-      <p class="ter">A la mentora le llegan solo códigos (A01, A02…) y cómo viene cada uno, nunca los nombres.</p>
+      <p class="ter">A la mentora le llegan solo códigos (S01, S02…) y cómo viene cada uno, nunca los nombres.</p>
     </div>
     ${error ? `<div class="tarjeta" style="border-color:var(--rojo);margin-top:12px">${esc(error)}</div>` : ''}
+    ${tardia ? `<div class="tarjeta fila-accion" style="margin-top:12px;border-color:var(--verde)"><div class="crece">✨ <b>La mentora terminó su propuesta</b><div class="ter">La de abajo es un ejemplo listo.</div></div><button class="btn" onclick="Mapa.verTardia()">Ver la de la mentora</button></div>` : ''}
     ${propuesta ? `<div class="tarjeta pila" style="margin-top:12px;border-color:var(--verde)">
       <div class="fila entre envuelve"><b>${OBJ[propuesta.objetivo]?.ico || '✨'} Propuesta de la mentora</b>${propuesta.ejemplo ? '<span class="pildora ambar">ejemplo</span>' : ''}</div>
       <p class="chica">${esc(propuesta.resumen)}</p>
@@ -230,6 +242,7 @@
     vista,
     ficha,
     pedir,
+    verTardia() { if (tardia) { propuesta = tardia; tardia = null; repintar(); } },
     objetivo(k) { objetivo = k; repintar(); },
     tema(v) { tema = v; },
     usar() { mapa = { grupos: propuesta.grupos.map((g) => ({ ...g, alumnos: [...g.alumnos] })), atencion: propuesta.atencion || [], resumen: propuesta.resumen, objetivo: propuesta.objetivo, tema: propuesta.tema }; propuesta = null; guardado = false; U.toast('Propuesta aplicada: podés moverla y guardar'); repintar(); },

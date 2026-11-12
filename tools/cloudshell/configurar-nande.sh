@@ -15,6 +15,7 @@
 #    5. Crea la cuenta "github-deploy" y deja que SOLO GitHub Actions de este repo la use
 #       (Workload Identity: no se guarda ninguna llave en GitHub).
 #    5b. Deja compilar Cloud Functions a la cuenta de cómputo (Cloud Build).
+#    5c. Deja que las Functions firmen el pase de la demo sin login (EDU.15): solo sobre sí misma.
 #    6. Da a la cuenta "claude-code" permisos de SOLO LECTURA (logs, estado, versiones).
 #    7. Ofrece guardar la clave de Gemini en Secret Manager (se escribe oculta).
 #    8. Imprime los "Datos para GitHub" que hay que pegarle a Claude (no son secretos).
@@ -198,6 +199,13 @@ aplicar() {
   local COMPUTE_SA="${num}-compute@developer.gserviceaccount.com"
   reintentar gcloud projects add-iam-policy-binding "$P" --member="serviceAccount:$COMPUTE_SA" \
     --role=roles/cloudbuild.builds.builder --condition=None --format=none && ok "$COMPUTE_SA puede compilar"
+
+  paso "5c. Pase de la demo sin login (EDU.15)"
+  # eduDemo entrega un "custom token" de Firebase para la cuenta demo: para firmarlo, la cuenta
+  # con la que corren las Functions necesita firmar en nombre de sí misma (no de otras cuentas).
+  reintentar gcloud iam service-accounts add-iam-policy-binding "$COMPUTE_SA" --project="$P" \
+    --member="serviceAccount:$COMPUTE_SA" --role=roles/iam.serviceAccountTokenCreator --format=none \
+    && ok "Las Functions pueden firmar el pase de la demo"
 
   paso "6. claude-code (solo lectura)"
   for R in "${ROLES_CLAUDE[@]}"; do

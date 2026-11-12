@@ -11,6 +11,7 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'firebase/auth'
 import { getFunctions, httpsCallable } from 'firebase/functions'
+import { entrarDemo, salirDemo, esDemo } from '../comun/demo.js'
 
 const DOMINIO_CUENTAS = 'alumnos.nande-educacion.local'
 
@@ -39,6 +40,9 @@ const llamar = async (fn, datos) => {
 let usuario = null
 await new Promise((res) => onAuthStateChanged(auth, (u) => { usuario = u; res() }))
 onAuthStateChanged(auth, (u) => { usuario = u })
+// EDU.15: con la llave de la demo en el link (o recordada en el equipo) se entra solo.
+const demo = await entrarDemo(auth, f)
+if (demo.ok) usuario = auth.currentUser
 
 const mensaje = (err) => {
   const m = String(err?.message || err || '')
@@ -50,7 +54,16 @@ const mensaje = (err) => {
 
 window.NandeClase = {
   conectado: true,
-  usuario: () => (usuario ? usuario.email.split('@')[0] : null),
+  usuario: () => (usuario ? (esDemo(usuario) ? 'demo' : usuario.email.split('@')[0]) : null),
+  // EDU.15: demo sin login
+  esDemo: () => esDemo(usuario),
+  errorDemo: demo.error || null,
+  async demo() {
+    const r = await entrarDemo(auth, f)
+    if (r.ok) { usuario = auth.currentUser; window.dispatchEvent(new CustomEvent('nande-cuenta', { detail: { demo: true } })) }
+    return r
+  },
+  async salirDemo() { await salirDemo(auth); usuario = null; window.dispatchEvent(new CustomEvent('nande-cuenta', { detail: { demo: false } })) },
   async entrar(u, clave) {
     try {
       await signInWithEmailAndPassword(auth, u.includes('@') ? u : `${u.trim().toLowerCase()}@${DOMINIO_CUENTAS}`, clave)
@@ -84,3 +97,4 @@ window.NandeClase = {
   },
 }
 window.dispatchEvent(new Event('nande-clase-listo'))
+if (demo.ok) window.dispatchEvent(new CustomEvent('nande-cuenta', { detail: { demo: true } }))

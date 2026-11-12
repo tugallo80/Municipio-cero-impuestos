@@ -1,0 +1,6 @@
+{
+  "_nota": "EDU.15: hashes SHA-256 de las llaves de la demo sin login (?demo=<llave>). La llave NUNCA va en el repo: la tiene el dueño. Rotar = generar otra llave y reemplazar el hash; para cortar una llave, borrar su línea. Las carga el workflow en edu/demo/llaves.",
+  "llaves": {
+    "presentacion": "11322d3ee85b04c2942d185eccc7eb5ca8c55ecaa26c5ab1a726966112771e2e"
+  }
+}

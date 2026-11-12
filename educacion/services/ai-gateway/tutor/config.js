@@ -36,6 +36,8 @@ const LIMITES = {
   costoGlobalDiaUsd: numeroEnv('EDU_TOPE_COSTO_GLOBAL_DIA_USD', 5),
   // Bolsa aparte para las cuentas de prueba automática del workflow (EDU.04e): no tocan la de arriba.
   costoPruebasDiaUsd: numeroEnv('EDU_TOPE_COSTO_PRUEBAS_DIA_USD', 1),
+  // EDU.15: bolsa propia de la demo sin login (si se agota, la pantalla muestra ejemplos).
+  costoDemoDiaUsd: numeroEnv('EDU_TOPE_COSTO_DEMO_DIA_USD', 2),
 };
 
 module.exports = { MODELO_KAY, VOCES, VOZ_POR_DEFECTO, LIMITES };

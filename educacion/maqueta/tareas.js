@@ -60,6 +60,21 @@
       variantes: { apoyo, base: consigna, desafio }, origen: { tipo: c.origen, tema: c.tema }, como: tipo === 'practica' ? 'texto' : 'texto',
       pistas: ['¿En cuántas partes iguales quedó partido?', 'El número de abajo dice en cuántas partes se partió; el de arriba, cuántas tomaste.', 'Ejemplo: una tableta de 6 cuadritos, comés 2 → dos sextos (2/6).'],
     });
+    const tema = c.tema || 'el tema de la clase';
+    if (c.materia === 'ing') {
+      const ing = (titulo, tipo, consigna, apoyo, desafio, pistas) => ({ ...base(titulo, tipo, consigna, apoyo, desafio), pistas,
+        criterios: { ser: 'Escucha y respeta a quien entrevista o con quien practica.', saber: `Usa bien ${tema} en oraciones propias.`, hacer: 'Escribe y dice en voz alta sus oraciones.', autoevaluacion: '¿Me animé a decirlo en inglés?' } });
+      return [
+        ing('My family routine', 'practica', `Escribí 6 oraciones en inglés sobre la rutina de alguien de tu casa usando ${tema}. Subrayá el verbo de cada una.`, 'Usá estos verbos: get up, eat, work, sleep. Completá: She ___ at seven.', 'Sumá 2 preguntas con do / does y respondelas con respuestas cortas.', ['¿Quién hace la acción? Con he / she el verbo lleva -s.', 'Mirá el ejemplo del pizarrón: She gets up at six.', 'Leé tus oraciones en voz alta: ¿suenan bien?']),
+        ing('Interview a classmate', 'mision', 'Prepará 4 preguntas en inglés para conocer la rutina de un compañero. Mañana se las hacés en clase y anotás sus respuestas.', 'Usá el molde: What time do you ___ ?', 'Después contá su rutina en 3 oraciones con he / she.', ['Las preguntas empiezan con Do / Does o con What time.', 'Después de does el verbo va sin -s.', 'Probá primero con alguien de tu casa.']),
+      ];
+    }
+    if (c.materia !== 'mat') {
+      return [
+        base(`Lo que aprendí de ${tema}`, 'practica', `Explicá con tus palabras lo más importante de ${tema} y dá un ejemplo de tu vida o de tu barrio.`, `Completá: "Hoy aprendí que…" y "Un ejemplo es…" sobre ${tema}.`, `Explicáselo a alguien de tu casa y anotá qué preguntas te hizo.`),
+        base(`Investigadores: ${tema}`, 'investigacion', `Buscá un ejemplo real de ${tema} (en casa, en el barrio o en las noticias) y contalo en 5 líneas.`, 'Buscá un ejemplo y dibujalo.', 'Buscá dos ejemplos y compará en qué se parecen y en qué no.'),
+      ].map((t) => ({ ...t, criterios: { ser: 'Trabaja con cuidado y comparte lo que hizo.', saber: `Explica ${tema} con sus palabras.`, hacer: 'Relaciona el tema con un ejemplo real.', autoevaluacion: 'Marca con el semáforo cómo le fue.' }, pistas: ['¿Qué fue lo que más te llamó la atención?', 'Pensá en algo que ves todos los días.', 'Releé el cuaderno de la última clase.'] }));
+    }
     return [
       base('Fracciones en la cocina', 'practica', 'Con ayuda de alguien de tu casa, partí una naranja o un pan en partes iguales. Dibujá cómo quedó y escribí la fracción de cada parte.', 'Partí una naranja en 2 y después en 4. Dibujá las partes y escribí "un medio" y "un cuarto". Mirá el ejemplo del cuaderno.', 'Partí algo en 8 partes, comé (¡o guardá!) 3 y escribí qué fracción queda. ¿Es más o menos que un medio?'),
       base('Cazadores de fracciones', 'investigacion', 'Buscá en tu casa o en el barrio 3 cosas partidas en partes iguales (una ventana, una tableta de chocolate, una baldosa). Dibujalas y escribí su fracción.', 'Buscá 2 cosas partidas en partes iguales y contá cuántas partes tienen.', 'Buscá 3 cosas y ordenalas de la fracción más chica a la más grande. Explicá cómo te diste cuenta.'),
@@ -69,12 +84,27 @@
   async function pedir() {
     if (!ctx) return;
     pidiendo = true; error = ''; sugeridas = null; repintar();
-    if (!conCuenta()) { await new Promise((r) => setTimeout(r, 500)); sugeridas = ejemplo(ctx); pidiendo = false; repintar(); return; }
-    const r = await api().tareas({ accion: 'sugerir', curso: ctx.curso, materia: ctx.materia, tema: ctx.tema, origen: ctx.origen, claseId: ctx.claseId, vistos: ctx.vistos, pendiente: ctx.pendiente, tareasDichas: ctx.tareasDichas, contenidos: ctx.contenidos, hoy: hoy() });
+    if (!conCuenta()) {
+      await new Promise((r) => setTimeout(r, 500));
+      // La cuenta (p. ej. la demo) puede llegar justo en este medio segundo: entonces se pide de verdad.
+      if (!conCuenta()) { sugeridas = ejemplo(ctx); pidiendo = false; repintar(); return; }
+    }
+    tardia = null;
+    const pedido = ctx;
+    const promesa = api().tareas({ accion: 'sugerir', curso: ctx.curso, materia: ctx.materia, tema: ctx.tema, origen: ctx.origen, claseId: ctx.claseId, vistos: ctx.vistos, pendiente: ctx.pendiente, tareasDichas: ctx.tareasDichas, contenidos: ctx.contenidos, hoy: hoy(), nueva: pedir.otra === true });
+    pedir.otra = false;
+    // EDU.15: en la demo nunca se espera más de 3 s ni se ve un error: si tarda, ejemplo listo
+    // y, cuando llega lo de la mentora, un botón para verlo.
+    const r = U.esDemo() ? await U.aTiempo(promesa, 2500) : await promesa;
     pidiendo = false;
-    if (r.ok) sugeridas = r.tareas.map((t) => ({ ...t, costoUsd: r.costoUsd })); else error = r.error;
+    if (r?.ok) sugeridas = r.tareas.map((t) => ({ ...t, costoUsd: r.costoUsd }));
+    else if (U.esDemo()) {
+      sugeridas = ejemplo(ctx);
+      if (!r) promesa.then((x) => { if (x?.ok && ctx === pedido) { tardia = x.tareas.map((t) => ({ ...t, costoUsd: x.costoUsd })); repintar(); } });
+    } else error = r.error;
     repintar();
   }
+  let tardia = null; // propuesta real que llegó después del ejemplo (demo)
 
   async function cargarEnviadas(curso) {
     if (cargarEnviadas.en) return;
@@ -125,7 +155,8 @@
     if (n === null && (tipo === 'clase' || tipo === 'tema')) cuerpo = `<div class="tarjeta"><p class="sec">No encontré esa ${tipo === 'clase' ? 'clase' : 'tema'}. Volvé a abrirla desde ${tipo === 'clase' ? 'Clase grabada' : 'el Cronograma'}.</p></div>`;
     else if (ctx) {
       cuerpo = `<div class="tarjeta fila-accion" style="margin-bottom:12px"><div class="crece"><b>${esc(ctx.titulo)}</b><div class="ter">${esc(CURSOS[ctx.curso] || ctx.curso)}${ctx.pendiente?.length ? ` · quedó pendiente: ${esc(ctx.pendiente.join('; '))}` : ''}</div></div>
-        <button class="btn sec2" ${pidiendo ? 'disabled' : ''} onclick="Tareas.pedir()">↻ Otras ideas</button></div>
+        <button class="btn sec2" ${pidiendo ? 'disabled' : ''} onclick="Tareas.otras()">↻ Otras ideas</button></div>
+        ${tardia ? `<div class="tarjeta fila-accion" style="margin-bottom:12px;border-color:var(--verde)"><div class="crece">✨ <b>La mentora terminó sus ideas</b><div class="ter">Las de abajo son un ejemplo listo.</div></div><button class="btn" onclick="Tareas.verTardia()">Ver las de la mentora</button></div>` : ''}
         ${pidiendo ? `<div class="tarjeta" style="text-align:center;padding:30px"><div style="width:46px;height:46px;border-radius:50%;border:5px solid var(--sup3);border-top-color:var(--verde);margin:0 auto 14px;animation:cg-gira 1s linear infinite"></div><b>La mentora está pensando tareas…</b><p class="ter">Unos segundos.</p></div>` : ''}
         ${error ? `<div class="tarjeta" style="border-color:var(--rojo)"><p>${esc(error)}</p></div>` : ''}
         ${sugeridas ? `<div class="pila">${sugeridas.map(tarjetaEditable).join('')}</div>${sugeridas[0]?.costoUsd ? `<p class="ter" style="margin-top:8px">Costo de IA de estas ideas: USD ${sugeridas[0].costoUsd}</p>` : ''}` : ''}`;
@@ -144,6 +175,8 @@
   window.Tareas = {
     vista,
     pedir,
+    otras() { pedir.otra = true; tardia = null; pedir(); },
+    verTardia() { if (tardia) { sugeridas = tardia; tardia = null; repintar(); } },
     editar(i, k, v) { if (sugeridas?.[i]) sugeridas[i][k] = v; },
     editarVariante(i, k, v) { if (sugeridas?.[i]) (sugeridas[i].variantes ||= {})[k] = v; },
     editarCriterio(i, k, v) { if (sugeridas?.[i]) (sugeridas[i].criterios ||= {})[k] = v; },
@@ -170,5 +203,10 @@
       enviadas = null; repintar();
     },
   };
-  window.addEventListener('nande-cuenta', () => { enviadas = null; repintar(); });
+  window.addEventListener('nande-cuenta', () => {
+    enviadas = null;
+    // Si se mostraban ideas de ejemplo porque la cuenta todavía no había cargado (p. ej. la demo), pedir las de verdad.
+    if (conCuenta() && ctx && !pidiendo && (!sugeridas || sugeridas[0]?.ejemplo)) { pedir(); return; }
+    repintar();
+  });
 })();

@@ -11,6 +11,7 @@
 //    edu/uso/{fecha}/{alumnoId}        → { sesiones, tokens, segundos, costoUsd }
 //    edu/uso_global/{fecha}            → { sesiones, tokens, segundos, costoUsd }   (chicos, profes, dueño)
 //    edu/uso_pruebas/{fecha}           → lo mismo, solo de las cuentas de prueba automática (EDU.04e)
+//    edu/uso_demo/{fecha}              → lo mismo, solo de la cuenta de la demo sin login (EDU.15, USD 2/día)
 //    Una cuenta es de prueba si su perfil (edu/alumnos/… o edu/personal/…) tiene pruebaAuto: true
 //    (lo pone solo el workflow con la cuenta de deploy; el navegador no puede escribir la base).
 //    edu/sesiones/{sesionId}           → { alumnoId, inicio, inicioCadena, voz, modelo, profe, relevo, cerrada }
@@ -29,22 +30,42 @@
 const { initializeApp, getApps } = require('firebase-admin/app');
 const NOMBRE_APP = 'educacion';
 const { getDatabase, ServerValue } = require('firebase-admin/database');
-const { fechaBolivia, evaluarCuota, bolsa } = require('./cuota');
+const { fechaBolivia, evaluarCuota, bolsa, tipoDeBolsa } = require('./cuota');
 
 // Cambios de profe por día (cada uno es una conexión nueva a Gemini).
 const MAX_RELEVOS_DIA = 40;
 
 let db = null;
+// App con nombre propio: firebase-functions crea su propia app interna, así que
+// "si no hay apps, inicializar" no sirve para saber si existe la nuestra.
+const appAdmin = () =>
+  getApps().find((a) => a.name === NOMBRE_APP) || initializeApp({ databaseURL: process.env.EDU_DATABASE_URL }, NOMBRE_APP);
 function base() {
-  if (!db) {
-    // App con nombre propio: firebase-functions crea su propia app interna, así que
-    // "si no hay apps, inicializar" no sirve para saber si existe la nuestra.
-    const app =
-      getApps().find((a) => a.name === NOMBRE_APP) ||
-      initializeApp({ databaseURL: process.env.EDU_DATABASE_URL }, NOMBRE_APP);
-    db = getDatabase(app);
-  }
+  if (!db) db = getDatabase(appAdmin());
   return db;
+}
+
+// ── Demo sin login (EDU.15) ─────────────────────────
+//    edu/demo/llaves/{nombre} → hash SHA-256 de la llave (la llave no se guarda en ningún lado)
+//    edu/demo/fallos/{fecha}  → intentos con llave mala del día
+async function hashesDemo() {
+  return (await base().ref('edu/demo/llaves').once('value')).val() || {};
+}
+async function fallosDemo(fecha) {
+  return (await base().ref(`edu/demo/fallos/${fecha}`).once('value')).val() || 0;
+}
+async function sumarFalloDemo(fecha) {
+  await base().ref(`edu/demo/fallos/${fecha}`).transaction((n) => (n || 0) + 1);
+}
+//    edu/demo/cache/{clave} → { respuesta, creado }: lo que ya respondió la IA en la demo
+//    (la misma propuesta vuelve al instante y sin costo; "↻ Otras" pide una nueva).
+const VENCE_CACHE_DEMO = 7 * 864e5;
+async function leerCacheDemo(clave) {
+  const c = (await base().ref(`edu/demo/cache/${clave}`).once('value')).val();
+  return c && Date.now() - (c.creado || 0) < VENCE_CACHE_DEMO ? c.respuesta : null;
+}
+async function guardarCacheDemo(clave, respuesta) {
+  await base().ref(`edu/demo/cache/${clave}`).set({ respuesta, creado: Date.now() });
 }
 
 async function obtenerAlumno(uid) {
@@ -57,7 +78,7 @@ async function obtenerAlumno(uid) {
   const limites = {};
   if (Number(perfil.limiteSesionesDia) > 0) limites.sesionesPorAlumnoDia = Math.min(Number(perfil.limiteSesionesDia), 100);
   if (Number(perfil.limiteTokensDia) > 0) limites.tokensPorAlumnoDia = Math.min(Number(perfil.limiteTokensDia), 10_000_000);
-  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo }, limites, prueba: perfil.pruebaAuto === true };
+  return { alumnoId, perfil: { curso: perfil.curso, estilo: perfil.estilo }, limites, prueba: tipoDeBolsa(perfil) };
 }
 
 async function obtenerContenido(curso) {
@@ -122,7 +143,7 @@ async function reservarSesion(alumnoId, limites, datosSesion, relevoDe = null, e
 
   if (!esRelevo) await base().ref(`${rutaBolsa}/${fecha}/sesiones`).transaction((n) => (n || 0) + 1);
   const ref = base().ref('edu/sesiones').push();
-  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, inicioCadena, relevo: esRelevo, cerrada: false, ...(esPrueba ? { prueba: true } : {}), ...datosSesion });
+  await ref.set({ alumnoId, fecha, inicio: ServerValue.TIMESTAMP, inicioCadena, relevo: esRelevo, cerrada: false, ...(esPrueba ? { prueba: esPrueba } : {}), ...datosSesion });
   const usoAlumno = tx.snapshot.val() || {};
   return {
     ok: true,
@@ -173,7 +194,7 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
     if (s === null) return null;
     if (s.alumnoId !== alumnoId || s.cerrada) return undefined;
     fecha = s.fecha;
-    esPrueba = s.prueba === true;
+    esPrueba = s.prueba === true ? true : s.prueba === 'demo' ? 'demo' : false;
     return { ...s, cerrada: true, totalTokens, costoUsd, segundos };
   });
   const final = tx.snapshot.val();
@@ -191,7 +212,7 @@ async function registrarUso(alumnoId, sesionId, { totalTokens, costoUsd, segundo
           costoUsd: Math.round(((x.costoUsd || 0) + costoUsd) * 1e6) / 1e6,
         };
       });
-  await Promise.all([sumarA(`edu/uso/${fecha}/${alumnoId}`), sumarA(`${esPrueba ? 'edu/uso_pruebas' : 'edu/uso_global'}/${fecha}`)]);
+  await Promise.all([sumarA(`edu/uso/${fecha}/${alumnoId}`), sumarA(`${bolsa(esPrueba, {}).ruta}/${fecha}`)]);
   return { ok: true };
 }
 
@@ -205,7 +226,7 @@ async function obtenerPersonal(uid) {
   const p = (await base().ref(`edu/personal/${uid}`).once('value')).val();
   if (!p || !p.id) return null;
   const cursos = Object.keys(p.cursos || {}).filter((c) => p.cursos[c] === true);
-  return { id: String(p.id), tutor: p.roles?.tutor === true, direccion: p.roles?.direccion === true, cursos, prueba: p.pruebaAuto === true };
+  return { id: String(p.id), tutor: p.roles?.tutor === true, direccion: p.roles?.direccion === true, cursos, prueba: tipoDeBolsa(p) };
 }
 
 /**
@@ -246,7 +267,7 @@ async function registrarCostoClase(personalId, fecha, costoUsd, segundos, tipo =
       });
   await Promise.all([
     sumar(`edu/uso_${tipo}/${fecha}/${personalId}`, () => ({})),
-    sumar(`${esPrueba ? 'edu/uso_pruebas' : 'edu/uso_global'}/${fecha}`, (x) =>
+    sumar(`${bolsa(esPrueba, {}).ruta}/${fecha}`, (x) =>
       tipo === 'clase'
         ? { clases: (x.clases || 0) + 1, segundosClase: (x.segundosClase || 0) + Math.round(segundos) }
         : { [`${tipo}s`]: (x[`${tipo}s`] || 0) + 1 }
@@ -425,4 +446,5 @@ module.exports = {
   borrarClase,
   obtenerClasesRecientes,
   VENCE,
+  appAdmin, hashesDemo, fallosDemo, sumarFalloDemo, leerCacheDemo, guardarCacheDemo,
   obtenerAlumno, obtenerContenido, reservarSesion, registrarUso, obtenerMemoria, anotarEleccion, guardarUltima, obtenerSesion };

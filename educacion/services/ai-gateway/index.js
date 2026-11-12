@@ -15,3 +15,5 @@ exports.eduMentora = eduMentora;
 const { eduTareas, eduMapa } = require('./src/tareas');
 exports.eduTareas = eduTareas;
 exports.eduMapa = eduMapa;
+const { eduDemo } = require('./src/demo');
+exports.eduDemo = eduDemo;

@@ -1,26 +1,28 @@
-// GENERADO por tools/datos/armar-curso-demo.mjs (no editar a mano). Alumnos FICTICIOS.
+// GENERADO por tools/datos/armar-demo.mjs desde tools/datos/demo-piloto.json. No editar a mano.
+// Alumnos FICTICIOS (apodos).
 window.CURSO_DEMO = {
- "_nota": "Curso de DEMOSTRACIÓN (2.º de secundaria A, 12 alumnos FICTICIOS de 13–14 años) para el mapa del curso y las tareas (EDU.04f). Los nombres son inventados y solo van a la pantalla; al servidor y a la IA va el archivo sin nombres (ver armar-curso-demo.mjs).",
  "curso": "2do_secundaria",
- "maqueta": "2.º de secundaria A",
+ "maqueta": "2.º de secundaria",
+ "colegio": "U.E. Nuevo Horizonte",
+ "temaMapa": "Present continuous: interrogative form",
  "alumnos": [
   {
    "id": "S01",
-   "nombre": "Mateo Rojas",
-   "avatar": "🦊",
+   "nombre": "Jaguar Azul 7",
+   "avatar": "🐆",
    "avance": 78,
    "tendencia": "sube",
    "misiones": 12,
    "aprende": "haciendo y explicándole a otros",
    "ritmo": "constante",
    "fortalezas": [
-    "cálculo mental",
+    "razonamiento lógico",
     "creatividad",
     "ayuda a sus compañeros"
    ],
    "practicando": [
-    "operaciones con números racionales",
-    "puntuación en textos largos"
+    "preguntas en present continuous (Is he playing…?)",
+    "tallado en bajo relieve"
    ],
    "intereses": [
     "fútbol",
@@ -28,21 +30,22 @@ window.CURSO_DEMO = {
     "construir"
    ],
    "temas": {
-    "Números racionales": "en camino",
-    "Simple present": "logrado",
-    "Género narrativo": "en camino"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "Racionales en la feria (en curso)",
-    "My daily routine (hecha)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
    "atencion": ""
   },
   {
    "id": "S02",
-   "nombre": "Valentina Suárez",
-   "avatar": "🦉",
+   "nombre": "Tucán Verde 3",
+   "avatar": "🦜",
    "avance": 86,
    "tendencia": "estable",
    "misiones": 15,
@@ -54,7 +57,7 @@ window.CURSO_DEMO = {
     "constancia"
    ],
    "practicando": [
-    "problemas de varios pasos sin apurarse",
+    "explicar su proyecto de vida sin apurarse",
     "pedir ayuda cuando se traba"
    ],
    "intereses": [
@@ -62,21 +65,22 @@ window.CURSO_DEMO = {
     "dibujo"
    ],
    "temas": {
-    "Números racionales": "logrado",
-    "Género narrativo": "logrado",
-    "Tawantinsuyu": "logrado"
+    "Present continuous: interrogative form": "logrado",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "Leyendas del Abya Yala (hecha)",
-    "Racionales en la feria (hecha)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
    ],
    "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
    "atencion": ""
   },
   {
    "id": "S03",
-   "nombre": "Thiago Vargas",
-   "avatar": "🐢",
+   "nombre": "Paraba Roja 9",
+   "avatar": "🦚",
    "avance": 58,
    "tendencia": "baja",
    "misiones": 6,
@@ -88,7 +92,7 @@ window.CURSO_DEMO = {
     "memoria visual"
    ],
    "practicando": [
-    "números racionales",
+    "present continuous: preguntas y respuestas cortas",
     "leer consignas largas"
    ],
    "intereses": [
@@ -97,21 +101,22 @@ window.CURSO_DEMO = {
     "música"
    ],
    "temas": {
-    "Números racionales": "inicio",
-    "Simple present": "en camino",
-    "Género narrativo": "inicio"
+    "Present continuous: interrogative form": "practicando",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "Racionales en la feria (a la mitad)",
-    "My daily routine (a la mitad)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Avanza mejor con un compañero paciente y tareas cortas.",
    "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
   },
   {
    "id": "S04",
-   "nombre": "Camila Justiniano",
-   "avatar": "🐬",
+   "nombre": "Tatú Dorado 4",
+   "avatar": "🦔",
    "avance": 74,
    "tendencia": "sube",
    "misiones": 10,
@@ -123,28 +128,29 @@ window.CURSO_DEMO = {
     "curiosidad"
    ],
    "practicando": [
-    "ortografía (b/v, s/c)"
+    "ortografía en sus escritos de Valores"
    ],
    "intereses": [
     "música",
     "series en inglés"
    ],
    "temas": {
-    "Simple present": "logrado",
-    "Género narrativo": "en camino",
-    "Números racionales": "en camino"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "My daily routine (hecha)",
-    "Leyendas del Abya Yala (en curso)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Mejoró mucho con las tareas de voz y en inglés ayuda a sus compañeros.",
    "atencion": ""
   },
   {
    "id": "S05",
-   "nombre": "Lucía Paz",
-   "avatar": "🐞",
+   "nombre": "Capibara Celeste 2",
+   "avatar": "🦫",
    "avance": 90,
    "tendencia": "estable",
    "misiones": 16,
@@ -155,28 +161,29 @@ window.CURSO_DEMO = {
     "paciencia para explicar"
    ],
    "practicando": [
-    "escribir textos argumentativos"
+    "escribir un proyecto de vida con metas medibles"
    ],
    "intereses": [
     "plantas",
     "rompecabezas"
    ],
    "temas": {
-    "Números racionales": "logrado",
-    "Expresiones algebraicas": "logrado",
-    "Género narrativo": "en camino"
+    "Present continuous: interrogative form": "logrado",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "Racionales en la feria (hecha)",
-    "El sistema solar (hecha)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
    ],
-   "mentora": "Explica racionales con dibujos muy claros: puede acompañar en parejas.",
+   "mentora": "Explica con dibujos muy claros (le salió precioso el boceto del relieve): puede acompañar en parejas.",
    "atencion": ""
   },
   {
    "id": "S06",
-   "nombre": "Joaquín Ribera",
-   "avatar": "🐿️",
+   "nombre": "Bufeo Rosado 8",
+   "avatar": "🐬",
    "avance": 64,
    "tendencia": "estable",
    "misiones": 8,
@@ -189,27 +196,29 @@ window.CURSO_DEMO = {
    ],
    "practicando": [
     "terminar una tarea antes de empezar otra",
-    "vocabulario en inglés"
+    "vocabulario de instrumentos y deportes en inglés"
    ],
    "intereses": [
     "autos",
     "construir"
    ],
    "temas": {
-    "Números racionales": "en camino",
-    "Simple present": "en camino"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "My daily routine (hecha)",
-    "Racionales en la feria (en curso)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Rinde más con material concreto y consignas paso a paso.",
    "atencion": ""
   },
   {
    "id": "S07",
-   "nombre": "Emma Saucedo",
-   "avatar": "🐱",
+   "nombre": "Tapir Gris 5",
+   "avatar": "🐗",
    "avance": 77,
    "tendencia": "sube",
    "misiones": 11,
@@ -222,28 +231,29 @@ window.CURSO_DEMO = {
    ],
    "practicando": [
     "hablar frente al grupo",
-    "speaking en inglés"
+    "speaking: hablar de su música favorita"
    ],
    "intereses": [
     "dibujo",
     "música"
    ],
    "temas": {
-    "Género narrativo": "logrado",
-    "Simple present": "en camino",
-    "Tawantinsuyu": "logrado"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "Leyendas del Abya Yala (hecha)",
-    "Mapa del Tawantinsuyu (hecha)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Participa más en grupos chicos que frente a todo el curso.",
    "atencion": ""
   },
   {
    "id": "S08",
-   "nombre": "Santiago Vaca",
-   "avatar": "🦁",
+   "nombre": "Puma Naranja 1",
+   "avatar": "🐈",
    "avance": 69,
    "tendencia": "sube",
    "misiones": 9,
@@ -251,32 +261,33 @@ window.CURSO_DEMO = {
    "ritmo": "rápido pero se apura",
    "fortalezas": [
     "liderazgo",
-    "cálculo rápido"
+    "ritmo en el ensamble"
    ],
    "practicando": [
     "revisar antes de entregar",
-    "redacción"
+    "afinar en el coro a dos voces"
    ],
    "intereses": [
     "fútbol",
     "videojuegos"
    ],
    "temas": {
-    "Números racionales": "en camino",
-    "Expresiones algebraicas": "en camino",
-    "Género narrativo": "inicio"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "Racionales en la feria (hecha)",
-    "Leyendas del Abya Yala (a la mitad)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Le motiva coordinar un grupo con una tarea clara.",
    "atencion": ""
   },
   {
    "id": "S09",
-   "nombre": "Martina Flores",
-   "avatar": "🦩",
+   "nombre": "Colibrí Violeta 6",
+   "avatar": "🐦",
    "avance": 55,
    "tendencia": "estable",
    "misiones": 5,
@@ -288,7 +299,7 @@ window.CURSO_DEMO = {
     "empatía"
    ],
    "practicando": [
-    "números racionales",
+    "present continuous en preguntas",
     "confianza para preguntar"
    ],
    "intereses": [
@@ -296,21 +307,22 @@ window.CURSO_DEMO = {
     "animales"
    ],
    "temas": {
-    "Números racionales": "inicio",
-    "Género narrativo": "logrado",
-    "Simple present": "en camino"
+    "Present continuous: interrogative form": "practicando",
+    "Autoconocimiento y proyecto de vida": "practicando",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "Leyendas del Abya Yala (hecha)",
-    "Racionales en la feria (a la mitad)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Escribe relatos muy lindos; en matemática necesita más práctica guiada.",
    "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
   },
   {
    "id": "S10",
-   "nombre": "Gael Peña",
-   "avatar": "🐸",
+   "nombre": "Ardilla Amarilla 10",
+   "avatar": "🐿️",
    "avance": 81,
    "tendencia": "sube",
    "misiones": 13,
@@ -322,28 +334,29 @@ window.CURSO_DEMO = {
     "preguntas buenas"
    ],
    "practicando": [
-    "orden en el cuaderno"
+    "orden en el cuaderno de Artes"
    ],
    "intereses": [
     "astronomía",
     "experimentos"
    ],
    "temas": {
-    "Números racionales": "logrado",
-    "Sistema solar": "logrado",
-    "Género narrativo": "en camino"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
    },
    "ultimas": [
-    "El sistema solar (hecha)",
-    "Racionales en la feria (hecha)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
    ],
    "mentora": "Sus preguntas en clase ayudan a todo el curso.",
    "atencion": ""
   },
   {
    "id": "S11",
-   "nombre": "Renata Chávez",
-   "avatar": "🐼",
+   "nombre": "Garza Blanca 11",
+   "avatar": "🦢",
    "avance": 70,
    "tendencia": "estable",
    "misiones": 10,
@@ -354,29 +367,30 @@ window.CURSO_DEMO = {
     "lectura en voz alta"
    ],
    "practicando": [
-    "expresiones algebraicas",
-    "listening en inglés"
+    "listening en inglés",
+    "ritmo en el ensamble (corcheas y semicorcheas)"
    ],
    "intereses": [
     "baile",
     "música"
    ],
    "temas": {
-    "Expresiones algebraicas": "en camino",
-    "Simple present": "en camino",
-    "Género narrativo": "logrado"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "Leyendas del Abya Yala (hecha)",
-    "Racionales en la feria (en curso)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Trabaja mejor en pareja que sola.",
    "atencion": ""
   },
   {
    "id": "S12",
-   "nombre": "Dylan Arteaga",
-   "avatar": "🐺",
+   "nombre": "Cóndor Negro 12",
+   "avatar": "🦅",
    "avance": 61,
    "tendencia": "sube",
    "misiones": 7,
@@ -388,20 +402,21 @@ window.CURSO_DEMO = {
    ],
    "practicando": [
     "leer con fluidez",
-    "expresiones algebraicas"
+    "escribir sobre su vocación"
    ],
    "intereses": [
     "videojuegos",
     "robots"
    ],
    "temas": {
-    "Números racionales": "en camino",
-    "Simple present": "logrado",
-    "Género narrativo": "inicio"
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
    },
    "ultimas": [
-    "My daily routine (hecha)",
-    "Racionales en la feria (en curso)"
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
    ],
    "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
    "atencion": ""

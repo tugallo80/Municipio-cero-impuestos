@@ -19,6 +19,15 @@ const { LIMITES } = require('../tutor/config');
 const { costoClase } = require('./costos');
 const { fechaBolivia } = require('./cuota');
 const datos = require('./datos');
+const crypto = require('node:crypto');
+
+// EDU.15: en la cuenta demo, la misma pregunta se responde desde el caché (al instante, sin costo).
+const claveCache = (tipo, x) => `${tipo}-${crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex').slice(0, 32)}`;
+async function desdeCache(yo, d, tipo, x) {
+  if (yo.prueba !== 'demo' || d.nueva === true) return { clave: yo.prueba === 'demo' ? claveCache(tipo, x) : null, respuesta: null };
+  const clave = claveCache(tipo, x);
+  return { clave, respuesta: await datos.leerCacheDemo(clave) };
+}
 
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const MODELOS = (process.env.EDU_MODELO_PLAN || 'gemini-3.1-flash-lite,gemini-3.1-flash-lite-preview,gemini-2.5-flash-lite,gemini-flash-lite-latest')
@@ -122,12 +131,16 @@ exports.eduTareas = onCall({ ...OPC, secrets: [GEMINI_API_KEY] }, async (request
   if (accion === 'sugerir') {
     const p = T.validarPedidoTareas(d);
     if (!p.ok) throw new HttpsError('invalid-argument', p.error);
+    const cache = await desdeCache(yo, d, 'tareas', { curso, ...p });
+    if (cache.respuesta) return { ...cache.respuesta, costoUsd: 0, cache: true };
     const r = await conIA(yo, 'tareas', MAX_SUGERENCIAS_DIA, T.pedidoTareas(p), T.instruccionTareas(), T.ESQUEMA_TAREAS);
     if (!r.ok) return r;
     const hoy = p.hoy || fechaBolivia();
     const tareas = (Array.isArray(r.json.tareas) ? r.json.tareas : []).slice(0, 3).map((t) => T.normalizarTarea({ ...t, materia: p.materia }, { curso, materia: p.materia, hoy, origen: p.origen, tema: p.tema }));
     log('tareas_sugeridas', { personalId: yo.id, curso, n: tareas.length, modelo: r.modelo, tokens: r.costo.totalTokens, costoUsd: r.costo.costoUsd });
-    return { ok: true, tareas, costoUsd: r.costo.costoUsd, modelo: r.modelo };
+    const resp = { ok: true, tareas, costoUsd: r.costo.costoUsd, modelo: r.modelo };
+    if (cache.clave && tareas.length) await datos.guardarCacheDemo(cache.clave, resp);
+    return resp;
   }
 
   if (accion === 'enviar') {
@@ -176,11 +189,15 @@ exports.eduMapa = onCall({ ...OPC, secrets: [GEMINI_API_KEY] }, async (request) 
     if (!T.alumnosDemo(curso).length) return { ok: false, error: 'Este curso todavía no tiene alumnos cargados.' };
     const objetivo = Object.keys(T.OBJETIVOS).includes(d.objetivo) ? d.objetivo : 'parejas';
     const tema = String(d.tema || '').slice(0, 160);
+    const cache = await desdeCache(yo, d, 'mapa', { curso, objetivo, tema: tema.trim().toLowerCase() });
+    if (cache.respuesta) return { ...cache.respuesta, costoUsd: 0, cache: true };
     const r = await conIA(yo, 'mapa', MAX_MAPAS_DIA, T.pedidoMapa(curso, objetivo, tema), T.instruccionMapa(), T.ESQUEMA_MAPA);
     if (!r.ok) return r;
     const propuesta = { ...T.normalizarMapa(r.json, curso), objetivo, tema };
     log('mapa_propuesto', { personalId: yo.id, curso, objetivo, grupos: propuesta.grupos.length, modelo: r.modelo, tokens: r.costo.totalTokens, costoUsd: r.costo.costoUsd });
-    return { ok: true, propuesta, costoUsd: r.costo.costoUsd, modelo: r.modelo };
+    const resp = { ok: true, propuesta, costoUsd: r.costo.costoUsd, modelo: r.modelo };
+    if (cache.clave && propuesta.grupos.length) await datos.guardarCacheDemo(cache.clave, resp);
+    return resp;
   }
 
   if (accion === 'guardar') {

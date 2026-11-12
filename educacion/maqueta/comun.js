@@ -56,7 +56,7 @@
       const fn = rutas[ruta] || rutas[porDefecto];
       document.querySelectorAll('[data-ruta]').forEach(a => a.classList.toggle('activo', a.dataset.ruta === ruta));
       const main = U.$('#principal');
-      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta EDU.01b · datos inventados de un colegio ficticio</p>';
+      main.innerHTML = fn(param ? decodeURIComponent(param) : undefined) + '<p class="aviso-demo">Maqueta · alumnos y datos inventados (el colegio y sus textos son los del curso del piloto)</p>';
       window.scrollTo(0, 0);
       if (rutas._despues) rutas._despues(ruta, param);
     };
@@ -100,6 +100,76 @@
       <p class="ter">Este perfil lo arma su tutor con lo que observa. Cada niño aprende distinto: sirve para acompañarlo, no para ponerle etiquetas. Lo ven solo ustedes, su tutor y quien autorice la dirección.</p>
     </div>`;
   };
+
+  // ── Nombre del profe real (EDU.15) ──
+  // Son datos reales: NO van en el repo, la base ni la IA. Llegan por el link (?profe=…&profeApodo=…, también
+  // en el #), se guardan solo en este equipo y se borran de la barra de direcciones.
+  // nande-profe = nombre formal · nande-profe-apodo = cómo lo llaman sus alumnos · nande-apodo = apodo del ALUMNO.
+  U.nombreProfe = () => { try { return localStorage.getItem('nande-profe') || ''; } catch { return ''; } };
+  U.apodoProfe = () => { try { return localStorage.getItem('nande-profe-apodo') || ''; } catch { return ''; } };
+  // Parámetros del link → equipo: ?profe= (nombre formal) · ?profeApodo= o ?apodo= (cómo lo llaman sus alumnos).
+  (function leerProfeDelLink() {
+    try {
+      const url = new URL(location.href);
+      const partes = url.hash.slice(1).split('&');
+      const leer = (k) => {
+        const h = partes.find((x) => x.startsWith(k + '='));
+        return url.searchParams.get(k) ?? (h ? decodeURIComponent(h.slice(k.length + 1).replace(/\+/g, ' ')) : null);
+      };
+      const guardar = (clave, v) => {
+        if (v === null) return;
+        const limpio = v.replace(/[<>"'`]/g, '').trim().slice(0, 60);
+        limpio ? localStorage.setItem(clave, limpio) : localStorage.removeItem(clave);
+      };
+      const CLAVES = { profe: 'nande-profe', profeApodo: 'nande-profe-apodo', apodo: 'nande-profe-apodo' };
+      let hubo = false;
+      const conProfeApodo = leer('profeApodo') !== null; // si vienen los dos, manda profeApodo
+      for (const [k, clave] of Object.entries(CLAVES)) {
+        const v = leer(k);
+        if (v === null) continue;
+        hubo = true;
+        if (!(k === 'apodo' && conProfeApodo)) guardar(clave, v);
+        url.searchParams.delete(k);
+      }
+      if (!hubo) return;
+      url.hash = partes.filter((x) => !Object.keys(CLAVES).some((k) => x.startsWith(k + '='))).join('&');
+      history.replaceState(history.state, '', url.pathname + url.search + (url.hash.length > 1 ? url.hash : ''));
+    } catch {}
+  })();
+
+  // ── Demo sin login (EDU.15) ──
+  U.esDemo = () => !!window.NandeClase?.esDemo?.();
+  // Espera la respuesta de la IA hasta `ms`; si tarda más, devuelve null (la promesa sigue viva).
+  U.aTiempo = (promesa, ms = 2500) => Promise.race([promesa, new Promise((r) => setTimeout(() => r(null), ms))]);
+
+  // Pastilla "Demo" en la barra de arriba (con "Salir de la demo"), cuando la cuenta es la demo.
+  function marcarDemo() {
+    const top = document.querySelector('header.top');
+    if (!top) return;
+    let p = top.querySelector('.pildora-demo');
+    if (!U.esDemo()) { p?.remove(); return; }
+    if (p) return;
+    // El panel muestra el curso real del piloto (nombre del profe configurable en demo-piloto.json).
+    const P = window.DEMO_PILOTO;
+    if (P) {
+      const n = document.getElementById('nom-tutor'), c = document.getElementById('nom-colegio');
+      if (n) n.textContent = U.nombreProfe() || P.profe.nombre;
+      if (c) c.textContent = `${P.colegio.nombre} · ${P.curso.nombre}`;
+    }
+    p = document.createElement('button');
+    p.className = 'pildora pildora-demo';
+    p.title = 'Salir de la demo';
+    p.textContent = '✨ Demo';
+    p.style.cssText = 'border:0;cursor:pointer;margin-left:auto';
+    p.onclick = async () => {
+      if (!confirm('¿Salir de la demo? En este equipo se olvida el link de la demo.')) return;
+      await window.NandeClase?.salirDemo?.();
+      U.toast('Saliste de la demo');
+    };
+    top.appendChild(p);
+  }
+  window.addEventListener('nande-cuenta', marcarDemo);
+  window.addEventListener('nande-clase-listo', marcarDemo);
 
   window.U = U;
 })();
