@@ -17,3 +17,6 @@ exports.eduTareas = eduTareas;
 exports.eduMapa = eduMapa;
 const { eduDemo } = require('./src/demo');
 exports.eduDemo = eduDemo;
+// EDU.16: tutor 24/7 del alumno (texto con streaming; la voz usa eduKayToken con `tutor`)
+const { eduTutor } = require('./src/tutor');
+exports.eduTutor = eduTutor;

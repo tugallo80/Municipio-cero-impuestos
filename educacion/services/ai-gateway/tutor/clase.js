@@ -102,6 +102,8 @@ Reglas que no se rompen:
 4. No inventes. Si algo no se entiende en el audio, decilo. Si el audio no es una clase o está
    vacío, marcá hubo_clase=false y dejá las listas vacías.
 5. Tareas: solo las que el profe dio de verdad, con la fecha de entrega si la dijo.
+   Avisos para la casa ("avisen en casa que…", "díganle a sus papás…") y lo que pidió traer
+   ("traigan…", "para el lunes necesitan…"): solo si el profe lo dijo, con la fecha si la dijo.
 6. La transcripción va completa pero con los nombres de alumnos ya reemplazados; marcá quién habla
    con "Profe:" o "Alumno:" / "Alumna:" / "Varios:" al inicio de cada intervención.`;
 }
@@ -170,8 +172,10 @@ const ESQUEMA_INFORME = {
         explicaciones_clave: { ...LISTA_TEXTO, description: 'cómo lo explicó el profe (ejemplos, pasos) para poder repetirlo' },
         tareas: LISTA_TEXTO,
         dudas: { ...LISTA_TEXTO, description: 'dudas que tuvieron los alumnos en clase' },
+        avisos_casa: { ...LISTA_TEXTO, description: 'lo que el profe pidió avisar en casa a la familia ("el profe pidió avisar en casa que…"), con la fecha si la dijo; vacía si no pidió nada' },
+        llevar: { ...LISTA_TEXTO, description: 'lo que el profe pidió traer a una próxima clase ("traer…"), con la fecha o la materia si la dijo; vacía si no pidió nada' },
       },
-      required: ['temas', 'explicaciones_clave', 'tareas', 'dudas'],
+      required: ['temas', 'explicaciones_clave', 'tareas', 'dudas', 'avisos_casa', 'llevar'],
     },
     transcripcion: { type: 'string' },
   },
@@ -220,6 +224,8 @@ function limpiarInforme(crudo, nombres = []) {
       explicaciones: l(c.explicaciones_clave, 6, 300),
       tareas: l(c.tareas, 5, 240),
       dudas: l(c.dudas, 5, 200),
+      avisosCasa: l(c.avisos_casa, 4, 240),
+      llevar: l(c.llevar, 5, 200),
     },
     transcripcion: a(String(r.transcripcion || '').slice(0, 60000)),
   };
@@ -240,7 +246,7 @@ function completarInforme(inf) {
     calidadAudio: i.calidadAudio || 'regular',
     profe: { resumen: p.resumen || '', vistos: arr(p.vistos), comparacionPensum: p.comparacionPensum || '', pendiente: arr(p.pendiente), sugerencias: arr(p.sugerencias), tareas: arr(p.tareas) },
     direccion: { resumen: d.resumen || '', alertas: arr(d.alertas) },
-    contexto: { temas: arr(c.temas), explicaciones: arr(c.explicaciones), tareas: arr(c.tareas), dudas: arr(c.dudas) },
+    contexto: { temas: arr(c.temas), explicaciones: arr(c.explicaciones), tareas: arr(c.tareas), dudas: arr(c.dudas), avisosCasa: arr(c.avisosCasa), llevar: arr(c.llevar) },
   };
 }
 
@@ -260,6 +266,8 @@ function textoClasesParaTutor(clases = []) {
       linea('Cómo lo explicó su profe', c.explicaciones),
       linea('Tareas que dejó', c.tareas),
       linea('Dudas que hubo en clase', c.dudas),
+      linea('Pidió avisar en casa', c.avisosCasa),
+      linea('Pidió traer', c.llevar),
     ]
       .filter(Boolean)
       .join('\n');
@@ -267,7 +275,7 @@ function textoClasesParaTutor(clases = []) {
   return `# Lo que pasó en las últimas clases de su curso (las dio su profe de verdad)
 
 Usalo cuando el alumno pregunte por la clase ("¿qué dijo el profe que teníamos que hacer?",
-"¿qué tarea dejó?", "no entendí la parte de…"). Contale lo que dijo su profe y explicalo de la
+"¿qué tarea dejó?", "no entendí la parte de…", "¿qué tenía que decir en casa?", "¿qué hay que traer?"). Contale lo que dijo su profe y explicalo de la
 misma forma, con la escalera de siempre (sin hacerle la tarea). Si lo que pregunta no está acá,
 decí con sinceridad que no lo sabés y que le pregunte a su profe: no inventes tareas ni fechas.
 

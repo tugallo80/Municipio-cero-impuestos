@@ -50,6 +50,9 @@ function claseDeEjemplo() {
     ],
     tareas: [`Escribir 6 preguntas en present continuous sobre deportes y música, con su respuesta corta, para el ${entrega}`],
     dudas: ['Cuándo va am, is o are al principio de la pregunta'],
+    // EDU.16: lo que el tutor 24/7 responde a "¿qué tenía que decir en casa?" y "¿qué tengo que llevar?"
+    avisosCasa: [`El profe pidió avisar en casa que para Música (el ${habil(1)}) hay que traer un instrumento autóctono o folclórico si tienen (charango, tarka, bombo…)`],
+    llevar: [`Para Inglés del ${habil(2)}: el cuaderno con las 6 preguntas y el texto (págs. 57–58)`],
   };
   return {
     clase: {

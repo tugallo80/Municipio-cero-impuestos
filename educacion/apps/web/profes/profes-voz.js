@@ -285,7 +285,8 @@ async function empezar(profeId, relevoDe = null) {
       ctxSalida: tomarSalida(),
       obtenerToken: async () => {
         try {
-          const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe })
+          // EDU.16: desde "Mi tutor" la voz recibe el mismo foco que el chat (materia, tema, página, tarea).
+          const { data } = await fnToken({ profe: profeId, mision: ctx.mision, relevoDe, ...(ctx.tutor && !ctx.mision ? { tutor: ctx.tutor } : {}) })
           if (data?.ok) esta.sesionId = data.sesionId
           return data
         } catch (err) {
@@ -469,7 +470,7 @@ function colgar() {
 }
 
 function contexto(nuevo) {
-  ctx = { materia: nuevo?.materia || nuevo?.mision?.materia || null, mision: nuevo?.mision || null }
+  ctx = { materia: nuevo?.materia || nuevo?.mision?.materia || null, mision: nuevo?.mision || null, tutor: nuevo?.tutor && typeof nuevo.tutor === 'object' ? nuevo.tutor : null }
   if (ctx.mision && !ctx.materia) ctx.materia = MD()?.MISIONES[ctx.mision.id]?.materia || null
   if (charla && ctx.mision) charla.peldanoMax = Math.max(charla.peldanoMax, ctx.mision.peldano || 0)
   pintar(charla ? 'escuchando' : 'libre')

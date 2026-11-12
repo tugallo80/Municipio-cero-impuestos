@@ -125,6 +125,14 @@ jobs:
           echo "::add-mask::$FIREBASE_API_KEY"
           node e2e/probar-demo.mjs
 
+      - name: Prueba del tutor 24/7 (6 casos, seguridad, streaming, costo por consulta)
+        if: env.SOLO_CANAL != 'true' && (github.event_name == 'push' || inputs.probar)
+        working-directory: educacion/tools
+        run: |
+          export FIREBASE_API_KEY="$(node -e 'console.log(require(process.argv[1]).apiKey)' "$RUNNER_TEMP/firebase-web.json")"
+          echo "::add-mask::$FIREBASE_API_KEY"
+          node e2e/probar-tutor.mjs
+
       # La prueba de voz de Kay es la cara (~USD 0,20 por corrida) y gasta del mismo tope diario
       # que los chicos (USD 5): corre solo al publicar en main o a mano, no en cada push de rama.
       - name: Prueba de punta a punta (voz real contra Gemini)

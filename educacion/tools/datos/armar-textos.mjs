@@ -132,3 +132,4 @@ const orden = ['len', 'mat', 'bio', 'csoc', 'ing', 'fil', 'art', 'mus', 'val']
 resumen.sort((a, b) => orden.indexOf(a.id) - orden.indexOf(b.id))
 writeFileSync(resolve(sal, 'indice.json'), JSON.stringify({ curso: '2do_secundaria', areas: resumen }))
 console.log('listo:', sal)
+await import('./copiar-textos-tutor.mjs')

@@ -16,6 +16,7 @@ const { construirInstruccion, HERRAMIENTAS, cursoLegible } = require('../tutor/i
 const profes = require('../tutor/profes');
 const { resumirUso, PRECIOS_USD_POR_MILLON } = require('./costos');
 const datos = require('./datos');
+const T24 = require('../tutor/tutor24');
 
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const OPCIONES = { region: 'us-central1', secrets: [GEMINI_API_KEY], timeoutSeconds: 30, memory: '256MiB', maxInstances: 10 };
@@ -64,7 +65,16 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
   let herramientas = HERRAMIENTAS;
   if (profe) {
     const [memoria, clases] = await Promise.all([datos.obtenerMemoria(alumnoId), datos.obtenerClasesRecientes(perfil.curso)]);
-    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, clases, relevo: reserva.relevo, cursoLegible });
+    // EDU.16: desde "Mi tutor", la voz sabe lo mismo que el chat (tareas, horario, avisos, texto abierto).
+    let tutor = null;
+    if (request.data?.tutor && typeof request.data.tutor === 'object' && !mision) {
+      const p = T24.validarPedido({ pregunta: String(request.data.tutor.pregunta || 'contexto'), foco: request.data.tutor });
+      if (p.ok) {
+        const { contextoAlumno } = require('./tutor');
+        tutor = T24.contextoParaVoz(await contextoAlumno({ alumnoId, perfil }, p));
+      }
+    }
+    instruccion = profes.construirInstruccionProfe(profe.id, perfil, { mision, memoria, clases, tutor, relevo: reserva.relevo, cursoLegible });
     herramientas = profes.HERRAMIENTAS_PROFES;
     if (mision && !reserva.relevo) await datos.anotarEleccion(alumnoId, mision.materia, profe.id);
   } else {
@@ -114,6 +124,7 @@ exports.eduKayToken = onCall(OPCIONES, async (request) => {
     modelo: MODELO_KAY,
     caracteresInstruccion: instruccion.length,
     clasesEnContexto: instruccion.includes('# Lo que pasó en las últimas clases'),
+    tutor247: instruccion.includes('modo tutor a cualquier hora'),
   });
 
   return {
