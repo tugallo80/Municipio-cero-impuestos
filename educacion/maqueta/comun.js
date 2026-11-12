@@ -101,6 +101,25 @@
     </div>`;
   };
 
+  // ── Nombre del profe real (EDU.15) ──
+  // Es un dato real: NO va en el repo, la base ni la IA. Llega por el link (?profe=… o #…&profe=…),
+  // se guarda solo en este equipo (localStorage 'nande-profe') y se borra de la barra de direcciones.
+  U.nombreProfe = () => { try { return localStorage.getItem('nande-profe') || ''; } catch { return ''; } };
+  (function leerProfeDelLink() {
+    try {
+      const url = new URL(location.href);
+      const partes = url.hash.slice(1).split('&');
+      const enHash = partes.find((x) => x.startsWith('profe='));
+      const v = url.searchParams.get('profe') ?? (enHash ? decodeURIComponent(enHash.slice(6).replace(/\+/g, ' ')) : null);
+      if (v === null) return;
+      const limpio = v.replace(/[<>"'`]/g, '').trim().slice(0, 60);
+      limpio ? localStorage.setItem('nande-profe', limpio) : localStorage.removeItem('nande-profe');
+      url.searchParams.delete('profe');
+      url.hash = partes.filter((x) => !x.startsWith('profe=')).join('&');
+      history.replaceState(history.state, '', url.pathname + url.search + (url.hash.length > 1 ? url.hash : ''));
+    } catch {}
+  })();
+
   // ── Demo sin login (EDU.15) ──
   U.esDemo = () => !!window.NandeClase?.esDemo?.();
   // Espera la respuesta de la IA hasta `ms`; si tarda más, devuelve null (la promesa sigue viva).
@@ -117,7 +136,7 @@
     const P = window.DEMO_PILOTO;
     if (P) {
       const n = document.getElementById('nom-tutor'), c = document.getElementById('nom-colegio');
-      if (n) n.textContent = P.profe.nombre;
+      if (n) n.textContent = U.nombreProfe() || P.profe.nombre;
       if (c) c.textContent = `${P.colegio.nombre} · ${P.curso.nombre}`;
     }
     p = document.createElement('button');

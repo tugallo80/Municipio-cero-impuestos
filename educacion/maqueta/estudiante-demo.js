@@ -7,17 +7,83 @@
  "curso": "2do_secundaria",
  "cursoNombre": "2.º de secundaria",
  "colegio": "U.E. Nuevo Horizonte",
+ "gestion": 2026,
+ "distrito": "scz_rural_demo",
+ "recreo": [
+  "09:30",
+  "09:50"
+ ],
  "materias": {
-  "len": "Comunicación y Lenguajes",
-  "mat": "Matemática",
-  "ing": "Inglés",
-  "bio": "Biología – Geografía",
-  "csoc": "Ciencias Sociales",
-  "art": "Artes Plásticas",
-  "fil": "Cosmovisiones y Filosofía",
-  "mus": "Educación Musical",
-  "val": "Valores y Espiritualidad",
-  "efd": "Educación Física"
+  "len": {
+   "nombre": "Lengua Castellana",
+   "corto": "Lenguaje",
+   "icono": "📖",
+   "color": "#F59E0B",
+   "profe": "la profe Taji"
+  },
+  "mat": {
+   "nombre": "Matemática",
+   "corto": "Mate",
+   "icono": "🔢",
+   "color": "#10B981",
+   "profe": "la profe Taji"
+  },
+  "bio": {
+   "nombre": "Biología - Geografía",
+   "corto": "Biología",
+   "icono": "🧬",
+   "color": "#22C55E",
+   "profe": "el profe Jochi"
+  },
+  "csoc": {
+   "nombre": "Ciencias Sociales",
+   "corto": "Sociales",
+   "icono": "🗺️",
+   "color": "#A78BFA",
+   "profe": "el profe Jochi"
+  },
+  "ing": {
+   "nombre": "Lengua Extranjera (Inglés)",
+   "corto": "Inglés",
+   "icono": "💬",
+   "color": "#F472B6",
+   "profe": "el profe Jochi"
+  },
+  "fil": {
+   "nombre": "Cosmovisiones, Filosofía y Psicología",
+   "corto": "Filosofía",
+   "icono": "💭",
+   "color": "#818CF8",
+   "profe": "el profe Jochi"
+  },
+  "art": {
+   "nombre": "Artes Plásticas y Visuales",
+   "corto": "Artes",
+   "icono": "🎨",
+   "color": "#FB923C",
+   "profe": "la profe Taji"
+  },
+  "mus": {
+   "nombre": "Educación Musical",
+   "corto": "Música",
+   "icono": "🎵",
+   "color": "#EC4899",
+   "profe": "la profe Taji"
+  },
+  "val": {
+   "nombre": "Valores, Espiritualidades y Religiones",
+   "corto": "Valores",
+   "icono": "🤝",
+   "color": "#EAB308",
+   "profe": "el profe Jochi"
+  },
+  "efd": {
+   "nombre": "Educación Física y Deportes",
+   "corto": "Ed. Física",
+   "icono": "⚽",
+   "color": "#14B8A6",
+   "profe": "el profe Jochi"
+  }
  },
  "horario": [
   {
@@ -36,8 +102,8 @@
   },
   {
    "dia": 1,
-   "desde": "09:10",
-   "hasta": "09:50",
+   "desde": "08:50",
+   "hasta": "09:30",
    "materia": "mat",
    "aula": "Aula 7"
   },
@@ -50,17 +116,17 @@
   },
   {
    "dia": 1,
-   "desde": "10:50",
-   "hasta": "11:30",
+   "desde": "10:30",
+   "hasta": "11:10",
    "materia": "ing",
-   "aula": "Laboratorio de idiomas"
+   "aula": "Aula 7"
   },
   {
    "dia": 1,
-   "desde": "11:30",
-   "hasta": "12:10",
+   "desde": "11:10",
+   "hasta": "11:50",
    "materia": "ing",
-   "aula": "Laboratorio de idiomas"
+   "aula": "Aula 7"
   },
   {
    "dia": 2,
@@ -78,8 +144,8 @@
   },
   {
    "dia": 2,
-   "desde": "09:10",
-   "hasta": "09:50",
+   "desde": "08:50",
+   "hasta": "09:30",
    "materia": "csoc",
    "aula": "Aula 7"
   },
@@ -92,15 +158,15 @@
   },
   {
    "dia": 2,
-   "desde": "10:50",
-   "hasta": "11:30",
+   "desde": "10:30",
+   "hasta": "11:10",
    "materia": "art",
    "aula": "Taller"
   },
   {
    "dia": 2,
-   "desde": "11:30",
-   "hasta": "12:10",
+   "desde": "11:10",
+   "hasta": "11:50",
    "materia": "fil",
    "aula": "Aula 7"
   },
@@ -120,8 +186,8 @@
   },
   {
    "dia": 3,
-   "desde": "09:10",
-   "hasta": "09:50",
+   "desde": "08:50",
+   "hasta": "09:30",
    "materia": "len",
    "aula": "Aula 7"
   },
@@ -130,19 +196,19 @@
    "desde": "09:50",
    "hasta": "10:30",
    "materia": "ing",
-   "aula": "Laboratorio de idiomas"
+   "aula": "Aula 7"
   },
   {
    "dia": 3,
-   "desde": "10:50",
-   "hasta": "11:30",
+   "desde": "10:30",
+   "hasta": "11:10",
    "materia": "mus",
    "aula": "Sala de música"
   },
   {
    "dia": 3,
-   "desde": "11:30",
-   "hasta": "12:10",
+   "desde": "11:10",
+   "hasta": "11:50",
    "materia": "val",
    "aula": "Aula 7"
   },
@@ -162,8 +228,8 @@
   },
   {
    "dia": 4,
-   "desde": "09:10",
-   "hasta": "09:50",
+   "desde": "08:50",
+   "hasta": "09:30",
    "materia": "fil",
    "aula": "Aula 7"
   },
@@ -176,15 +242,15 @@
   },
   {
    "dia": 4,
-   "desde": "10:50",
-   "hasta": "11:30",
+   "desde": "10:30",
+   "hasta": "11:10",
    "materia": "art",
    "aula": "Taller"
   },
   {
    "dia": 4,
-   "desde": "11:30",
-   "hasta": "12:10",
+   "desde": "11:10",
+   "hasta": "11:50",
    "materia": "efd",
    "aula": "Cancha"
   },
@@ -204,8 +270,8 @@
   },
   {
    "dia": 5,
-   "desde": "09:10",
-   "hasta": "09:50",
+   "desde": "08:50",
+   "hasta": "09:30",
    "materia": "bio",
    "aula": "Laboratorio"
   },
@@ -218,15 +284,15 @@
   },
   {
    "dia": 5,
-   "desde": "10:50",
-   "hasta": "11:30",
+   "desde": "10:30",
+   "hasta": "11:10",
    "materia": "val",
    "aula": "Aula 7"
   },
   {
    "dia": 5,
-   "desde": "11:30",
-   "hasta": "12:10",
+   "desde": "11:10",
+   "hasta": "11:50",
    "materia": "efd",
    "aula": "Cancha"
   }
@@ -305,6 +371,80 @@
    "texto": "Buzo deportivo y botella de agua"
   }
  ],
+ "tareas": [
+  {
+   "id": "demo-tarea-1",
+   "curso": "2do_secundaria",
+   "materia": "ing",
+   "titulo": "Questions about sports and music",
+   "consigna": "Escribí 6 preguntas en present continuous sobre deportes y música (Is your brother playing football? Are they playing the charango?) y respondé cada una con una respuesta corta. Usá la tabla de la página 58.",
+   "tipo": "practica",
+   "variante": "base",
+   "textoVariante": "Escribí 6 preguntas en present continuous sobre deportes y música (Is your brother playing football? Are they playing the charango?) y respondé cada una con una respuesta corta. Usá la tabla de la página 58.",
+   "criterios": {
+    "ser": "Respeta los gustos musicales y deportivos de los demás.",
+    "saber": "Usa am / is / are según el sujeto y el verbo con -ing.",
+    "hacer": "Escribe las 6 preguntas con su respuesta corta.",
+    "autoevaluacion": "¿Puse el verbo to be al principio de cada pregunta?"
+   },
+   "puntos": {
+    "ser": 10,
+    "saber": 45,
+    "hacer": 40,
+    "autoevaluacion": 5
+   },
+   "autoevaluacion": "",
+   "como": "texto",
+   "pistas": [
+    "Fijate quién es el sujeto: he / she → Is; you / they → Are; I → Am.",
+    "El verbo principal lleva -ing: play → playing, run → running.",
+    "Mirá la tabla de la página 58 del texto."
+   ],
+   "origen": {
+    "tipo": "clase",
+    "tema": "Musical instruments and sports"
+   },
+   "dias": 2,
+   "estado": "pendiente",
+   "hecha": false
+  },
+  {
+   "id": "demo-tarea-2",
+   "curso": "2do_secundaria",
+   "materia": "fil",
+   "titulo": "Mi proyecto de vida en 5 pasos",
+   "consigna": "Con lo que leímos en la página 48 sobre autoconocimiento, escribí tu proyecto de vida en 5 pasos: 1) quién soy, 2) qué me gusta y qué hago bien, 3) una meta para el próximo año, 4) qué voy a hacer para lograrla, 5) quién me puede ayudar.",
+   "tipo": "proyecto",
+   "variante": "base",
+   "textoVariante": "Con lo que leímos en la página 48 sobre autoconocimiento, escribí tu proyecto de vida en 5 pasos: 1) quién soy, 2) qué me gusta y qué hago bien, 3) una meta para el próximo año, 4) qué voy a hacer para lograrla, 5) quién me puede ayudar.",
+   "criterios": {
+    "ser": "Reflexiona sobre sí mismo con respeto y sinceridad.",
+    "saber": "Explica qué es el autoconocimiento y qué es un proyecto de vida.",
+    "hacer": "Escribe sus 5 pasos con una meta clara.",
+    "autoevaluacion": "¿Mi meta es algo que puedo empezar a hacer este mes?"
+   },
+   "puntos": {
+    "ser": 10,
+    "saber": 45,
+    "hacer": 40,
+    "autoevaluacion": 5
+   },
+   "autoevaluacion": "",
+   "como": "texto",
+   "pistas": [
+    "Empezá por lo que te gusta hacer en tu tiempo libre.",
+    "Una buena meta se puede medir: \"leer un libro por mes\" mejor que \"leer más\".",
+    "Releé la página 48: ¿qué es conocerse a uno mismo?"
+   ],
+   "origen": {
+    "tipo": "cronograma",
+    "tema": "Autoconocimiento y proyecto de vida"
+   },
+   "dias": 3,
+   "estado": "pendiente",
+   "hecha": false
+  }
+ ],
  "temasHoy": {
   "ing": {
    "unidad": 9,
@@ -376,5 +516,6 @@
   const hoy = new Date(Date.now() - 4 * 3600e3);
   const habil = (n) => { const x = new Date(hoy); let k = Math.abs(n); const p = n >= 0 ? 1 : -1; while (k > 0) { x.setUTCDate(x.getUTCDate() + p); if (x.getUTCDay() % 6) k--; } return x.toISOString().slice(0, 10); };
   const conFecha = (xs) => xs.map(({ dias, ...r }) => ({ fecha: habil(dias), ...r }));
-  window.ESTUDIANTE_DEMO = { ...D, avisos: conFecha(D.avisos), eventos: conFecha(D.eventos), llevar: conFecha(D.llevar) };
+  const tareas = D.tareas.map(({ dias, ...t }) => ({ ...t, entrega: habil(dias) }));
+  window.ESTUDIANTE_DEMO = { ...D, avisos: conFecha(D.avisos), eventos: conFecha(D.eventos), llevar: conFecha(D.llevar), tareas };
 })();

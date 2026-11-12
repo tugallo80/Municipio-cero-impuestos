@@ -532,8 +532,8 @@
    },
    {
     "dia": 1,
-    "desde": "09:10",
-    "hasta": "09:50",
+    "desde": "08:50",
+    "hasta": "09:30",
     "materia": "mat",
     "aula": "Aula 7"
    },
@@ -546,17 +546,17 @@
    },
    {
     "dia": 1,
-    "desde": "10:50",
-    "hasta": "11:30",
+    "desde": "10:30",
+    "hasta": "11:10",
     "materia": "ing",
-    "aula": "Laboratorio de idiomas"
+    "aula": "Aula 7"
    },
    {
     "dia": 1,
-    "desde": "11:30",
-    "hasta": "12:10",
+    "desde": "11:10",
+    "hasta": "11:50",
     "materia": "ing",
-    "aula": "Laboratorio de idiomas"
+    "aula": "Aula 7"
    },
    {
     "dia": 2,
@@ -574,8 +574,8 @@
    },
    {
     "dia": 2,
-    "desde": "09:10",
-    "hasta": "09:50",
+    "desde": "08:50",
+    "hasta": "09:30",
     "materia": "csoc",
     "aula": "Aula 7"
    },
@@ -588,15 +588,15 @@
    },
    {
     "dia": 2,
-    "desde": "10:50",
-    "hasta": "11:30",
+    "desde": "10:30",
+    "hasta": "11:10",
     "materia": "art",
     "aula": "Taller"
    },
    {
     "dia": 2,
-    "desde": "11:30",
-    "hasta": "12:10",
+    "desde": "11:10",
+    "hasta": "11:50",
     "materia": "fil",
     "aula": "Aula 7"
    },
@@ -616,8 +616,8 @@
    },
    {
     "dia": 3,
-    "desde": "09:10",
-    "hasta": "09:50",
+    "desde": "08:50",
+    "hasta": "09:30",
     "materia": "len",
     "aula": "Aula 7"
    },
@@ -626,19 +626,19 @@
     "desde": "09:50",
     "hasta": "10:30",
     "materia": "ing",
-    "aula": "Laboratorio de idiomas"
+    "aula": "Aula 7"
    },
    {
     "dia": 3,
-    "desde": "10:50",
-    "hasta": "11:30",
+    "desde": "10:30",
+    "hasta": "11:10",
     "materia": "mus",
     "aula": "Sala de música"
    },
    {
     "dia": 3,
-    "desde": "11:30",
-    "hasta": "12:10",
+    "desde": "11:10",
+    "hasta": "11:50",
     "materia": "val",
     "aula": "Aula 7"
    },
@@ -658,8 +658,8 @@
    },
    {
     "dia": 4,
-    "desde": "09:10",
-    "hasta": "09:50",
+    "desde": "08:50",
+    "hasta": "09:30",
     "materia": "fil",
     "aula": "Aula 7"
    },
@@ -672,15 +672,15 @@
    },
    {
     "dia": 4,
-    "desde": "10:50",
-    "hasta": "11:30",
+    "desde": "10:30",
+    "hasta": "11:10",
     "materia": "art",
     "aula": "Taller"
    },
    {
     "dia": 4,
-    "desde": "11:30",
-    "hasta": "12:10",
+    "desde": "11:10",
+    "hasta": "11:50",
     "materia": "efd",
     "aula": "Cancha"
    },
@@ -700,8 +700,8 @@
    },
    {
     "dia": 5,
-    "desde": "09:10",
-    "hasta": "09:50",
+    "desde": "08:50",
+    "hasta": "09:30",
     "materia": "bio",
     "aula": "Laboratorio"
    },
@@ -714,30 +714,90 @@
    },
    {
     "dia": 5,
-    "desde": "10:50",
-    "hasta": "11:30",
+    "desde": "10:30",
+    "hasta": "11:10",
     "materia": "val",
     "aula": "Aula 7"
    },
    {
     "dia": 5,
-    "desde": "11:30",
-    "hasta": "12:10",
+    "desde": "11:10",
+    "hasta": "11:50",
     "materia": "efd",
     "aula": "Cancha"
    }
   ],
   "materias": {
-   "len": "Comunicación y Lenguajes",
-   "mat": "Matemática",
-   "ing": "Inglés",
-   "bio": "Biología – Geografía",
-   "csoc": "Ciencias Sociales",
-   "art": "Artes Plásticas",
-   "fil": "Cosmovisiones y Filosofía",
-   "mus": "Educación Musical",
-   "val": "Valores y Espiritualidad",
-   "efd": "Educación Física"
+   "len": {
+    "nombre": "Lengua Castellana",
+    "corto": "Lenguaje",
+    "icono": "📖",
+    "color": "#F59E0B",
+    "profe": "la profe Taji"
+   },
+   "mat": {
+    "nombre": "Matemática",
+    "corto": "Mate",
+    "icono": "🔢",
+    "color": "#10B981",
+    "profe": "la profe Taji"
+   },
+   "bio": {
+    "nombre": "Biología - Geografía",
+    "corto": "Biología",
+    "icono": "🧬",
+    "color": "#22C55E",
+    "profe": "el profe Jochi"
+   },
+   "csoc": {
+    "nombre": "Ciencias Sociales",
+    "corto": "Sociales",
+    "icono": "🗺️",
+    "color": "#A78BFA",
+    "profe": "el profe Jochi"
+   },
+   "ing": {
+    "nombre": "Lengua Extranjera (Inglés)",
+    "corto": "Inglés",
+    "icono": "💬",
+    "color": "#F472B6",
+    "profe": "el profe Jochi"
+   },
+   "fil": {
+    "nombre": "Cosmovisiones, Filosofía y Psicología",
+    "corto": "Filosofía",
+    "icono": "💭",
+    "color": "#818CF8",
+    "profe": "el profe Jochi"
+   },
+   "art": {
+    "nombre": "Artes Plásticas y Visuales",
+    "corto": "Artes",
+    "icono": "🎨",
+    "color": "#FB923C",
+    "profe": "la profe Taji"
+   },
+   "mus": {
+    "nombre": "Educación Musical",
+    "corto": "Música",
+    "icono": "🎵",
+    "color": "#EC4899",
+    "profe": "la profe Taji"
+   },
+   "val": {
+    "nombre": "Valores, Espiritualidades y Religiones",
+    "corto": "Valores",
+    "icono": "🤝",
+    "color": "#EAB308",
+    "profe": "el profe Jochi"
+   },
+   "efd": {
+    "nombre": "Educación Física y Deportes",
+    "corto": "Ed. Física",
+    "icono": "⚽",
+    "color": "#14B8A6",
+    "profe": "el profe Jochi"
+   }
   },
   "avisos": [
    {
@@ -812,7 +872,12 @@
     "materia": "efd",
     "texto": "Buzo deportivo y botella de agua"
    }
-  ]
+  ],
+  "recreo": [
+   "09:30",
+   "09:50"
+  ],
+  "_notaMaterias": "'profe' = el profe IA que acompaña la materia (Taji/Jochi). El nombre del profe REAL nunca va acá: llega por el link y queda en el equipo (localStorage 'nande-profe')."
  },
  "temaMapa": "Present continuous: interrogative form"
 }

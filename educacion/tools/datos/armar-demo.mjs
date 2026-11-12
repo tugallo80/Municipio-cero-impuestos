@@ -12,6 +12,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { resolve } from 'node:path'
+import { createRequire } from 'node:module'
 
 const edu = resolve(fileURLToPath(new URL('.', import.meta.url)), '../..')
 const D = JSON.parse(readFileSync(resolve(edu, 'tools/datos/demo-piloto.json'), 'utf8'))
@@ -34,14 +35,22 @@ escribir('services/ai-gateway/tutor/curso-demo.json', JSON.stringify({
 
 const E = D.estudiante
 const yo = D.alumnos.find((a) => a.id === E.alumnoId)
-const est = { curso: D.curso.id, cursoNombre: D.curso.nombre, colegio: D.colegio.nombre, materias: E.materias, horario: E.horario, avisos: E.avisos, eventos: E.eventos, llevar: E.llevar, temasHoy: piloto.temasHoy }
+// Las mismas 2 tareas que carga el seed, en el formato común de EDU.06d (con 'dias' para fechar al abrir).
+const require = createRequire(import.meta.url)
+const T = require('../../services/ai-gateway/tutor/tareas.js')
+const { tareasDemo } = require('../seed/datos-demo.js')
+const hoy = new Date(Date.now() - 4 * 3600e3).toISOString().slice(0, 10)
+const habilesHasta = (f) => { let n = 0; const d = new Date(hoy + 'T12:00:00Z'); while (d.toISOString().slice(0, 10) < f) { d.setUTCDate(d.getUTCDate() + 1); if (d.getUTCDay() % 6) n++; } return n }
+const tareas = tareasDemo().map((t) => { const { entrega, enviada, ...x } = T.tareaParaAlumno(t.id, t, t.asignacion?.alu_demo01 || 'base'); return { ...x, dias: habilesHasta(entrega), estado: 'pendiente', hecha: false } })
+const est = { curso: D.curso.id, cursoNombre: D.curso.nombre, colegio: D.colegio.nombre, gestion: D.gestion, distrito: D.distrito, recreo: E.recreo, materias: E.materias, horario: E.horario, avisos: E.avisos, eventos: E.eventos, llevar: E.llevar, tareas, temasHoy: piloto.temasHoy }
 escribir('maqueta/estudiante-demo.js', `${CAB}// Alumno demo FICTICIO. Las fechas se calculan al abrir (días hábiles desde hoy, hora de Bolivia).
 (function () {
   const D = ${JSON.stringify({ apodo: yo.nombre, avatar: yo.avatar, ...est }, null, 1)};
   const hoy = new Date(Date.now() - 4 * 3600e3);
   const habil = (n) => { const x = new Date(hoy); let k = Math.abs(n); const p = n >= 0 ? 1 : -1; while (k > 0) { x.setUTCDate(x.getUTCDate() + p); if (x.getUTCDay() % 6) k--; } return x.toISOString().slice(0, 10); };
   const conFecha = (xs) => xs.map(({ dias, ...r }) => ({ fecha: habil(dias), ...r }));
-  window.ESTUDIANTE_DEMO = { ...D, avisos: conFecha(D.avisos), eventos: conFecha(D.eventos), llevar: conFecha(D.llevar) };
+  const tareas = D.tareas.map(({ dias, ...t }) => ({ ...t, entrega: habil(dias) }));
+  window.ESTUDIANTE_DEMO = { ...D, avisos: conFecha(D.avisos), eventos: conFecha(D.eventos), llevar: conFecha(D.llevar), tareas };
 })();
 `)
 escribir('services/ai-gateway/tutor/estudiante-demo.json', JSON.stringify({ _nota: 'GENERADO por tools/datos/armar-demo.mjs (sin apodo ni avatar). Fechas en días hábiles desde hoy.', ...est, temasHoy: D.temasHoy }, null, 1) + '\n')
