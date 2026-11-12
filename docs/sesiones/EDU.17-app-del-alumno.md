@@ -120,3 +120,9 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
 - Cambiar al `estudiante-demo.js` de EDU.15 cuando lo publique.
 - El selector de perfiles todavía dice "U.E. Arcoíris del Sur · colegio ficticio" (lo usan el profe y
   la dirección): pasarlo al curso real junto con EDU.15.
+- **Nombre del profe: nunca en el repo.** `estudiante.js` lo lee del link de la presentación
+  (`?profe=…&apodo=…`), lo guarda en el equipo (`localStorage 'nande-profe'`) y lo usa en Hoy, en las
+  tareas ("La dejó … en la clase del miércoles") y en las materias. Si no hay, dice "tu profe".
+  Los datos usan el marcador `{profe}`. Tampoco se manda a la IA.
+- Si la fuente de EDU.15 trae `temasHoy`, Hoy usa ese título; si trae `DEMO_PILOTO.materiasProfe`,
+  el nombre va solo en esas materias.

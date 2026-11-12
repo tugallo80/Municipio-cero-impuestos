@@ -61,7 +61,12 @@ function proximoConClase(desde) { for (let i = 1; i < 30; i++) { const f = sumar
 
 // Tema de cada materia según el punto del año (los textos oficiales del curso, EDU.17 parte 3)
 let TEMA = {};
-EST.dondeVa().then(({ VA, INDICE }) => { INDICE.areas.forEach(a => { if (VA[a.id] !== undefined) TEMA[a.id] = { i: VA[a.id], titulo: a.temas[VA[a.id]].titulo }; }); pintar(); });
+// Si la fuente única de EDU.15 trae temasHoy, manda ese título; el enlace al texto sale del índice.
+EST.dondeVa().then(({ VA, INDICE }) => {
+  INDICE.areas.forEach(a => { if (VA[a.id] !== undefined) TEMA[a.id] = { i: VA[a.id], titulo: a.temas[VA[a.id]].titulo }; });
+  Object.entries(E.temasHoy || {}).forEach(([m, t]) => { if (t && t.titulo) TEMA[m] = { i: TEMA[m] ? TEMA[m].i : '', titulo: t.titulo }; });
+  pintar();
+});
 
 function pintar() {
   const inf = infoDia(hoy), clases = clasesDe(hoy), ya = ahoraHHMM();

@@ -53,7 +53,7 @@
       id: t.id, curso: t.curso, materia: t.materia, titulo: t.titulo, consigna: t.textoVariante || t.consigna,
       tipo: como === 'nada' ? 'texto' : como, minimo: como === 'nada' ? 0 : undefined, soloMarcar: como === 'nada',
       mision: t.mision, preguntas: t.preguntas, escalera: t.pistas && t.pistas.length ? t.pistas : null, vence: t.entrega, creada: env ? env.toISOString().slice(0, 10) : t.entrega,
-      origen: { tipo: (t.origen && t.origen.tipo) || 'profe', texto: t.origen && t.origen.tipo === 'cronograma' ? `del cronograma${tema ? ': ' + tema : ''}` : `la dejó el profe${dia ? ' el ' + dia : ''}${tema ? ' (clase de ' + tema + ')' : ''}` },
+      origen: { tipo: (t.origen && t.origen.tipo) || 'profe', texto: t.origen && t.origen.tipo === 'cronograma' ? `del cronograma${tema ? ': ' + tema : ''}` : `la dejó ${window.nombreProfe ? window.nombreProfe() : 'tu profe'}${dia ? ' el ' + dia : ''}${tema ? ' (clase de ' + tema + ')' : ''}` },
       autoevaluacion: t.autoevaluacion, criterios: t.criterios, estado: t.hecha || t.estado === 'hecha' || t.estado === 'entregada' ? 'hecha' : 'pendiente', delProfe: true
     };
   };

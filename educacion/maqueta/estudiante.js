@@ -2,6 +2,19 @@
 // Secciones: Hoy · Agenda · Mis textos · Mis tareas · Mi tutor · Mundo (el juego).
 // Barra abajo en celular y tablet parada; a la izquierda en tablet acostada y PC (≥ 1000 px).
 (function () {
+  // ---------- Nombre del profe: nunca en el repo ----------
+  // Llega por el link de la presentación (?profe=…&apodo=…) y queda en el equipo (localStorage 'nande-profe').
+  // Si no hay, "tu profe". No se manda a la IA.
+  function nombreProfe() {
+    try {
+      const q = new URLSearchParams(location.search);
+      if (q.get('profe')) localStorage.setItem('nande-profe', q.get('profe').slice(0, 60));
+      if (q.get('apodo')) localStorage.setItem('nande-profe-apodo', q.get('apodo').slice(0, 60));
+      return (localStorage.getItem('nande-profe') || localStorage.getItem('nande-profe-apodo') || '').trim();
+    } catch (e) { return ''; }
+  }
+  const PROFE = nombreProfe(), QUIEN = PROFE || 'tu profe';
+  window.nombreProfe = () => QUIEN;
   const E = normalizar(window.ESTUDIANTE_DEMO);
   // Acepta también el formato de la fuente única de EDU.15/EDU.04f (tools/datos/estudiante-demo.json):
   // horario como lista [{dia, desde, hasta, materia}] y llevar como lista [{fecha?, materia?, texto}].
@@ -17,6 +30,9 @@
       E.llevarFechas = E.llevar.filter(x => x.fecha);
       E.llevar = Object.fromEntries(E.llevar.filter(x => !x.fecha && x.materia).map(x => [x.materia, x.texto]));
     }
+    const delPiloto = window.DEMO_PILOTO && window.DEMO_PILOTO.materiasProfe;   // materias que da el profe del piloto (EDU.15)
+    Object.entries(E.materias || {}).forEach(([id, m]) => { if (!m.profe || /\{profe\}/.test(m.profe)) m.profe = !delPiloto || delPiloto.includes(id) ? QUIEN : 'tu profe'; });
+    (E.tareas || []).forEach(t => { if (t.origen && t.origen.texto) t.origen.texto = t.origen.texto.replace(/\{profe\}/g, QUIEN); });
     E.llevar = E.llevar || {}; E.materias = E.materias || {}; E.eventos = E.eventos || []; E.avisos = E.avisos || [];
     return E;
   }
