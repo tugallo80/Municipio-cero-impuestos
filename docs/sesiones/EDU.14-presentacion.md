@@ -273,3 +273,12 @@ Santa Cruz)**. Presentación de 14 láminas.
 derecha. Nota al pie con fuentes. Notas del presentador: guion de 30 segundos y fuentes.
 Probado en 360×740, 390×844, 844×390, 1280×800 y 1920×1080 sin desbordes; PDF de 14 páginas.
 Captura: `docs/sesiones/capturas/EDU.14/juan-14d.jpg`.
+
+### Botón "Mi tutor" (EDU.16 ya en main)
+
+- Lámina del tutor ("Un tutor en el bolsillo… a cualquier hora"): sin el sello "Lo que viene"; botón **"Mi tutor"**
+  destacado (`/maqueta/mi-tutor/`, celular vertical). También en la lámina de la app del alumno, después de "Hoy".
+- Probado con el sitio armado (`npm run build`, con `/voz/tutor.js`) en 1280×800 y 390×844: abre en "modo ejemplo
+  (sin tu cuenta)" con las preguntas sugeridas; "¿Qué dijo el profe hoy?" responde el ejemplo de respaldo y nombra
+  al profe con su apodo (`?profeApodo=`). Con la llave de demo responde la IA.
+- Ojo: la página del tutor (EDU.16) todavía muestra "la profe Taji" y "el profe Jochi"; la presentación no los nombra.

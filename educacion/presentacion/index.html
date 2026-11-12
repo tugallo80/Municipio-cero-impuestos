@@ -163,6 +163,7 @@ h2.grande { font-size: calc(var(--h2) * 1.2); max-width: 20ch; text-wrap: balanc
 .envivo-tit svg { width: 14px; height: 14px; }
 .btn.vivo-btn { height: 34px; padding: 0 12px; font-size: 13px; border-color: rgba(16,185,129,.5); background: rgba(16,185,129,.1); color: #d1fae5; }
 .btn.vivo-btn:hover { background: rgba(16,185,129,.2); }
+.btn.vivo-btn.destacado { background: var(--verde); color: #000; border-color: var(--verde); font-weight: 700; }
 figure .envivo { justify-content: center; margin-top: 4px; }
 .vivo { position: fixed; inset: 0; z-index: 50; background: #000; display: flex; flex-direction: column; animation: aparecer .22s ease; }
 .vivo[hidden] { display: none; }
@@ -457,12 +458,11 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 
   <!-- Un tutor en el bolsillo -->
   <section class="lam declaracion">
-    <template class="notas">Lo que viene. Decile: el tutor de tus alumnos conoce tus textos y tu plan, y sabe qué dijiste en clase. No es un chat cualquiera: ayuda a aprender y a ordenarse, no a copiar.</template>
+    <template class="notas">Abrí «Mi tutor» (celular): tocá una de las preguntas sugeridas y mostrale cómo guía con pistas, sin dar la respuesta. Decile: el tutor de tus alumnos conoce tus textos y tu plan, y sabe qué dijiste en clase. No es un chat cualquiera: ayuda a aprender y a ordenarse, no a copiar.</template>
     <div class="marca"><b class="n"></b> Para el alumno</div>
     <div class="cuerpo lado">
       <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
-        <p><span class="sello">Lo que viene</span></p>
-        <h2 class="grande">Un tutor en el bolsillo de cada alumno, <span class="verde">a cualquier hora.</span></h2>
+                <h2 class="grande">Un tutor en el bolsillo de cada alumno, <span class="verde">a cualquier hora.</span></h2>
         <p class="globo sin-chico">“Profe, no me acuerdo qué dijo hoy sobre las fracciones…”</p>
         <ul class="lista">
           <li><b>Recuerda tu clase de hoy</b>: se escucha y se resume.</li>
@@ -474,6 +474,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
         <div class="tarjeta gris"><h3>Un buscador o un chat cualquiera</h3><p class="sec">Responde cualquier cosa. No sabe dónde estás.</p></div>
         <div class="tarjeta verde-borde"><h3 class="verde">Su tutor</h3><p>Conoce tus textos y tu plan: sabe <b>en qué tema va</b>, <b>qué dijiste en clase</b> y <b>qué le cuesta</b>.</p></div>
         <p class="frase chica">Ayuda a aprender y a ordenarse, <span>no a copiar.</span></p>
+        <div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn destacado" type="button" data-vivo="/maqueta/mi-tutor/" data-disp="cel-v" data-titulo="Mi tutor">Mi tutor</button></div>
       </div>
     </div>
   </section>
@@ -520,7 +521,7 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
         </ul>
         <p class="chico sec">Los nombres de los profes son provisionales: los chicos van a ayudar a elegirlos en los talleres.</p>
       </div>
-      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · tareas sin juego.</figcaption><div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/hoy/" data-disp="cel-v" data-titulo="Hoy">Hoy</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/agenda/" data-disp="cel-v" data-titulo="Agenda">Agenda</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/textos/" data-disp="tablet" data-titulo="Mis textos">Mis textos</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/alumno/?demo=1" data-titulo="Juego" data-disp="cel-h" data-aparte>Juego</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tareas/" data-titulo="Mis tareas" data-disp="cel-v">Mis tareas</button></div></figure>
+      <figure><div class="par"><img src="img/alumno-pregunta.jpg" alt="El juego del alumno: una misión de fracciones con la ayuda de los profes" width="1200" height="555"><img src="img/alumno-tareas.jpg" alt="Modo directo: la lista de tareas del alumno" width="468" height="606"></div><figcaption>Demo: misión con pistas de los profes · tareas sin juego.</figcaption><div class="envivo"><span class="envivo-tit"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Verlo en vivo</span><button class="btn vivo-btn" type="button" data-vivo="/maqueta/hoy/" data-disp="cel-v" data-titulo="Hoy">Hoy</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/mi-tutor/" data-disp="cel-v" data-titulo="Mi tutor">Mi tutor</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/agenda/" data-disp="cel-v" data-titulo="Agenda">Agenda</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/textos/" data-disp="tablet" data-titulo="Mis textos">Mis textos</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/alumno/?demo=1" data-titulo="Juego" data-disp="cel-h" data-aparte>Juego</button><button class="btn vivo-btn" type="button" data-vivo="/maqueta/tareas/" data-titulo="Mis tareas" data-disp="cel-v">Mis tareas</button></div></figure>
     </div>
   </section>
 
