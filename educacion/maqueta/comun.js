@@ -113,6 +113,13 @@
     let p = top.querySelector('.pildora-demo');
     if (!U.esDemo()) { p?.remove(); return; }
     if (p) return;
+    // El panel muestra el curso real del piloto (nombre del profe configurable en demo-piloto.json).
+    const P = window.DEMO_PILOTO;
+    if (P) {
+      const n = document.getElementById('nom-tutor'), c = document.getElementById('nom-colegio');
+      if (n) n.textContent = P.profe.nombre;
+      if (c) c.textContent = `${P.colegio.nombre} · ${P.curso.nombre}`;
+    }
     p = document.createElement('button');
     p.className = 'pildora pildora-demo';
     p.title = 'Salir de la demo';

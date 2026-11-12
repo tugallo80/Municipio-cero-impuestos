@@ -27,7 +27,7 @@
   let mapa = null;        // { grupos, atencion, resumen, objetivo, tema }
   let propuesta = null;
   let objetivo = 'parejas';
-  let tema = 'Números racionales';
+  let tema = window.CURSO_DEMO?.temaMapa || 'Números racionales';
   let pidiendo = false;
   let guardado = true;
   let cargado = false;

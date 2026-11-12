@@ -4,7 +4,7 @@
 //   2. La cuenta demo ve todo armado: tareas enviadas (alumno y profe), clase grabada, mapa y cronograma.
 //   3. Gasta de su propia bolsa (edu/uso_demo), no de la general.
 //   4. La propuesta del mapa sale del caché la segunda vez (al instante y sin costo); de paso deja
-//      listas las tres propuestas de la pantalla para la presentación.
+//      listas las tres propuestas de la pantalla para la presentación (tema del mapa de demo-piloto.json).
 //   5. Con la bolsa demo agotada responde "tope_demo" (la pantalla muestra el ejemplo).
 //  Usa una llave de prueba propia (se crea y se borra acá): la llave real de la presentación no
 //  se toca ni se conoce.
@@ -13,6 +13,8 @@ import { randomBytes, createHash } from 'node:crypto'
 import { appendFileSync } from 'node:fs'
 import { initializeApp } from 'firebase-admin/app'
 import { getDatabase } from 'firebase-admin/database'
+import { readFileSync } from 'node:fs'
+const TEMA_MAPA = JSON.parse(readFileSync(new URL('../datos/demo-piloto.json', import.meta.url), 'utf8')).temaMapa
 
 const PROYECTO = process.env.PROYECTO || 'municipio-ia'
 const API_KEY = process.env.FIREBASE_API_KEY
@@ -84,8 +86,8 @@ try {
 
   // Caché de la demo: deja listas las propuestas que pide la pantalla (tema por defecto).
   for (const objetivo of ['parejas', 'niveles', 'atencion']) {
-    const p1 = await llamar('eduMapa', { accion: 'proponer', curso: CURSO, objetivo, tema: 'Números racionales' }, tok)
-    const p2 = await llamar('eduMapa', { accion: 'proponer', curso: CURSO, objetivo, tema: 'Números racionales' }, tok)
+    const p1 = await llamar('eduMapa', { accion: 'proponer', curso: CURSO, objetivo, tema: TEMA_MAPA }, tok)
+    const p2 = await llamar('eduMapa', { accion: 'proponer', curso: CURSO, objetivo, tema: TEMA_MAPA }, tok)
     chequear(p1.result?.ok && p2.result?.cache === true && p2.result?.costoUsd === 0, `Mapa "${objetivo}": ${p1.result?.cache ? 'ya estaba en caché' : `la mentora tardó ${(p1.ms / 1000).toFixed(1)} s (USD ${p1.result?.costoUsd})`}; la segunda vez, del caché en ${(p2.ms / 1000).toFixed(1)} s y sin costo`)
   }
 

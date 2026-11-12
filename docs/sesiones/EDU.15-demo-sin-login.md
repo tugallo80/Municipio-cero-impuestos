@@ -24,14 +24,27 @@ presentación. Un link con una **llave de demo** entra solo, como cuenta demo, e
 - Freno: más de 300 llaves malas en el día → la demo se apaga hasta mañana.
 - Necesita que las Functions puedan firmar el pase: paso **5c** de `tools/cloudshell/configurar-nande.sh`.
 
+### El curso de la demo: el REAL del profe del piloto
+Fuente única **`tools/datos/demo-piloto.json`** → `node tools/datos/armar-demo.mjs` genera `maqueta/demo-piloto.js`
+(`window.DEMO_PILOTO`), `maqueta/curso-demo.js`, `maqueta/estudiante-demo.js` y las copias del servidor sin apodos;
+el seed lo lee directo. Lo usan el panel del profe, la app del alumno (EDU.17), el tutor (EDU.16) y la presentación (EDU.14b).
+- **U.E. Nuevo Horizonte** (rural, Santa Cruz) · **2.º de secundaria** · gestión 2026 · 3.er trimestre.
+- **Profe:** `profe.nombre` ("Profe" por ahora; se cambia solo ahí).
+- **Materias del profe:** las de los textos que pasó él: Inglés, Cosmovisiones-Filosofía-Psicología, Artes Plásticas,
+  Música y Valores (a confirmar). Lengua, Matemática, Bio-Geo y Sociales quedan en el horario del alumno.
+- **Hoy** (últimas unidades de cada texto): Inglés u.9 "Musical instruments and sports" (pág. 57) · Filosofía u.9
+  "Autoconocimiento y proyecto de vida" (pág. 48) · Artes u.9 "La escultura: bajo, medio y alto relieve" (pág. 38) ·
+  Música u.13 "Ensambles instrumentales" (pág. 49) · Valores u.10 "Vidas ejemplares… vocacionales" (pág. 38).
+- **Alumnos:** 12 ficticios con apodos ("Jaguar Azul 7", "Tucán Verde 3"…); el alumno demo es Jaguar Azul 7.
+
 ### La cuenta demo
-- Alumno de `2do_secundaria` (`alu_demo01`) **y** profe/dirección demo del mismo curso (`per_demo01`), con `demo: true`.
+- Alumno de `2do_secundaria` (`alu_demo01`, en pantalla Jaguar Azul 7) **y** profe/dirección del mismo curso (`per_demo01`), con `demo: true`.
 - Solo ve datos ficticios de su curso. No tiene clave: no se puede entrar con usuario.
 - Cada deploy la deja "como nueva" (`tools/seed/datos-demo.js`), con las fechas corridas a esta semana:
-  - 2 tareas enviadas (Inglés "Entrevista en casa" y Matemática "Racionales en el mercado"); 7 de 12 ficticios ya entregaron la primera.
-  - Una clase grabada de ejemplo (Inglés, simple present) con informe, tarea y "avisos para casa".
-  - Mapa armado en tres grupos por nivel (Números racionales).
-  - Cronograma con Inglés, Filosofía, Artes, Música y Valores, con lo ya dado hasta noviembre.
+  - 2 tareas enviadas: Inglés "Questions about sports and music" (de la clase) y Filosofía "Mi proyecto de vida en 5 pasos" (del cronograma).
+  - Clase grabada de ayer: Inglés, lectura "Patricia's talents" (pág. 57) y present continuous en preguntas (pág. 58), con tarea y aviso para casa.
+  - Mapa armado en tres grupos por nivel ("Present continuous: interrogative form").
+  - Cronograma de la gestión 2026 con las 5 áreas del profe: todo lo anterior al tema de hoy, marcado como dado.
   - Memoria de los profes IA en cero.
 
 ## Gasto
@@ -48,7 +61,7 @@ presentación. Un link con una **llave de demo** entra solo, como cuenta demo, e
 - La clase grabada nueva tarda lo que tarda la IA (1–2 min); para la demo está la clase de ejemplo.
 
 ## Datos del alumno demo para la app (EDU.17) y el tutor (EDU.16)
-`tools/datos/estudiante-demo.json` → `node tools/datos/armar-estudiante-demo.mjs` genera:
+Salen de `demo-piloto.json` (sección `estudiante`) con `node tools/datos/armar-demo.mjs`:
 - `maqueta/estudiante-demo.js` → `window.ESTUDIANTE_DEMO = { apodo, avatar, curso, cursoNombre, materias,
   horario:[{dia,desde,hasta,materia,aula}], avisos:[{fecha,titulo,texto,materia}],
   eventos:[{fecha,tipo:'examen'|'acto'|'entrega',materia,titulo}], llevar:[{fecha,materia,texto}] }`
@@ -63,7 +76,9 @@ presentación. Un link con una **llave de demo** entra solo, como cuenta demo, e
 - Playwright local con la IA simulada lenta (6 s): ejemplo a los 2,5 s, botón con la propuesta real, sin desbordes, 390 y 1280 px.
 
 ## Pendiente
-- Si `eduDemo` responde "La demo todavía no está habilitada": el dueño corre el paso 5c (un comando en Cloud Shell).
+- **Permiso para firmar el pase** (paso 5c): el primer deploy confirmó que falta (`iam.serviceAccounts.signBlob`
+  denegado a la cuenta de las Functions). Lo corre el dueño una vez en Cloud Shell.
+- Confirmar con el dueño qué materias da el profe y su nombre (`demo-piloto.json`).
 - EDU.16 (tutor 24/7) lee `tutor/estudiante-demo.json` y los avisos para casa del informe.
 
 ## Cierre

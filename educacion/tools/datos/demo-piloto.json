@@ -1,0 +1,818 @@
+{
+ "_nota": "FUENTE ÚNICA de la demo (EDU.15): el curso REAL del profe del piloto (colegio, curso, gestión y temas de sus textos oficiales), con alumnos FICTICIOS (apodos, sin datos reales). Todo lo demás se genera con: node tools/datos/armar-demo.mjs (panel del profe, app del alumno, juego, tutor, presentación y seed). El nombre del profe se cambia SOLO acá (profe.nombre).",
+ "colegio": {
+  "nombre": "U.E. Nuevo Horizonte",
+  "lugar": "rural, Santa Cruz"
+ },
+ "curso": {
+  "id": "2do_secundaria",
+  "nombre": "2.º de secundaria",
+  "maqueta": "S2"
+ },
+ "gestion": 2026,
+ "distrito": "scz_rural_demo",
+ "trimestre": 3,
+ "profe": {
+  "nombre": "Profe"
+ },
+ "materiasProfe": [
+  "ing",
+  "fil",
+  "art",
+  "mus",
+  "val"
+ ],
+ "_notaMaterias": "Por ahora: las de los libros que pasó el profe. Confirmar con el dueño cuáles da.",
+ "temasHoy": {
+  "ing": {
+   "unidad": 9,
+   "temaId": "ing-9",
+   "titulo": "Musical instruments and sports",
+   "contenidos": [
+    "Present continuous tense: interrogative form",
+    "Writing and speaking about my favorite music",
+    "Pronunciation tips"
+   ],
+   "pagina": 57,
+   "texto": "lengua-extranjera-ingles.txt",
+   "enCurso": "Present continuous tense: interrogative form",
+   "siguiente": "Writing and speaking about my favorite music"
+  },
+  "fil": {
+   "unidad": 9,
+   "temaId": "fil-9",
+   "titulo": "Autoconocimiento y proyecto de vida",
+   "contenidos": [
+    "¿Qué es el autoconocimiento?",
+    "¿Qué es un proyecto de vida?"
+   ],
+   "pagina": 48,
+   "texto": "cosmovisiones-filosofia-psicologia.txt",
+   "enCurso": "¿Qué es un proyecto de vida?",
+   "siguiente": null
+  },
+  "art": {
+   "unidad": 9,
+   "temaId": "art-9",
+   "titulo": "La escultura: bajo, medio y alto relieve en materiales blandos",
+   "contenidos": [
+    "La escultura: bajo, medio y alto relieve",
+    "Tallado en materiales blandos relacionado a las expresiones de nuestros pueblos"
+   ],
+   "pagina": 38,
+   "texto": "artes-plasticas-visuales.txt",
+   "enCurso": "La escultura: bajo, medio y alto relieve",
+   "siguiente": "Tallado en materiales blandos"
+  },
+  "mus": {
+   "unidad": 13,
+   "temaId": "mus-13",
+   "titulo": "Ensambles instrumentales de acuerdo al contexto",
+   "contenidos": [
+    "Ensamble instrumental",
+    "Instrumentos autóctonos",
+    "Instrumentos folclóricos, tradicionales o populares",
+    "Notación de un ensamble instrumental"
+   ],
+   "pagina": 49,
+   "texto": "educacion-musical.txt",
+   "enCurso": "Instrumentos autóctonos",
+   "siguiente": "Repertorio de canciones del contexto a dos voces"
+  },
+  "val": {
+   "unidad": 10,
+   "temaId": "val-10",
+   "titulo": "Conociendo vidas ejemplares de nuestro contexto, para construir intereses vocacionales",
+   "contenidos": [
+    "Personajes destacados en su vocación",
+    "Superando adversidades para realizar su vocación",
+    "Mi vocación y mi misión",
+    "Desarrollo de la autoestima y autoconocimiento"
+   ],
+   "pagina": 38,
+   "texto": "valores-espiritualidad-religiones.txt",
+   "enCurso": "Mi vocación y mi misión",
+   "siguiente": null
+  }
+ },
+ "alumnos": [
+  {
+   "id": "S01",
+   "nombre": "Jaguar Azul 7",
+   "avatar": "🐆",
+   "avance": 78,
+   "tendencia": "sube",
+   "misiones": 12,
+   "aprende": "haciendo y explicándole a otros",
+   "ritmo": "constante",
+   "fortalezas": [
+    "razonamiento lógico",
+    "creatividad",
+    "ayuda a sus compañeros"
+   ],
+   "practicando": [
+    "preguntas en present continuous (Is he playing…?)",
+    "tallado en bajo relieve"
+   ],
+   "intereses": [
+    "fútbol",
+    "música",
+    "construir"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Cuando entiende algo, se lo explica a otro: buen compañero para el que recién empieza.",
+   "atencion": ""
+  },
+  {
+   "id": "S02",
+   "nombre": "Tucán Verde 3",
+   "avatar": "🦜",
+   "avance": 86,
+   "tendencia": "estable",
+   "misiones": 15,
+   "aprende": "leyendo y ordenando por escrito",
+   "ritmo": "rápido",
+   "fortalezas": [
+    "comprensión lectora",
+    "orden",
+    "constancia"
+   ],
+   "practicando": [
+    "explicar su proyecto de vida sin apurarse",
+    "pedir ayuda cuando se traba"
+   ],
+   "intereses": [
+    "libros",
+    "dibujo"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "logrado",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
+   ],
+   "mentora": "Termina rápido: le vienen bien desafíos extra y explicar en voz alta.",
+   "atencion": ""
+  },
+  {
+   "id": "S03",
+   "nombre": "Paraba Roja 9",
+   "avatar": "🦚",
+   "avance": 58,
+   "tendencia": "baja",
+   "misiones": 6,
+   "aprende": "con imágenes y consignas cortas",
+   "ritmo": "necesita más tiempo",
+   "fortalezas": [
+    "trabajo en equipo",
+    "deportes",
+    "memoria visual"
+   ],
+   "practicando": [
+    "present continuous: preguntas y respuestas cortas",
+    "leer consignas largas"
+   ],
+   "intereses": [
+    "fútbol",
+    "motos",
+    "música"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "practicando",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Avanza mejor con un compañero paciente y tareas cortas.",
+   "atencion": "Bajó en las últimas 3 semanas: acompañar de cerca y hablar con la familia."
+  },
+  {
+   "id": "S04",
+   "nombre": "Tatú Dorado 4",
+   "avatar": "🦔",
+   "avance": 74,
+   "tendencia": "sube",
+   "misiones": 10,
+   "aprende": "escuchando y hablando (voz de los profes)",
+   "ritmo": "constante",
+   "fortalezas": [
+    "expresión oral",
+    "inglés",
+    "curiosidad"
+   ],
+   "practicando": [
+    "ortografía en sus escritos de Valores"
+   ],
+   "intereses": [
+    "música",
+    "series en inglés"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Mejoró mucho con las tareas de voz y en inglés ayuda a sus compañeros.",
+   "atencion": ""
+  },
+  {
+   "id": "S05",
+   "nombre": "Capibara Celeste 2",
+   "avatar": "🦫",
+   "avance": 90,
+   "tendencia": "estable",
+   "misiones": 16,
+   "aprende": "resolviendo problemas y dibujándolos",
+   "ritmo": "rápido",
+   "fortalezas": [
+    "matemática",
+    "paciencia para explicar"
+   ],
+   "practicando": [
+    "escribir un proyecto de vida con metas medibles"
+   ],
+   "intereses": [
+    "plantas",
+    "rompecabezas"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "logrado",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
+   ],
+   "mentora": "Explica con dibujos muy claros (le salió precioso el boceto del relieve): puede acompañar en parejas.",
+   "atencion": ""
+  },
+  {
+   "id": "S06",
+   "nombre": "Bufeo Rosado 8",
+   "avatar": "🐬",
+   "avance": 64,
+   "tendencia": "estable",
+   "misiones": 8,
+   "aprende": "moviéndose y con objetos concretos",
+   "ritmo": "variable",
+   "fortalezas": [
+    "energía",
+    "manualidades",
+    "trabajo en grupo"
+   ],
+   "practicando": [
+    "terminar una tarea antes de empezar otra",
+    "vocabulario de instrumentos y deportes en inglés"
+   ],
+   "intereses": [
+    "autos",
+    "construir"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Rinde más con material concreto y consignas paso a paso.",
+   "atencion": ""
+  },
+  {
+   "id": "S07",
+   "nombre": "Tapir Gris 5",
+   "avatar": "🐗",
+   "avance": 77,
+   "tendencia": "sube",
+   "misiones": 11,
+   "aprende": "en silencio y con ejemplos resueltos",
+   "ritmo": "constante",
+   "fortalezas": [
+    "prolijidad",
+    "memoria",
+    "ortografía"
+   ],
+   "practicando": [
+    "hablar frente al grupo",
+    "speaking: hablar de su música favorita"
+   ],
+   "intereses": [
+    "dibujo",
+    "música"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Participa más en grupos chicos que frente a todo el curso.",
+   "atencion": ""
+  },
+  {
+   "id": "S08",
+   "nombre": "Puma Naranja 1",
+   "avatar": "🐈",
+   "avance": 69,
+   "tendencia": "sube",
+   "misiones": 9,
+   "aprende": "con desafíos y juegos",
+   "ritmo": "rápido pero se apura",
+   "fortalezas": [
+    "liderazgo",
+    "ritmo en el ensamble"
+   ],
+   "practicando": [
+    "revisar antes de entregar",
+    "afinar en el coro a dos voces"
+   ],
+   "intereses": [
+    "fútbol",
+    "videojuegos"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Le motiva coordinar un grupo con una tarea clara.",
+   "atencion": ""
+  },
+  {
+   "id": "S09",
+   "nombre": "Colibrí Violeta 6",
+   "avatar": "🐦",
+   "avance": 55,
+   "tendencia": "estable",
+   "misiones": 5,
+   "aprende": "con calma, en voz alta y con mucho ánimo",
+   "ritmo": "necesita más tiempo",
+   "fortalezas": [
+    "creatividad",
+    "escritura de cuentos",
+    "empatía"
+   ],
+   "practicando": [
+    "present continuous en preguntas",
+    "confianza para preguntar"
+   ],
+   "intereses": [
+    "cuentos",
+    "animales"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "practicando",
+    "Autoconocimiento y proyecto de vida": "practicando",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Escribe relatos muy lindos; en matemática necesita más práctica guiada.",
+   "atencion": "Faltó 3 días esta semana: conviene ponerla al día con calma."
+  },
+  {
+   "id": "S10",
+   "nombre": "Ardilla Amarilla 10",
+   "avatar": "🐿️",
+   "avance": 81,
+   "tendencia": "sube",
+   "misiones": 13,
+   "aprende": "preguntando y experimentando",
+   "ritmo": "constante",
+   "fortalezas": [
+    "ciencias",
+    "curiosidad",
+    "preguntas buenas"
+   ],
+   "practicando": [
+    "orden en el cuaderno de Artes"
+   ],
+   "intereses": [
+    "astronomía",
+    "experimentos"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "logrado",
+    "La escultura: bajo y alto relieve": "logrado",
+    "Ensambles instrumentales": "logrado"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (hecha)"
+   ],
+   "mentora": "Sus preguntas en clase ayudan a todo el curso.",
+   "atencion": ""
+  },
+  {
+   "id": "S11",
+   "nombre": "Garza Blanca 11",
+   "avatar": "🦢",
+   "avance": 70,
+   "tendencia": "estable",
+   "misiones": 10,
+   "aprende": "en pareja, conversando",
+   "ritmo": "constante",
+   "fortalezas": [
+    "colaboración",
+    "lectura en voz alta"
+   ],
+   "practicando": [
+    "listening en inglés",
+    "ritmo en el ensamble (corcheas y semicorcheas)"
+   ],
+   "intereses": [
+    "baile",
+    "música"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Trabaja mejor en pareja que sola.",
+   "atencion": ""
+  },
+  {
+   "id": "S12",
+   "nombre": "Cóndor Negro 12",
+   "avatar": "🦅",
+   "avance": 61,
+   "tendencia": "sube",
+   "misiones": 7,
+   "aprende": "con tecnología y paso a paso",
+   "ritmo": "variable",
+   "fortalezas": [
+    "tecnología",
+    "dibujo digital"
+   ],
+   "practicando": [
+    "leer con fluidez",
+    "escribir sobre su vocación"
+   ],
+   "intereses": [
+    "videojuegos",
+    "robots"
+   ],
+   "temas": {
+    "Present continuous: interrogative form": "en camino",
+    "Autoconocimiento y proyecto de vida": "en camino",
+    "La escultura: bajo y alto relieve": "en camino",
+    "Ensambles instrumentales": "en camino"
+   },
+   "ultimas": [
+    "Questions about sports and music (en curso)",
+    "Mi proyecto de vida en 5 pasos (en curso)"
+   ],
+   "mentora": "Viene subiendo desde que usa las pistas de la escalera.",
+   "atencion": ""
+  }
+ ],
+ "estudiante": {
+  "alumnoId": "S01",
+  "_nota": "El alumno demo (cuenta sin clave de la demo) es uno de los 12: Jaguar Azul 7.",
+  "horario": [
+   {
+    "dia": 1,
+    "desde": "07:30",
+    "hasta": "08:10",
+    "materia": "len",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 1,
+    "desde": "08:10",
+    "hasta": "08:50",
+    "materia": "len",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 1,
+    "desde": "09:10",
+    "hasta": "09:50",
+    "materia": "mat",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 1,
+    "desde": "09:50",
+    "hasta": "10:30",
+    "materia": "mat",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 1,
+    "desde": "10:50",
+    "hasta": "11:30",
+    "materia": "ing",
+    "aula": "Laboratorio de idiomas"
+   },
+   {
+    "dia": 1,
+    "desde": "11:30",
+    "hasta": "12:10",
+    "materia": "ing",
+    "aula": "Laboratorio de idiomas"
+   },
+   {
+    "dia": 2,
+    "desde": "07:30",
+    "hasta": "08:10",
+    "materia": "bio",
+    "aula": "Laboratorio"
+   },
+   {
+    "dia": 2,
+    "desde": "08:10",
+    "hasta": "08:50",
+    "materia": "bio",
+    "aula": "Laboratorio"
+   },
+   {
+    "dia": 2,
+    "desde": "09:10",
+    "hasta": "09:50",
+    "materia": "csoc",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 2,
+    "desde": "09:50",
+    "hasta": "10:30",
+    "materia": "csoc",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 2,
+    "desde": "10:50",
+    "hasta": "11:30",
+    "materia": "art",
+    "aula": "Taller"
+   },
+   {
+    "dia": 2,
+    "desde": "11:30",
+    "hasta": "12:10",
+    "materia": "fil",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 3,
+    "desde": "07:30",
+    "hasta": "08:10",
+    "materia": "mat",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 3,
+    "desde": "08:10",
+    "hasta": "08:50",
+    "materia": "mat",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 3,
+    "desde": "09:10",
+    "hasta": "09:50",
+    "materia": "len",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 3,
+    "desde": "09:50",
+    "hasta": "10:30",
+    "materia": "ing",
+    "aula": "Laboratorio de idiomas"
+   },
+   {
+    "dia": 3,
+    "desde": "10:50",
+    "hasta": "11:30",
+    "materia": "mus",
+    "aula": "Sala de música"
+   },
+   {
+    "dia": 3,
+    "desde": "11:30",
+    "hasta": "12:10",
+    "materia": "val",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 4,
+    "desde": "07:30",
+    "hasta": "08:10",
+    "materia": "bio",
+    "aula": "Laboratorio"
+   },
+   {
+    "dia": 4,
+    "desde": "08:10",
+    "hasta": "08:50",
+    "materia": "csoc",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 4,
+    "desde": "09:10",
+    "hasta": "09:50",
+    "materia": "fil",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 4,
+    "desde": "09:50",
+    "hasta": "10:30",
+    "materia": "art",
+    "aula": "Taller"
+   },
+   {
+    "dia": 4,
+    "desde": "10:50",
+    "hasta": "11:30",
+    "materia": "art",
+    "aula": "Taller"
+   },
+   {
+    "dia": 4,
+    "desde": "11:30",
+    "hasta": "12:10",
+    "materia": "efd",
+    "aula": "Cancha"
+   },
+   {
+    "dia": 5,
+    "desde": "07:30",
+    "hasta": "08:10",
+    "materia": "mat",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 5,
+    "desde": "08:10",
+    "hasta": "08:50",
+    "materia": "len",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 5,
+    "desde": "09:10",
+    "hasta": "09:50",
+    "materia": "bio",
+    "aula": "Laboratorio"
+   },
+   {
+    "dia": 5,
+    "desde": "09:50",
+    "hasta": "10:30",
+    "materia": "mus",
+    "aula": "Sala de música"
+   },
+   {
+    "dia": 5,
+    "desde": "10:50",
+    "hasta": "11:30",
+    "materia": "val",
+    "aula": "Aula 7"
+   },
+   {
+    "dia": 5,
+    "desde": "11:30",
+    "hasta": "12:10",
+    "materia": "efd",
+    "aula": "Cancha"
+   }
+  ],
+  "materias": {
+   "len": "Comunicación y Lenguajes",
+   "mat": "Matemática",
+   "ing": "Inglés",
+   "bio": "Biología – Geografía",
+   "csoc": "Ciencias Sociales",
+   "art": "Artes Plásticas",
+   "fil": "Cosmovisiones y Filosofía",
+   "mus": "Educación Musical",
+   "val": "Valores y Espiritualidad",
+   "efd": "Educación Física"
+  },
+  "avisos": [
+   {
+    "dias": 0,
+    "titulo": "Charango o instrumento del lugar",
+    "texto": "Avisar en casa: para Música hay que traer un instrumento autóctono o folclórico (charango, tarka, bombo, zampoña…) si tienen. Si no, uno hecho con material reciclado.",
+    "materia": "mus"
+   },
+   {
+    "dias": 1,
+    "titulo": "Reunión de madres y padres",
+    "texto": "Avisar en casa: el viernes a las 18:00 hay reunión de madres y padres en el colegio para hablar del cierre del trimestre.",
+    "materia": null
+   },
+   {
+    "dias": 3,
+    "titulo": "Jabón o plastilina para tallar",
+    "texto": "Avisar en casa: para Artes se necesita una barra de jabón o plastilina para el tallado en relieve.",
+    "materia": "art"
+   }
+  ],
+  "eventos": [
+   {
+    "dias": 2,
+    "tipo": "entrega",
+    "materia": "ing",
+    "titulo": "Questions about sports and music"
+   },
+   {
+    "dias": 4,
+    "tipo": "entrega",
+    "materia": "fil",
+    "titulo": "Mi proyecto de vida en 5 pasos"
+   },
+   {
+    "dias": 6,
+    "tipo": "examen",
+    "materia": "ing",
+    "titulo": "Evaluación oral: my favorite music"
+   },
+   {
+    "dias": 9,
+    "tipo": "acto",
+    "materia": "mus",
+    "titulo": "Muestra de ensambles del curso"
+   },
+   {
+    "dias": 12,
+    "tipo": "examen",
+    "materia": "art",
+    "titulo": "Entrega del relieve tallado (cierre del trimestre)"
+   }
+  ],
+  "llevar": [
+   {
+    "dias": 1,
+    "materia": "ing",
+    "texto": "Cuaderno de inglés y el texto (página 57)"
+   },
+   {
+    "dias": 1,
+    "materia": "mus",
+    "texto": "Instrumento autóctono o uno hecho con material reciclado"
+   },
+   {
+    "dias": 3,
+    "materia": "art",
+    "texto": "Barra de jabón o plastilina, y un palito para tallar"
+   },
+   {
+    "dias": 3,
+    "materia": "efd",
+    "texto": "Buzo deportivo y botella de agua"
+   }
+  ]
+ },
+ "temaMapa": "Present continuous: interrogative form"
+}

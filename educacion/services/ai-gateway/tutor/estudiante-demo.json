@@ -1,7 +1,20 @@
 {
- "_nota": "GENERADO por tools/datos/armar-estudiante-demo.mjs (sin apodo ni avatar). Fechas en días hábiles desde hoy.",
+ "_nota": "GENERADO por tools/datos/armar-demo.mjs (sin apodo ni avatar). Fechas en días hábiles desde hoy.",
  "curso": "2do_secundaria",
- "cursoNombre": "2.º de secundaria A",
+ "cursoNombre": "2.º de secundaria",
+ "colegio": "U.E. Nuevo Horizonte",
+ "materias": {
+  "len": "Comunicación y Lenguajes",
+  "mat": "Matemática",
+  "ing": "Inglés",
+  "bio": "Biología – Geografía",
+  "csoc": "Ciencias Sociales",
+  "art": "Artes Plásticas",
+  "fil": "Cosmovisiones y Filosofía",
+  "mus": "Educación Musical",
+  "val": "Valores y Espiritualidad",
+  "efd": "Educación Física"
+ },
  "horario": [
   {
    "dia": 1,
@@ -214,36 +227,24 @@
    "aula": "Cancha"
   }
  ],
- "materias": {
-  "len": "Comunicación y Lenguajes",
-  "mat": "Matemática",
-  "ing": "Inglés",
-  "bio": "Biología – Geografía",
-  "csoc": "Ciencias Sociales",
-  "art": "Artes Plásticas",
-  "fil": "Cosmovisiones y Filosofía",
-  "mus": "Educación Musical",
-  "val": "Valores y Espiritualidad",
-  "efd": "Educación Física"
- },
  "avisos": [
   {
    "dias": 0,
-   "titulo": "Diccionario de inglés",
-   "texto": "Avisar en casa: la próxima clase de Inglés hay que traer el diccionario.",
-   "materia": "ing"
+   "titulo": "Charango o instrumento del lugar",
+   "texto": "Avisar en casa: para Música hay que traer un instrumento autóctono o folclórico (charango, tarka, bombo, zampoña…) si tienen. Si no, uno hecho con material reciclado.",
+   "materia": "mus"
   },
   {
    "dias": 1,
-   "titulo": "Reunión de padres",
-   "texto": "Avisar en casa: el viernes a las 18:00 hay reunión de madres y padres en el salón del colegio.",
+   "titulo": "Reunión de madres y padres",
+   "texto": "Avisar en casa: el viernes a las 18:00 hay reunión de madres y padres en el colegio para hablar del cierre del trimestre.",
    "materia": null
   },
   {
-   "dias": 2,
-   "titulo": "Feria de ciencias",
-   "texto": "Contar en casa que para la feria de ciencias se necesita una botella de plástico vacía por grupo.",
-   "materia": "bio"
+   "dias": 3,
+   "titulo": "Jabón o plastilina para tallar",
+   "texto": "Avisar en casa: para Artes se necesita una barra de jabón o plastilina para el tallado en relieve.",
+   "materia": "art"
   }
  ],
  "eventos": [
@@ -251,53 +252,125 @@
    "dias": 2,
    "tipo": "entrega",
    "materia": "ing",
-   "titulo": "Entrevista en casa (preguntas con do / does)"
+   "titulo": "Questions about sports and music"
   },
   {
    "dias": 4,
    "tipo": "entrega",
-   "materia": "mat",
-   "titulo": "Racionales en el mercado"
+   "materia": "fil",
+   "titulo": "Mi proyecto de vida en 5 pasos"
   },
   {
    "dias": 6,
    "tipo": "examen",
-   "materia": "mat",
-   "titulo": "Evaluación de números racionales"
-  },
-  {
-   "dias": 8,
-   "tipo": "acto",
-   "materia": null,
-   "titulo": "Feria de ciencias del colegio"
-  },
-  {
-   "dias": 11,
-   "tipo": "examen",
    "materia": "ing",
-   "titulo": "Evaluación oral: my daily routine"
+   "titulo": "Evaluación oral: my favorite music"
+  },
+  {
+   "dias": 9,
+   "tipo": "acto",
+   "materia": "mus",
+   "titulo": "Muestra de ensambles del curso"
+  },
+  {
+   "dias": 12,
+   "tipo": "examen",
+   "materia": "art",
+   "titulo": "Entrega del relieve tallado (cierre del trimestre)"
   }
  ],
  "llevar": [
   {
    "dias": 1,
-   "materia": "bio",
-   "texto": "Guardapolvo y cuaderno de laboratorio"
-  },
-  {
-   "dias": 2,
    "materia": "ing",
-   "texto": "Diccionario de inglés"
+   "texto": "Cuaderno de inglés y el texto (página 57)"
   },
   {
-   "dias": 2,
+   "dias": 1,
+   "materia": "mus",
+   "texto": "Instrumento autóctono o uno hecho con material reciclado"
+  },
+  {
+   "dias": 3,
    "materia": "art",
-   "texto": "Témperas y un pincel grueso"
+   "texto": "Barra de jabón o plastilina, y un palito para tallar"
   },
   {
    "dias": 3,
    "materia": "efd",
    "texto": "Buzo deportivo y botella de agua"
   }
- ]
+ ],
+ "temasHoy": {
+  "ing": {
+   "unidad": 9,
+   "temaId": "ing-9",
+   "titulo": "Musical instruments and sports",
+   "contenidos": [
+    "Present continuous tense: interrogative form",
+    "Writing and speaking about my favorite music",
+    "Pronunciation tips"
+   ],
+   "pagina": 57,
+   "texto": "lengua-extranjera-ingles.txt",
+   "enCurso": "Present continuous tense: interrogative form",
+   "siguiente": "Writing and speaking about my favorite music"
+  },
+  "fil": {
+   "unidad": 9,
+   "temaId": "fil-9",
+   "titulo": "Autoconocimiento y proyecto de vida",
+   "contenidos": [
+    "¿Qué es el autoconocimiento?",
+    "¿Qué es un proyecto de vida?"
+   ],
+   "pagina": 48,
+   "texto": "cosmovisiones-filosofia-psicologia.txt",
+   "enCurso": "¿Qué es un proyecto de vida?",
+   "siguiente": null
+  },
+  "art": {
+   "unidad": 9,
+   "temaId": "art-9",
+   "titulo": "La escultura: bajo, medio y alto relieve en materiales blandos",
+   "contenidos": [
+    "La escultura: bajo, medio y alto relieve",
+    "Tallado en materiales blandos relacionado a las expresiones de nuestros pueblos"
+   ],
+   "pagina": 38,
+   "texto": "artes-plasticas-visuales.txt",
+   "enCurso": "La escultura: bajo, medio y alto relieve",
+   "siguiente": "Tallado en materiales blandos"
+  },
+  "mus": {
+   "unidad": 13,
+   "temaId": "mus-13",
+   "titulo": "Ensambles instrumentales de acuerdo al contexto",
+   "contenidos": [
+    "Ensamble instrumental",
+    "Instrumentos autóctonos",
+    "Instrumentos folclóricos, tradicionales o populares",
+    "Notación de un ensamble instrumental"
+   ],
+   "pagina": 49,
+   "texto": "educacion-musical.txt",
+   "enCurso": "Instrumentos autóctonos",
+   "siguiente": "Repertorio de canciones del contexto a dos voces"
+  },
+  "val": {
+   "unidad": 10,
+   "temaId": "val-10",
+   "titulo": "Conociendo vidas ejemplares de nuestro contexto, para construir intereses vocacionales",
+   "contenidos": [
+    "Personajes destacados en su vocación",
+    "Superando adversidades para realizar su vocación",
+    "Mi vocación y mi misión",
+    "Desarrollo de la autoestima y autoconocimiento"
+   ],
+   "pagina": 38,
+   "texto": "valores-espiritualidad-religiones.txt",
+   "enCurso": "Mi vocación y mi misión",
+   "siguiente": null
+  }
+ }
 }
