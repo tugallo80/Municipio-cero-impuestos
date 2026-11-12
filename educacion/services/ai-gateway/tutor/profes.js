@@ -112,6 +112,8 @@ function textoMemoria(memoria) {
  * @param {object} perfil { curso } — cualquier otro campo se ignora
  * @param {{mision?: object, memoria?: object, clases?: object[], relevo?: boolean, cursoLegible: (c:string)=>string}} extra
  *   `clases`: contexto del día de las últimas clases grabadas del curso (EDU.04a, sin nombres)
+ *   `tutor`: (EDU.16) bloque "tutor 24/7" con su vida escolar (tareas, horario, avisos, texto); si viene,
+ *            reemplaza al de las clases (ya las incluye)
  */
 function construirInstruccionProfe(profeId, perfil = {}, extra = {}) {
   const yo = profePorId(profeId);
@@ -135,7 +137,7 @@ El alumno te acaba de llamar: venía con ${otro.titulo} en esta misma charla. Sa
 
 - Un alumno o alumna de ${curso}. No sabés su nombre y no hace falta: tratalo con cariño sin nombrarlo.`,
     textoMemoria(extra.memoria),
-    textoClasesParaTutor(extra.clases),
+    extra.tutor || textoClasesParaTutor(extra.clases),
     textoMision(extra.mision),
     relevo,
   ]

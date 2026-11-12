@@ -152,8 +152,9 @@ function ayudaHtml() {
     <div class="ayuda-fila">
       ${esc3 && R.peldano < 3 ? `<button class="btn sec2" onclick="subir()">${['🤔 No entiendo', '💡 Darme una pista', '📝 Mostrarme un ejemplo'][R.peldano]}</button>` : ''}
       ${window.ProfesVoz ? `<button class="btn sec2" onclick="hablar()">🎙️ Preguntarle a ${profeDe() === 'la_profe' ? 'la profe Taji' : 'el profe Jochi'}</button>` : ''}
+      <a class="btn sec2" href="/maqueta/mi-tutor/?tarea=${encodeURIComponent(T.id)}">🧑‍🏫 Preguntale a tu tutor</a>
     </div>
-    ${!esc3 && !window.ProfesVoz ? '<div class="ter" style="margin-top:10px">Si te trabás, pedile ayuda al profe en la clase o en el juego 🎮.</div>' : ''}`;
+    ${!esc3 && !window.ProfesVoz ? '<div class="ter" style="margin-top:10px">Si te trabás, escribile a tu tutor o pedile ayuda al profe en la clase 🎮.</div>' : ''}`;
 }
 function pintarTarea() {
   if (T.estado === 'hecha') { $('#principal').innerHTML = cabTarea() + `<div class="tarjeta hecho" style="margin-top:12px"><div class="grande">✅</div><b>Esta tarea ya está hecha.</b><div style="margin-top:14px"><a class="btn sec2" href="tareas/">📋 Volver a mis tareas</a></div></div>`; return; }
