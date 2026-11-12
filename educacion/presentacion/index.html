@@ -268,6 +268,25 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
 @media (orientation: landscape) and (max-height: 520px) { .ev2 { padding: 8px 10px; gap: 10px; } .ev-ico { width: 30px; height: 30px; } .ev-gr { font-size: calc(var(--f) * 1.02); } .ev2 .fuente { font-size: 10.5px; } }
 @media screen and (orientation: portrait) { .evid2 .extra, .lam .nota .extra { display: none; } .ev2 { padding: 10px 12px; gap: 12px; } .ev-ico { width: 34px; height: 34px; } .ev-gr { font-size: calc(var(--f) * 1.05); } }
 @media screen and (orientation: portrait) and (max-height: 780px) { .ev2 .fuente { font-size: 11px; } .evid2 { gap: 7px; } .ev2 { grid-template-columns: 1fr; } .ev-ico { display: none; } }
+
+/* Un ejemplo: lo que ahorra una familia (EDU.14d) */
+.cifras { display: flex; flex-direction: column; gap: calc(var(--gap) * .7); }
+.cifra { display: grid; grid-template-columns: 1fr auto; grid-template-areas: "tit num" "det num"; align-items: center; column-gap: 16px;
+  background: var(--sup2); border: 1px solid var(--borde); border-radius: var(--radio); padding: 10px 16px; }
+.c-tit { grid-area: tit; font-weight: 600; }
+.c-det { grid-area: det; font-size: var(--chico); color: var(--sec); }
+.c-num { grid-area: num; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: var(--grande); white-space: nowrap; }
+.cifra.gris .c-num { color: var(--sec); }
+.cifra.fuerte { border-color: var(--verde); background: rgba(16,185,129,.1); }
+.cifra.fuerte .c-num { color: var(--verde); font-size: calc(var(--grande) * 1.15); }
+.juan .cifra.fuerte .c-det { display: block !important; }
+.cifras-pie { display: flex; flex-direction: column; gap: 6px; font-size: var(--chico); color: #d4d4d4; padding: 2px 4px; }
+.cifras-pie b { color: var(--txt); font-weight: 600; }
+.juan .notas-pie { font-size: calc(var(--chico) * .9); flex: none; }
+@media screen and (orientation: portrait) { .juan .bajada { font-size: var(--f); } .cifra { padding: 8px 12px; } .juan .lado { display: flex; flex-direction: column; gap: var(--gap); } }
+@media screen and (orientation: portrait) { .juan .c-det { display: none; } }
+@media screen and (orientation: portrait) and (max-height: 780px) { .juan .bajada { display: none; } .juan .notas-pie { font-size: 10px; } }
+@media screen and (orientation: landscape) and (max-height: 520px) { .juan .bajada, .juan .sello, .juan .c-det { display: none; } .cifra { padding: 4px 10px; } .juan .notas-pie { font-size: 9.5px; line-height: 1.3; padding-top: 4px; } .cifras-pie { gap: 2px; } .juan h2.grande { font-size: var(--h2); } .juan .cifras { gap: 5px; } }
 /* ── Controles ───────────────────────────── */
 .barra { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--barra) + env(safe-area-inset-bottom));
   padding: 0 calc(12px + env(safe-area-inset-right)) env(safe-area-inset-bottom) calc(12px + env(safe-area-inset-left));
@@ -410,6 +429,31 @@ body.modo-presentador .deck, body.modo-presentador .barra, body.modo-presentador
       <p class="nota">* El Deber, 2025; cada libro, Bs 80 a 180. Cifras a verificar. Es una visión a construir con la alcaldía, no un acuerdo firmado.</p>
     </div>
   </section>
+
+  <!-- Un ejemplo: lo que ahorra una familia (EDU.14d) -->
+  <section class="lam declaracion juan">
+    <template class="notas">En 30 segundos: «Pensemos en Juan, el papá de Carlitos, que está en 2.º de secundaria. El año que viene va a gastar unos 1.700 bolivianos entre textos, cuadernos, mochila y útiles. Con la tablet y los textos adentro, gasta unos 1.150: ahorra 550 al año, casi dos Juancito Pinto. En tu curso son unos 16.500 bolivianos que se quedan en las casas. Y la tablet cuesta unos 700 al año: con lo que ahorran las familias, casi se paga sola». Aclarale que la mochila, el uniforme y los bolígrafos siguen; que son estimados; y que es una visión a construir con la alcaldía. Fuentes: El Deber (útiles 2025 y precios ene-2026), FMI (inflación 2026), tiendas de Bolivia (tablet), DS 5712 (Juancito Pinto Bs 300). El bono municipal de Bs 400 anunciado para 2026 no se confirmó que se haya pagado: mejor no compararlo.</template>
+    <div class="marca"><b class="n"></b> Un ejemplo</div>
+    <div class="cuerpo">
+     <div class="lado">
+      <div class="texto" style="display:flex;flex-direction:column;gap:var(--gap)">
+        <p><span class="sello">Estimado · 2027</span></p>
+        <h2 class="grande">Juan, el papá de Carlitos, <span class="verde">ahorra cada año.</span></h2>
+        <p class="bajada">Carlitos está en 2.º de secundaria. Con la tablet, Juan ya no compra libros y casi no compra cuadernos. Mochila, uniforme y bolígrafos siguen igual.</p>
+      </div>
+      <div class="cifras">
+        <div class="cifra gris"><span class="c-tit">Hoy, por año¹</span><span class="c-num">Bs 1.700</span><span class="c-det">textos, cuadernos, mochila y útiles</span></div>
+        <div class="cifra"><span class="c-tit">Con la tablet²</span><span class="c-num">Bs 1.150</span><span class="c-det">sin textos y con 3 cuadernos en vez de 10</span></div>
+        <div class="cifra fuerte"><span class="c-tit">Juan ahorra</span><span class="c-num">Bs 550 al año</span><span class="c-det">casi 2 bonos Juancito Pinto³</span></div>
+        <div class="cifras-pie">
+          <p><b>Tu curso (30 familias):</b> Bs 16.500 al año que se quedan en las casas.</p>
+          <p><b>La tablet</b> cuesta unos Bs 700 al año (Bs 1.400, dura 2 años)⁴: con lo que ahorran las familias, <b>casi se paga sola</b>.</p>
+        </div>
+      </div>
+    </div>
+      <p class="nota notas-pie">Estimados, en Bs de 2027 (inflación del FMI para 2026: 12,7 %). ¹ El Deber 2025–2026: lista ≈ Bs 1.000 sin libros, mochila Bs 50–400; 3 textos ≈ Bs 130 c/u. ² Supuesto. ³ Bs 300 (DS 5712). ⁴ Tiendas de Bolivia: Bs 1.044–1.687. Visión a construir con la alcaldía.</p>
+    </div>
+</section>
 
   <!-- Un tutor en el bolsillo -->
   <section class="lam declaracion">
