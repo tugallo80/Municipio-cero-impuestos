@@ -32,7 +32,19 @@
   .barra-libro .tema { flex: 1; min-width: 0; font-size: 13px; color: var(--texto3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding: 0 4px; }
   .barra-libro .tema b { color: var(--texto); }
   .barra-libro .txt { font-size: 14px; }
-  @media (max-width: 560px) { .barra-libro .tema { display: none; } .barra-libro { justify-content: space-between; } }
+  @media (max-width: 560px) {
+    .barra-libro .tema { display: none; } .barra-libro { justify-content: space-between; gap: 3px; }
+    .barra-libro button, .barra-libro a { min-width: 38px; height: 42px; padding: 0 4px; font-size: 16px; }
+  }
+  /* celular acostado (poca altura): sin encabezado ni barra de abajo mientras se lee; la barra del libro trae el "←" */
+  .barra-libro .solo-bajo { display: none; }
+  @media (max-height: 520px) and (orientation: landscape) {
+    body.leyendo .top, body.leyendo .nav-est { display: none !important; }
+    body.leyendo .app { padding-left: 0 !important; }
+    body.leyendo .principal { padding-top: 6px; }
+    .barra-libro .solo-bajo { display: grid; }
+    .barra-libro { margin-bottom: 4px; } .barra-libro button, .barra-libro a { height: 38px; min-width: 40px; }
+  }
   #lienzo { width: 100%; }
   /* páginas de texto maquetado */
   .tx { position: absolute; inset: 0; display: flex; flex-direction: column; font-family: 'Literata', Georgia, serif; }
@@ -60,6 +72,15 @@
   .uni + .uni { margin-top: 6px; }
   .uni.aqui-u { border-color: var(--verde); }
   .uni .n { width: 30px; height: 30px; border-radius: 10px; background: var(--sup3); display: grid; place-items: center; font-weight: 700; flex: none; }
+  /* modo libro a pantalla completa: solo el libro */
+  body.pantalla-libro .top, body.pantalla-libro .nav-est, body.pantalla-libro .barra-libro { display: none !important; }
+  body.pantalla-libro #lienzo { position: fixed; inset: 0; z-index: 45; height: 100% !important; width: 100% !important; }
+  body.pantalla-libro .app { padding-left: 0 !important; }
+  body.pantalla-libro .lb-flecha { display: none; }
+  .ctrl-pc { position: fixed; z-index: 55; left: 0; right: 0; top: 0; display: flex; gap: 8px; align-items: center; padding: 10px 12px calc(10px); background: linear-gradient(rgba(0,0,0,.75), rgba(0,0,0,0)); opacity: 0; pointer-events: none; transition: opacity .25s; }
+  .ctrl-pc.ver { opacity: 1; pointer-events: auto; }
+  .ctrl-pc button { min-width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(255,255,255,.18); background: rgba(17,17,17,.85); color: #fff; font-size: 18px; font-weight: 700; }
+  .ctrl-pc .t { flex: 1; min-width: 0; color: #fff; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-shadow: 0 1px 3px #000; }
   .aviso-libro { position: fixed; left: 50%; bottom: 110px; transform: translateX(-50%); z-index: 50; background: #111; border: 1px solid var(--borde); color: var(--texto); padding: 10px 14px; border-radius: 999px; font-size: 14px; max-width: calc(100% - 32px); }
   @media (min-width: 1000px) { .aviso-libro { bottom: 24px; } }
 </style>
@@ -80,7 +101,7 @@
 <script src="estudiante-demo.js?v=edu17-2"></script>
 <script src="tareas-curso-demo.js?v=edu17-2"></script>
 <script src="estudiante.js?v=edu17-2"></script>
-<script src="libro.js?v=edu17b-1"></script>
+<script src="libro.js?v=edu17b-2"></script>
 <script>
 const { E, materia, esc } = EST;
 EST.nav('textos');
@@ -95,7 +116,7 @@ let VA = {};   // área → índice de la unidad que toca hoy (EST.dondeVa: cron
 let LIBRO = null, B = null, Q = '';   // el libro abierto, sus datos y la palabra buscada
 
 function cab(t, s, volver) { $('#tit').textContent = t; $('#subt').textContent = s || ''; $('#volver').href = volver || 'hoy/'; }
-function cerrarLibro() { if (B && B.limpiar) B.limpiar(); if (LIBRO) { LIBRO.cerrar(); LIBRO = null; } B = null; document.body.classList.remove('leyendo'); }
+function cerrarLibro() { if (document.body.classList.contains('pantalla-libro')) pantallaLibro(false); if (B && B.limpiar) B.limpiar(); if (LIBRO) { LIBRO.cerrar(); LIBRO = null; } B = null; document.body.classList.remove('leyendo'); }
 function aviso(t) { const a = document.createElement('div'); a.className = 'aviso-libro'; a.textContent = t; document.body.appendChild(a); setTimeout(() => a.remove(), 2600); }
 
 // ---------- Inicio: las áreas ----------
@@ -200,12 +221,14 @@ async function abrirLibro(id, destino) {
   const imagen = !!d.carpeta;
   $('#principal').innerHTML = `
     <div class="barra-libro">
+      <a class="solo-bajo" href="textos/" aria-label="Volver a Mis textos" title="Volver">←</a>
       <button onclick="verUnidades()" title="Unidades" aria-label="Unidades">☰</button>
       ${VA[id] !== undefined ? `<button onclick="irVaAca()" title="Ir a donde va el curso" aria-label="Ir a donde va el curso">📍</button>` : ''}
       <button onclick="verBuscar()" title="Buscar en este libro" aria-label="Buscar">🔎</button>
       <span class="tema" id="tema-actual"></span>
       ${imagen ? '' : '<button class="txt" onclick="tamLetra(-1)" aria-label="Letra más chica">A−</button><button class="txt" onclick="tamLetra(1)" aria-label="Letra más grande">A+</button>'}
       <button id="b-noche" onclick="pref.noche=!pref.noche;guardarPref();LIBRO.noche(pref.noche);this.textContent=pref.noche?'☀️':'🌙'" title="Modo noche" aria-label="Modo noche">${pref.noche ? '☀️' : '🌙'}</button>
+      <button onclick="pantallaLibro(true)" title="Leer a pantalla completa" aria-label="Leer a pantalla completa">⛶</button>
       <a id="al-tutor" href="mi-tutor/" title="Preguntale a tu tutor sobre esta página" aria-label="Preguntale a tu tutor sobre esta página">🧑‍🏫</a>
     </div>
     <div id="lienzo"></div>`;
@@ -213,6 +236,7 @@ async function abrirLibro(id, destino) {
   const lienzo = $('#lienzo');
   const altoLienzo = () => {   // lo que queda de pantalla, sin la barra de abajo
     const nav = document.querySelector('.nav-est'), abajo = nav && innerWidth < 1000 ? nav.offsetHeight : 0;
+    if (document.body.classList.contains('pantalla-libro')) return;
     lienzo.style.height = Math.max(240, innerHeight - lienzo.getBoundingClientRect().top - abajo - 10) + 'px';
   };
   altoLienzo(); addEventListener('resize', altoLienzo);   // va antes que el del libro: mide con el alto nuevo
@@ -223,7 +247,8 @@ async function abrirLibro(id, destino) {
   if (!B || B.id !== id) return;
   if (imagen) B.arm = armarImagen(d); else { [B.pw, B.ph] = medidaHoja(); B.arm = armarTexto(d, B.pw, B.ph); }
   LIBRO = Libro.abrir(lienzo, {
-    paginas: B.arm.n, ratio: B.arm.ratio, pagina: 1, noche: pref.noche,
+    paginas: B.arm.n, ratio: B.arm.ratio, pagina: 1, noche: pref.noche, tapa: m.color,
+    alTocarCentro: () => { if (document.body.classList.contains('pantalla-libro')) mostrarCtrl(!$('.ctrl-pc').classList.contains('ver')); },
     pintar: p => B.arm.pintar(p), precargar: B.arm.precargar,
     alCambiar: (p, visibles) => alCambiar(p, visibles),
     alRedimensionar: (pw, ph) => {   // el texto se vuelve a repartir si cambió el tamaño de la hoja
@@ -244,6 +269,7 @@ function alCambiar(p, visibles) {
   $('#tema-actual').innerHTML = t ? `<b>${u + 1}. ${esc(t.titulo)}</b>${VA[B.id] === u ? ' · 📍 el curso va acá' : ''}` : esc(B.d.nombre);
   const imp = visibles.map(B.arm.impresa).filter(x => x > 0);
   cab(B.d.nombre, t ? `${t.trimestre}.º trim. · unidad ${u + 1} de ${B.d.temas.length}${imp.length ? ' · pág. ' + imp.join('–') : ''}` : 'Portada', 'textos/');
+  if ($('#ctrl-t')) $('#ctrl-t').textContent = $('#tit').textContent + ' · ' + $('#subt').textContent;
   const pagImp = B.arm.impresa(ult);
   $('#al-tutor').href = `mi-tutor/?materia=${B.id}${t ? `&tema=${encodeURIComponent(t.id)}` : ''}${pagImp > 0 ? `&pagina=${pagImp}` : ''}`;
   if (t) try { localStorage.setItem('textos-seguir', JSON.stringify({ area: B.id, parte: 'p' + p, titulo: `${m.corto}: ${t.titulo}` })); } catch (e) {}
@@ -257,6 +283,36 @@ function irA(dest, sinAnim) {
   LIBRO.ir(p, sinAnim);
   if (Q && B.imagen && dest.parrafo !== undefined) aviso(`🔎 “${Q}” está en esta página`);
 }
+// ---------- Modo libro a pantalla completa ----------
+let ctrlT = null;
+function mostrarCtrl(v) {
+  const c = $('.ctrl-pc'); if (!c) return;
+  c.classList.toggle('ver', v); clearTimeout(ctrlT);
+  if (v) ctrlT = setTimeout(() => c.classList.remove('ver'), 3200);
+}
+function pantallaLibro(on) {
+  if (!LIBRO) return;
+  const ya = document.body.classList.contains('pantalla-libro'); if (ya === on) return;
+  document.body.classList.toggle('pantalla-libro', on);
+  if (on) {
+    const c = document.createElement('div'); c.className = 'ctrl-pc';
+    c.innerHTML = `<button onclick="pantallaLibro(false)" aria-label="Salir de pantalla completa" title="Salir (Esc)">✕</button><span class="t" id="ctrl-t"></span>
+      ${VA[B.id] !== undefined ? '<button onclick="irVaAca();mostrarCtrl(true)" aria-label="Ir a donde va el curso">📍</button>' : ''}
+      <button onclick="LIBRO.anterior();mostrarCtrl(true)" aria-label="Página anterior">‹</button><button onclick="LIBRO.siguiente();mostrarCtrl(true)" aria-label="Página siguiente">›</button>
+      <button onclick="document.getElementById('b-noche').click();mostrarCtrl(true)" aria-label="Modo noche">🌙</button>`;
+    document.body.appendChild(c);
+    $('#ctrl-t').textContent = $('#tit').textContent + ' · ' + $('#subt').textContent;
+    try { const el = document.documentElement; (el.requestFullscreen || el.webkitRequestFullscreen || (() => Promise.reject())).call(el).catch(() => {}); } catch (e) {}
+    mostrarCtrl(true);
+  } else {
+    const c = $('.ctrl-pc'); if (c) c.remove();
+    try { if (document.fullscreenElement) document.exitFullscreen().catch(() => {}); } catch (e) {}
+  }
+  dispatchEvent(new Event('resize'));   // el libro se vuelve a medir con el espacio nuevo
+}
+addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('pantalla-libro')) pantallaLibro(false); });
+document.addEventListener('fullscreenchange', () => { if (!document.fullscreenElement && document.body.classList.contains('pantalla-libro')) pantallaLibro(false); else dispatchEvent(new Event('resize')); });
+
 function irVaAca() { if (VA[B.id] !== undefined) LIBRO.ir(B.arm.inicioUnidad[VA[B.id]]); }
 function tamLetra(d) {
   pref.esc = Math.max(0.75, Math.min(1.6, Math.round(((pref.esc || 1) + d * 0.12) * 100) / 100)); guardarPref();

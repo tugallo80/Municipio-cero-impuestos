@@ -179,3 +179,13 @@ Problema que encontró el dueño en la presentación: al salir del mundo (✕ / 
   de cada párrafo (`hoja`, `hojaFin`, `ph`), para el buscador y la cinta.
 - Probado en 820×1180, 1180×820, 390×844 y 1280×800, y dentro del marco tablet de la presentación:
   sin desbordes, ninguna hoja de texto cortada, sin errores.
+- **Pantalla completa** (botón ⛶): solo el libro, ocupando todo (usa la pantalla completa del equipo
+  si se puede). Un toque al centro muestra ✕, 📍, ‹ ›, 🌙 y el tema; se esconden solos a los 3 s.
+  Esc o ✕ vuelve.
+- **Más realismo**: tapa detrás de las hojas (color del área, un poco más grande, lomo al centro y
+  sombra sobre la mesa); canto de las hojas a cada lado, más grueso del lado con más páginas; sombra
+  hacia el lomo; textura sutil de papel; fondo de escritorio oscuro.
+- Celular acostado: mientras se lee se esconden el encabezado y la barra de abajo (la barra del libro
+  trae "←"), para que el libro abierto se vea más grande.
+- Probado en 820×1180, 1180×820, 844×390, 390×844, 1280×800 y 1920×1080, y en la presentación con
+  los 4 marcos (celular, horizontal, tablet, completa): sin desbordes ni errores.
