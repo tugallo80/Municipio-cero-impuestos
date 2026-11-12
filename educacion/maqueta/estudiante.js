@@ -3,37 +3,62 @@
 // Barra abajo en celular y tablet parada; a la izquierda en tablet acostada y PC (≥ 1000 px).
 (function () {
   // ---------- Nombre del profe: nunca en el repo ----------
-  // Llega por el link de la presentación (?profe=…&apodo=…) y queda en el equipo (localStorage 'nande-profe').
-  // Si no hay, "tu profe". No se manda a la IA.
-  function nombreProfe() {
+  // Llega por el link de la presentación: ?profe=<nombre formal>&apodo=<apodo del profe, ej. "Profe …">.
+  // Queda en el equipo (localStorage 'nande-profe' y 'nande-profe-apodo'). El alumno ve el apodo; si no
+  // hay, el nombre; si no hay nada, "tu profe". No se manda a la IA.
+  function quienProfe() {
+    let nombre = '', apodo = '';
     try {
       const q = new URLSearchParams(location.search);
       if (q.get('profe')) localStorage.setItem('nande-profe', q.get('profe').slice(0, 60));
       if (q.get('apodo')) localStorage.setItem('nande-profe-apodo', q.get('apodo').slice(0, 60));
-      return (localStorage.getItem('nande-profe') || localStorage.getItem('nande-profe-apodo') || '').trim();
-    } catch (e) { return ''; }
+      nombre = (localStorage.getItem('nande-profe') || '').trim(); apodo = (localStorage.getItem('nande-profe-apodo') || '').trim();
+    } catch (e) {}
+    const x = apodo || nombre;
+    return x ? (/^profe\b/i.test(x) ? 'el ' + x : x) : 'tu profe';   // "La dejó el Profe …"
   }
-  const PROFE = nombreProfe(), QUIEN = PROFE || 'tu profe';
+  const QUIEN = quienProfe();
   window.nombreProfe = () => QUIEN;
   const E = normalizar(window.ESTUDIANTE_DEMO);
-  // Acepta también el formato de la fuente única de EDU.15/EDU.04f (tools/datos/estudiante-demo.json):
-  // horario como lista [{dia, desde, hasta, materia}] y llevar como lista [{fecha?, materia?, texto}].
+
+  // Fuente única de EDU.15 (estudiante-demo.js, generado desde tools/datos/demo-piloto.json) +
+  // lo que suma EDU.17 (tareas-curso-demo.js). Formatos aceptados:
+  //   horario: lista [{dia: 1..5 | 'lunes', desde, hasta, materia, aula?}] o mapa {lun: [...]} con horas
+  //   llevar: lista [{fecha?, materia?, texto}] o mapa {materia: texto}
+  //   tareas: formato común (vence) o el del servidor de EDU.04f (entrega) → adaptarTareaProfe
   function normalizar(E) {
     if (!E) return E;
+    const CL = ['dom', 'lun', 'mar', 'mie', 'jue', 'vie', 'sab'];
     if (Array.isArray(E.horario)) {
       const lista = E.horario, horas = [...new Set(lista.map(h => h.desde + '|' + h.hasta))].sort().map(x => x.split('|'));
       const mapa = {};
-      lista.forEach(h => { const d = String(h.dia).slice(0, 3).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''); (mapa[d] = mapa[d] || Array(horas.length).fill(null))[horas.findIndex(x => x[0] === h.desde)] = h.materia; });
+      lista.forEach(h => {
+        const d = typeof h.dia === 'number' ? CL[h.dia] : String(h.dia).slice(0, 3).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        (mapa[d] = mapa[d] || Array(horas.length).fill(null))[horas.findIndex(x => x[0] === h.desde)] = h.materia;
+      });
       E.horario = mapa; E.horas = E.horas || horas;
     }
     if (Array.isArray(E.llevar)) {
       E.llevarFechas = E.llevar.filter(x => x.fecha);
       E.llevar = Object.fromEntries(E.llevar.filter(x => !x.fecha && x.materia).map(x => [x.materia, x.texto]));
     }
-    const delPiloto = window.DEMO_PILOTO && window.DEMO_PILOTO.materiasProfe;   // materias que da el profe del piloto (EDU.15)
-    Object.entries(E.materias || {}).forEach(([id, m]) => { if (!m.profe || /\{profe\}/.test(m.profe)) m.profe = !delPiloto || delPiloto.includes(id) ? QUIEN : 'tu profe'; });
+    E.llevar = E.llevar || {}; E.materias = E.materias || {}; E.eventos = E.eventos || []; E.avisos = E.avisos || []; E.tareas = E.tareas || [];
+    const X = window.EDU17_EXTRA;
+    if (X && !E._extra) {
+      E._extra = true;
+      E.llevar = Object.assign({}, X.llevar, E.llevar);
+      E.eventos = E.eventos.concat(X.eventos || []);
+      E.tareas = E.tareas.concat((X.tareas || []).filter(t => !E.tareas.some(u => u.id === t.id)));
+    }
+    // Apodo elegido por el alumno en la presentación (EDU.14b), si hay
+    try { const a = (localStorage.getItem('nande-apodo') || '').trim(); if (a) E.apodo = a.slice(0, 30); } catch (e) {}
+    // En las materias, "profe" de la fuente es el profe IA (Taji/Jochi): pasa a profeIA; el alumno ve a su profe.
+    const delPiloto = window.DEMO_PILOTO && window.DEMO_PILOTO.materiasProfe;
+    Object.entries(E.materias).forEach(([id, m]) => {
+      if (m.profe && /taji|jochi/i.test(m.profe)) m.profeIA = m.profe;
+      if (!m.profe || m.profeIA || /\{profe\}/.test(m.profe)) m.profe = !delPiloto || delPiloto.includes(id) ? QUIEN : 'tu profe';
+    });
     (E.tareas || []).forEach(t => { if (t.origen && t.origen.texto) t.origen.texto = t.origen.texto.replace(/\{profe\}/g, QUIEN); });
-    E.llevar = E.llevar || {}; E.materias = E.materias || {}; E.eventos = E.eventos || []; E.avisos = E.avisos || [];
     return E;
   }
   const SECCIONES = [

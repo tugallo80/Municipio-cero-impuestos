@@ -1,79 +1,521 @@
-// EDU.17 — Alumno demo del curso piloto: U.E. Nuevo Horizonte, 2.º de secundaria, gestión 2026.
-// El curso y sus textos son reales (los pasó el profe del piloto); el alumno es ficticio (apodo, sin nombre real).
-// Tareas y exámenes van sobre las unidades del 3.er trimestre de sus textos oficiales.
-// Las fechas se arman desde HOY (en días hábiles relativos) para que la demo siempre se vea al día.
-// Fuente única: EDU.15/EDU.04f van a generar este archivo desde tools/datos/estudiante-demo.json;
-// estudiante.js acepta también su formato (horario y llevar como listas).
+// GENERADO por tools/datos/armar-demo.mjs desde tools/datos/demo-piloto.json. No editar a mano.
+// Alumno demo FICTICIO. Las fechas se calculan al abrir (días hábiles desde hoy, hora de Bolivia).
 (function () {
-  const dia = n => { const d = new Date(); d.setHours(12, 0, 0, 0); d.setDate(d.getDate() + n); return d.toISOString().slice(0, 10); };
-  // n días HÁBILES desde hoy (salta sábado y domingo)
-  const DIAS = ['domingo', 'lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado'];
-  const lindo = isoF => { const d = new Date(isoF + 'T12:00:00'); return `${DIAS[d.getDay()]} ${d.getDate()}`; };
-  const habil = n => { const d = new Date(); d.setHours(12, 0, 0, 0); let k = 0; const paso = n >= 0 ? 1 : -1; while (k !== n) { d.setDate(d.getDate() + paso); if (d.getDay() % 6) k += paso; } return d.toISOString().slice(0, 10); };
-
-  window.ESTUDIANTE_DEMO = {
-    apodo: 'Jaguar Azul 7', avatar: '🐆', curso: '2do_secundaria', cursoNombre: '2.º de secundaria A',
-    colegio: 'U.E. Nuevo Horizonte', gestion: 2026, distrito: 'scz_capital',
-    // Mismo horario que el cronograma del profe para 2.º de secundaria (EDU.04b)
-    horario: {
-      lun: ['len', 'len', 'mat', 'mat', 'ing', 'ing'],
-      mar: ['bio', 'bio', 'csoc', 'csoc', 'art', 'fil'],
-      mie: ['mat', 'mat', 'len', 'ing', 'mus', 'val'],
-      jue: ['bio', 'csoc', 'fil', 'art', 'art', 'efd'],
-      vie: ['mat', 'len', 'bio', 'mus', 'val', 'efd']
-    },
-    horas: [['07:30', '08:10'], ['08:10', '08:50'], ['08:50', '09:30'], ['09:50', '10:30'], ['10:30', '11:10'], ['11:10', '11:50']],
-    recreo: ['09:30', '09:50'],
-    materias: {
-      len: { nombre: 'Lengua Castellana', corto: 'Lenguaje', icono: '📖', color: '#F59E0B' },
-      mat: { nombre: 'Matemática', corto: 'Mate', icono: '🔢', color: '#10B981' },
-      bio: { nombre: 'Biología - Geografía', corto: 'Biología', icono: '🧬', color: '#22C55E' },
-      csoc: { nombre: 'Ciencias Sociales', corto: 'Sociales', icono: '🗺️', color: '#A78BFA' },
-      ing: { nombre: 'Lengua Extranjera (Inglés)', corto: 'Inglés', icono: '💬', color: '#F472B6' },
-      fil: { nombre: 'Cosmovisiones, Filosofía y Psicología', corto: 'Filosofía', icono: '💭', color: '#818CF8' },
-      art: { nombre: 'Artes Plásticas y Visuales', corto: 'Artes', icono: '🎨', color: '#FB923C' },
-      mus: { nombre: 'Educación Musical', corto: 'Música', icono: '🎵', color: '#EC4899' },
-      val: { nombre: 'Valores, Espiritualidades y Religiones', corto: 'Valores', icono: '🤝', color: '#EAB308' },
-      efd: { nombre: 'Educación Física y Deportes', corto: 'Ed. Física', icono: '⚽', color: '#14B8A6' }
-    },
-    // El nombre del profe NO va en el repo: estudiante.js lo lee del equipo (localStorage 'nande-profe')
-    // y reemplaza {profe}; si no hay, dice "tu profe".
-    // Qué llevar según la materia del día (se suma lo de las tareas)
-    llevar: { mus: 'Flauta o tu instrumento', efd: 'Buzo, zapatillas y una botella de agua', art: 'Lápices de colores y hoja bond', mat: 'Calculadora y regla', bio: 'Cuaderno de Biología', ing: 'Diccionario de inglés (si tenés)' },
-    avisos: [
-      { fecha: dia(0), titulo: 'Feria de ciencias', texto: `El ${lindo(habil(8))} es la feria de ciencias. Cada grupo trae su maqueta de un bioma de Bolivia.` },
-      { fecha: dia(-1), titulo: 'Reunión de padres', texto: `El ${lindo(habil(3))} a las 18:00 hay reunión de padres de 2.º de secundaria: entrega de notas del 3.er trimestre.` },
-      { fecha: dia(-3), titulo: 'Fin de gestión', texto: 'Las clases de la gestión 2026 terminan el 4 de diciembre. ¡Último empujón!' }
-    ],
-    // Exámenes y actos del 3.er trimestre, sobre los temas reales de sus textos
-    eventos: [
-      { fecha: habil(2), tipo: 'examen', materia: 'mat', titulo: 'Evaluación de Matemática: cuerpos geométricos' },
-      { fecha: habil(4), tipo: 'examen', materia: 'csoc', titulo: 'Evaluación de Sociales: las grandes rebeliones indígenas' },
-      { fecha: habil(6), tipo: 'acto', titulo: 'Acto cívico (el curso lee una crónica)' },
-      { fecha: habil(8), tipo: 'acto', titulo: 'Feria de ciencias: biomas de Bolivia' },
-      { fecha: habil(3), tipo: 'casa', titulo: 'Reunión de padres 18:00' }
-    ],
-    // Tareas del curso (formato común de EDU.06d/EDU.04f), sobre las unidades del 3.er trimestre de sus textos
-    tareas: [
-      { id: 'S2-mat-cuerpos', curso: '2do_secundaria', materia: 'mat', titulo: 'Cuerpos geométricos', consigna: 'Respondé estas preguntas de las formas en el espacio. Si te trabás, pedí una pista.', tipo: 'opciones', vence: dia(0), creada: habil(-1),
-        origen: { tipo: 'clase', texto: `la dejó {profe} en la clase del ${DIAS[new Date(habil(-1) + 'T12:00:00').getDay()]}` },
-        preguntas: [
-          { q: '¿Cuántas caras tiene un cubo?', ops: ['6', '8', '12'], ok: 0, mal: { 1: '8 son los vértices (las esquinas), no las caras.', 2: '12 son las aristas (los bordes), no las caras.' }, escalera: ['Pensá en un dado: ¿cuántos números tiene?', 'Cada cara es un cuadrado. Contá arriba, abajo y los costados.', 'Ejemplo: una caja de fósforos también tiene 6 caras.'] },
-          { q: 'Un prisma triangular, ¿qué forma tienen sus dos bases?', ops: ['Triángulos', 'Cuadrados', 'Círculos'], ok: 0, mal: { 1: 'Las caras de los costados son rectángulos; las bases le dan el nombre.', 2: 'Las bases con círculos son del cilindro.' }, escalera: ['El nombre del prisma te da una pista.', 'Las bases son las dos caras iguales y paralelas.', 'Ejemplo: un prisma cuadrangular tiene bases cuadradas.'] }
-        ] },
-      { id: 'S2-len-acentos', curso: '2do_secundaria', materia: 'len', titulo: 'Leer: diptongos e hiatos', consigna: 'Leé en “Mis textos” el taller ortográfico de Lengua (acentuación en diptongos, hiatos y casos especiales) y anotá 5 ejemplos de cada uno en tu cuaderno.', tipo: 'texto', como: 'nada', soloMarcar: true, vence: dia(1), creada: habil(-1),
-        origen: { tipo: 'cronograma', texto: 'del cronograma de Lengua Castellana' } },
-      { id: 'S2-bio-bioma', curso: '2do_secundaria', materia: 'bio', titulo: 'Un bioma de Bolivia', consigna: 'Dibujá un bioma de Bolivia (por ejemplo, el Chaco o la Chiquitanía) con 3 animales y 3 plantas, y sacale una foto.', tipo: 'foto', vence: habil(2), creada: dia(0),
-        origen: { tipo: 'clase', texto: 'la dejó {profe} en la clase de hoy' },
-        escalera: ['¿Cómo es el clima en ese lugar: seco, húmedo, frío?', 'Los animales y plantas se adaptan al clima del bioma.', 'Ejemplo: en el Chaco hay quebracho, cactus y el tatú carreta.'] },
-      { id: 'S2-ing-music', curso: '2do_secundaria', materia: 'ing', titulo: 'My favorite music and sport', consigna: 'Write 5 sentences about the musical instruments and sports you like (in English). Usá: I like, I play, I can…', tipo: 'texto', minimo: 80, vence: habil(3), creada: dia(0),
-        origen: { tipo: 'mentora', texto: 'sugerida por la mentora de {profe} para repasar' },
-        escalera: ['What sport do you play?', 'Usá “I play” + deporte o instrumento: I play football.', 'Ejemplo: I play the guitar. I like basketball because it is fun.'] },
-      { id: 'S2-csoc-rebeliones', curso: '2do_secundaria', materia: 'csoc', titulo: 'Las grandes rebeliones indígenas', consigna: 'Respondé sobre las rebeliones indígenas de la colonia.', tipo: 'opciones', vence: habil(4), creada: dia(0),
-        origen: { tipo: 'cronograma', texto: 'del cronograma de Ciencias Sociales' },
-        preguntas: [{ q: '¿Quién dirigió el cerco a la ciudad de La Paz en 1781?', ops: ['Túpac Katari', 'Simón Bolívar', 'Pedro Domingo Murillo'], ok: 0, mal: { 1: 'Bolívar llegó más de 40 años después, en la independencia.', 2: 'Murillo encabezó la revolución de 1809, no el cerco de 1781.' }, escalera: ['¿Fue antes o después de la independencia?', 'Fue un líder aymara, junto a Bartolina Sisa.', 'Ejemplo: Túpac Amaru se levantó en el Cusco en 1780.'] }] },
-      { id: 'S2-mus-coro', curso: '2do_secundaria', materia: 'mus', titulo: 'Calentamiento vocal', consigna: 'Hacé los ejercicios de calentamiento vocal del texto de Música y contá cuál te costó más.', tipo: 'texto', minimo: 40, vence: habil(-1), creada: habil(-4),
-        origen: { tipo: 'clase', texto: 'la dejó {profe} en la clase de música' }, estado: 'hecha' }
-    ]
-  };
+  const D = {
+ "apodo": "Jaguar Azul 7",
+ "avatar": "🐆",
+ "curso": "2do_secundaria",
+ "cursoNombre": "2.º de secundaria",
+ "colegio": "U.E. Nuevo Horizonte",
+ "gestion": 2026,
+ "distrito": "scz_rural_demo",
+ "recreo": [
+  "09:30",
+  "09:50"
+ ],
+ "materias": {
+  "len": {
+   "nombre": "Lengua Castellana",
+   "corto": "Lenguaje",
+   "icono": "📖",
+   "color": "#F59E0B",
+   "profe": "la profe Taji"
+  },
+  "mat": {
+   "nombre": "Matemática",
+   "corto": "Mate",
+   "icono": "🔢",
+   "color": "#10B981",
+   "profe": "la profe Taji"
+  },
+  "bio": {
+   "nombre": "Biología - Geografía",
+   "corto": "Biología",
+   "icono": "🧬",
+   "color": "#22C55E",
+   "profe": "el profe Jochi"
+  },
+  "csoc": {
+   "nombre": "Ciencias Sociales",
+   "corto": "Sociales",
+   "icono": "🗺️",
+   "color": "#A78BFA",
+   "profe": "el profe Jochi"
+  },
+  "ing": {
+   "nombre": "Lengua Extranjera (Inglés)",
+   "corto": "Inglés",
+   "icono": "💬",
+   "color": "#F472B6",
+   "profe": "el profe Jochi"
+  },
+  "fil": {
+   "nombre": "Cosmovisiones, Filosofía y Psicología",
+   "corto": "Filosofía",
+   "icono": "💭",
+   "color": "#818CF8",
+   "profe": "el profe Jochi"
+  },
+  "art": {
+   "nombre": "Artes Plásticas y Visuales",
+   "corto": "Artes",
+   "icono": "🎨",
+   "color": "#FB923C",
+   "profe": "la profe Taji"
+  },
+  "mus": {
+   "nombre": "Educación Musical",
+   "corto": "Música",
+   "icono": "🎵",
+   "color": "#EC4899",
+   "profe": "la profe Taji"
+  },
+  "val": {
+   "nombre": "Valores, Espiritualidades y Religiones",
+   "corto": "Valores",
+   "icono": "🤝",
+   "color": "#EAB308",
+   "profe": "el profe Jochi"
+  },
+  "efd": {
+   "nombre": "Educación Física y Deportes",
+   "corto": "Ed. Física",
+   "icono": "⚽",
+   "color": "#14B8A6",
+   "profe": "el profe Jochi"
+  }
+ },
+ "horario": [
+  {
+   "dia": 1,
+   "desde": "07:30",
+   "hasta": "08:10",
+   "materia": "len",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 1,
+   "desde": "08:10",
+   "hasta": "08:50",
+   "materia": "len",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 1,
+   "desde": "08:50",
+   "hasta": "09:30",
+   "materia": "mat",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 1,
+   "desde": "09:50",
+   "hasta": "10:30",
+   "materia": "mat",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 1,
+   "desde": "10:30",
+   "hasta": "11:10",
+   "materia": "ing",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 1,
+   "desde": "11:10",
+   "hasta": "11:50",
+   "materia": "ing",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 2,
+   "desde": "07:30",
+   "hasta": "08:10",
+   "materia": "bio",
+   "aula": "Laboratorio"
+  },
+  {
+   "dia": 2,
+   "desde": "08:10",
+   "hasta": "08:50",
+   "materia": "bio",
+   "aula": "Laboratorio"
+  },
+  {
+   "dia": 2,
+   "desde": "08:50",
+   "hasta": "09:30",
+   "materia": "csoc",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 2,
+   "desde": "09:50",
+   "hasta": "10:30",
+   "materia": "csoc",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 2,
+   "desde": "10:30",
+   "hasta": "11:10",
+   "materia": "art",
+   "aula": "Taller"
+  },
+  {
+   "dia": 2,
+   "desde": "11:10",
+   "hasta": "11:50",
+   "materia": "fil",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 3,
+   "desde": "07:30",
+   "hasta": "08:10",
+   "materia": "mat",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 3,
+   "desde": "08:10",
+   "hasta": "08:50",
+   "materia": "mat",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 3,
+   "desde": "08:50",
+   "hasta": "09:30",
+   "materia": "len",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 3,
+   "desde": "09:50",
+   "hasta": "10:30",
+   "materia": "ing",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 3,
+   "desde": "10:30",
+   "hasta": "11:10",
+   "materia": "mus",
+   "aula": "Sala de música"
+  },
+  {
+   "dia": 3,
+   "desde": "11:10",
+   "hasta": "11:50",
+   "materia": "val",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 4,
+   "desde": "07:30",
+   "hasta": "08:10",
+   "materia": "bio",
+   "aula": "Laboratorio"
+  },
+  {
+   "dia": 4,
+   "desde": "08:10",
+   "hasta": "08:50",
+   "materia": "csoc",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 4,
+   "desde": "08:50",
+   "hasta": "09:30",
+   "materia": "fil",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 4,
+   "desde": "09:50",
+   "hasta": "10:30",
+   "materia": "art",
+   "aula": "Taller"
+  },
+  {
+   "dia": 4,
+   "desde": "10:30",
+   "hasta": "11:10",
+   "materia": "art",
+   "aula": "Taller"
+  },
+  {
+   "dia": 4,
+   "desde": "11:10",
+   "hasta": "11:50",
+   "materia": "efd",
+   "aula": "Cancha"
+  },
+  {
+   "dia": 5,
+   "desde": "07:30",
+   "hasta": "08:10",
+   "materia": "mat",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 5,
+   "desde": "08:10",
+   "hasta": "08:50",
+   "materia": "len",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 5,
+   "desde": "08:50",
+   "hasta": "09:30",
+   "materia": "bio",
+   "aula": "Laboratorio"
+  },
+  {
+   "dia": 5,
+   "desde": "09:50",
+   "hasta": "10:30",
+   "materia": "mus",
+   "aula": "Sala de música"
+  },
+  {
+   "dia": 5,
+   "desde": "10:30",
+   "hasta": "11:10",
+   "materia": "val",
+   "aula": "Aula 7"
+  },
+  {
+   "dia": 5,
+   "desde": "11:10",
+   "hasta": "11:50",
+   "materia": "efd",
+   "aula": "Cancha"
+  }
+ ],
+ "avisos": [
+  {
+   "dias": 0,
+   "titulo": "Charango o instrumento del lugar",
+   "texto": "Avisar en casa: para Música hay que traer un instrumento autóctono o folclórico (charango, tarka, bombo, zampoña…) si tienen. Si no, uno hecho con material reciclado.",
+   "materia": "mus"
+  },
+  {
+   "dias": 1,
+   "titulo": "Reunión de madres y padres",
+   "texto": "Avisar en casa: el viernes a las 18:00 hay reunión de madres y padres en el colegio para hablar del cierre del trimestre.",
+   "materia": null
+  },
+  {
+   "dias": 3,
+   "titulo": "Jabón o plastilina para tallar",
+   "texto": "Avisar en casa: para Artes se necesita una barra de jabón o plastilina para el tallado en relieve.",
+   "materia": "art"
+  }
+ ],
+ "eventos": [
+  {
+   "dias": 2,
+   "tipo": "entrega",
+   "materia": "ing",
+   "titulo": "Questions about sports and music"
+  },
+  {
+   "dias": 4,
+   "tipo": "entrega",
+   "materia": "fil",
+   "titulo": "Mi proyecto de vida en 5 pasos"
+  },
+  {
+   "dias": 6,
+   "tipo": "examen",
+   "materia": "ing",
+   "titulo": "Evaluación oral: my favorite music"
+  },
+  {
+   "dias": 9,
+   "tipo": "acto",
+   "materia": "mus",
+   "titulo": "Muestra de ensambles del curso"
+  },
+  {
+   "dias": 12,
+   "tipo": "examen",
+   "materia": "art",
+   "titulo": "Entrega del relieve tallado (cierre del trimestre)"
+  }
+ ],
+ "llevar": [
+  {
+   "dias": 1,
+   "materia": "ing",
+   "texto": "Cuaderno de inglés y el texto (página 57)"
+  },
+  {
+   "dias": 1,
+   "materia": "mus",
+   "texto": "Instrumento autóctono o uno hecho con material reciclado"
+  },
+  {
+   "dias": 3,
+   "materia": "art",
+   "texto": "Barra de jabón o plastilina, y un palito para tallar"
+  },
+  {
+   "dias": 3,
+   "materia": "efd",
+   "texto": "Buzo deportivo y botella de agua"
+  }
+ ],
+ "tareas": [
+  {
+   "id": "demo-tarea-1",
+   "curso": "2do_secundaria",
+   "materia": "ing",
+   "titulo": "Questions about sports and music",
+   "consigna": "Escribí 6 preguntas en present continuous sobre deportes y música (Is your brother playing football? Are they playing the charango?) y respondé cada una con una respuesta corta. Usá la tabla de la página 58.",
+   "tipo": "practica",
+   "variante": "base",
+   "textoVariante": "Escribí 6 preguntas en present continuous sobre deportes y música (Is your brother playing football? Are they playing the charango?) y respondé cada una con una respuesta corta. Usá la tabla de la página 58.",
+   "criterios": {
+    "ser": "Respeta los gustos musicales y deportivos de los demás.",
+    "saber": "Usa am / is / are según el sujeto y el verbo con -ing.",
+    "hacer": "Escribe las 6 preguntas con su respuesta corta.",
+    "autoevaluacion": "¿Puse el verbo to be al principio de cada pregunta?"
+   },
+   "puntos": {
+    "ser": 10,
+    "saber": 45,
+    "hacer": 40,
+    "autoevaluacion": 5
+   },
+   "autoevaluacion": "",
+   "como": "texto",
+   "pistas": [
+    "Fijate quién es el sujeto: he / she → Is; you / they → Are; I → Am.",
+    "El verbo principal lleva -ing: play → playing, run → running.",
+    "Mirá la tabla de la página 58 del texto."
+   ],
+   "origen": {
+    "tipo": "clase",
+    "tema": "Musical instruments and sports"
+   },
+   "dias": 2,
+   "estado": "pendiente",
+   "hecha": false
+  },
+  {
+   "id": "demo-tarea-2",
+   "curso": "2do_secundaria",
+   "materia": "fil",
+   "titulo": "Mi proyecto de vida en 5 pasos",
+   "consigna": "Con lo que leímos en la página 48 sobre autoconocimiento, escribí tu proyecto de vida en 5 pasos: 1) quién soy, 2) qué me gusta y qué hago bien, 3) una meta para el próximo año, 4) qué voy a hacer para lograrla, 5) quién me puede ayudar.",
+   "tipo": "proyecto",
+   "variante": "base",
+   "textoVariante": "Con lo que leímos en la página 48 sobre autoconocimiento, escribí tu proyecto de vida en 5 pasos: 1) quién soy, 2) qué me gusta y qué hago bien, 3) una meta para el próximo año, 4) qué voy a hacer para lograrla, 5) quién me puede ayudar.",
+   "criterios": {
+    "ser": "Reflexiona sobre sí mismo con respeto y sinceridad.",
+    "saber": "Explica qué es el autoconocimiento y qué es un proyecto de vida.",
+    "hacer": "Escribe sus 5 pasos con una meta clara.",
+    "autoevaluacion": "¿Mi meta es algo que puedo empezar a hacer este mes?"
+   },
+   "puntos": {
+    "ser": 10,
+    "saber": 45,
+    "hacer": 40,
+    "autoevaluacion": 5
+   },
+   "autoevaluacion": "",
+   "como": "texto",
+   "pistas": [
+    "Empezá por lo que te gusta hacer en tu tiempo libre.",
+    "Una buena meta se puede medir: \"leer un libro por mes\" mejor que \"leer más\".",
+    "Releé la página 48: ¿qué es conocerse a uno mismo?"
+   ],
+   "origen": {
+    "tipo": "cronograma",
+    "tema": "Autoconocimiento y proyecto de vida"
+   },
+   "dias": 3,
+   "estado": "pendiente",
+   "hecha": false
+  }
+ ],
+ "temasHoy": {
+  "ing": {
+   "unidad": 9,
+   "temaId": "ing-9",
+   "titulo": "Musical instruments and sports",
+   "contenidos": [
+    "Present continuous tense: interrogative form",
+    "Writing and speaking about my favorite music",
+    "Pronunciation tips"
+   ],
+   "pagina": 57,
+   "enCurso": "Present continuous tense: interrogative form",
+   "siguiente": "Writing and speaking about my favorite music"
+  },
+  "fil": {
+   "unidad": 9,
+   "temaId": "fil-9",
+   "titulo": "Autoconocimiento y proyecto de vida",
+   "contenidos": [
+    "¿Qué es el autoconocimiento?",
+    "¿Qué es un proyecto de vida?"
+   ],
+   "pagina": 48,
+   "enCurso": "¿Qué es un proyecto de vida?",
+   "siguiente": null
+  },
+  "art": {
+   "unidad": 9,
+   "temaId": "art-9",
+   "titulo": "La escultura: bajo, medio y alto relieve en materiales blandos",
+   "contenidos": [
+    "La escultura: bajo, medio y alto relieve",
+    "Tallado en materiales blandos relacionado a las expresiones de nuestros pueblos"
+   ],
+   "pagina": 38,
+   "enCurso": "La escultura: bajo, medio y alto relieve",
+   "siguiente": "Tallado en materiales blandos"
+  },
+  "mus": {
+   "unidad": 13,
+   "temaId": "mus-13",
+   "titulo": "Ensambles instrumentales de acuerdo al contexto",
+   "contenidos": [
+    "Ensamble instrumental",
+    "Instrumentos autóctonos",
+    "Instrumentos folclóricos, tradicionales o populares",
+    "Notación de un ensamble instrumental"
+   ],
+   "pagina": 49,
+   "enCurso": "Instrumentos autóctonos",
+   "siguiente": "Repertorio de canciones del contexto a dos voces"
+  },
+  "val": {
+   "unidad": 10,
+   "temaId": "val-10",
+   "titulo": "Conociendo vidas ejemplares de nuestro contexto, para construir intereses vocacionales",
+   "contenidos": [
+    "Personajes destacados en su vocación",
+    "Superando adversidades para realizar su vocación",
+    "Mi vocación y mi misión",
+    "Desarrollo de la autoestima y autoconocimiento"
+   ],
+   "pagina": 38,
+   "enCurso": "Mi vocación y mi misión",
+   "siguiente": null
+  }
+ }
+};
+  const hoy = new Date(Date.now() - 4 * 3600e3);
+  const habil = (n) => { const x = new Date(hoy); let k = Math.abs(n); const p = n >= 0 ? 1 : -1; while (k > 0) { x.setUTCDate(x.getUTCDate() + p); if (x.getUTCDay() % 6) k--; } return x.toISOString().slice(0, 10); };
+  const conFecha = (xs) => xs.map(({ dias, ...r }) => ({ fecha: habil(dias), ...r }));
+  const tareas = D.tareas.map(({ dias, ...t }) => ({ ...t, entrega: habil(dias) }));
+  window.ESTUDIANTE_DEMO = { ...D, avisos: conFecha(D.avisos), eventos: conFecha(D.eventos), llevar: conFecha(D.llevar), tareas };
 })();

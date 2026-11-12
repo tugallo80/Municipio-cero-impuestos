@@ -126,3 +126,16 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
   Los datos usan el marcador `{profe}`. Tampoco se manda a la IA.
 - Si la fuente de EDU.15 trae `temasHoy`, Hoy usa ese título; si trae `DEMO_PILOTO.materiasProfe`,
   el nombre va solo en esas materias.
+
+## Fuente única ya adoptada (12/11)
+
+- `maqueta/estudiante-demo.js` es **el mismo archivo que genera EDU.15** (PR #37, desde
+  `tools/datos/demo-piloto.json`): copiado tal cual para que no haya conflicto al mergear.
+- Lo que suma EDU.17 va aparte, en `maqueta/tareas-curso-demo.js` (`window.EDU17_EXTRA`): tareas y
+  exámenes de Mate, Lenguaje, Biología, Sociales y Música sobre unidades reales del 3.er trimestre,
+  y qué llevar según la materia. Las tareas de EDU.15 (Inglés y Filosofía, las del servidor) vienen en
+  formato del servidor y se adaptan con `adaptarTareaProfe`.
+- `estudiante.js` acepta días con número (1 = lunes) y pasa el profe IA (Taji/Jochi) a `profeIA`.
+- **Profe**: el alumno ve el **apodo** (`?apodo=` → `nande-profe-apodo`, ej. "el Profe …"); si no hay,
+  el nombre formal (`?profe=` → `nande-profe`); si no hay nada, "tu profe".
+- **Alumno**: si la presentación guardó un apodo en `nande-apodo`, se usa en vez de "Jaguar Azul 7".

@@ -63,7 +63,7 @@
     try { extra = JSON.parse(localStorage.getItem('nande-tareas-profe') || '[]'); } catch (e) {}
     // con la app del alumno de 2.º de secundaria (EDU.17), sus tareas; si no, las de la demo de 4.º de primaria
     const base = window.ESTUDIANTE_DEMO ? window.ESTUDIANTE_DEMO.tareas : window.TAREAS_DEMO;
-    const todas = [...(window.TAREAS_PROFE || []), ...extra].map(window.adaptarTareaProfe).concat(base);
+    const todas = [...(window.TAREAS_PROFE || []), ...extra, ...(base || [])].map(window.adaptarTareaProfe);
     const vistas = new Set(), hechas = new Set(leer());
     return todas.filter(t => !vistas.has(t.id) && vistas.add(t.id)).map(t => Object.assign({}, t, { estado: hechas.has(t.id) || hechas.has(t.mision) ? 'hecha' : t.estado }));
   };
