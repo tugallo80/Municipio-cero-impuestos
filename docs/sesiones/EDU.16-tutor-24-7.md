@@ -10,7 +10,9 @@ profe en clase, qué tareas tiene y qué le cuesta, y **guía sin hacer la tarea
 
 ## Dónde está
 - App del alumno → **🧑‍🏫 Mi tutor** (`/maqueta/mi-tutor/`). También se abre desde:
-  - **Mis textos**: botón "🧑‍🏫 Preguntale a tu tutor sobre esta unidad" → `/maqueta/mi-tutor/?materia=ing&tema=ing-9&pagina=57`
+  - **Mis textos**: botón "Preguntale a tu tutor sobre esta página" (lo pone EDU.17b en su lector tipo libro) →
+    `/maqueta/mi-tutor/?materia=ing&tema=ing-9&pagina=57`. "Página" = la **impresa** del libro (la del índice); las
+    imágenes del lector usan la hoja del PDF (hoja = página + 2 en los 5 libros de área).
   - **Mis tareas**: botón "🧑‍🏫 Preguntale a tu tutor" → `/maqueta/mi-tutor/?tarea=<id>`
   - `&q=<pregunta>` la manda sola al abrir.
 - Demo sin login: el link con la llave de EDU.15 (`…/maqueta/mi-tutor/#demo=<llave>`).
@@ -88,7 +90,8 @@ Cabecera con el profe IA (cambiar Taji ↔ Jochi), pastilla **IA**, **🎙️ Ha
 ## Pendiente
 - Feriados en el servidor: el tutor no conoce el calendario por capas (el navegador sí); por ahora "mañana" es el
   próximo día hábil y la instrucción le dice que crea al alumno si dice que no hay clase.
-- Páginas en imagen de los textos (rama `maestra-2`): hoy se recupera solo el texto extraído.
+- Páginas en imagen de los textos (rama `maestra-2`): hoy se recupera solo el texto extraído. Cuando EDU.17b
+  mergee `ph` (hoja de cada párrafo) en `maqueta/textos/*.json`, usar esa hoja en vez de interpolar la página.
 - Cursos reales (EDU.03): horario, avisos y "qué llevar" hoy salen del curso del piloto (`estudiante-demo.json`).
 - Biología, Sociales y parte de Matemática solo tienen índice (EDU.17): el tutor lo dice.
 
