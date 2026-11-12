@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/maqueta/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Hoy · Mi colegio ÑANDÉ</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css?v=edu17-1">
+<style>
+  .principal { max-width: 1100px; }
+  .saludo { display: flex; align-items: center; gap: 14px; margin-bottom: 4px; }
+  .saludo .av { width: 56px; height: 56px; border-radius: 18px; background: var(--verde-suave); display: grid; place-items: center; font-size: 30px; flex: none; }
+  .saludo h1 { font-family: 'Space Grotesk'; font-size: 26px; line-height: 1.15; }
+  .rejilla { display: grid; gap: 14px; margin-top: 16px; }
+  @media (min-width: 768px) { .rejilla { grid-template-columns: 1fr 1fr; } .ancha { grid-column: 1 / -1; } }
+  .tarjeta h2 { font-family: 'Space Grotesk'; font-size: 18px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+  .clase { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--borde); }
+  .clase:first-of-type { border-top: 0; }
+  .clase .hora { width: 52px; font-size: 13px; color: var(--texto3); flex: none; }
+  .clase .ico { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-size: 20px; flex: none; }
+  .clase b { font-size: 16px; }
+  .clase.ahora { background: var(--verde-suave); border-radius: 14px; padding: 10px; margin: 2px -10px; border-top-color: transparent; }
+  .clase.paso { opacity: .5; }
+  .clase .tema { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: 13px; margin-top: 2px; }
+  .item { display: flex; gap: 10px; align-items: flex-start; padding: 8px 0; font-size: 15px; line-height: 1.4; }
+  .item + .item { border-top: 1px solid var(--borde); }
+  .atajos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .atajo { display: flex; flex-direction: column; gap: 6px; padding: 16px; border-radius: 18px; background: var(--sup2); border: 1px solid var(--borde); color: var(--texto); min-height: 104px; }
+  .atajo .grande { font-size: 30px; }
+  .atajo b { font-family: 'Space Grotesk'; font-size: 16px; }
+  .atajo small { color: var(--texto3); font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
+    <div class="marca"><b>Mi colegio</b><span id="curso"></span></div>
+    <span class="pildora">Alumno</span>
+  </header>
+  <main class="principal" id="principal"></main>
+</div>
+<script src="calendario.js?v=edu17-1"></script>
+<script src="plan-ejemplo-2do-secundaria.js?v=edu17-1"></script>
+<script src="datos-demo.js?v=edu02d-2"></script>
+<script src="misiones-demo.js?v=edu02d-2"></script>
+<script src="estudiante-demo.js?v=edu17-2"></script>
+<script src="tareas-curso-demo.js?v=edu17-2"></script>
+<script src="tareas-demo.js?v=edu17-2"></script>
+<script src="estudiante.js?v=edu17-2"></script>
+<script>
+const { E, hoy, sumar, largo, relativo, infoDia, clasesDe, materia, ahoraHHMM, esc } = EST;
+EST.nav('hoy');
+document.getElementById('curso').textContent = `${E.cursoNombre} · ${E.colegio}`;
+
+// próximo día con clase (para "qué llevar")
+function proximoConClase(desde) { for (let i = 1; i < 30; i++) { const f = sumar(desde, i); if (infoDia(f).clase) return f; } return null; }
+
+// Tema de cada materia según el punto del año (los textos oficiales del curso, EDU.17 parte 3)
+let TEMA = {};
+// Si la fuente única de EDU.15 trae temasHoy, manda ese título; el enlace al texto sale del índice.
+EST.dondeVa().then(({ VA, INDICE }) => {
+  INDICE.areas.forEach(a => { if (VA[a.id] !== undefined) TEMA[a.id] = { i: VA[a.id], titulo: a.temas[VA[a.id]].titulo }; });
+  Object.entries(E.temasHoy || {}).forEach(([m, t]) => { if (t && t.titulo) TEMA[m] = { i: TEMA[m] ? TEMA[m].i : '', titulo: t.titulo }; });
+  pintar();
+});
+
+function pintar() {
+  const inf = infoDia(hoy), clases = clasesDe(hoy), ya = ahoraHHMM();
+  const manana = sumar(hoy, 1), sig = proximoConClase(hoy);
+  const tareas = window.tareasDelAlumno().filter(t => t.estado !== 'hecha');
+  const paraHoy = tareas.filter(t => t.vence <= hoy), paraManana = tareas.filter(t => t.vence === manana);
+  const proximos = (E.eventos || []).filter(e => e.fecha >= hoy && e.fecha <= sumar(hoy, 10)).sort((a, b) => a.fecha.localeCompare(b.fecha));
+  // qué llevar al próximo día de clase: según sus materias y lo que hay que entregar
+  const llevar = [];
+  if (sig) {
+    const mats = [...new Set(clasesDe(sig).map(c => c.materia))];
+    mats.forEach(m => E.llevar[m] && llevar.push([materia(m).icono, E.llevar[m]]));
+    (E.llevarFechas || []).filter(x => x.fecha === sig).forEach(x => llevar.push([x.materia ? materia(x.materia).icono : '🎒', x.texto]));
+    tareas.filter(t => t.vence === sig && (t.tipo === 'foto')).forEach(t => llevar.push(['📎', `${t.titulo} (para entregar)`]));
+    (E.eventos || []).filter(e => e.fecha === sig && e.tipo === 'examen').forEach(e => llevar.push(['📝', `Estudiar: ${e.titulo}`]));
+  }
+  const seguir = (() => { try { return JSON.parse(localStorage.getItem('textos-seguir') || 'null'); } catch (e) { return null; } })();
+  const tarjetaTarea = t => { const m = materia(t.materia); return `<a class="item" href="tareas/#t=${encodeURIComponent(t.id)}" style="color:var(--texto)"><span style="font-size:22px">${m.icono}</span><span style="flex:1"><b>${esc(t.titulo)}</b><br><small class="ter">${esc(m.corto)} · ${t.vence < hoy ? '⏰ atrasada' : t.vence === hoy ? 'para hoy' : 'para mañana'}</small></span><span class="pildora">Hacer</span></a>`; };
+
+  document.getElementById('principal').innerHTML = `
+    <div class="saludo"><div class="av">${E.avatar}</div><div><h1>¡Hola, ${esc(E.apodo.split(' ')[0])}!</h1><div class="sec">${largo(hoy).replace(/^./, c => c.toUpperCase())}</div></div></div>
+    <div class="rejilla">
+      <div class="tarjeta">
+        <h2>🏫 Tus clases de hoy</h2>
+        ${clases.length ? clases.map((c, i) => {
+          const m = materia(c.materia), ahora = ya >= c.desde && ya < c.hasta, paso = ya >= c.hasta;
+          const recreo = i === 2 ? `<div class="clase" style="opacity:.7"><span class="hora">${E.recreo[0]}</span><span class="ico" style="background:var(--sup3)">🥤</span><span>Recreo</span></div>` : '';
+          return `<div class="clase ${ahora ? 'ahora' : paso ? 'paso' : ''}"><span class="hora">${c.desde}</span><span class="ico" style="background:${m.color}22">${m.icono}</span><span style="flex:1;min-width:0"><b>${esc(m.corto)}</b> <small class="ter">· ${esc(m.profe)}</small>${TEMA[c.materia] && !clases.slice(0, i).some(x => x.materia === c.materia) ? `<a class="ter tema" href="textos/#${c.materia}/${TEMA[c.materia].i}">📖 ${esc(TEMA[c.materia].titulo)}</a>` : ''}</span>${ahora ? '<span class="pildora">Ahora</span>' : ''}</div>` + recreo;
+        }).join('') : `<p class="sec">${inf.fin ? '🎉 Hoy es fin de semana: no hay clases.' : inf.motivo ? `🎉 Hoy no hay clases: <b>${esc(inf.motivo)}</b>.` : 'Hoy no hay clases.'}${sig ? `<br>Tu próxima clase es el ${largo(sig)}.` : ''}</p>`}
+        ${inf.menosHoras ? `<p class="ter" style="margin-top:8px">⏱️ Hoy hay menos horas: ${esc(inf.motivo)}.</p>` : ''}
+      </div>
+      <div class="tarjeta">
+        <h2>📋 Tareas para hoy y mañana</h2>
+        ${paraHoy.length + paraManana.length ? [...paraHoy, ...paraManana].map(tarjetaTarea).join('') : '<p class="sec">🎉 No tenés tareas para hoy ni para mañana.</p>'}
+        <a class="btn sec2 ancho" style="margin-top:12px" href="tareas/">Ver todas mis tareas (${tareas.length})</a>
+      </div>
+      <div class="tarjeta">
+        <h2>🎒 Qué llevar ${sig ? (sig === manana ? 'mañana' : 'el ' + largo(sig)) : ''}</h2>
+        ${llevar.length ? llevar.map(([i, t]) => `<div class="item"><span style="font-size:20px">${i}</span><span>${esc(t)}</span></div>`).join('') : '<p class="sec">Tus cuadernos de siempre. 🙂</p>'}
+      </div>
+      <div class="tarjeta">
+        <h2>📌 Se viene</h2>
+        ${proximos.length ? proximos.map(e => `<div class="item"><span style="font-size:20px">${e.tipo === 'examen' ? '📝' : e.tipo === 'casa' ? '🏠' : '🎉'}</span><span><b>${esc(e.titulo)}</b><br><small class="ter">${relativo(e.fecha).replace(/^./, c => c.toUpperCase())}</small></span></div>`).join('') : '<p class="sec">Nada especial en los próximos días.</p>'}
+        <a class="btn sec2 ancho" style="margin-top:12px" href="agenda/">Ver la agenda</a>
+      </div>
+      <div class="tarjeta ancha">
+        <h2>🏠 Avisos para la casa</h2>
+        ${(E.avisos || []).map(a => `<div class="item"><span style="font-size:20px">📣</span><span><b>${esc(a.titulo)}</b> <small class="ter">· ${relativo(a.fecha)}</small><br>${esc(a.texto)}</span></div>`).join('')}
+      </div>
+      <div class="atajos ancha">
+        <a class="atajo" href="textos/${seguir ? '#' + encodeURIComponent(seguir.area) + '/' + seguir.parte : ''}"><span class="grande">📖</span><b>${seguir ? 'Seguir leyendo' : 'Mis textos'}</b><small>${seguir ? esc(seguir.titulo) : 'Los textos oficiales de tu curso'}</small></a>
+        <a class="atajo" href="alumno/"><span class="grande">🌎</span><b>Ir al mundo</b><small>Tu colegio 3D, el parque y las canchas</small></a>
+      </div>
+    </div>`;
+}
+pintar();
+setInterval(pintar, 60000);   // la clase "Ahora" se mueve con la hora
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/maqueta/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Mi tutor · Mi colegio ÑANDÉ</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css?v=edu17-1">
+<style>
+  .principal { max-width: 900px; }
+  .tarjeta h2 { font-family: 'Space Grotesk'; font-size: 18px; margin-bottom: 10px; }
+  /* Lugar fijo para el chat y la voz del tutor (EDU.16). Se monta acá adentro. */
+  #tutor-montaje { min-height: 320px; border-radius: 20px; border: 1px dashed var(--borde); background: var(--sup2); padding: 18px; }
+  #tutor-montaje.montado { border-style: solid; padding: 0; overflow: hidden; }
+  .profes { display: grid; gap: 12px; margin-top: 14px; }
+  @media (min-width: 640px) { .profes { grid-template-columns: 1fr 1fr; } }
+  .profe { display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 18px; background: var(--sup3); border: 1px solid var(--borde); }
+  .profe .cab { display: flex; gap: 12px; align-items: center; }
+  .profe .av { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; font-size: 28px; flex: none; }
+  .profe b { font-family: 'Space Grotesk'; font-size: 17px; }
+  .temas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .temas button { min-height: 44px; padding: 0 14px; border-radius: 999px; background: var(--sup3); border: 1px solid var(--borde); color: var(--texto); font-size: 14px; }
+  .temas button.activo { border-color: var(--verde); color: var(--verde); background: var(--verde-suave); }
+  .btn[disabled] { opacity: .4; cursor: default; background: var(--sup3); color: var(--texto3); }
+  .reglas li { margin: 6px 0 0 18px; line-height: 1.45; font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="hoy/" title="Volver">←</a>
+    <div class="marca"><b>Mi tutor</b><span>Te ayuda a pensar, no te da la respuesta</span></div>
+    <span class="pildora">Alumno</span>
+  </header>
+  <main class="principal">
+    <div class="tarjeta">
+      <h2>¿De qué querés hablar?</h2>
+      <div class="temas" id="temas"></div>
+    </div>
+    <div style="margin-top:14px" id="tutor-montaje" aria-live="polite"></div>
+    <div class="tarjeta" style="margin-top:14px">
+      <h2>Cómo te ayuda</h2>
+      <ul class="reglas">
+        <li>Te hace preguntas y te da pistas de a una, como una escalera.</li>
+        <li>No te da la respuesta de la tarea: la idea es que la pienses vos.</li>
+        <li>Solo sabe tu apodo y tu curso, nunca tu nombre real.</li>
+      </ul>
+    </div>
+  </main>
+</div>
+<script src="calendario.js?v=edu17-1"></script>
+<script src="estudiante-demo.js?v=edu17-2"></script>
+<script src="tareas-curso-demo.js?v=edu17-2"></script>
+<script src="tareas-demo.js?v=edu17-2"></script>
+<script src="estudiante.js?v=edu17-2"></script>
+<script>
+const { E, hoy, clasesDe, materia, esc } = EST;
+EST.nav('tutor');
+const $ = s => document.querySelector(s);
+const NOMBRES = { la_profe: 'la profe Taji', el_profe: 'el profe Jochi' };
+
+// Tema elegido: una tarea pendiente o una materia (por defecto, la clase que viene hoy).
+const pendientes = (window.tareasDelAlumno ? window.tareasDelAlumno() : []).filter(t => t.estado !== 'hecha');
+const deUrl = new URLSearchParams(location.search);
+let elegido = deUrl.get('tarea') ? { tarea: deUrl.get('tarea') } : { materia: deUrl.get('materia') || (clasesDe(hoy)[0] || {}).materia || 'mat' };
+function pintarTemas() {
+  const mats = [...new Set(Object.values(E.horario).flat())];
+  $('#temas').innerHTML = pendientes.slice(0, 4).map(t => `<button class="${elegido.tarea === t.id ? 'activo' : ''}" onclick="elegir({tarea:'${t.id}'})">📋 ${esc(t.titulo)}</button>`).join('') +
+    mats.map(m => `<button class="${elegido.materia === m && !elegido.tarea ? 'activo' : ''}" onclick="elegir({materia:'${m}'})">${materia(m).icono} ${esc(materia(m).corto)}</button>`).join('');
+}
+function contexto() {
+  const t = elegido.tarea && pendientes.find(x => x.id === elegido.tarea);
+  return { curso: E.curso, materia: t ? t.materia : elegido.materia, tarea: t ? { id: t.id, titulo: t.titulo, consigna: t.consigna } : null };
+}
+function elegir(x) { elegido = x; pintarTemas(); actualizar(); }
+
+// ---------- 1) El tutor de EDU.16, si ya está publicado: NandeTutor.montar(el, {curso, materia, tarea}) ----------
+let tutor = null;
+function montarTutor() {
+  const NT = window.NandeTutor; if (!NT || tutor) return false;
+  const el = $('#tutor-montaje'); el.innerHTML = ''; el.classList.add('montado');
+  try { tutor = NT.montar(el, contexto()) || {}; return true; } catch (e) { console.warn('[mi-tutor] no se pudo montar', e); el.classList.remove('montado'); return false; }
+}
+// ---------- 2) Mientras tanto: los profes de voz que ya existen (EDU.02b), y si no hay servidor, un aviso honesto ----------
+function pintarEspera() {
+  if (tutor) return;
+  const PV = window.ProfesVoz, c = contexto();
+  $('#tutor-montaje').innerHTML = `
+    <div class="sec">${c.tarea ? `Vas a hablar de <b>${esc(c.tarea.titulo)}</b>.` : `Vas a hablar de <b>${esc(materia(c.materia).nombre)}</b>.`}</div>
+    <div class="profes">${['la_profe', 'el_profe'].map(id => `
+      <div class="profe"><div class="cab"><div class="av" style="background:${id === 'la_profe' ? '#FBBF2433' : '#8B5CF633'}">🧑‍🏫</div>
+        <div><b>${NOMBRES[id].replace(/^./, x => x.toUpperCase())}</b><br><small class="ter">${PV ? 'Por voz, en vivo' : 'Por voz (necesita internet y tu cuenta)'}</small></div></div>
+        <button class="btn ancho" ${PV ? '' : 'disabled'} onclick="llamar('${id}')">🎙️ ${PV ? 'Hablar' : 'Todavía no disponible'}</button></div>`).join('')}</div>
+    <p class="ter" style="margin-top:14px">💬 Pronto: el chat del tutor, a cualquier hora, para escribir o hablar. Va a aparecer en este mismo lugar.</p>`;
+}
+function llamar(id) { const PV = window.ProfesVoz; if (!PV) return; const c = contexto(); PV.contexto({ materia: c.materia, mision: null, tarea: c.tarea }); PV.llamar(id); }
+function actualizar() {
+  if (tutor && tutor.actualizar) return tutor.actualizar(contexto());
+  pintarEspera();
+}
+pintarTemas(); pintarEspera();
+addEventListener('nande-tutor-listo', () => { montarTutor() || pintarEspera(); });
+addEventListener('profes-voz-listo', () => {
+  const PV = window.ProfesVoz;
+  PV.al && PV.al('estado', st => { (st.profes || []).forEach(p => { if (NOMBRES[p.id]) NOMBRES[p.id] = p.titulo; }); });
+  pintarEspera();
+}, { once: true });
+addEventListener('load', () => setTimeout(() => {
+  import('/voz/tutor.js').then(() => montarTutor()).catch(() => { /* EDU.16 todavía no publicado */ });
+  import('/voz/profes.js?v=edu02d-2').catch(() => { /* sin servidor de voz */ });
+}, 300));
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
+</script>
+</body>
+</html>

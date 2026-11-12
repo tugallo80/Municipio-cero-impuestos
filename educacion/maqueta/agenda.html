@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<base href="/maqueta/">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Agenda · Mi colegio ÑANDÉ</title>
+<link rel="manifest" href="/maqueta/manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="estilos.css?v=edu17-1">
+<style>
+  .principal { max-width: 1100px; }
+  .barra-ag { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
+  .seg { display: inline-flex; background: var(--sup2); border: 1px solid var(--borde); border-radius: 14px; padding: 4px; }
+  .seg button { min-height: 42px; padding: 0 18px; border-radius: 10px; color: var(--texto2); font-weight: 600; font-size: 15px; }
+  @media (max-width: 600px) { .seg { flex: 1 1 100%; } .seg button { flex: 1; } }
+  .seg button.activo { background: var(--verde); color: #00140D; }
+  .flecha { width: 46px; height: 46px; border-radius: 14px; background: var(--sup2); border: 1px solid var(--borde); font-size: 18px; color: var(--texto); }
+  .titulo-ag { font-family: 'Space Grotesk'; font-weight: 700; font-size: 20px; flex: 1; min-width: 160px; text-align: center; }
+  .capas { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .capas button { min-height: 38px; padding: 0 12px; border-radius: 99px; border: 1px solid var(--borde); background: var(--sup2); color: var(--texto3); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+  .capas button.on { color: var(--texto); border-color: #444; }
+  .capas i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  /* semana */
+  .semana { display: grid; gap: 10px; }
+  @media (min-width: 900px) { .semana { grid-template-columns: repeat(5, 1fr); } }
+  .dia { background: var(--sup2); border: 1px solid var(--borde); border-radius: 16px; padding: 12px; min-width: 0; }
+  .dia.hoy { border-color: var(--verde); box-shadow: 0 0 0 1px var(--verde) inset; }
+  .dia h3 { font-family: 'Space Grotesk'; font-size: 16px; margin-bottom: 8px; display: flex; justify-content: space-between; gap: 6px; }
+  .ev { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; line-height: 1.35; padding: 6px 8px; border-radius: 10px; margin-top: 6px; border-left: 4px solid; background: rgba(255,255,255,.03); }
+  .ev small { color: var(--texto3); display: block; font-size: 12px; }
+  .clases-mini { display: flex; flex-wrap: wrap; gap: 4px; }
+  .clases-mini span { font-size: 12px; padding: 3px 7px; border-radius: 8px; background: var(--sup3); color: var(--texto2); }
+  .sin { font-size: 14px; color: var(--ambar); }
+  /* mes */
+  .mes { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .mes .cab { text-align: center; font-size: 12px; color: var(--texto3); padding: 4px 0; }
+  .celda { min-height: 64px; border-radius: 12px; background: var(--sup2); border: 1px solid var(--borde); padding: 6px; font-size: 13px; text-align: left; color: var(--texto); display: flex; flex-direction: column; gap: 4px; }
+  @media (min-width: 768px) { .celda { min-height: 92px; } }
+  .celda.otro { opacity: .35; }
+  .celda.hoy { border-color: var(--verde); }
+  .celda.sinclase { background: rgba(245,158,11,.08); }
+  .celda.elegida { outline: 2px solid var(--verde); }
+  .puntos { display: flex; gap: 3px; flex-wrap: wrap; }
+  .puntos i { width: 8px; height: 8px; border-radius: 50%; }
+  .det { margin-top: 14px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <a class="volver" href="hoy/" title="Volver a Hoy">←</a>
+    <div class="marca"><b>Agenda</b><span id="curso"></span></div>
+    <span class="pildora">Alumno</span>
+  </header>
+  <main class="principal" id="principal"></main>
+</div>
+<script src="calendario.js?v=edu17-1"></script>
+<script src="datos-demo.js?v=edu02d-2"></script>
+<script src="misiones-demo.js?v=edu02d-2"></script>
+<script src="estudiante-demo.js?v=edu17-2"></script>
+<script src="tareas-curso-demo.js?v=edu17-2"></script>
+<script src="tareas-demo.js?v=edu17-2"></script>
+<script src="estudiante.js?v=edu17-2"></script>
+<script>
+const { E, hoy, sumar, largo, aFecha, infoDia, clasesDe, materia, esc, DIAS, MESES } = EST;
+EST.nav('agenda');
+document.getElementById('curso').textContent = E.cursoNombre;
+// Capas de la agenda (se prenden y apagan)
+const CAPAS = { clases: ['Clases', '#64748b'], tareas: ['Tareas y entregas', '#10B981'], examenes: ['Exámenes', '#F87171'], feriados: ['Feriados y sin clase', '#F59E0B'], actos: ['Actos y avisos', '#A78BFA'] };
+const on = Object.fromEntries(Object.keys(CAPAS).map(k => [k, true]));
+let vista = matchMedia('(min-width: 900px)').matches ? 'semana' : 'semana', ref = hoy, elegido = hoy;
+const lunes = s => { const d = aFecha(s), dw = d.getDay(); return sumar(s, dw === 0 ? -6 : 1 - dw); };
+const tareas = () => window.tareasDelAlumno();
+// clases seguidas de la misma materia se muestran juntas: "Mate ×2"
+const agrupar = cl => cl.reduce((a, c) => { const u = a[a.length - 1]; if (u && u.materia === c.materia) u.n++; else a.push({ ...c, n: 1 }); return a; }, []);
+
+function cosasDe(f) {   // todo lo que pasa un día, por capa
+  const inf = infoDia(f), out = [];
+  if (on.feriados && !inf.clase && !inf.fin) out.push({ capa: 'feriados', ico: '🎉', titulo: inf.motivo || 'Sin clases' });
+  if (on.feriados && inf.menosHoras) out.push({ capa: 'feriados', ico: '⏱️', titulo: 'Menos horas: ' + inf.motivo });
+  if (on.tareas) tareas().filter(t => t.vence === f).forEach(t => out.push({ capa: 'tareas', ico: t.estado === 'hecha' ? '✅' : '📋', titulo: t.titulo, sub: materia(t.materia).corto + (t.estado === 'hecha' ? ' · hecha' : ' · se entrega'), link: 'tareas/#t=' + encodeURIComponent(t.id) }));
+  (E.eventos || []).filter(e => e.fecha === f).forEach(e => {
+    const capa = e.tipo === 'examen' ? 'examenes' : e.tipo === 'entrega' ? 'tareas' : 'actos';
+    if (on[capa]) out.push({ capa, ico: e.tipo === 'examen' ? '📝' : e.tipo === 'entrega' ? '📎' : e.tipo === 'casa' ? '🏠' : '🎉', titulo: e.titulo, sub: e.materia ? materia(e.materia).corto : '' });
+  });
+  return out;
+}
+const color = c => CAPAS[c][1];
+
+function barra(titulo) {
+  return `<div class="barra-ag">
+      <div class="seg"><button class="${vista === 'semana' ? 'activo' : ''}" onclick="vista='semana';pintar()">Semana</button><button class="${vista === 'mes' ? 'activo' : ''}" onclick="vista='mes';pintar()">Mes</button></div>
+      <button class="flecha" onclick="mover(-1)" aria-label="Anterior">‹</button><div class="titulo-ag">${titulo}</div><button class="flecha" onclick="mover(1)" aria-label="Siguiente">›</button>
+      <button class="btn sec2 chico" onclick="ref=hoy;elegido=hoy;pintar()">Hoy</button></div>
+    <div class="capas">${Object.entries(CAPAS).map(([k, [n, c]]) => `<button class="${on[k] ? 'on' : ''}" onclick="on['${k}']=!on['${k}'];pintar()"><i style="background:${on[k] ? c : '#333'}"></i>${n}</button>`).join('')}</div>`;
+}
+function mover(n) { if (vista === 'semana') ref = sumar(ref, 7 * n); else { const d = aFecha(ref); d.setDate(1); d.setMonth(d.getMonth() + n); ref = d.toISOString().slice(0, 10); } pintar(); }
+
+function evHtml(x) { return `<${x.link ? `a href="${x.link}"` : 'div'} class="ev" style="border-color:${color(x.capa)};color:var(--texto)"><span>${x.ico}</span><span>${esc(x.titulo)}${x.sub ? `<small>${esc(x.sub)}</small>` : ''}</span></${x.link ? 'a' : 'div'}>`; }
+function semana() {
+  const l = lunes(ref), dias = [0, 1, 2, 3, 4].map(i => sumar(l, i));
+  const d0 = aFecha(dias[0]), d4 = aFecha(dias[4]);
+  return barra(`${d0.getDate()} – ${d4.getDate()} de ${MESES[d4.getMonth()]}`) + `<div class="semana">${dias.map(f => {
+    const inf = infoDia(f), cl = on.clases ? clasesDe(f) : [];
+    return `<div class="dia ${f === hoy ? 'hoy' : ''}"><h3><span>${DIAS[aFecha(f).getDay()].replace(/^./, c => c.toUpperCase())} ${aFecha(f).getDate()}</span>${f === hoy ? '<span class="pildora">Hoy</span>' : ''}</h3>
+      ${!inf.clase && inf.motivo && !on.feriados ? `<div class="sin">Sin clases</div>` : ''}
+      ${cl.length ? `<div class="clases-mini">${agrupar(cl).map(c => `<span title="${c.desde}">${materia(c.materia).icono} ${esc(materia(c.materia).corto)}${c.n > 1 ? ' ×' + c.n : ''}</span>`).join('')}</div>` : ''}
+      ${cosasDe(f).map(evHtml).join('')}</div>`;
+  }).join('')}</div>`;
+}
+function mes() {
+  const d = aFecha(ref); d.setDate(1); const primero = d.toISOString().slice(0, 10), mesN = d.getMonth();
+  const inicio = lunes(primero), celdas = [];
+  for (let i = 0; i < 42; i++) { const f = sumar(inicio, i); if (i >= 35 && aFecha(f).getMonth() !== mesN) break; celdas.push(f); }
+  const det = cosasDe(elegido), cl = on.clases ? clasesDe(elegido) : [];
+  return barra(`${MESES[mesN].replace(/^./, c => c.toUpperCase())} ${d.getFullYear()}`) + `
+    <div class="mes">${['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map(x => `<div class="cab">${x}</div>`).join('')}
+    ${celdas.map(f => {
+      const inf = infoDia(f), cs = cosasDe(f), otro = aFecha(f).getMonth() !== mesN;
+      return `<button class="celda ${otro ? 'otro' : ''} ${f === hoy ? 'hoy' : ''} ${!inf.clase && !inf.fin ? 'sinclase' : ''} ${f === elegido ? 'elegida' : ''}" onclick="elegido='${f}';pintar()" aria-label="${largo(f)}">
+        <b>${aFecha(f).getDate()}</b><span class="puntos">${cs.map(x => `<i style="background:${color(x.capa)}"></i>`).join('')}</span></button>`;
+    }).join('')}</div>
+    <div class="tarjeta det"><h3 style="font-family:'Space Grotesk';margin-bottom:8px">${largo(elegido).replace(/^./, c => c.toUpperCase())}</h3>
+      ${cl.length ? `<div class="clases-mini" style="margin-bottom:6px">${cl.map(c => `<span>${c.desde} ${materia(c.materia).icono} ${esc(materia(c.materia).corto)}</span>`).join('')}</div>` : ''}
+      ${det.length ? det.map(evHtml).join('') : (cl.length ? '' : '<p class="sec">Nada anotado este día.</p>')}</div>`;
+}
+function pintar() { document.getElementById('principal').innerHTML = vista === 'semana' ? semana() : mes(); }
+pintar();
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/maqueta/sw.js', { scope: '/maqueta/' }).catch(() => {});
+</script>
+</body>
+</html>

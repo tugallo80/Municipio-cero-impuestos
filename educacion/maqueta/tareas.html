@@ -54,18 +54,24 @@
   <header class="top">
     <a class="volver" href="index.html" title="Cambiar de perfil">←</a>
     <div class="marca"><b>📋 Mis tareas</b><span id="quien"></span></div>
-    <a class="btn chico" href="/maqueta/alumno/" title="Ir al juego">🎮 Jugar</a>
+    <span class="pildora">Alumno</span>
   </header>
   <main class="principal" id="principal"></main>
 </div>
 <script src="datos-demo.js?v=edu02d-2"></script>
 <script src="misiones-demo.js?v=edu02d-2"></script>
-<script src="tareas-demo.js?v=edu06d-1"></script>
+<script src="calendario.js?v=edu17-1"></script>
+<script src="estudiante-demo.js?v=edu17-2"></script>
+<script src="tareas-curso-demo.js?v=edu17-2"></script>
+<script src="tareas-demo.js?v=edu17-2"></script>
+<script src="estudiante.js?v=edu17-2"></script>
 <script>
-const D = window.DEMO, YO = D.alumnoDemo, $ = s => document.querySelector(s);
+// EDU.17: dentro de la app del alumno (2.º de secundaria) usa ese alumno y su barra de navegación
+const D = window.DEMO, YO = window.ESTUDIANTE_DEMO ? { apodo: ESTUDIANTE_DEMO.apodo, curso: ESTUDIANTE_DEMO.cursoNombre } : D.alumnoDemo, $ = s => document.querySelector(s);
+if (window.EST) EST.nav('tareas');
 // materias que manda el profe (EDU.04f) aunque no estén en la demo
 const EXTRA = { mus: ['Música', '🎵', '#ec4899'], efd: ['Ed. Física', '⚽', '#22c55e'], val: ['Valores', '🤝', '#f59e0b'], tec: ['Tecnología', '💻', '#0ea5e9'], ori: ['Orientación', '🧭', '#a855f7'], fil: ['Filosofía', '💭', '#6366f1'], bio: ['Biología', '🧬', '#16a34a'], fis: ['Física', '🧲', '#3b82f6'], qui: ['Química', '⚗️', '#14b8a6'] };
-const materia = id => D.materias.find(m => m.id === id) || (EXTRA[id] ? { id, corto: EXTRA[id][0], nombre: EXTRA[id][0], icono: EXTRA[id][1], color: EXTRA[id][2] } : { id, corto: id, nombre: id, icono: '📘', color: '#10B981' });
+const materia = id => (window.ESTUDIANTE_DEMO && ESTUDIANTE_DEMO.materias[id] && Object.assign({ id }, ESTUDIANTE_DEMO.materias[id])) || D.materias.find(m => m.id === id) || (EXTRA[id] ? { id, corto: EXTRA[id][0], nombre: EXTRA[id][0], icono: EXTRA[id][1], color: EXTRA[id][2] } : { id, corto: id, nombre: id, icono: '📘', color: '#10B981' });
 const lugar = id => (D.mundo.lugares || []).find(l => l.id === id);
 const { CONT, GEN, REPASO_GEN } = window.MISIONES_DEMO;
 const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
