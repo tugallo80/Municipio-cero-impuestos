@@ -204,3 +204,22 @@ nombre, el modo demo debería aceptar colegio y nombre del profe (la presentaci�
   **Hoy** (`/maqueta/hoy/`), **Agenda** (`/maqueta/agenda/`), **Mis textos**, además de Juego y Mis tareas.
 - La agenda y los textos ya no van como "Lo que viene". El **tutor 24 h (EDU.16)** sigue con su sello.
 - Funcionan del todo cuando #36 y #37 estén en `main`; probados en local contra la rama `sesion/pantalla-edu-17`.
+
+---
+
+# EDU.14c — Evidencia en comparaciones simples (12-nov-2026)
+
+Pedido del dueño: que la lámina de evidencia no hable en "DE", sino con comparaciones que se entiendan al toque.
+Rama `sesion/pantalla-edu-14c`. Cada fila: pictograma + frase grande + dato técnico en chico.
+
+1. **Nigeria (Banco Mundial 2025):** "6 semanas que rindieron como 1,5 a 2 años de escuela". Chico: "un chico del
+   medio de la clase pasó a estar por delante de 6 de cada 10" (≈ +0,25 DE), secundaria, inglés, docentes guiando,
+   +0,2 a 0,3 DE. La equivalencia en años es la del propio Banco Mundial.
+2. **India, enseñar al nivel (J-PAL):** "donde se aplicó bien, el salto fue grande; donde la clase no cambió, casi
+   nada" (se usó "grande", no "enorme"). Chico: 6 ensayos con sorteo, 0,07 a 0,70 DE.
+3. **Inglaterra (EEF 2024):** "de cada 3 horas, recuperás casi 1, sin bajar la calidad" (−31 %).
+4. **Perú (BID 2012):** "repartir aparatos no alcanza: sin guía, los chicos no aprendieron más" (319 escuelas).
+
+Cierre: "Son estudios de otros países: en tu curso lo vamos a medir." En celular vertical se ocultan la línea de
+"6 de cada 10" y la explicación de DE; en celulares muy chicos, los pictogramas.
+Probado en 390×844, 844×390, 1280×800, 360×740 y 1920×1080; PDF de 13 páginas.
