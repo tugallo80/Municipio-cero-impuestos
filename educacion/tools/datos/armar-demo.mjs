@@ -25,7 +25,7 @@ const piloto = {
   temasHoy: Object.fromEntries(Object.entries(D.temasHoy).map(([k, { texto, ...t }]) => [k, t])),
 }
 escribir('maqueta/demo-piloto.js', `${CAB}// Curso REAL del profe del piloto; alumnos ficticios. El nombre REAL del profe NO va acá:
-// llega por el link y queda en el equipo (localStorage 'nande-profe'; 'nande-apodo' = cómo lo llaman sus alumnos).
+// llega por el link y queda en el equipo (localStorage 'nande-profe'; 'nande-profe-apodo' = cómo lo llaman sus alumnos).
 window.DEMO_PILOTO = ${JSON.stringify(piloto, null, 1)};
 // Las pantallas de la maqueta (selector, profe, padres, dirección) muestran el colegio del piloto.
 (function () {

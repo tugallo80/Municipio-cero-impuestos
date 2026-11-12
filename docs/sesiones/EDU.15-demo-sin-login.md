@@ -39,8 +39,10 @@ el seed lo lee directo. Lo usan el panel del profe, la app del alumno (EDU.17), 
   Música u.13 "Ensambles instrumentales" (pág. 49) · Valores u.10 "Vidas ejemplares… vocacionales" (pág. 38).
 - **Toda la maqueta** (selector de perfiles, profe, padres, dirección) muestra el colegio del piloto: `demo-piloto.js`
   se carga después de `datos-demo.js` y pisa `DEMO.colegio` (y `DEMO.tutor.nombre` con `nande-profe`).
-- **Convención de nombres** (los dos solo en el equipo, nunca en el repo, la base ni la IA): `nande-profe` = nombre
-  formal (panel del profe, presentación); `nande-apodo` = cómo lo llaman sus alumnos (app del alumno y tutor).
+- **Convención de nombres** (solo en el equipo, nunca en el repo, la base ni la IA; los guarda la presentación):
+  `nande-profe` = nombre formal del profe (panel del profe, presentación) · `nande-profe-apodo` = cómo lo llaman
+  sus alumnos (app del alumno y tutor) · `nande-apodo` = apodo del alumno, opcional (si no, "Jaguar Azul 7") ·
+  `nande-demo` = la llave de la demo.
 - **Alumnos:** 12 ficticios con apodos ("Jaguar Azul 7", "Tucán Verde 3"…); el alumno demo es Jaguar Azul 7.
 
 ### La cuenta demo
