@@ -3,7 +3,7 @@
 // Barra abajo en celular y tablet parada; a la izquierda en tablet acostada y PC (≥ 1000 px).
 (function () {
   // ---------- Nombre del profe: nunca en el repo ----------
-  // Llega por el link de la presentación: ?profe=<nombre formal>&apodo=<apodo del profe, ej. "Profe …">.
+  // Llega por el link de la presentación: ?profe=<nombre formal>&profeApodo=<apodo del profe, ej. "Profe …">.
   // Queda en el equipo (localStorage 'nande-profe' y 'nande-profe-apodo'). El alumno ve el apodo; si no
   // hay, el nombre; si no hay nada, "tu profe". No se manda a la IA.
   function quienProfe() {
@@ -11,7 +11,8 @@
     try {
       const q = new URLSearchParams(location.search);
       if (q.get('profe')) localStorage.setItem('nande-profe', q.get('profe').slice(0, 60));
-      if (q.get('apodo')) localStorage.setItem('nande-profe-apodo', q.get('apodo').slice(0, 60));
+      const ap = q.get('profeApodo') || q.get('apodo');   // 'apodo' queda por compatibilidad con links viejos
+      if (ap) localStorage.setItem('nande-profe-apodo', ap.slice(0, 60));
       nombre = (localStorage.getItem('nande-profe') || '').trim(); apodo = (localStorage.getItem('nande-profe-apodo') || '').trim();
     } catch (e) {}
     const x = apodo || nombre;

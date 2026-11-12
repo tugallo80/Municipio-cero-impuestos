@@ -136,6 +136,6 @@ navegación (celular vertical, tablet y PC) con seis secciones: **Hoy**, **Agend
   y qué llevar según la materia. Las tareas de EDU.15 (Inglés y Filosofía, las del servidor) vienen en
   formato del servidor y se adaptan con `adaptarTareaProfe`.
 - `estudiante.js` acepta días con número (1 = lunes) y pasa el profe IA (Taji/Jochi) a `profeIA`.
-- **Profe**: el alumno ve el **apodo** (`?apodo=` → `nande-profe-apodo`, ej. "el Profe …"); si no hay,
+- **Profe**: el alumno ve el **apodo** (`?profeApodo=` → `nande-profe-apodo`, ej. "el Profe …"); si no hay,
   el nombre formal (`?profe=` → `nande-profe`); si no hay nada, "tu profe".
 - **Alumno**: si la presentación guardó un apodo en `nande-apodo`, se usa en vez de "Jaguar Azul 7".
