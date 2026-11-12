@@ -116,6 +116,7 @@ async function leer(id, i, buscar, foco) {
       ${u.subtemas && u.subtemas.length ? `<div class="sub">${u.subtemas.map(s => `<span class="pildora gris">${esc(s)}</span>`).join('')}</div>` : ''}
       ${u.parrafos.length ? u.parrafos.map((p, k) => `<p id="p${k}">${resaltar(p)}</p>`).join('') : `<p>Esta unidad figura en el índice del texto oficial, pero su contenido todavía no está cargado. ${esc(d.aviso || '')}</p>`}
       <p class="ter" style="font-size:13px">Fuente: ${esc(d.fuente)}</p></article>
+    ${u.parrafos.length ? `<a class="btn sec2 ancho" style="margin-top:14px" href="/maqueta/mi-tutor/?materia=${id}&tema=${encodeURIComponent(u.id)}${u.pagina ? `&pagina=${u.pagina}` : ''}">🧑‍🏫 Preguntale a tu tutor sobre esta unidad</a>` : ''}
     <div class="pasar">${i > 0 ? `<a class="btn sec2" href="textos/#${id}/${i - 1}">‹ Anterior</a>` : ''}${i < d.temas.length - 1 ? `<a class="btn" href="textos/#${id}/${i + 1}">Siguiente ›</a>` : ''}</div></div>`;
   if (foco !== undefined) { const el = document.getElementById('p' + foco); if (el) el.scrollIntoView({ block: 'center' }); } else scrollTo(0, 0);
 }

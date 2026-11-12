@@ -1,0 +1,62 @@
+{
+  "_nota": "EDU.16 — Qué está preguntando el alumno. Lo usan el servidor (src/tutor.js) y el navegador (/voz/tutor.js, para la respuesta de ejemplo). Expresiones regulares sobre el texto en minúsculas y SIN tildes. Se prueban en orden: la primera que coincide gana.",
+  "orden": ["riesgo", "emocional", "llevar", "casa", "clase", "texto", "manana", "tarea"],
+  "patrones": {
+    "riesgo": [
+      "\\b(me quiero|quiero) (matar|morir)",
+      "suicid",
+      "matarme|quitarme la vida|no quiero (vivir|seguir viviendo)",
+      "hacerme dano|lastimarme|cortarme",
+      "\\bme (pega|pegan|golpea|golpean|lastima|lastiman|maltrata|maltratan)\\b",
+      "\\b(abus|violaci|violar|acoso sexual)",
+      "me (toca|toco|tocan|tocaron) (mis|las|mi) (partes|cuerpo)",
+      "me (amenaza|amenazan|amenazo)"
+    ],
+    "emocional": [
+      "\\b(triste|tristeza|deprimid|depre|angusti|ansios|ansiedad)",
+      "me siento (mal|solo|sola|feo|fea)",
+      "\\b(lloro|llorar|llorando)\\b",
+      "\\b(bullying|me molestan|me hacen burla|se burlan|me insultan)",
+      "nadie me quiere|no tengo amigos|estoy solo|estoy sola",
+      "\\b(miedo|asustad)",
+      "mis papas (pelean|se separan|se separaron)"
+    ],
+    "llevar": [
+      "\\b(llevar|traer|traigo|llevo)\\b",
+      "\\bmateriales?\\b",
+      "que (tengo|hay|tenemos) que (llevar|traer)"
+    ],
+    "casa": [
+      "(decir|avisar|contar|comunicar)( algo)? (en|a) (mi )?casa",
+      "en (mi )?casa",
+      "\\bavis(o|ar|os)\\b",
+      "mis papas|mi mama|mi papa|mi familia",
+      "reunion de (padres|madres)"
+    ],
+    "clase": [
+      "que (dijo|explico|conto|enseno) (el|la|mi|nuestr[oa]) profe",
+      "(el|la) profe (dijo|explico|hablo)",
+      "en (la )?clase (de )?(hoy|ayer)",
+      "que (vimos|dimos|hicimos) (hoy|ayer|en clase)"
+    ],
+    "texto": [
+      "\\bpag(ina)?\\.? ?\\d+",
+      "\\b(texto|libro|lectura)\\b",
+      "no entiendo (esta|esa|la) parte",
+      "que significa|que quiere decir"
+    ],
+    "manana": [
+      "\\bmanana\\b",
+      "pasado manana",
+      "que (tengo|hay|tenemos) (para|el) (el )?(lunes|martes|miercoles|jueves|viernes)",
+      "que (tengo|hay) (de|para) (hacer|estudiar)"
+    ],
+    "tarea": [
+      "\\btareas?\\b",
+      "\\bdeberes?\\b",
+      "ayud(a|ame) con",
+      "(dame|decime|pasame) la respuesta",
+      "como (se )?(hace|resuelvo|hago)"
+    ]
+  }
+}
