@@ -15,6 +15,10 @@
 | 7 | **Cartas del piloto (U.E. Nuevo Horizonte)** | Completar y hacer firmar `docs/piloto/carta-intencion-UE-Nuevo-Horizonte.docx` (director/a) y, si se puede, la de la Alcaldía. Preguntas para la visita en `docs/piloto/README.md` | Respaldo para Google y otros financiadores; arrancar el piloto |
 | 6 | **Correo de contacto** | Un correo para la página del proyecto | Enviar la solicitud de créditos de Google (cuando el proyecto esté terminado) |
 
+| 8 | **Solicitud Google for Startups (USD 2.000)** | Mandarla **después de la reunión con el profe**, con la carta de intención firmada. Antes: correo de contacto (ideal con dominio propio) y publicar la página del proyecto. La MAESTRA deja la solicitud lista | Créditos para el piloto |
+| 9 | **Crédito de Gemini para las demos** | Cargar USD 10–20 en AI Studio (prepago de "Pago de Firebase") y una tarjeta alternativa antes de la reunión | Que la demo no se corte |
+| 10 | **Clave de Gemini propia del proyecto** | Crear una clave en el proyecto MUNICIPIO IA (AI Studio → Claves de API) y guardarla con el comando que pase la MAESTRA | Cuentas claras y orden para Google |
+
 ## Para probar cuando avise la MAESTRA
 
 - **6 evoluciones del mundo** (PR #8): P1–P2, P3–P4, P5–P6, S1–S2, S3–S5 y S6 (promo).
