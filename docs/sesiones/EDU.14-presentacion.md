@@ -225,3 +225,60 @@ Cierre: "Son estudios de otros países: en tu curso lo vamos a medir." En celula
 Probado en 390×844, 844×390, 1280×800, 360×740 y 1920×1080; PDF de 13 páginas.
 - Pedido de la MAESTRA: no usar "24/7" ni "las 24 horas" (se lee como fecha). La lámina dice
   "Un tutor en el bolsillo de cada alumno, **a cualquier hora**".
+
+---
+
+# EDU.14d — Lámina "Un ejemplo": lo que ahorra una familia (12-nov-2026)
+
+Lámina 5, después de "Una tablet por alumno". Ejemplo genérico: **Juan, el papá de Carlitos (2.º de secundaria,
+Santa Cruz)**. Presentación de 14 láminas.
+
+| | Bs por año (2027, estimado) |
+|---|---|
+| Hoy (textos, cuadernos, mochila y útiles) | **≈ 1.700** |
+| Con la tablet (sin textos, 3 cuadernos en vez de 10) | **≈ 1.150** |
+| **Juan ahorra** | **≈ 550** (casi 2 bonos Juancito Pinto de Bs 300) |
+| Tu curso (30 familias) | ≈ 16.500 que se quedan en las casas |
+| La tablet (≈ Bs 1.400, 2 años de uso) | ≈ 700 por alumno: con lo que ahorran las familias, casi se paga sola (≈ 8 de cada 10 Bs) |
+
+**Cálculo (precios 2026 → 2027 × 1,127):**
+- Textos: 3 al año × ≈ Bs 130 = Bs 390 → 440. Precio por libro Bs 80–180 (El Deber, feb-2025); la cantidad es supuesto.
+- Cuadernos: 10 × ≈ Bs 17 = Bs 170 → 192 (El Deber, ene-2026: carta tapa dura Bs 15–18). Con la tablet, 3 → 57.
+- Resto de la lista (bolígrafos, colores, geometría, hojas, carpetas): Bs 830 → 935, igual con y sin tablet.
+  (Lista básica ≈ Bs 1.000 sin libros, El Deber feb-2025, menos los cuadernos.)
+- Mochila: ≈ Bs 150 → 169 (rango Bs 50–400, El Deber ene-2026), igual con y sin tablet. Uniforme no se cuenta.
+- Total: 1.736 → "≈ 1.700"; con tablet 1.161 → "≈ 1.150"; ahorro 575 → se muestra "≈ 550" (redondeo conservador).
+- Se trata la lista 2025 como precio 2026: los comerciantes dijeron que en 2026 los útiles bajaron (Unitel, ene-2026),
+  así que no se suma la inflación de 2025 (20,4 %, INE) para no inflar.
+
+**Fuentes:**
+- El Deber, feb-2025: lista de útiles ≈ Bs 1.000 sin libros; libros Bs 80–180 —
+  https://eldeber.com.bo/santa-cruz/la-lista-de-utiles-escolares-demanda-un-gasto-de-unos-bs-1000-y-sube-el-precio-de-los-materiales_502810/
+- El Deber, ene-2026: cuadernos Bs 9–21, mochilas Bs 50–400 — https://eldeber.com.bo/santa-cruz/gente-vuelca-mercados-utiles-escolares_1769731111
+- Unitel, ene-2026: útiles bajan hasta 50 % — https://unitel.bo/noticias/economia/utiles-escolares-bajan-de-precio-hasta-un-50-en-comparacion-con-el-ano-pasado-segun-comerciantes-DJ18995521
+- Inflación: INE 2025 = 20,40 % (Infobae, ene-2026) — https://www.infobae.com/america/america-latina/2026/01/07/bolivia-registro-en-2025-una-inflacion-de-2040-el-nivel-mas-alto-en-mas-de-dos-decadas/ ;
+  FMI oct-2026: 12,7 % (2026) y 15,8 % (2027) — https://oxigeno.bo/fmi-proyecta-que-bolivia-sera-la-unica-economia-de-sudamerica-en-contraccion-en-2026-y-2027/
+- Tablet: Samsung Galaxy Tab A9 Bs 1.687 (Next Level, distribuidor) a Bs 1.044 (listados 2025) —
+  https://nextlevel.com.bo/collections/tablets ; https://www.laptop6.com/bo/laptops/samsung/galaxy-tab-a9-16265 .
+  Bs 1.400 por compra al por mayor es **estimado** (no se encontró precio unitario de licitaciones; buscar en SICOES).
+- Bono Juancito Pinto 2026: Bs 300 (DS 5712) — https://correodelsur.com/sociedad/20260923/el-pago-del-bono-juancito-pinto-comenzara-el-lunes-19-de-octubre.html
+- Bono municipal de Santa Cruz de la Sierra: Bs 400 anunciado para abril 2026 (El Deber / eju.tv, dic-2025), pero en
+  oct-2026 el exalcalde dijo que se retiró del presupuesto. **No confirmado → no va en la lámina** (solo en notas).
+  https://eju.tv/2025/12/jhonny-confirma-bono-de-bs-400-para-cada-estudiante-de-santa-cruz-se-pagara-en-abril-de-2026/ ;
+  https://eju.tv/2026/10/jhonny-fernandez-acusa-a-mamen-de-montar-procesos-para-tapar-el-destino-de-bs-1-800-millones/
+- Curso de 30: supuesto (Reduno, 2026: cursos de hasta 35–40 en secundaria). No se encontró el dato de la U.E. Nuevo
+  Horizonte ni la matrícula de secundaria del municipio (pedir al SIE / Dirección Departamental).
+
+**Diseño:** sello "Estimado · 2027", texto arriba y cifras apiladas en celular; en PC, texto a la izquierda y cifras a la
+derecha. Nota al pie con fuentes. Notas del presentador: guion de 30 segundos y fuentes.
+Probado en 360×740, 390×844, 844×390, 1280×800 y 1920×1080 sin desbordes; PDF de 14 páginas.
+Captura: `docs/sesiones/capturas/EDU.14/juan-14d.jpg`.
+
+### Botón "Mi tutor" (EDU.16 ya en main)
+
+- Lámina del tutor ("Un tutor en el bolsillo… a cualquier hora"): sin el sello "Lo que viene"; botón **"Mi tutor"**
+  destacado (`/maqueta/mi-tutor/`, celular vertical). También en la lámina de la app del alumno, después de "Hoy".
+- Probado con el sitio armado (`npm run build`, con `/voz/tutor.js`) en 1280×800 y 390×844: abre en "modo ejemplo
+  (sin tu cuenta)" con las preguntas sugeridas; "¿Qué dijo el profe hoy?" responde el ejemplo de respaldo y nombra
+  al profe con su apodo (`?profeApodo=`). Con la llave de demo responde la IA.
+- Ojo: la página del tutor (EDU.16) todavía muestra "la profe Taji" y "el profe Jochi"; la presentación no los nombra.

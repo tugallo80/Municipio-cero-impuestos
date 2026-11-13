@@ -74,7 +74,8 @@ que es el módulo más avanzado; después el Núcleo ciudadano, que lo necesitan
 | EDU.13 | Limpieza | Archivar `rubikeduai-backend` (PR aparte, con OK del dueño) | EDU.12 | ⏳ |
 | EDU.14 | Presentación del proyecto | 10 láminas para el profe del piloto (celular, PC, proyector, PDF), en `/presentacion/` del sitio de Educación | EDU.04b | ✅ En `main` (PR #32) |
 | EDU.14b | Presentación con alma | Apertura "cambio de paradigma" (6 láminas: 100 años, IA aliada, tablet con todo adentro, tutor 24 h, "lo que sabés", bajar aplazos) + lo práctico más corto; 13 láminas | EDU.14 | ✅ En `main` (PR #34) |
-| EDU.14c | Evidencia en comparaciones | Lámina de evidencia con frases simples ("6 semanas que rindieron como 1,5 a 2 años") y el dato técnico en chico | EDU.14b | 🔎 PR abierto, canal `pantalla-edu-14c` |
+| EDU.14c | Evidencia en comparaciones | Lámina de evidencia con frases simples ("6 semanas que rindieron como 1,5 a 2 años") y el dato técnico en chico | EDU.14b | ✅ En `main` (PR #39) |
+| EDU.14d | Un ejemplo de ahorro | Lámina "Juan, el papá de Carlitos": gasto escolar hoy vs con la tablet, ahorro por familia y por curso, con fuentes; 14 láminas | EDU.14c | 🔎 PR abierto, canal `pantalla-edu-14d` |
 | NUC.01 | Núcleo ciudadano | Login, perfil, plan de suscripción, billetera de créditos, Hub con diseño ÑANDÉ | INF.01 | ⏳ |
 | TRA.01 | Transporte | Del prototipo a MVP: pedir viaje, conductor, pago con créditos | NUC.01 | ⏳ |
 | MKT.01 | eMarket | Catálogo de comercios, pedidos, suscripción comercial | NUC.01 | ⏳ |
