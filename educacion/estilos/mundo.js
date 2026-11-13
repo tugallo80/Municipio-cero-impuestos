@@ -1044,8 +1044,10 @@ export function crearMundo(THREE, estilo = 'A', tipo = 'escena') {
     // --- personajes en la plazuela: los dos profes (IA) y los alumnos del tramo
     const yT = persona(-1.7, 10.1, 0.12, PERSONAS.taji);
     const yJ = persona(1.8, 10.1, -0.12, PERSONAS.jochi);
-    etiqueta('Profe Taji (IA)', new THREE.Vector3(-1.95, yT + 0.75, 10.1), '#F2C230', 13);
-    etiqueta('Profe Jochi (IA)', new THREE.Vector3(2.05, yJ + 0.75, 10.1), '#10B981', 13);
+    // EDU.16b: nombres configurables (maqueta/nombres-ia.js); fuera de la app, genéricos.
+    const IA = window.NandeIA;
+    etiqueta(IA ? `Profe ${IA.mujer} (IA)` : 'La profe (IA)', new THREE.Vector3(-1.95, yT + 0.75, 10.1), '#F2C230', 13);
+    etiqueta(IA ? `Profe ${IA.varon} (IA)` : 'El profe (IA)', new THREE.Vector3(2.05, yJ + 0.75, 10.1), '#10B981', 13);
     ALUMNOS.forEach(([k, nombre, color], i) => {
       const x = ALUMNOS.length === 1 ? 0.05 : i ? 0.65 : -0.55, z = ALUMNOS.length === 1 ? 11.0 : 11.15;
       const y = persona(x, z, i ? -0.05 : 0.05, PERSONAS[k]);

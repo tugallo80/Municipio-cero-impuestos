@@ -6,7 +6,7 @@
 //                sugerencias en tono positivo y las tareas que dio (nunca una nota).
 //   - direccion: resumen corto y alertas SOLO con señales claras de riesgo, siempre
 //                "para revisar por una persona".
-//   - contexto:  lo que necesitan los profes IA (Taji / Jochi / Kay) para responder
+//   - contexto:  lo que necesitan los profes IA (la profe, el profe y Kay) para responder
 //                "¿qué tarea dejó el profe?" — sin nombres de alumnos.
 //   - transcripcion: con los nombres de alumnos reemplazados por "un alumno".
 //

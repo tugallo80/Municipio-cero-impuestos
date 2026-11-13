@@ -15,6 +15,8 @@
  "profe": {
   "nombre": "Profe"
  },
+ "ia": { "varon": "Tomatao", "mujer": "Tomatina" },
+ "_notaIA": "EDU.16b: nombres de los dos profes IA. TEMPORALES para la demo (los definitivos salen de la investigación de naming). Un solo lugar: armar-demo.mjs los copia a maqueta/nombres-ia.js y a services/ai-gateway/tutor/estudiante-demo.json. Se pueden cambiar por link: ?iaVaron=…&iaMujer=… (quedan en el equipo: nande-ia-varon / nande-ia-mujer).",
  "materiasProfe": [
   "ing",
   "fil",
@@ -733,70 +735,70 @@
     "corto": "Lenguaje",
     "icono": "📖",
     "color": "#F59E0B",
-    "profe": "la profe Taji"
+    "profe": "la profe {IA_MUJER}"
    },
    "mat": {
     "nombre": "Matemática",
     "corto": "Mate",
     "icono": "🔢",
     "color": "#10B981",
-    "profe": "la profe Taji"
+    "profe": "la profe {IA_MUJER}"
    },
    "bio": {
     "nombre": "Biología - Geografía",
     "corto": "Biología",
     "icono": "🧬",
     "color": "#22C55E",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    },
    "csoc": {
     "nombre": "Ciencias Sociales",
     "corto": "Sociales",
     "icono": "🗺️",
     "color": "#A78BFA",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    },
    "ing": {
     "nombre": "Lengua Extranjera (Inglés)",
     "corto": "Inglés",
     "icono": "💬",
     "color": "#F472B6",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    },
    "fil": {
     "nombre": "Cosmovisiones, Filosofía y Psicología",
     "corto": "Filosofía",
     "icono": "💭",
     "color": "#818CF8",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    },
    "art": {
     "nombre": "Artes Plásticas y Visuales",
     "corto": "Artes",
     "icono": "🎨",
     "color": "#FB923C",
-    "profe": "la profe Taji"
+    "profe": "la profe {IA_MUJER}"
    },
    "mus": {
     "nombre": "Educación Musical",
     "corto": "Música",
     "icono": "🎵",
     "color": "#EC4899",
-    "profe": "la profe Taji"
+    "profe": "la profe {IA_MUJER}"
    },
    "val": {
     "nombre": "Valores, Espiritualidades y Religiones",
     "corto": "Valores",
     "icono": "🤝",
     "color": "#EAB308",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    },
    "efd": {
     "nombre": "Educación Física y Deportes",
     "corto": "Ed. Física",
     "icono": "⚽",
     "color": "#14B8A6",
-    "profe": "el profe Jochi"
+    "profe": "el profe {IA_VARON}"
    }
   },
   "avisos": [
@@ -877,7 +879,7 @@
    "09:30",
    "09:50"
   ],
-  "_notaMaterias": "'profe' = el profe IA que acompaña la materia (Taji/Jochi). El nombre del profe REAL nunca va acá: llega por el link y queda en el equipo (localStorage 'nande-profe')."
+  "_notaMaterias": "'profe' = el profe IA que acompaña la materia ({IA_MUJER}/{IA_VARON}: se reemplazan por los nombres de 'ia'). El nombre del profe REAL nunca va acá: llega por el link y queda en el equipo (localStorage 'nande-profe')."
  },
  "temaMapa": "Present continuous: interrogative form"
 }

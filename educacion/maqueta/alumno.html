@@ -286,14 +286,15 @@
     .chip-puente .txt-largo { display: none; }
   }
 </style>
+<script src="nombres-ia.js?v=edu16b-1"></script>
 <script src="salida.js?v=edu17b-1"></script>
 </head>
 <body>
 <canvas id="mundo"></canvas>
 
 <div class="hud-profes">
-  <button class="boton-hud profe" data-profe="la_profe" style="--pc:#FBBF24" title="La profe Taji (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#f2c79b"/><path d="M8 21c0-9 5-14 12-14s12 5 12 14c-2-5-6-8-12-8s-10 3-12 8z" fill="#3b2314"/><circle cx="31" cy="9" r="5" fill="#3b2314"/><circle cx="10" cy="14" r="3.2" fill="#f472b6"/><circle cx="10" cy="14" r="1.2" fill="#fde047"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M15 27q5 4 10 0" stroke="#7c2d12" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
-  <button class="boton-hud profe" data-profe="el_profe" style="--pc:#8B5CF6" title="El profe Jochi (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#c98e5f"/><path d="M8 19c1-8 6-12 12-12s11 4 12 12c-3-4-7-5-12-5s-9 1-12 5z" fill="#1f1410"/><path d="M7 13h26l-3-6H11z" fill="#0f766e"/><rect x="5" y="12" width="17" height="3" rx="1.5" fill="#115e59"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M14 27q6 5 12 0" stroke="#5b2a0e" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
+  <button class="boton-hud profe" data-profe="la_profe" style="--pc:#FBBF24" title="La profe IA (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#f2c79b"/><path d="M8 21c0-9 5-14 12-14s12 5 12 14c-2-5-6-8-12-8s-10 3-12 8z" fill="#3b2314"/><circle cx="31" cy="9" r="5" fill="#3b2314"/><circle cx="10" cy="14" r="3.2" fill="#f472b6"/><circle cx="10" cy="14" r="1.2" fill="#fde047"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M15 27q5 4 10 0" stroke="#7c2d12" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
+  <button class="boton-hud profe" data-profe="el_profe" style="--pc:#8B5CF6" title="El profe IA (tocá para hablar)"><svg viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="22" r="12" fill="#c98e5f"/><path d="M8 19c1-8 6-12 12-12s11 4 12 12c-3-4-7-5-12-5s-9 1-12 5z" fill="#1f1410"/><path d="M7 13h26l-3-6H11z" fill="#0f766e"/><rect x="5" y="12" width="17" height="3" rx="1.5" fill="#115e59"/><circle cx="15.5" cy="22" r="1.6" fill="#1f2937"/><circle cx="24.5" cy="22" r="1.6" fill="#1f2937"/><path d="M14 27q6 5 12 0" stroke="#5b2a0e" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg><span class="estrella">⭐</span></button>
 </div>
 <div class="hud">
   <button class="chip-puente" id="chip-puente" onclick="abrirPuente()" title="El puente del curso">🌉 <span id="puente-txt"></span><span class="mini"><i id="puente-mini"></i></span></button>
@@ -597,9 +598,9 @@ function preguntaRapida(id, elegida) {
 }
 // Biblioteca: lecturas cortas (demo, escritas para 4.º de primaria)
 const LECTURAS = [
-  { t: 'El toborochi panzón', ic: '🌳', txt: ['En el patio del colegio hay un toborochi con la panza gorda. Los chicos de 4.º se preguntaban por qué era tan panzón.', 'La profe Taji les contó que el toborochi guarda agua en su tronco. Cuando llegan los meses secos y no llueve, el árbol pierde sus hojas y aguanta con el agua guardada.', 'Después se llena de flores rosadas y el patio parece pintado. Los loros vienen a visitarlo, y sus semillas vuelan con un algodón blanco.', 'Desde ese día, cuando pasan por el patio, los chicos le dicen: «¡Gracias por la sombra, panzón!».'],
+  { t: 'El toborochi panzón', ic: '🌳', txt: ['En el patio del colegio hay un toborochi con la panza gorda. Los chicos de 4.º se preguntaban por qué era tan panzón.', 'La profe les contó que el toborochi guarda agua en su tronco. Cuando llegan los meses secos y no llueve, el árbol pierde sus hojas y aguanta con el agua guardada.', 'Después se llena de flores rosadas y el patio parece pintado. Los loros vienen a visitarlo, y sus semillas vuelan con un algodón blanco.', 'Desde ese día, cuando pasan por el patio, los chicos le dicen: «¡Gracias por la sombra, panzón!».'],
     q: '¿Para qué guarda agua el toborochi?', ops: ['Para los meses secos', 'Para los loros', 'Para bañarse'], ok: 0 },
-  { t: 'El jochi jardinero', ic: '🌱', txt: ['En el monte, cerca de Santa Cruz, vivía un jochi colorado muy ordenado. Cada tarde juntaba semillas y las enterraba en distintos lugares para comerlas después.', 'Pero el jochi tenía un problema: ¡se olvidaba de dónde las había guardado!', 'Con las lluvias, algunas semillas olvidadas brotaron. Al año siguiente había arbolitos nuevos por todo el monte.', 'Una paraba lo vio y le dijo: «Jochi, sin querer sos el mejor jardinero del bosque». El jochi movió los bigotes y siguió guardando semillas… y olvidándose de algunas.'],
+  { t: 'El jochi jardinero', ic: '🌱', txt: ['En el monte, cerca de Santa Cruz, vivía un jochi colorado muy ordenado. Cada tarde juntaba semillas y las enterraba en distintos lugares para comerlas después.', 'Pero el jochi tenía un problema: ¡se olvidaba de dónde las había guardado!', 'Con las lluvias, algunas semillas olvidadas brotaron. Al año siguiente había arbolitos nuevos por todo el monte.', 'Una paraba lo vio y le dijo: «Amigo jochi, sin querer sos el mejor jardinero del bosque». El jochi movió los bigotes y siguió guardando semillas… y olvidándose de algunas.'],
     q: '¿Por qué crecieron arbolitos nuevos?', ops: ['El jochi se olvidó semillas enterradas', 'La paraba los plantó', 'Llovieron arbolitos'], ok: 0 }
 ];
 function panelBiblioteca() {
@@ -1233,7 +1234,9 @@ function abrirMochila() {
 // dentro del mundo, sin tapar el juego. Sin módulo (maqueta abierta como archivo):
 // ayuda simulada de texto, como en EDU.01b. Nunca dan la respuesta.
 // ============================================================
-const NOMBRES = { la_profe: 'la profe Taji', el_profe: 'el profe Jochi' };
+// EDU.16b: nombres de los profes IA configurables (nombres-ia.js; temporales de la demo).
+const NOMBRES = { la_profe: NandeIA.titulo('la_profe'), el_profe: NandeIA.titulo('el_profe') };
+document.querySelectorAll('.boton-hud.profe').forEach((b) => { b.title = `${NandeIA.Titulo(b.dataset.profe)} (tocá para hablar)`; });
 function estadoMision() {
   if (!E.mision) return null;
   return { id: E.mision.id, fase: E.fase === 'repaso' ? 'repaso' : 'pasos', paso: E.i || 0, peldano: E.peldano || 0, completa: !!E.completa };
@@ -1280,7 +1283,7 @@ function conectarVoz() {
     PV.preferido = st.preferido;
     document.querySelectorAll('.profe[data-profe]').forEach(b => {
       const id = b.dataset.profe, info = (st.profes || []).find(x => x.id === id);
-      if (info) { b.style.setProperty('--pc', info.color); b.title = info.titulo + ' (tocá para hablar)'; NOMBRES[id] = info.titulo; }
+      if (info) { b.style.setProperty('--pc', info.color); b.title = info.titulo.replace(/^./, (c) => c.toUpperCase()) + ' (tocá para hablar)'; NOMBRES[id] = info.titulo; }
       b.classList.toggle('hablando', st.activo && st.profe === id && st.estado !== 'conectando');
       b.classList.toggle('llamando', st.activo && st.profe === id && st.estado === 'conectando');
       b.classList.toggle('pref', st.preferido === id);
@@ -2691,7 +2694,7 @@ function iniciar(THREE) {
     const P = id === 'la_profe' ? profeTaji : profeJochi, otro = P === profeTaji ? profeJochi : profeTaji;
     otro.yo.visible = false; P.yo.visible = true;
     const c = piz.userData.cajaLocal; aMundo(piz, c.max.x + .55, 0, .8, P.yo.position); P.yo.position.y = 0; P.yo.rotation.y = rumboDe(piz) - .5;
-    pProfe.copy(P.yo.position); intProfe.id = id; intProfe.texto = id === 'la_profe' ? '🎙️ Hablar con la profe Taji' : '🎙️ Hablar con el profe Jochi';
+    pProfe.copy(P.yo.position); intProfe.id = id; intProfe.texto = `🎙️ Hablar con ${NOMBRES[id] || NandeIA.titulo(id)}`;
     setTimeout(() => hablar(P, ['¡Hola! Pasá, sentate nomás.', '¿Vamos con la misión de hoy?', '¡Buenas! Mirá la pizarra.'][Math.floor(Math.random() * 3)], 2600, '#A7F3D0'), 700);
   }
   Object.values(salas).forEach(s => { if (profeDe[s.nombre]) { const antes = s.alEntrar; s.alEntrar = () => { antes && antes(); profeEnSala(s); }; } });

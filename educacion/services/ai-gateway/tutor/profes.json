@@ -1,23 +1,19 @@
 {
-  "_nota": "Los dos profes de voz. Para cambiar un nombre: editar 'nombre' y 'titulo' (y su archivo .md). Nombres PROVISIONALES: 'opciones' son las alternativas propuestas al dueño. Mismo nivel de calidez y de saber; ninguna materia asignada. La voz es fija por profe (el navegador no la puede cambiar).",
+  "_nota": "Los dos profes de voz. Los NOMBRES no van acá (EDU.16b): salen de tutor/nombres-ia.js (por defecto los de tools/datos/demo-piloto.json → 'ia'; se pueden cambiar por link). La voz es fija por profe (el navegador no la puede cambiar).",
   "profes": [
     {
       "id": "la_profe",
-      "nombre": "Taji",
-      "titulo": "la profe Taji",
       "voz": "Sulafat",
       "color": "#FBBF24",
       "archivo": "la-profe.md",
-      "opciones": ["Taji (del tajibo en flor)", "Cusi (la palmera)", "Paraba (el loro grande)"]
+      "genero": "mujer"
     },
     {
       "id": "el_profe",
-      "nombre": "Jochi",
-      "titulo": "el profe Jochi",
       "voz": "Achird",
       "color": "#8B5CF6",
       "archivo": "el-profe.md",
-      "opciones": ["Jochi (el del monte)", "Totaí (la palmera)", "Peji (el tatú chiquito)"]
+      "genero": "varon"
     }
   ]
 }

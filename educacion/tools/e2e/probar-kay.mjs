@@ -296,7 +296,7 @@ md('### Los dos profes (la profe y el profe)')
 await getDatabase().ref(`edu/memoria/${E2E.alumnoId}`).remove()
 const lista = await llamar('eduProfes', {}, idToken)
 chequear(lista.result?.profes?.length === 2, `eduProfes devuelve dos profes (${(lista.result?.profes || []).map((p) => p.titulo).join(' y ')})`)
-const [LA, EL] = lista.result?.profes || [{ id: 'la_profe', nombre: 'Taji' }, { id: 'el_profe', nombre: 'Jochi' }]
+const [LA, EL] = lista.result?.profes || [{ id: 'la_profe', nombre: 'Tomatina', titulo: 'la profe Tomatina' }, { id: 'el_profe', nombre: 'Tomatao', titulo: 'el profe Tomatao' }]
 const mision = { id: 'M1', fase: 'pasos', paso: 0, peldano: 0 }
 const tA = await llamar('eduKayToken', { profe: LA.id, mision, voz: 'Puck' }, idToken)
 chequear(tA.result?.ok === true && tA.result?.voz === 'Sulafat', `${LA.titulo || LA.id}: token con su voz fija (${tA.result?.voz}; pedir otra voz se ignora)`)

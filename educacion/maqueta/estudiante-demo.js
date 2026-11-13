@@ -4,6 +4,10 @@
   const D = {
  "apodo": "Jaguar Azul 7",
  "avatar": "🐆",
+ "ia": {
+  "varon": "Tomatao",
+  "mujer": "Tomatina"
+ },
  "curso": "2do_secundaria",
  "cursoNombre": "2.º de secundaria",
  "colegio": "U.E. Nuevo Horizonte",
@@ -19,70 +23,70 @@
    "corto": "Lenguaje",
    "icono": "📖",
    "color": "#F59E0B",
-   "profe": "la profe Taji"
+   "profe": "la profe {IA_MUJER}"
   },
   "mat": {
    "nombre": "Matemática",
    "corto": "Mate",
    "icono": "🔢",
    "color": "#10B981",
-   "profe": "la profe Taji"
+   "profe": "la profe {IA_MUJER}"
   },
   "bio": {
    "nombre": "Biología - Geografía",
    "corto": "Biología",
    "icono": "🧬",
    "color": "#22C55E",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   },
   "csoc": {
    "nombre": "Ciencias Sociales",
    "corto": "Sociales",
    "icono": "🗺️",
    "color": "#A78BFA",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   },
   "ing": {
    "nombre": "Lengua Extranjera (Inglés)",
    "corto": "Inglés",
    "icono": "💬",
    "color": "#F472B6",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   },
   "fil": {
    "nombre": "Cosmovisiones, Filosofía y Psicología",
    "corto": "Filosofía",
    "icono": "💭",
    "color": "#818CF8",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   },
   "art": {
    "nombre": "Artes Plásticas y Visuales",
    "corto": "Artes",
    "icono": "🎨",
    "color": "#FB923C",
-   "profe": "la profe Taji"
+   "profe": "la profe {IA_MUJER}"
   },
   "mus": {
    "nombre": "Educación Musical",
    "corto": "Música",
    "icono": "🎵",
    "color": "#EC4899",
-   "profe": "la profe Taji"
+   "profe": "la profe {IA_MUJER}"
   },
   "val": {
    "nombre": "Valores, Espiritualidades y Religiones",
    "corto": "Valores",
    "icono": "🤝",
    "color": "#EAB308",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   },
   "efd": {
    "nombre": "Educación Física y Deportes",
    "corto": "Ed. Física",
    "icono": "⚽",
    "color": "#14B8A6",
-   "profe": "el profe Jochi"
+   "profe": "el profe {IA_VARON}"
   }
  },
  "horario": [
@@ -440,7 +444,7 @@
     "tipo": "cronograma",
     "tema": "Autoconocimiento y proyecto de vida"
    },
-   "dias": 3,
+   "dias": 2,
    "estado": "pendiente",
    "hecha": false
   }

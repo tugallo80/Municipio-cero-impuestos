@@ -53,10 +53,10 @@
     }
     // Apodo elegido por el alumno en la presentación (EDU.14b), si hay
     try { const a = (localStorage.getItem('nande-apodo') || '').trim(); if (a) E.apodo = a.slice(0, 30); } catch (e) {}
-    // En las materias, "profe" de la fuente es el profe IA (Taji/Jochi): pasa a profeIA; el alumno ve a su profe.
+    // En las materias, "profe" de la fuente es el profe IA ("la profe {IA_MUJER}"): pasa a profeIA; el alumno ve a su profe.
     const delPiloto = window.DEMO_PILOTO && window.DEMO_PILOTO.materiasProfe;
     Object.entries(E.materias).forEach(([id, m]) => {
-      if (m.profe && /taji|jochi/i.test(m.profe)) m.profeIA = m.profe;
+      if (m.profe && /\{IA_(VARON|MUJER)\}|taji|jochi/i.test(m.profe)) m.profeIA = window.NandeIA ? NandeIA.texto(m.profe) : m.profe;
       if (!m.profe || m.profeIA || /\{profe\}/.test(m.profe)) m.profe = !delPiloto || delPiloto.includes(id) ? QUIEN : 'tu profe';
     });
     (E.tareas || []).forEach(t => { if (t.origen && t.origen.texto) t.origen.texto = t.origen.texto.replace(/\{profe\}/g, QUIEN); });

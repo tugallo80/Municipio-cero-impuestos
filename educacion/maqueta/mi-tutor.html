@@ -28,6 +28,7 @@
   .btn[disabled] { opacity: .4; cursor: default; background: var(--sup3); color: var(--texto3); }
   .reglas li { margin: 6px 0 0 18px; line-height: 1.45; font-size: 14px; }
 </style>
+<script src="nombres-ia.js?v=edu16b-1"></script>
 <script src="salida.js?v=edu17b-1"></script>
 </head>
 <body>
@@ -62,7 +63,7 @@
 const { E, hoy, clasesDe, materia, esc } = EST;
 EST.nav('tutor');
 const $ = s => document.querySelector(s);
-const NOMBRES = { la_profe: 'la profe Taji', el_profe: 'el profe Jochi' };
+const NOMBRES = { la_profe: NandeIA.titulo('la_profe'), el_profe: NandeIA.titulo('el_profe') };
 
 // Tema elegido: una tarea pendiente o una materia (por defecto, la clase que viene hoy).
 const pendientes = (window.tareasDelAlumno ? window.tareasDelAlumno() : []).filter(t => t.estado !== 'hecha');
