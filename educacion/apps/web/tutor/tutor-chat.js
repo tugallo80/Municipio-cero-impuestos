@@ -22,7 +22,8 @@ import { nombresIA, nombreIA, tituloIA, conNombresIA } from '../comun/nombres-ia
 
 const DOMINIO_CUENTAS = 'alumnos.nande-educacion.local'
 const ESPERA_DEMO_MS = 3000
-const ESPERA_MAX_MS = 30000
+// El servidor reintenta una vez si Gemini falla (EDU.16c): hasta ~45 s en el peor caso.
+const ESPERA_MAX_MS = 50000
 const CLAVE_CHARLA = 'nande-tutor-charla'
 const PROFES = {
   // EDU.16b: los nombres (temporales de la demo) salen de nombres-ia.js: configurables por link.
@@ -254,7 +255,8 @@ function montar(el, opciones = {}) {
     const ejemplo = () => respuestaEjemplo(q, foco, E(), { historial, profe })
     const ponerEjemplo = (motivo) => {
       if (!resp.pensando && !resp.ejemplo && resp.texto) return
-      if (intencion(q) === 'riesgo') return
+      // Riesgo: siempre el mensaje fijo que deriva a un adulto (sin la etiqueta "Ejemplo").
+      if (intencion(q) === 'riesgo') { Object.assign(resp, { texto: ejemplo().texto, pensando: false, ejemplo: false }); pintarMensajes(); return }
       Object.assign(resp, { texto: ejemplo().texto, pensando: false, ejemplo: true, meta: `ejemplo (${motivo})` })
       pintarMensajes()
     }
@@ -277,6 +279,8 @@ function montar(el, opciones = {}) {
         const { stream, data } = await fnTutor.stream(datos)
         let acumulado = ''
         for await (const pedazo of stream) {
+          // EDU.16c: el servidor va a reintentar → se borra lo que había llegado.
+          if (pedazo?.reset) { acumulado = ''; if (!resp.ejemplo) Object.assign(resp, { texto: '', pensando: true }); pintarMensajes(); continue }
           if (!pedazo?.t) continue
           acumulado += pedazo.t
           if (!llegoAlgo) { llegoAlgo = true; clearTimeout(reloj) }
@@ -288,11 +292,15 @@ function montar(el, opciones = {}) {
         final = (await fnTutor(datos)).data
       }
       clearTimeout(reloj)
-      if (final?.ok && final.texto) {
+      if (final?.ok && String(final.texto || '').trim() && !final.respaldo) {
         llegoAlgo = true
         reemplazar(final.texto)
         if (final.profe && PROFES[final.profe] && !profeElegido) profe = final.profe
         resp.meta = `${final.cache ? 'caché' : final.modelo} · ${((performance.now() - t0) / 1000).toFixed(1)} s${final.primerPedazoMs ? ` (1.ª letra ${(final.primerPedazoMs / 1000).toFixed(1)} s)` : ''} · USD ${Number(final.costoUsd || 0).toFixed(4)} · ${final.intencion}`
+      } else if (final?.ok) {
+        // EDU.16c: la IA no respondió ni al reintento (o vino vacía): nunca un globo vacío → el ejemplo del curso.
+        resp.pensando = true
+        ponerEjemplo(final.respaldo ? 'la IA no respondió (respaldo)' : 'respuesta vacía')
       } else {
         // Sin presupuesto o tope del día: en la demo, el ejemplo; si no, el mensaje amable del servidor.
         if (cuenta.demo || !final?.error) ponerEjemplo(final?.motivo || 'sin respuesta')
@@ -301,7 +309,9 @@ function montar(el, opciones = {}) {
     } catch (e) {
       clearTimeout(reloj)
       console.warn('[tutor]', e)
-      if (resp.pensando || !resp.texto || resp.ejemplo) ponerEjemplo('falló la conexión')
+      // Un pedazo a medias no sirve: se reemplaza por el ejemplo del curso.
+      resp.pensando = true
+      ponerEjemplo('falló la conexión')
     }
     pintarMensajes(); pintarCabecera()
     ocupado = false

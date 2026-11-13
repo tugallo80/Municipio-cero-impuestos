@@ -23,6 +23,7 @@ const { LIMITES } = require('../tutor/config');
 const { costoClase } = require('./costos');
 const { fechaBolivia } = require('./cuota');
 const datos = require('./datos');
+const { conReintento, RespuestaVacia } = require('./reintento');
 
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const MODELOS = (process.env.EDU_MODELO_TUTOR || process.env.EDU_MODELO_PLAN || 'gemini-3.1-flash-lite,gemini-3.1-flash-lite-preview,gemini-2.5-flash-lite,gemini-flash-lite-latest')
@@ -63,13 +64,17 @@ async function contextoAlumno(alumno, p) {
   return { curso, est, tareas, clases, fragmento, intencion, materia, foco: p.foco };
 }
 
-async function generar(sistema, contenidos, alPedazo) {
+// EDU.16c: cada intento tiene tiempo máximo; si Gemini falla por algo pasajero (503 "high demand", 429,
+// tiempo agotado) o devuelve vacío, se reintenta UNA vez. Con streaming, antes de reintentar se le avisa
+// al navegador que borre lo que llegó ({ reset: true }).
+const LIMITE_INTENTO_MS = 18_000;
+const PRESUPUESTO_MS = 45_000;
+async function generar(sistema, contenidos, alPedazo, alReiniciar) {
   const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY.value() });
-  let ultimo = null;
-  for (const modelo of MODELOS) {
+  const r = await conReintento(MODELOS, async (modelo, signal) => {
     // Gemini 3: pensar lo mínimo (responde más rápido y más barato). Si el modelo no lo acepta, sin eso.
     for (const pensar of /gemini-3/.test(modelo) ? [true, false] : [false]) {
-      const config = { systemInstruction: sistema, temperature: 0.6, maxOutputTokens: 700, ...(pensar ? { thinkingConfig: { thinkingLevel: 'MINIMAL' } } : {}) };
+      const config = { systemInstruction: sistema, temperature: 0.6, maxOutputTokens: 700, abortSignal: signal, ...(pensar ? { thinkingConfig: { thinkingLevel: 'MINIMAL' } } : {}) };
       try {
         let texto = '';
         let uso = null;
@@ -81,22 +86,24 @@ async function generar(sistema, contenidos, alPedazo) {
             if (c.usageMetadata) uso = c.usageMetadata;
           }
         } else {
-          const r = await ai.models.generateContent({ model: modelo, contents: contenidos, config });
-          texto = r.text || '';
-          uso = r.usageMetadata;
+          const res = await ai.models.generateContent({ model: modelo, contents: contenidos, config });
+          texto = res.text || '';
+          uso = res.usageMetadata;
         }
-        return { modelo, texto, uso };
+        if (!texto.trim()) throw new RespuestaVacia();
+        return { texto, uso };
       } catch (err) {
-        ultimo = err;
-        const m = String(err?.message || err);
-        if (pensar && /think/i.test(m)) continue;
-        if (/not found|404|is not supported|no longer available|deprecated/i.test(m)) break;
+        if (pensar && !(err instanceof RespuestaVacia) && /think/i.test(String(err?.message || err))) continue;
         throw err;
       }
     }
-  }
-  throw ultimo || new Error('Sin modelos');
+    throw new RespuestaVacia();
+  }, { intentos: 2, limiteMs: LIMITE_INTENTO_MS, presupuestoMs: PRESUPUESTO_MS, alReintentar: alReiniciar });
+  return { modelo: r.modelo, texto: r.valor.texto, uso: r.valor.uso, intentos: r.intentos, fallas: r.fallas };
 }
+
+/** Si Gemini no responde ni al reintento: un mensaje amable (la pantalla, si puede, muestra un ejemplo del curso). */
+const RESPALDO = 'Uy, ahora hay mucha gente usando la IA y no me pude conectar bien. Probá de nuevo en un ratito. 🙏\n\nMientras tanto, podés mirar tus tareas en **Mis tareas** y la página que toca en **Mis textos**.';
 
 const claveCache = (x) => `tutor-${crypto.createHash('sha256').update(JSON.stringify(x)).digest('hex').slice(0, 32)}`;
 
@@ -145,19 +152,27 @@ exports.eduTutor = onCall(OPC, async (request, response) => {
   let r;
   let primerPedazoMs = null;
   try {
-    r = await generar(sistema, contenidos, request.acceptsStreaming
-      ? async (t) => {
-          if (primerPedazoMs === null) primerPedazoMs = Date.now() - t0;
-          await response.sendChunk({ t: T24.limpiarPedazo(t, ctx.curso) });
-        }
-      : null);
+    r = await generar(
+      sistema,
+      contenidos,
+      request.acceptsStreaming
+        ? async (t) => {
+            if (primerPedazoMs === null) primerPedazoMs = Date.now() - t0;
+            await response.sendChunk({ t: T24.limpiarPedazo(t, ctx.curso) });
+          }
+        : null,
+      request.acceptsStreaming ? async () => { primerPedazoMs = null; await response.sendChunk({ reset: true }); } : null
+    );
   } catch (err) {
-    log('tutor_error', { alumnoId: alumno.alumnoId, error: String(err?.message || err).slice(0, 300) });
-    throw new HttpsError('unavailable', 'El tutor no pudo responder ahora. Probá de nuevo en un ratito.');
+    // Nunca un globo vacío ni un error: respuesta de respaldo (sin costo registrado; no se guarda en caché).
+    log('tutor_respaldo', { alumnoId: alumno.alumnoId, intencion, ms: Date.now() - t0, fallas: err?.fallas || [], error: String(err?.message || err).slice(0, 300) });
+    if (request.acceptsStreaming) await response.sendChunk({ reset: true });
+    return { ok: true, respaldo: true, texto: RESPALDO, profe, intencion, fuentes, costoUsd: 0, modelo: null, ms: Date.now() - t0 };
   }
   const costo = costoClase(r.uso, r.modelo);
   await datos.registrarCostoClase(alumno.alumnoId, reserva.fecha, costo.costoUsd, 0, 'tutor', alumno.prueba);
-  const texto = T24.limpiarRespuesta(r.texto, ctx.curso) || 'Uy, no me salió la respuesta. ¿Me lo preguntás de nuevo con otras palabras?';
+  const limpio = T24.limpiarRespuesta(r.texto, ctx.curso);
+  const texto = limpio || RESPALDO;
   const ms = Date.now() - t0;
   log('tutor_respuesta', {
     alumnoId: alumno.alumnoId,
@@ -174,10 +189,12 @@ exports.eduTutor = onCall(OPC, async (request, response) => {
     ms,
     primerPedazoMs,
     stream: !!request.acceptsStreaming,
+    intentos: r.intentos,
+    fallas: r.fallas.length ? r.fallas : undefined,
     bolsa: alumno.prueba === 'demo' ? 'demo' : alumno.prueba === true ? 'pruebas' : 'general',
   });
-  const resp = { ok: true, texto, profe, intencion, fuentes, costoUsd: costo.costoUsd, tokens: costo.totalTokens, modelo: r.modelo, ms, primerPedazoMs };
-  if (clave) await datos.guardarCacheDemo(clave, resp);
+  const resp = { ok: true, texto, profe, intencion, fuentes, costoUsd: costo.costoUsd, tokens: costo.totalTokens, modelo: r.modelo, ms, primerPedazoMs, ...(limpio ? {} : { respaldo: true }) };
+  if (clave && limpio) await datos.guardarCacheDemo(clave, resp);
   return resp;
 });
 
