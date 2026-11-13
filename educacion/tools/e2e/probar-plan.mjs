@@ -140,7 +140,12 @@ try {
     // Texto de aprendizaje oficial (2.º de secundaria, Inglés): el navegador manda el texto del índice.
     const txt = readFileSync(new URL('../../datos/textos-oficiales/2do-secundaria/lengua-extranjera-ingles.txt', import.meta.url), 'utf8')
     const indice = txt.slice(txt.indexOf('ÍNDICE'), txt.indexOf('PRESENTACI', txt.indexOf('ÍNDICE') + 20) + 600)
-    const ri = await llamar('eduPlan', { accion: 'extraer', curso: '2do_secundaria', texto: indice }, token)
+    // EDU.16c: si la IA falla (503 "high demand", 13-nov), se reintenta UNA vez; la exigencia es la misma.
+    let ri = await llamar('eduPlan', { accion: 'extraer', curso: '2do_secundaria', texto: indice }, token)
+    if (!ri.result?.plan?.areas?.find((a) => a.id === 'ing')) {
+      md(`- 🔁 Índice del texto: reintento (${ri.error ? `${ri.error.status} ${ri.error.message}` : 'sin Inglés'})`)
+      ri = await llamar('eduPlan', { accion: 'extraer', curso: '2do_secundaria', texto: indice }, token)
+    }
     const ing = ri.result?.plan?.areas?.find((a) => a.id === 'ing')
     const tri = ing ? [1, 2, 3].map((n) => ing.temas.filter((t) => t.trimestre === n).length) : []
     chequear(ri.result?.ok && ing && ing.temas.length >= 8 && tri.every((n) => n >= 2), `Índice del texto oficial de Inglés → ${ing?.temas.length} unidades por trimestre ${tri.join('/')} (USD ${ri.result?.costoUsd})`)
