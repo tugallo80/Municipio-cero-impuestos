@@ -15,6 +15,7 @@ const plan = require('../tutor/plan');
 const { LIMITES } = require('../tutor/config');
 const { costoClase } = require('./costos');
 const datos = require('./datos');
+const { conReintento, RespuestaVacia } = require('./reintento');
 
 const GEMINI_API_KEY = defineSecret('GEMINI_API_KEY');
 const MODELOS = (process.env.EDU_MODELO_PLAN || 'gemini-3.1-flash-lite,gemini-3.1-flash-lite-preview,gemini-2.5-flash-lite,gemini-flash-lite-latest')
@@ -38,30 +39,34 @@ async function profeDeLaCuenta(request, curso) {
   return p;
 }
 
-async function generarJson(partes, sistema, esquema, maxSalida) {
+/**
+ * EDU.16c: con reintento ante fallas pasajeras de Gemini (503 "high demand", 429, tiempo) y ante una respuesta
+ * que no sirve: `valido(json)` false (p. ej. un plan sin áreas) → se reintenta UNA vez.
+ */
+async function generarJson(partes, sistema, esquema, maxSalida, op = {}) {
   const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY.value() });
-  let ultimo = null;
-  for (const modelo of MODELOS) {
+  const valido = op.valido || ((j) => !!j);
+  const r = await conReintento(MODELOS, async (modelo, signal) => {
+    const res = await ai.models.generateContent({
+      model: modelo,
+      contents: [{ role: 'user', parts: partes }],
+      config: { systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema, temperature: 0.4, maxOutputTokens: maxSalida, abortSignal: signal },
+    });
+    let json = null;
     try {
-      const r = await ai.models.generateContent({
-        model: modelo,
-        contents: [{ role: 'user', parts: partes }],
-        config: { systemInstruction: sistema, responseMimeType: 'application/json', responseJsonSchema: esquema, temperature: 0.4, maxOutputTokens: maxSalida },
-      });
-      let json = null;
-      try {
-        json = JSON.parse(r.text || '{}');
-      } catch {
-        json = null;
-      }
-      return { modelo, json, uso: r.usageMetadata };
-    } catch (err) {
-      ultimo = err;
-      if (/not found|404|is not supported|no longer available|deprecated/i.test(String(err?.message || err))) continue;
-      throw err;
+      json = JSON.parse(res.text || '{}');
+    } catch {
+      json = null;
     }
-  }
-  throw ultimo || new Error('Sin modelos');
+    if (!valido(json)) {
+      const e = new RespuestaVacia('La IA devolvió un JSON sin contenido útil');
+      e.uso = res.usageMetadata;
+      throw e;
+    }
+    return { json, uso: res.usageMetadata };
+  }, { intentos: 2, limiteMs: op.limiteMs || 120_000, presupuestoMs: op.presupuestoMs || 240_000 });
+  if (r.fallas.length) log('ia_reintento', { modelo: r.modelo, intentos: r.intentos, fallas: r.fallas });
+  return { modelo: r.modelo, json: r.valor.json, uso: r.valor.uso };
 }
 
 const OPC = { region: 'us-central1', invoker: 'public', secrets: [GEMINI_API_KEY], maxInstances: 5 };
@@ -103,7 +108,9 @@ exports.eduPlan = onCall({ ...OPC, timeoutSeconds: 300, memory: '1GiB' }, async 
           : [{ inlineData: { mimeType: 'application/pdf', data: pdf } }, { text: `Curso del profe: ${plan.cursoLegible(curso)}. Extraé el plan.` }],
         plan.instruccionPlan(),
         plan.ESQUEMA_PLAN,
-        16384
+        16384,
+        // Un plan sin ninguna área con temas no sirve: se pide de nuevo (pasó el 13-nov con un 503 de Gemini).
+        { valido: (j) => plan.normalizarPlan(j || {}).areas.some((a) => a.temas.length) }
       );
     } catch (err) {
       log('plan_error', { personalId: yo.id, error: String(err?.message || err).slice(0, 300) });
@@ -134,7 +141,7 @@ exports.eduMentora = onCall({ ...OPC, timeoutSeconds: 60, memory: '256MiB' }, as
   if (!reserva.ok) return { ok: false, motivo: reserva.motivo, error: reserva.mensaje };
   let r;
   try {
-    r = await generarJson([{ text: plan.pedidoMentora(p) }], plan.instruccionMentora(), plan.ESQUEMA_MENTORA, 4096);
+    r = await generarJson([{ text: plan.pedidoMentora(p) }], plan.instruccionMentora(), plan.ESQUEMA_MENTORA, 4096, { limiteMs: 25_000, presupuestoMs: 50_000 });
   } catch (err) {
     log('mentora_error', { personalId: yo.id, error: String(err?.message || err).slice(0, 300) });
     throw new HttpsError('unavailable', 'La mentora no pudo responder. Probá de nuevo.');

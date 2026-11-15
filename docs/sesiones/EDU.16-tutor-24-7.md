@@ -147,3 +147,29 @@ Tomatina y Tomatao", borrar informe), la portada del sitio y la vitrina de estil
 nombre configurado, ignora uno inválido); e2e de voz actualizadas. Playwright en 390×844, 1280×800 y el juego 844×390:
 ningún Taji/Jochi visible; con el link aparecen Tomatao/Tomatina; con `?iaVaron=Pancho&iaMujer=Rosita` cambian.
 Capturas: `docs/sesiones/capturas/edu-16b/`.
+
+## EDU.16c — Nunca un globo vacío: reintentos ante fallas de Gemini (13-nov-2026)
+
+**Qué pasó** (run de main 43344729273 y el anterior), según los logs de Cloud Run:
+- `eduPlan` (índice del texto de Inglés, 01:28:24 UTC): Gemini respondió **503 "This model is currently experiencing
+  high demand"** a los 15,7 s; el código no lo reintentaba → la prueba vio `undefined`.
+- `eduTutor` ("¿Cómo te llamás?", 01:33 UTC): la llamada a Gemini **se colgó** y la Function se cortó a los 60 s
+  (**504**); la prueba recibió un error y lo mostró como texto vacío. En ese rato otras respuestas tardaron 16 s y 82 s.
+
+**Arreglo**
+- `src/reintento.js` (común): cada intento con tiempo máximo (se corta con AbortSignal); ante 503/429/500/tiempo/red o
+  respuesta vacía, espera ~1 s y reintenta **una vez**; "modelo inexistente" pasa al siguiente sin contar.
+- `eduTutor`: 18 s por intento, 45 s en total (antes del corte de 60 s). Con streaming, antes de reintentar manda
+  `{reset: true}` y el navegador borra lo que había llegado. Si tampoco responde al reintento → **respuesta de respaldo**
+  (`respaldo: true`, costo 0, no va al caché) y log `tutor_respaldo` con las fallas. Una respuesta que queda vacía al
+  limpiarla también es respaldo.
+- Mi tutor (navegador): con `respaldo`, texto vacío o un pedazo a medias → muestra el **ejemplo del curso** (etiqueta
+  "Ejemplo"). Las señales de riesgo siempre muestran el mensaje fijo. Espera hasta 50 s.
+- `eduPlan` y la mentora: el mismo reintento; además un plan **sin áreas con temas** se pide de nuevo una vez
+  (log `ia_reintento`).
+- Pruebas: `test/reintento.test.js` (503→bien, vacío→bien, dos fallas→error, modelo inexistente, error no pasajero sin
+  reintento, llamada colgada cortada por tiempo, aviso antes de reintentar). Playwright: respaldo, vacía y reset.
+  e2e del tutor y del plan: si la IA falla, reintentan **una** vez la llamada y siguen exigiendo lo mismo (el nombre
+  configurado, las unidades por trimestre); el resumen anota los reintentos.
+
+**Pendiente**: aplicar el mismo reintento a `eduTareas`/`eduMapa` y a la clase grabada (`eduClase`).
