@@ -288,3 +288,16 @@ Tras ver las propuestas de EDU.01c (`/educacion/estilos/`):
 - Para producción, la evolución 6 (y las intermedias) conviene hacerla con **Blender (EDU.07)**:
   personajes con esqueleto y animaciones, modelos glTF con texturas y luz horneada. Ver
   `docs/sesiones/EDU.01c-estilo-visual.md`.
+
+
+## Visión del dueño (11-nov-2026): cambio de paradigma, no una app
+
+- **No es un juego ni "una forma más bonita de hacer tareas"**: es integrar la tecnología y la IA en la
+  educación, como respuesta a la pobreza y a la falta de alcance. "No puede ser que sigamos igual que hace 100 años."
+- **Tablet por alumno entregada por las alcaldías**, con la plataforma y los **textos oficiales instalados**:
+  las familias ahorran en textos, cuadernos y mochilas.
+- **App del alumno completa**: agenda, calendario, textos digitales, **agente IA personal** y el mundo-juego.
+- **Agente IA del alumno, "el celular del tutor 24/7"**: recuerda lo que dijo el profe en la clase (gracias a
+  la clase grabada), las tareas, los horarios, qué llevar y los avisos para la casa.
+- **Objetivo de fondo**: bachilleres que salen sabiendo de verdad porque se les enseñó a su ritmo; bajar los
+  aplazos por el conjunto de todo (a medir en el piloto).
