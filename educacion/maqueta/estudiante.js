@@ -74,6 +74,10 @@
     .nav-est { position: fixed; z-index: 40; background: rgba(10,10,10,.97); backdrop-filter: blur(10px); display: flex; }
     .nav-est a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; color: var(--texto3); font-size: 12px; font-weight: 600; text-decoration: none; border-radius: 14px; }
     .nav-est a .ico { font-size: 24px; filter: grayscale(1) opacity(.65); line-height: 1; }
+    .nav-est a { min-width: 0; padding: 0 2px; }
+    .nav-est a .txt { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; line-height: 1.2; }
+    .nav-est a .txt.corto { display: none; }
+    @media (max-width: 420px) { .nav-est a .txt.largo { display: none; } .nav-est a .txt.corto { display: block; } }
     .nav-est a.activo { color: var(--verde); background: var(--verde-suave); }
     .nav-est a.activo .ico { filter: none; }
     @media (max-width: 999px) {
@@ -94,7 +98,7 @@
     const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
     document.body.classList.add('est-app');
     const n = document.createElement('nav'); n.className = 'nav-est'; n.setAttribute('aria-label', 'Secciones');
-    n.innerHTML = '<div class="marca-est">ÑANDÉ</div>' + SECCIONES.map(([id, ico, txt, url]) => `<a href="${url}" class="${id === activa ? 'activo' : ''}"${id === activa ? ' aria-current="page"' : ''}><span class="ico">${ico}</span>${txt}</a>`).join('');
+    n.innerHTML = '<div class="marca-est">ÑANDÉ</div>' + SECCIONES.map(([id, ico, txt, url]) => `<a href="${url}" class="${id === activa ? 'activo' : ''}"${id === activa ? ' aria-current="page"' : ''}><span class="ico">${ico}</span><span class="txt largo">${txt}</span><span class="txt corto">${txt.replace(/^Mis? /, '').replace(/^./, c => c.toUpperCase())}</span></a>`).join('');
     document.body.appendChild(n);
   }
 
